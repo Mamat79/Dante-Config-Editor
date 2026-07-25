@@ -9,12 +9,14 @@
     <SolidColorBrush x:Key="DialogInputBrush" Color="#FFFFFF" />
     <SolidColorBrush x:Key="DialogInputTextBrush" Color="#111827" />
 
-    <Style TargetType="{x:Type Label}">
+    <Style x:Key="DialogLabelBaseStyle" TargetType="{x:Type Label}">
         <Setter Property="Foreground" Value="{DynamicResource DialogTextBrush}" />
         <Setter Property="Padding" Value="0,0,0,4" />
     </Style>
+    <Style TargetType="{x:Type Label}"
+           BasedOn="{StaticResource DialogLabelBaseStyle}" />
 
-    <Style TargetType="{x:Type Button}">
+    <Style x:Key="DialogButtonBaseStyle" TargetType="{x:Type Button}">
         <Setter Property="MinHeight" Value="34" />
         <Setter Property="MinWidth" Value="92" />
         <Setter Property="Margin" Value="0,0,8,8" />
@@ -23,6 +25,8 @@
         <Setter Property="Foreground" Value="White" />
         <Setter Property="BorderThickness" Value="0" />
     </Style>
+    <Style TargetType="{x:Type Button}"
+           BasedOn="{StaticResource DialogButtonBaseStyle}" />
 
     <Style x:Key="DialogSecondaryButtonStyle"
            TargetType="{x:Type Button}"
@@ -33,24 +37,32 @@
         <Setter Property="BorderThickness" Value="1" />
     </Style>
 
-    <Style TargetType="{x:Type TextBox}">
+    <Style x:Key="DialogTextBoxBaseStyle" TargetType="{x:Type TextBox}">
         <Setter Property="MinHeight" Value="30" />
         <Setter Property="Padding" Value="7,5" />
         <Setter Property="Background" Value="{DynamicResource DialogInputBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource DialogInputTextBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource DialogBorderBrush}" />
     </Style>
+    <Style TargetType="{x:Type TextBox}"
+           BasedOn="{StaticResource DialogTextBoxBaseStyle}" />
 
-    <Style TargetType="{x:Type ComboBox}">
+    <Style x:Key="DialogComboBoxBaseStyle" TargetType="{x:Type ComboBox}">
         <Setter Property="MinHeight" Value="30" />
         <Setter Property="Padding" Value="5,3" />
         <Setter Property="Background" Value="{DynamicResource DialogInputBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource DialogInputTextBrush}" />
     </Style>
+    <Style TargetType="{x:Type ComboBox}"
+           BasedOn="{StaticResource DialogComboBoxBaseStyle}" />
 
     <Style TargetType="{x:Type CheckBox}">
         <Setter Property="Foreground" Value="{DynamicResource DialogTextBrush}" />
         <Setter Property="Margin" Value="0,4,12,4" />
+    </Style>
+
+    <Style TargetType="{x:Type RadioButton}">
+        <Setter Property="Foreground" Value="{DynamicResource DialogTextBrush}" />
     </Style>
 
     <Style TargetType="{x:Type GroupBox}">
@@ -103,13 +115,40 @@
     <Style TargetType="{x:Type TabItem}">
         <Setter Property="Background" Value="{DynamicResource DialogSurfaceBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource DialogTextBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DialogBorderBrush}" />
         <Setter Property="Padding" Value="10,5" />
-        <Style.Triggers>
-            <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="{DynamicResource DialogAccentBrush}" />
-                <Setter Property="Foreground" Value="White" />
-            </Trigger>
-        </Style.Triggers>
+        <Setter Property="Margin" Value="0,0,3,0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabItem}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1,1,1,0"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter ContentSource="Header"
+                                          TextElement.Foreground="{TemplateBinding Foreground}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          RecognizesAccessKey="True" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource DialogAccentBrush}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Panel.ZIndex" Value="10" />
+                            <Setter Property="Background" Value="{DynamicResource DialogAccentBrush}" />
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="FontWeight" Value="SemiBold" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.45" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style TargetType="{x:Type Separator}">

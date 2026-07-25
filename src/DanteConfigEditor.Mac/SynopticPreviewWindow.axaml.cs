@@ -31,7 +31,7 @@ public sealed partial class SynopticPreviewWindow : Window
         surface.Height = Math.Max(1, height);
         surface.Fill = new VisualBrush(source)
         {
-            Stretch = Stretch.Fill,
+            Stretch = Stretch.Uniform,
             AlignmentX = AlignmentX.Left,
             AlignmentY = AlignmentY.Top
         };

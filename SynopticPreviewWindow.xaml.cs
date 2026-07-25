@@ -19,9 +19,14 @@ public partial class SynopticPreviewWindow : Window
         PreviewSurface.Height = Math.Max(1, height);
         PreviewSurface.Fill = new VisualBrush(source)
         {
-            Stretch = Stretch.Fill,
+            // Le Viewbox absolu évite que le zoom de la vue principale soit
+            // repris comme une nouvelle proportion dans la fenêtre séparée.
+            ViewboxUnits = BrushMappingMode.Absolute,
+            Viewbox = new Rect(0, 0, Math.Max(1, width), Math.Max(1, height)),
+            Stretch = Stretch.Uniform,
             AlignmentX = AlignmentX.Left,
-            AlignmentY = AlignmentY.Top
+            AlignmentY = AlignmentY.Top,
+            AutoLayoutContent = false
         };
         PreviewSurface.LayoutTransform = _zoomTransform;
         ApplyLanguage(language);

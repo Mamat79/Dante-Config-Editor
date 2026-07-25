@@ -8,20 +8,29 @@
         MinHeight="560"
         WindowStartupLocation="CenterOwner">
     <Window.Resources>
-        <Style TargetType="{x:Type Label}">
-            <Setter Property="Padding" Value="0,8,0,4" />
-        </Style>
-        <Style TargetType="{x:Type Button}">
-            <Setter Property="Padding" Value="12,8" />
-            <Setter Property="Margin" Value="0,0,8,0" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-        </Style>
-        <Style TargetType="{x:Type TextBox}">
-            <Setter Property="Padding" Value="8,5" />
-        </Style>
-        <Style TargetType="{x:Type ComboBox}">
-            <Setter Property="Padding" Value="6,4" />
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/DialogStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="{x:Type Label}"
+                   BasedOn="{StaticResource DialogLabelBaseStyle}">
+                <Setter Property="Padding" Value="0,8,0,4" />
+            </Style>
+            <Style TargetType="{x:Type Button}"
+                   BasedOn="{StaticResource DialogButtonBaseStyle}">
+                <Setter Property="Padding" Value="12,8" />
+                <Setter Property="Margin" Value="0,0,8,0" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+            </Style>
+            <Style TargetType="{x:Type TextBox}"
+                   BasedOn="{StaticResource DialogTextBoxBaseStyle}">
+                <Setter Property="Padding" Value="8,5" />
+            </Style>
+            <Style TargetType="{x:Type ComboBox}"
+                   BasedOn="{StaticResource DialogComboBoxBaseStyle}">
+                <Setter Property="Padding" Value="6,4" />
+            </Style>
+        </ResourceDictionary>
     </Window.Resources>
 
     <Grid Margin="16">
@@ -153,8 +162,8 @@
 
                 <GroupBox Header="Canaux">
                     <TabControl Margin="8">
-                        <TabItem Header="TX">
-                            <DataGrid x:Name="TxChannelsGrid"
+                        <TabItem x:Name="RxChannelsTab" Header="RX">
+                            <DataGrid x:Name="RxChannelsGrid"
                                       AutoGenerateColumns="False"
                                       CanUserAddRows="False"
                                       CanUserDeleteRows="False"
@@ -165,8 +174,8 @@
                                 </DataGrid.Columns>
                             </DataGrid>
                         </TabItem>
-                        <TabItem Header="RX">
-                            <DataGrid x:Name="RxChannelsGrid"
+                        <TabItem x:Name="TxChannelsTab" Header="TX">
+                            <DataGrid x:Name="TxChannelsGrid"
                                       AutoGenerateColumns="False"
                                       CanUserAddRows="False"
                                       CanUserDeleteRows="False"

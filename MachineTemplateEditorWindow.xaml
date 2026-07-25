@@ -112,36 +112,6 @@
                                Foreground="{DynamicResource DialogMutedBrush}"
                                TextWrapping="Wrap" />
                     <TabControl Height="480">
-                        <TabItem x:Name="TxTabItem" Header="TX">
-                            <Grid Margin="8">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <DataGrid x:Name="TxLabelsGrid"
-                                          AutoGenerateColumns="False"
-                                          CanUserAddRows="False"
-                                          CanUserDeleteRows="False">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="#"
-                                                            Binding="{Binding Number}"
-                                                            IsReadOnly="True"
-                                                            Width="54" />
-                                        <DataGridTextColumn x:Name="TxLabelColumn"
-                                                            Header="Label TX"
-                                                            Binding="{Binding Label, UpdateSourceTrigger=PropertyChanged}"
-                                                            Width="*" />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <Button x:Name="GenerateTxButton"
-                                        Grid.Row="1"
-                                        Content="Générer TX 1, TX 2..."
-                                        Style="{StaticResource DialogSecondaryButtonStyle}"
-                                        HorizontalAlignment="Left"
-                                        Margin="0,8,0,0"
-                                        Click="GenerateTxButton_Click" />
-                            </Grid>
-                        </TabItem>
                         <TabItem x:Name="RxTabItem" Header="RX">
                             <Grid Margin="8">
                                 <Grid.RowDefinitions>
@@ -170,6 +140,36 @@
                                         HorizontalAlignment="Left"
                                         Margin="0,8,0,0"
                                         Click="GenerateRxButton_Click" />
+                            </Grid>
+                        </TabItem>
+                        <TabItem x:Name="TxTabItem" Header="TX">
+                            <Grid Margin="8">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <DataGrid x:Name="TxLabelsGrid"
+                                          AutoGenerateColumns="False"
+                                          CanUserAddRows="False"
+                                          CanUserDeleteRows="False">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="#"
+                                                            Binding="{Binding Number}"
+                                                            IsReadOnly="True"
+                                                            Width="54" />
+                                        <DataGridTextColumn x:Name="TxLabelColumn"
+                                                            Header="Label TX"
+                                                            Binding="{Binding Label, UpdateSourceTrigger=PropertyChanged}"
+                                                            Width="*" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <Button x:Name="GenerateTxButton"
+                                        Grid.Row="1"
+                                        Content="Générer TX 1, TX 2..."
+                                        Style="{StaticResource DialogSecondaryButtonStyle}"
+                                        HorizontalAlignment="Left"
+                                        Margin="0,8,0,0"
+                                        Click="GenerateTxButton_Click" />
                             </Grid>
                         </TabItem>
                     </TabControl>

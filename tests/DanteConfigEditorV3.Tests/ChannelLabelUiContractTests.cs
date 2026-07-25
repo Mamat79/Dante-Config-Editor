@@ -132,11 +132,18 @@ public sealed class ChannelLabelUiContractTests
         Assert.Contains("OpenSynopticPreviewWindowButton", macXaml, StringComparison.Ordinal);
         Assert.Contains("new SynopticPreviewWindow", windowsCode, StringComparison.Ordinal);
         Assert.Contains("new SynopticPreviewWindow", macCode, StringComparison.Ordinal);
-        Assert.Contains("VisualBrush", Read("SynopticPreviewWindow.xaml.cs"), StringComparison.Ordinal);
+        string windowsPreview = Read("SynopticPreviewWindow.xaml.cs");
+        string macPreview = Read("src", "DanteConfigEditor.Mac", "SynopticPreviewWindow.axaml.cs");
+        Assert.Contains("VisualBrush", windowsPreview, StringComparison.Ordinal);
+        Assert.Contains("Stretch = Stretch.Uniform", windowsPreview, StringComparison.Ordinal);
+        Assert.Contains("ViewboxUnits = BrushMappingMode.Absolute", windowsPreview, StringComparison.Ordinal);
+        Assert.DoesNotContain("Stretch = Stretch.Fill", windowsPreview, StringComparison.Ordinal);
         Assert.Contains(
             "VisualBrush",
-            Read("src", "DanteConfigEditor.Mac", "SynopticPreviewWindow.axaml.cs"),
+            macPreview,
             StringComparison.Ordinal);
+        Assert.Contains("Stretch = Stretch.Uniform", macPreview, StringComparison.Ordinal);
+        Assert.DoesNotContain("Stretch = Stretch.Fill", macPreview, StringComparison.Ordinal);
     }
 
     private static string Read(params string[] parts)

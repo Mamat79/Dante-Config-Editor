@@ -65,26 +65,6 @@
             <Grid Grid.Row="1" ColumnDefinitions="1.15*,1.15*,1*" ColumnSpacing="12">
                 <Border Classes="panel">
                     <Grid RowDefinitions="Auto,*,Auto" RowSpacing="8">
-                        <TextBlock x:Name="TxHeading" FontWeight="SemiBold" />
-                        <DataGrid x:Name="TxLabelsGrid"
-                                  Grid.Row="1"
-                                  AutoGenerateColumns="False"
-                                  CanUserResizeColumns="True"
-                                  IsReadOnly="False">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="#" Binding="{Binding Number}" IsReadOnly="True" Width="58" />
-                                <DataGridTextColumn Binding="{Binding Label, Mode=TwoWay}" Width="*" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                        <Button x:Name="GenerateTxButton"
-                                Grid.Row="2"
-                                HorizontalAlignment="Left"
-                                Click="GenerateTxButton_Click" />
-                    </Grid>
-                </Border>
-
-                <Border Grid.Column="1" Classes="panel">
-                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="8">
                         <TextBlock x:Name="RxHeading" FontWeight="SemiBold" />
                         <DataGrid x:Name="RxLabelsGrid"
                                   Grid.Row="1"
@@ -100,6 +80,26 @@
                                 Grid.Row="2"
                                 HorizontalAlignment="Left"
                                 Click="GenerateRxButton_Click" />
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="1" Classes="panel">
+                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="8">
+                        <TextBlock x:Name="TxHeading" FontWeight="SemiBold" />
+                        <DataGrid x:Name="TxLabelsGrid"
+                                  Grid.Row="1"
+                                  AutoGenerateColumns="False"
+                                  CanUserResizeColumns="True"
+                                  IsReadOnly="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="#" Binding="{Binding Number}" IsReadOnly="True" Width="58" />
+                                <DataGridTextColumn Binding="{Binding Label, Mode=TwoWay}" Width="*" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Button x:Name="GenerateTxButton"
+                                Grid.Row="2"
+                                HorizontalAlignment="Left"
+                                Click="GenerateTxButton_Click" />
                     </Grid>
                 </Border>
 
