@@ -9,13 +9,6 @@
     <SolidColorBrush x:Key="DialogInputBrush" Color="#FFFFFF" />
     <SolidColorBrush x:Key="DialogInputTextBrush" Color="#111827" />
 
-    <Style TargetType="{x:Type Window}">
-        <Setter Property="Background" Value="{DynamicResource DialogWindowBrush}" />
-        <Setter Property="Foreground" Value="{DynamicResource DialogTextBrush}" />
-        <Setter Property="FontFamily" Value="Segoe UI" />
-        <Setter Property="FontSize" Value="13" />
-    </Style>
-
     <Style TargetType="{x:Type Label}">
         <Setter Property="Foreground" Value="{DynamicResource DialogTextBrush}" />
         <Setter Property="Padding" Value="0,0,0,4" />
@@ -31,7 +24,9 @@
         <Setter Property="BorderThickness" Value="0" />
     </Style>
 
-    <Style x:Key="DialogSecondaryButtonStyle" TargetType="{x:Type Button}">
+    <Style x:Key="DialogSecondaryButtonStyle"
+           TargetType="{x:Type Button}"
+           BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="Background" Value="{DynamicResource DialogSurfaceBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource DialogTextBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource DialogBorderBrush}" />
@@ -81,9 +76,52 @@
         <Setter Property="Padding" Value="7,5" />
     </Style>
 
+    <Style TargetType="{x:Type DataGridRow}">
+        <Setter Property="Foreground" Value="{DynamicResource DialogInputTextBrush}" />
+    </Style>
+
+    <Style TargetType="{x:Type DataGridCell}">
+        <Setter Property="Foreground" Value="{DynamicResource DialogInputTextBrush}" />
+    </Style>
+
     <Style TargetType="{x:Type ListBox}">
         <Setter Property="Background" Value="{DynamicResource DialogInputBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource DialogInputTextBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource DialogBorderBrush}" />
+    </Style>
+
+    <Style TargetType="{x:Type ListBoxItem}">
+        <Setter Property="Foreground" Value="{DynamicResource DialogInputTextBrush}" />
+    </Style>
+
+    <Style TargetType="{x:Type TabControl}">
+        <Setter Property="Background" Value="{DynamicResource DialogSurfaceBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource DialogTextBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DialogBorderBrush}" />
+    </Style>
+
+    <Style TargetType="{x:Type TabItem}">
+        <Setter Property="Background" Value="{DynamicResource DialogSurfaceBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource DialogTextBrush}" />
+        <Setter Property="Padding" Value="10,5" />
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{DynamicResource DialogAccentBrush}" />
+                <Setter Property="Foreground" Value="White" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type Separator}">
+        <Setter Property="Background" Value="{DynamicResource DialogBorderBrush}" />
+    </Style>
+
+    <Style TargetType="{x:Type ToolTip}">
+        <Setter Property="Background" Value="{DynamicResource DialogSurfaceBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource DialogTextBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DialogBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="9,6" />
+        <Setter Property="MaxWidth" Value="380" />
     </Style>
 </ResourceDictionary>

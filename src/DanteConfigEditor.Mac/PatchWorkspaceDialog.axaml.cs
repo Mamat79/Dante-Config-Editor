@@ -24,6 +24,7 @@ public sealed partial class PatchWorkspaceDialog : Window
     private UiLanguage _language = UiLanguage.French;
     private DanteProject _project = null!;
     private PatchWorkspaceSession _session = null!;
+    private Func<IReadOnlyList<PatchEditRequest>, Task>? _immediateApply;
     private readonly HashSet<string> _ambiguousSourceNames = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<MatrixCellKey, PatchMatrixCell> _matrixCells = [];
     private readonly Dictionary<int, TextBlock> _matrixRxHeaders = [];
@@ -52,14 +53,17 @@ public sealed partial class PatchWorkspaceDialog : Window
         UiLanguage language,
         DanteProject project,
         string? initialTxDeviceName = null,
-        string? initialRxDeviceName = null)
+        string? initialRxDeviceName = null,
+        Func<IReadOnlyList<PatchEditRequest>, Task>? immediateApply = null)
         : this()
     {
         _language = language;
         _project = project ?? throw new ArgumentNullException(nameof(project));
         _session = new PatchWorkspaceSession(project.PatchMatrix.Subscriptions);
+        _immediateApply = immediateApply;
 
         FindControl<ListBox>("TxChannelList")!.SelectionChanged += TxChannelList_SelectionChanged;
+        ConfigureWorkflowPresentation();
         ApplyLanguage();
         PopulateDeviceSelectors(initialTxDeviceName, initialRxDeviceName);
         _initializing = false;
@@ -69,11 +73,27 @@ public sealed partial class PatchWorkspaceDialog : Window
 
     public IReadOnlyList<PatchEditRequest> Edits => _session.Edits;
 
+    public bool WarnOnExistingPatch =>
+        FindControl<CheckBox>("WarnOnExistingPatchCheckBox")!.IsChecked != false;
+
     private T? FindControl<T>(string name) where T : Control => ControlExtensions.FindControl<T>(this, name);
 
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
+    }
+
+    private void ConfigureWorkflowPresentation()
+    {
+        if (_immediateApply is null)
+        {
+            return;
+        }
+
+        FindControl<TextBlock>("PendingHeaderText")!.IsVisible = false;
+        FindControl<TextBlock>("PendingFooterText")!.IsVisible = false;
+        FindControl<Button>("ResetPendingButton")!.IsVisible = false;
+        FindControl<Button>("ApplyButton")!.IsVisible = false;
     }
 
     private void PopulateDeviceSelectors(string? initialTxDeviceName, string? initialRxDeviceName)
@@ -520,11 +540,23 @@ public sealed partial class PatchWorkspaceDialog : Window
         await AssignSourcesAsync(sources, targetRow.Target);
     }
 
-    private void RemoveSelectedRxButton_Click(object? sender, RoutedEventArgs e)
+    private async void RemoveSelectedRxButton_Click(object? sender, RoutedEventArgs e)
     {
         if (FindControl<ListBox>("RxChannelList")!.SelectedItem is not PatchRxListItem targetRow)
         {
             SetInfo(L("Sélectionnez un canal RX à déconnecter.", "Select an Rx channel to disconnect."), warning: true);
+            return;
+        }
+
+        if (_immediateApply is not null)
+        {
+            if (!_session.GetCommittedAssignment(targetRow.Target).IsActive)
+            {
+                SetInfo(L("Ce canal RX est déjà libre.", "This Rx channel is already free."));
+                return;
+            }
+
+            await ApplyImmediateEditsAsync([PatchEditRequest.Remove(targetRow.Target)]);
             return;
         }
 
@@ -618,6 +650,11 @@ public sealed partial class PatchWorkspaceDialog : Window
             return false;
         }
 
+        if (_immediateApply is not null)
+        {
+            return await ApplyPlanImmediatelyAsync(plan);
+        }
+
         PatchBatchPreview preview = _session.BuildPreview(plan.Assignments);
         PatchConflictResolution resolution;
         if (preview.HasConflicts)
@@ -673,6 +710,51 @@ public sealed partial class PatchWorkspaceDialog : Window
         return true;
     }
 
+    private async Task<bool> ApplyPlanImmediatelyAsync(PatchAssignmentPlan plan)
+    {
+        PatchBatchPreview preview = _session.BuildCommittedPreview(plan.Assignments);
+        PatchConflictResolution resolution = preview.HasConflicts && WarnOnExistingPatch
+            ? await ChooseConflictResolutionAsync(preview)
+            : PatchConflictResolution.Replace;
+        if (resolution == PatchConflictResolution.Cancel)
+        {
+            SetInfo(L("Patch annulé.", "Patch cancelled."), warning: true);
+            return false;
+        }
+
+        PatchEditRequest[] edits = preview.Items
+            .Where(item => item.Action != PatchPreviewAction.Unchanged)
+            .Where(item => item.Action != PatchPreviewAction.Replace
+                || resolution == PatchConflictResolution.Replace)
+            .Select(item => PatchEditRequest.Apply(item.Assignment))
+            .ToArray();
+        if (edits.Length == 0)
+        {
+            SetInfo(
+                resolution == PatchConflictResolution.Skip
+                    ? L("Aucun patch appliqué : les RX déjà utilisés ont été ignorés.", "No patch applied: assigned Rx channels were skipped.")
+                    : L("Le patch demandé est déjà en place.", "The requested patch is already active."),
+                warning: resolution == PatchConflictResolution.Skip);
+            return false;
+        }
+
+        await ApplyImmediateEditsAsync(edits);
+        return true;
+    }
+
+    private async Task ApplyImmediateEditsAsync(IReadOnlyList<PatchEditRequest> edits)
+    {
+        if (_immediateApply is null || edits.Count == 0)
+        {
+            return;
+        }
+
+        await _immediateApply(edits);
+        _session = new PatchWorkspaceSession(_project.PatchMatrix.Subscriptions);
+        RefreshSourceChannels();
+        RefreshTargetRows();
+    }
+
     private async Task<PatchConflictResolution> ChooseConflictResolutionAsync(PatchBatchPreview preview)
     {
         MessageDialogChoice choice = await MessageDialog.ShowChoiceAsync(
@@ -682,11 +764,15 @@ public sealed partial class PatchWorkspaceDialog : Window
                 $"{preview.ReplaceCount} RX possède(nt) déjà une source.\n\n" +
                 "Remplacer = remplacer ces abonnements.\n" +
                 "Ignorer = conserver les abonnements existants.\n" +
-                "Annuler = ne rien ajouter au lot.",
+                (_immediateApply is null
+                    ? "Annuler = ne rien ajouter au lot."
+                    : "Annuler = ne rien modifier."),
                 $"{preview.ReplaceCount} Rx channel(s) already have a source.\n\n" +
                 "Replace = replace those subscriptions.\n" +
                 "Skip = preserve the existing subscriptions.\n" +
-                "Cancel = add nothing to the batch."),
+                (_immediateApply is null
+                    ? "Cancel = add nothing to the batch."
+                    : "Cancel = change nothing.")),
             L("Remplacer", "Replace"),
             L("Ignorer", "Skip"),
             L("Annuler", "Cancel"));
@@ -727,6 +813,12 @@ public sealed partial class PatchWorkspaceDialog : Window
 
         if (cell.IsAssigned)
         {
+            if (_immediateApply is not null)
+            {
+                await ApplyImmediateEditsAsync([PatchEditRequest.Remove(cell.Target)]);
+                return;
+            }
+
             _session.Remove(cell.Target);
             SetInfo(L("Déconnexion préparée.", "Disconnection staged."));
         }
@@ -1056,18 +1148,26 @@ public sealed partial class PatchWorkspaceDialog : Window
             ? L(
                 "RX en lignes, TX en colonnes. Affichage limité aux 128 premiers canaux de chaque côté.",
                 "Rx channels are rows and Tx channels are columns. Display is limited to the first 128 channels on each side.")
-            : L(
-                "RX en lignes, TX en colonnes. Cliquez dans une case pour affecter ou retirer un patch.",
-                "Rx channels are rows and Tx channels are columns. Click a cell to assign or remove a subscription.");
+            : _immediateApply is not null
+                ? L(
+                    "RX en lignes, TX en colonnes. Un clic applique ou retire immédiatement le patch.",
+                    "Rx channels are rows and Tx channels are columns. A click immediately assigns or removes the subscription.")
+                : L(
+                    "RX en lignes, TX en colonnes. Cliquez dans une case pour préparer ou retirer un patch.",
+                    "Rx channels are rows and Tx channels are columns. Click a cell to stage or remove a subscription.");
     }
 
     private void ApplyLanguage()
     {
         Title = L("Patch visuel", "Visual patch");
         FindControl<TextBlock>("TitleText")!.Text = Title;
-        FindControl<TextBlock>("IntroText")!.Text = L(
-            "Préparez les affectations puis appliquez-les en une seule opération.",
-            "Stage assignments, then apply them in a single operation.");
+        FindControl<TextBlock>("IntroText")!.Text = _immediateApply is not null
+            ? L(
+                "Chaque clic, sélection, glisser-déposer ou plage modifie immédiatement le patch.",
+                "Every click, selection, drag-and-drop or range immediately updates the patch.")
+            : L(
+                "Préparez les affectations puis appliquez-les en une seule opération.",
+                "Stage assignments, then apply them in a single operation.");
         FindControl<TextBlock>("TxDeviceLabel")!.Text = L("Machine émettrice TX", "Tx transmitting device");
         FindControl<TextBlock>("RxDeviceLabel")!.Text = L("Machine réceptrice RX", "Rx receiving device");
         FindControl<TabItem>("AssignmentTab")!.Header = L("Sélection et Patch 1:1", "Selection and one-to-one patch");
@@ -1083,13 +1183,24 @@ public sealed partial class PatchWorkspaceDialog : Window
         FindControl<TextBlock>("OneToOneFirstRxLabel")!.Text = L("Premier RX", "First Rx");
         FindControl<TextBlock>("OneToOneFirstTxLabel")!.Text = L("Premier TX", "First Tx");
         FindControl<TextBlock>("OneToOneCountLabel")!.Text = L("Nombre", "Count");
-        FindControl<Button>("PreviewOneToOneButton")!.Content = L(
-            "Prévisualiser et ajouter au lot",
-            "Preview and add to batch");
+        FindControl<Button>("PreviewOneToOneButton")!.Content = _immediateApply is not null
+            ? L("Appliquer", "Apply now")
+            : L("Prévisualiser et ajouter au lot", "Preview and add to batch");
         FindControl<Button>("MatrixZoomFitButton")!.Content = L("Ajuster", "Fit");
         FindControl<Button>("ResetPendingButton")!.Content = L("Annuler les changements visuels", "Discard visual changes");
-        FindControl<Button>("CancelButton")!.Content = L("Fermer sans appliquer", "Close without applying");
+        FindControl<Button>("CancelButton")!.Content = _immediateApply is not null
+            ? L("Fermer", "Close")
+            : L("Fermer sans appliquer", "Close without applying");
         FindControl<Button>("ApplyButton")!.Content = L("Appliquer au projet", "Apply to project");
+        CheckBox warnCheckBox = FindControl<CheckBox>("WarnOnExistingPatchCheckBox")!;
+        warnCheckBox.Content = L(
+            "M'avertir si le RX est déjà patché",
+            "Warn me when the Rx channel is already patched");
+        string warnHelp = L(
+            "Coché par défaut : demande confirmation avant de remplacer la source actuelle d'un RX. Décochez pour remplacer sans message.",
+            "Checked by default: asks for confirmation before replacing an Rx channel's current source. Clear it to replace without a prompt.");
+        ToolTip.SetTip(warnCheckBox, warnHelp);
+        AutomationProperties.SetName(warnCheckBox, warnCheckBox.Content?.ToString() ?? string.Empty);
 
         AutomationProperties.SetName(FindControl<ComboBox>("TxDeviceCombo")!, FindControl<TextBlock>("TxDeviceLabel")!.Text);
         AutomationProperties.SetName(FindControl<ComboBox>("RxDeviceCombo")!, FindControl<TextBlock>("RxDeviceLabel")!.Text);
@@ -1098,6 +1209,17 @@ public sealed partial class PatchWorkspaceDialog : Window
             "Swap the Tx and Rx devices without creating reverse subscriptions");
         ToolTip.SetTip(FindControl<Button>("SwapDeviceSelectionButton")!, swapName);
         AutomationProperties.SetName(FindControl<Button>("SwapDeviceSelectionButton")!, swapName);
+        ToolTip.SetTip(
+            FindControl<Button>("AssignSequentialButton")!,
+            L("Applique les TX sélectionnés à partir du RX choisi.", "Applies the selected Tx channels starting at the chosen Rx channel."));
+        ToolTip.SetTip(
+            FindControl<Button>("RemoveSelectedRxButton")!,
+            L("Déconnecte le RX sélectionné.", "Disconnects the selected Rx channel."));
+        ToolTip.SetTip(
+            FindControl<Button>("PreviewOneToOneButton")!,
+            _immediateApply is not null
+                ? L("Applique immédiatement cette plage de patchs 1:1.", "Immediately applies this one-to-one patch range.")
+                : L("Ajoute cette plage au lot.", "Adds this range to the batch."));
         AutomationProperties.SetName(FindControl<ListBox>("TxChannelList")!, FindControl<TextBlock>("TxListHeading")!.Text);
         AutomationProperties.SetName(FindControl<ListBox>("RxChannelList")!, FindControl<TextBlock>("RxListHeading")!.Text);
         AutomationProperties.SetName(FindControl<Grid>("MatrixPanel")!, FindControl<TabItem>("MatrixTab")!.Header?.ToString() ?? string.Empty);
@@ -1127,8 +1249,12 @@ public sealed partial class PatchWorkspaceDialog : Window
         bool isPending)
     {
         string action = isAssigned
-            ? L("Cliquer pour déconnecter", "Click to disconnect")
-            : L("Cliquer pour affecter", "Click to assign");
+            ? _immediateApply is not null
+                ? L("Cliquer pour déconnecter immédiatement", "Click to disconnect immediately")
+                : L("Cliquer pour préparer la déconnexion", "Click to stage the disconnection")
+            : _immediateApply is not null
+                ? L("Cliquer pour affecter immédiatement", "Click to assign immediately")
+                : L("Cliquer pour préparer l'affectation", "Click to stage the assignment");
         string pending = isPending ? L(" - changement en attente", " - pending change") : string.Empty;
         return $"{target.FullDisplay} <- {source.FullDisplay}\n{action}{pending}";
     }

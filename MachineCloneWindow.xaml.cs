@@ -66,6 +66,35 @@ public partial class MachineCloneWindow : Window
             "Hardware identity is never copied. The new device will be a generic offline role.");
         DuplicateButton.Content = L("Dupliquer", "Duplicate");
         CancelButton.Content = L("Annuler", "Cancel");
+
+        NewNameTextBox.ToolTip = L(
+            "Nom de la copie dans ce projet. Le nom de la machine source reste inchangé.",
+            "Name of the copy in this project. The source device name remains unchanged.");
+        PreserveTxLabelsCheckBox.ToolTip = L(
+            "Recopie les noms actuels des canaux TX dans la nouvelle machine.",
+            "Copies the current Tx channel names to the new device.");
+        PreserveRxLabelsCheckBox.ToolTip = L(
+            "Recopie les noms actuels des canaux RX dans la nouvelle machine.",
+            "Copies the current Rx channel names to the new device.");
+        PreserveSettingsCheckBox.ToolTip = L(
+            "Recopie uniquement les réglages audio génériques : fréquence, encodage et latence.",
+            "Copies only generic audio settings: sample rate, encoding and latency.");
+        PreservePreferredMasterCheckBox.ToolTip = L(
+            "Conserve le statut Preferred Master. À utiliser seulement si ce choix reste cohérent dans le projet.",
+            "Keeps Preferred Master status. Use only when this remains consistent in the project.");
+        PreserveNetworkCheckBox.ToolTip = L(
+            "Option avancée : recopie les interfaces et adresses. La validation bloque les doublons détectés.",
+            "Advanced option: copies interfaces and addresses. Validation blocks detected duplicates.");
+        PreserveSubscriptionsCheckBox.ToolTip = L(
+            "Option avancée : recopie les sources affectées aux RX de la machine.",
+            "Advanced option: copies sources assigned to this device's Rx channels.");
+        PreserveFlowsCheckBox.ToolTip = L(
+            "Option avancée : recopie les définitions de flows multicast TX.",
+            "Advanced option: copies Tx multicast flow definitions.");
+        DuplicateButton.ToolTip = L(
+            "Crée la nouvelle machine sans modifier la machine source.",
+            "Creates the new device without changing the source device.");
+        CancelButton.ToolTip = L("Ferme sans dupliquer.", "Closes without duplicating.");
     }
 
     private void DuplicateButton_Click(object sender, RoutedEventArgs e)

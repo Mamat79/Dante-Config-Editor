@@ -36,7 +36,11 @@
                 <TextBlock x:Name="TitleText" Text="Patch visuel" FontSize="21" FontWeight="Bold" />
                 <TextBlock x:Name="IntroText"
                            Classes="muted"
-                           Text="Préparez les affectations puis appliquez-les en une seule opération." />
+                           Text="Chaque action modifie immédiatement le patch." />
+                <CheckBox x:Name="WarnOnExistingPatchCheckBox"
+                          IsChecked="True"
+                          Content="M'avertir si le RX est déjà patché"
+                          ToolTip.Tip="Coché : demande confirmation avant de remplacer la source actuelle d'un RX." />
             </StackPanel>
             <TextBlock x:Name="PendingHeaderText"
                        Grid.Column="1"
@@ -160,7 +164,7 @@
                                 Classes="primary"
                                 HorizontalAlignment="Stretch"
                                 Click="PreviewOneToOneButton_Click">
-                            Prévisualiser et ajouter au lot
+                            Appliquer
                         </Button>
                     </StackPanel>
 

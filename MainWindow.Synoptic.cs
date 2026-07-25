@@ -23,6 +23,7 @@ public partial class MainWindow
     private Border? _draggedSynopticCard;
     private string? _draggedSynopticIdentity;
     private Point _synopticDragOffset;
+    private SynopticPreviewWindow? _synopticPreviewWindow;
 
     private void RefreshSynopticWorkspace(bool persistCurrentRows = true)
     {
@@ -679,6 +680,32 @@ public partial class MainWindow
         SynopticScrollViewer.ScrollToHome();
     }
 
+    private void OpenSynopticPreviewWindowButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_project is null || _synopticLayout is null)
+        {
+            return;
+        }
+
+        RenderSynopticPreview();
+        if (_synopticPreviewWindow?.IsVisible == true)
+        {
+            _synopticPreviewWindow.Activate();
+            return;
+        }
+
+        _synopticPreviewWindow = new SynopticPreviewWindow(
+            SynopticCanvas,
+            SynopticCanvas.Width,
+            SynopticCanvas.Height,
+            _language)
+        {
+            Owner = this
+        };
+        _synopticPreviewWindow.Closed += (_, _) => _synopticPreviewWindow = null;
+        _synopticPreviewWindow.Show();
+    }
+
     private void SynopticDeviceGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
     {
         Dispatcher.BeginInvoke(() => SaveAndRefreshSynoptic());
@@ -781,6 +808,7 @@ public partial class MainWindow
         RefreshSynopticButton.IsEnabled = enabled;
         ExportSynopticButton.IsEnabled = enabled;
         ExportSynopticPdfButton.IsEnabled = enabled;
+        OpenSynopticPreviewWindowButton.IsEnabled = enabled;
     }
 
     private static string FriendlyLine(SynopticDeviceNode node)

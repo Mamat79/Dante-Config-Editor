@@ -1,0 +1,91 @@
+<Window x:Class="DanteConfigEditor.SynopticPreviewWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Aperçu du synoptique"
+        Width="1280"
+        Height="820"
+        MinWidth="760"
+        MinHeight="520"
+        WindowStartupLocation="CenterOwner"
+        Background="#10141F"
+        Foreground="#F6F8FB"
+        ToolTipService.InitialShowDelay="500"
+        ToolTipService.ShowDuration="12000"
+        Loaded="Window_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Background="#171D2B"
+                BorderBrush="#334057"
+                BorderThickness="0,0,0,1"
+                Padding="12,8">
+            <DockPanel LastChildFill="True">
+                <Button x:Name="CloseButton"
+                        DockPanel.Dock="Right"
+                        Content="Fermer"
+                        Padding="12,6"
+                        Margin="8,0,0,0"
+                        Click="CloseButton_Click" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock x:Name="ZoomLabel"
+                               Text="Zoom"
+                               VerticalAlignment="Center"
+                               Margin="0,0,8,0" />
+                    <Button x:Name="ZoomOutButton"
+                            Content="−"
+                            Width="34"
+                            Padding="0"
+                            ToolTip="Réduire le zoom"
+                            Click="ZoomOutButton_Click" />
+                    <Slider x:Name="ZoomSlider"
+                            Width="190"
+                            Minimum="0.1"
+                            Maximum="3"
+                            Value="1"
+                            TickFrequency="0.1"
+                            Margin="8,0"
+                            ValueChanged="ZoomSlider_ValueChanged" />
+                    <Button x:Name="ZoomInButton"
+                            Content="+"
+                            Width="34"
+                            Padding="0"
+                            ToolTip="Augmenter le zoom"
+                            Click="ZoomInButton_Click" />
+                    <TextBlock x:Name="ZoomText"
+                               Text="100 %"
+                               Width="64"
+                               VerticalAlignment="Center"
+                               TextAlignment="Center" />
+                    <Button x:Name="ActualSizeButton"
+                            Content="100 %"
+                            Padding="10,6"
+                            Margin="6,0,0,0"
+                            ToolTip="Revenir à la taille réelle"
+                            Click="ActualSizeButton_Click" />
+                    <Button x:Name="FitButton"
+                            Content="Ajuster"
+                            Padding="10,6"
+                            Margin="6,0,0,0"
+                            ToolTip="Afficher tout le synoptique"
+                            Click="FitButton_Click" />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <ScrollViewer x:Name="PreviewScrollViewer"
+                      Grid.Row="1"
+                      Background="#DCE3EC"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto"
+                      PreviewMouseWheel="PreviewScrollViewer_PreviewMouseWheel">
+            <Border Background="#F7F9FC" Margin="20">
+                <Rectangle x:Name="PreviewSurface"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top" />
+            </Border>
+        </ScrollViewer>
+    </Grid>
+</Window>

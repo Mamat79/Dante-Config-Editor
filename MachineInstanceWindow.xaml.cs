@@ -62,6 +62,26 @@ public partial class MachineInstanceWindow : Window
             ? L("Continuer", "Continue")
             : L("Ajouter au projet", "Add to project");
         CancelButton.Content = L("Annuler", "Cancel");
+
+        NameTextBox.ToolTip = L(
+            "Nom unique de la machine qui sera créée dans le projet.",
+            "Unique name of the device that will be created in the project.");
+        UseTxLabelsCheckBox.ToolTip = L(
+            "Coché : conserve les labels TX du modèle. Décoché : génère des labels numérotés avec le préfixe saisi.",
+            "Checked: keeps the template Tx labels. Cleared: generates numbered labels with the entered prefix.");
+        UseRxLabelsCheckBox.ToolTip = L(
+            "Coché : conserve les labels RX du modèle. Décoché : génère des labels numérotés avec le préfixe saisi.",
+            "Checked: keeps the template Rx labels. Cleared: generates numbered labels with the entered prefix.");
+        TxPrefixTextBox.ToolTip = L(
+            "Préfixe utilisé pour générer TX 1, TX 2, etc.",
+            "Prefix used to generate TX 1, TX 2, and so on.");
+        RxPrefixTextBox.ToolTip = L(
+            "Préfixe utilisé pour générer RX 1, RX 2, etc.",
+            "Prefix used to generate RX 1, RX 2, and so on.");
+        ConfirmButton.ToolTip = createProjectMode
+            ? L("Valide cette première machine et poursuit la création du projet.", "Confirms this first device and continues project creation.")
+            : L("Ajoute une instance indépendante du modèle au projet ouvert.", "Adds an independent instance of the template to the open project.");
+        CancelButton.ToolTip = L("Ferme sans ajouter de machine.", "Closes without adding a device.");
     }
 
     private void LabelModeChanged(object sender, RoutedEventArgs e)

@@ -2057,9 +2057,8 @@ public partial class MainWindow : Window
         bool sameProject = ReferenceEquals(_easyPatchProject, _project);
         bool startInAssignmentMode = sameProject
             && _easyPatchWorkspace?.IsAssignmentModeSelected == true;
-        PatchEditRequest[] pendingEdits = sameProject
-            ? _easyPatchWorkspace?.Edits.ToArray() ?? []
-            : [];
+        bool warnOnExistingPatch = !sameProject
+            || _easyPatchWorkspace?.WarnOnExistingPatch != false;
         string? initialTxDevice = sameProject
             ? _easyPatchWorkspace?.SelectedTxDeviceName
             : SourceDeviceComboBox.SelectedItem as string;
@@ -2082,12 +2081,13 @@ public partial class MainWindow : Window
                 ThemeToggleButton.IsChecked == true,
                 initialTxDevice,
                 initialRxDevice,
-                pendingEdits,
+                initialEdits: null,
                 embedded: true,
                 renameChannelAction: RenameEasyPatchChannel,
                 extendChannelSeriesAction: ExtendEasyPatchChannelSeries,
-                startInAssignmentMode: startInAssignmentMode);
-            workspace.ApplyRequested += EasyPatchWorkspace_ApplyRequested;
+                startInAssignmentMode: startInAssignmentMode,
+                warnOnExistingPatch: warnOnExistingPatch);
+            workspace.DirectApplyRequested += EasyPatchWorkspace_DirectApplyRequested;
             workspace.InlineChannelNavigationRequested += EasyPatchWorkspace_InlineChannelNavigationRequested;
             _easyPatchProject = _project;
             _easyPatchWorkspace = workspace;
@@ -2108,22 +2108,18 @@ public partial class MainWindow : Window
             _easyPatchWorkspace?.FocusChannelEditor(e.Kind, e.DanteId, e.Matrix)));
     }
 
-    private void EasyPatchWorkspace_ApplyRequested(object? sender, EventArgs e)
+    private void EasyPatchWorkspace_DirectApplyRequested(
+        object? sender,
+        DirectPatchRequestEventArgs e)
     {
-        if (sender is not PatchWorkspaceView workspace || workspace.Edits.Count == 0)
+        if (sender is not PatchWorkspaceView workspace || e.Edits.Count == 0)
         {
             return;
         }
 
-        PatchEditRequest[] edits = workspace.Edits.ToArray();
-        bool applied = RunProjectAction(
-            Tf("Action.VisualPatchesApplied", edits.Length),
-            () => ApplyPatchEdits(edits));
-        if (applied)
-        {
-            _easyPatchWorkspace?.ResetPendingChanges();
-            RefreshEasyPatchWorkspace();
-        }
+        RunProjectAction(
+            Tf("Action.VisualPatchesApplied", e.Edits.Count),
+            () => ApplyPatchEdits(e.Edits));
     }
 
     private void ApplyPatchEdits(IEnumerable<PatchEditRequest> edits)

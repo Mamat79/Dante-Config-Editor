@@ -83,6 +83,52 @@ public partial class MachineBankWindow : Window
             : L(
                 "Ouvrez un projet et activez l'édition pour ajouter une machine.",
                 "Open a project and enable editing to add a device.");
+        ChangeBankButton.ToolTip = L(
+            "Choisir un autre dossier de banque, local, partagé ou synchronisé.",
+            "Choose another local, shared or synchronized bank folder.");
+        OpenBankFolderButton.ToolTip = L(
+            "Ouvre le dossier actuellement utilisé pour stocker la banque.",
+            "Opens the folder currently used to store the bank.");
+        SearchTextBox.ToolTip = L(
+            "Recherche dans le nom, le fabricant, le modèle, la catégorie, la description et les mots-clés.",
+            "Searches names, manufacturers, models, categories, descriptions and keywords.");
+        ManufacturerFilterComboBox.ToolTip = L(
+            "Limite la liste à un fabricant.",
+            "Limits the list to one manufacturer.");
+        CategoryFilterComboBox.ToolTip = L(
+            "Limite la liste à une catégorie.",
+            "Limits the list to one category.");
+        MinimumTxTextBox.ToolTip = L(
+            "Nombre minimal de canaux TX que doit contenir le modèle.",
+            "Minimum number of Tx channels required in the template.");
+        MinimumRxTextBox.ToolTip = L(
+            "Nombre minimal de canaux RX que doit contenir le modèle.",
+            "Minimum number of Rx channels required in the template.");
+        TemplatesGrid.ToolTip = L(
+            "Sélectionnez un modèle pour afficher son image, ses informations et un aperçu de ses labels.",
+            "Select a template to display its image, details and a label preview.");
+        EditTemplateButton.ToolTip = L(
+            "Modifie les informations et labels du modèle sélectionné.",
+            "Edits the selected template's details and labels.");
+        DuplicateTemplateButton.ToolTip = L(
+            "Crée une nouvelle fiche de banque indépendante à partir du modèle sélectionné.",
+            "Creates an independent bank entry from the selected template.");
+        DeleteTemplateButton.ToolTip = L(
+            "Supprime le modèle sélectionné après confirmation.",
+            "Deletes the selected template after confirmation.");
+        ImportTemplateButton.ToolTip = L(
+            "Importe une archive de modèle DCE dans cette banque.",
+            "Imports a DCE template archive into this bank.");
+        ExportTemplateButton.ToolTip = L(
+            "Exporte le modèle sélectionné dans une archive partageable.",
+            "Exports the selected template to a shareable archive.");
+        BackupBankButton.ToolTip = L(
+            "Crée une sauvegarde complète de la banque.",
+            "Creates a complete backup of the bank.");
+        RestoreBankButton.ToolTip = L(
+            "Restaure une sauvegarde dans un nouveau dossier ou un dossier vide.",
+            "Restores a backup into a new or empty folder.");
+        CloseButton.ToolTip = L("Ferme la banque de machines.", "Closes the device bank.");
     }
 
     private void RefreshBank(Guid? selectTemplateId = null)

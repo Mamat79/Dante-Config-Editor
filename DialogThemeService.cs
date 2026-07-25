@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace DanteConfigEditor.Services;
@@ -14,6 +15,14 @@ public static class DialogThemeService
         SetBrush(window, "DialogMutedBrush", useLightTheme ? "#4B5563" : "#AAB4C5");
         SetBrush(window, "DialogBorderBrush", useLightTheme ? "#CBD5E1" : "#334057");
         SetBrush(window, "DialogAccentBrush", useLightTheme ? "#1D4ED8" : "#2F80ED");
+
+        // Une ressource déclarée dans la fenêtre ne peut pas appliquer son style
+        // implicite à cette même fenêtre. On lie donc explicitement le fond et
+        // le texte aux couleurs calculées pour éviter du blanc sur blanc.
+        window.SetResourceReference(Control.BackgroundProperty, "DialogWindowBrush");
+        window.SetResourceReference(Control.ForegroundProperty, "DialogTextBrush");
+        window.FontFamily = new FontFamily("Segoe UI");
+        window.FontSize = 13;
     }
 
     private static void SetBrush(FrameworkElement element, string key, string color)

@@ -5,7 +5,7 @@ namespace DanteConfigEditorV3.Tests;
 public sealed class PatchWorkspaceUiContractTests
 {
     [Fact]
-    public void WindowsPatchWorkspaceUsesSelectionPreviewAndRangeControls()
+    public void WindowsPatchWorkspaceUsesSelectionRangeAndMatrixControls()
     {
         string xaml = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml"));
         string codeBehind = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml.cs"));
@@ -77,7 +77,8 @@ public sealed class PatchWorkspaceUiContractTests
         Assert.Contains("Header=\"Easy patch\"", xaml, StringComparison.Ordinal);
         Assert.Contains("x:Name=\"EasyPatchHost\"", xaml, StringComparison.Ordinal);
         Assert.Contains("embedded: true", codeBehind, StringComparison.Ordinal);
-        Assert.Contains("EasyPatchWorkspace_ApplyRequested", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("EasyPatchWorkspace_DirectApplyRequested", codeBehind, StringComparison.Ordinal);
+        Assert.DoesNotContain("EasyPatchWorkspace_ApplyRequested", codeBehind, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -121,6 +122,18 @@ public sealed class PatchWorkspaceUiContractTests
         Assert.Contains("ChannelSeriesHandleVisibilityConverter", xaml, StringComparison.Ordinal);
         Assert.Contains("source.CanExtendNameSeries ? Visibility.Visible : Visibility.Collapsed", codeBehind, StringComparison.Ordinal);
         Assert.Contains("e.Canceled", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"WarnOnExistingPatchCheckBox\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("IsChecked=\"True\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("ApplyMatrixCellDirectly", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("ApplyPlanImmediately", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("BuildCommittedPreview", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("DirectApplyRequested", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("WarnOnExistingPatch", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("if (!WarnOnExistingPatch)", codeBehind, StringComparison.Ordinal);
+
+        string mainCode = File.ReadAllText(RepositoryFile("MainWindow.xaml.cs"));
+        Assert.Contains("EasyPatchWorkspace_DirectApplyRequested", mainCode, StringComparison.Ordinal);
+        Assert.DoesNotContain("pendingEdits", mainCode[mainCode.IndexOf("private void RefreshEasyPatchWorkspace", StringComparison.Ordinal)..mainCode.IndexOf("private void ApplyPatchEdits", StringComparison.Ordinal)], StringComparison.Ordinal);
     }
 
     [Fact]
@@ -203,7 +216,7 @@ public sealed class PatchWorkspaceUiContractTests
     }
 
     [Fact]
-    public void WindowsPatchWorkspaceOffersCumulativePreviewAndDirectApplyPaths()
+    public void EmbeddedEasyPatchIsImmediateWhileStandaloneDialogKeepsItsReturnBatch()
     {
         string xaml = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml"));
         string codeBehind = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml.cs"));
@@ -218,6 +231,12 @@ public sealed class PatchWorkspaceUiContractTests
         Assert.Contains("StagePlanAsPreview", codeBehind, StringComparison.Ordinal);
         Assert.Contains("PendingChanges", codeBehind, StringComparison.Ordinal);
         Assert.Contains("ApplyPlanDirectly", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("ApplyPlanImmediately", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("PreviewSelectionButton.Visibility = Visibility.Collapsed", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("PreviewRangeButton.Visibility = Visibility.Collapsed", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("PreviewGroupBox.Visibility = Visibility.Collapsed", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("ApplyButton.Visibility = Visibility.Collapsed", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("if (_embedded)", codeBehind, StringComparison.Ordinal);
 
         XElement preview = NamedElement(document, xamlNamespace, "PreviewGroupBox");
         Assert.Equal("Collapsed", preview.Attribute("Visibility")?.Value);
@@ -265,8 +284,15 @@ public sealed class PatchWorkspaceUiContractTests
         Assert.Contains("x:Name=\"OneToOneFirstRxCombo\"", xaml, StringComparison.Ordinal);
         Assert.Contains("x:Name=\"OneToOneCountTextBox\"", xaml, StringComparison.Ordinal);
         Assert.Contains("x:Name=\"PreviewOneToOneButton\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"WarnOnExistingPatchCheckBox\"", xaml, StringComparison.Ordinal);
         Assert.Contains("PlanOneToOne", codeBehind, StringComparison.Ordinal);
         Assert.Contains("ShowChoiceAsync", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("ApplyPlanImmediatelyAsync", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("_immediateApply", codeBehind, StringComparison.Ordinal);
+        Assert.Contains(
+            "immediateApply: edits => ExecuteMutationAsync",
+            File.ReadAllText(RepositoryFile("src", "DanteConfigEditor.Mac", "MainWindow.axaml.cs")),
+            StringComparison.Ordinal);
         Assert.Contains("x:Name=\"MatrixZoomFitButton\"", xaml, StringComparison.Ordinal);
         Assert.Contains("PointerWheelChanged=\"MatrixViewport_PointerWheelChanged\"", xaml, StringComparison.Ordinal);
 

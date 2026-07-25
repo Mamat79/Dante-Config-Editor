@@ -179,11 +179,11 @@
         </Grid>
 
         <Grid Grid.Row="3" Margin="0,14,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <WrapPanel>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <WrapPanel x:Name="TemplateActionsPanel">
                 <Button x:Name="AddToProjectButton"
                         Content="Ajouter au projet"
                         Click="AddToProjectButton_Click" />
@@ -200,7 +200,10 @@
                         Style="{StaticResource DialogSecondaryButtonStyle}"
                         Click="DeleteTemplateButton_Click" />
             </WrapPanel>
-            <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
+            <WrapPanel x:Name="BankActionsPanel"
+                       Grid.Row="1"
+                       Margin="0,2,0,0"
+                       HorizontalAlignment="Right">
                 <Button x:Name="ImportTemplateButton"
                         Content="Importer un modèle"
                         Style="{StaticResource DialogSecondaryButtonStyle}"

@@ -1131,36 +1131,31 @@ public partial class MainWindow : Window
             _language,
             _project,
             initialTxDevice,
-            initialRxDevice);
-
-        if (!await dialog.ShowDialog<bool>(this) || dialog.Edits.Count == 0)
-        {
-            return;
-        }
-
-        PatchEditRequest[] edits = dialog.Edits.ToArray();
-        await ExecuteMutationAsync(
-            L("Patch visuel", "Visual patch"),
-            LocalizationService.Format(_language, "Action.VisualPatchesApplied", edits.Length),
-            project => project.ApplyBatch(batch =>
-            {
-                foreach (PatchEditRequest edit in edits)
+            initialRxDevice,
+            immediateApply: edits => ExecuteMutationAsync(
+                L("Patch visuel", "Visual patch"),
+                LocalizationService.Format(_language, "Action.VisualPatchesApplied", edits.Count),
+                project => project.ApplyBatch(batch =>
                 {
-                    if (edit.IsRemoval)
+                    foreach (PatchEditRequest edit in edits)
                     {
-                        batch.RemovePatch(edit.RxDeviceName, edit.RxDanteId);
+                        if (edit.IsRemoval)
+                        {
+                            batch.RemovePatch(edit.RxDeviceName, edit.RxDanteId);
+                        }
+                        else
+                        {
+                            batch.ApplyPatch(
+                                edit.RxDeviceName,
+                                edit.RxDanteId,
+                                edit.TxDeviceName!,
+                                edit.TxChannelName ?? string.Empty);
+                        }
                     }
-                    else
-                    {
-                        batch.ApplyPatch(
-                            edit.RxDeviceName,
-                            edit.RxDanteId,
-                            edit.TxDeviceName!,
-                            edit.TxChannelName ?? string.Empty);
-                    }
-                }
-            }),
-            edits[0].RxDeviceName);
+                }),
+                edits[0].RxDeviceName));
+
+        await dialog.ShowDialog<bool>(this);
     }
 
     private void ValidateButton_Click(object? sender, RoutedEventArgs e)

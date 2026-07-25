@@ -24,6 +24,7 @@ public partial class MainWindow
     private string? _draggedSynopticIdentity;
     private Point _synopticDragOffset;
     private IReadOnlyList<SynopticCable> _synopticPreviewCables = [];
+    private SynopticPreviewWindow? _synopticPreviewWindow;
 
     private void RefreshSynopticWorkspace(bool captureRows = true)
     {
@@ -524,6 +525,30 @@ public partial class MainWindow
             slider.Minimum,
             1);
         viewer.ScrollToHome();
+    }
+
+    private void OpenSynopticPreviewWindowButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_project is null || _synopticLayout is null)
+        {
+            return;
+        }
+
+        RenderSynopticPreview();
+        if (_synopticPreviewWindow?.IsVisible == true)
+        {
+            _synopticPreviewWindow.Activate();
+            return;
+        }
+
+        Canvas canvas = FindControl<Canvas>("SynopticCanvas")!;
+        _synopticPreviewWindow = new SynopticPreviewWindow(
+            canvas,
+            canvas.Width,
+            canvas.Height,
+            _language);
+        _synopticPreviewWindow.Closed += (_, _) => _synopticPreviewWindow = null;
+        _synopticPreviewWindow.Show(this);
     }
 
     private void SynopticDeviceGrid_CellEditEnded(object? sender, DataGridCellEditEndedEventArgs e)

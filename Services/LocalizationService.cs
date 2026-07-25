@@ -816,6 +816,8 @@ public static class LocalizationService
         Add(map, "Affiche toutes les différences de machines, canaux et patchs depuis l'ouverture du XML.", "Shows all device, channel, and subscription differences since the XML was opened.");
         Add(map, "Applique en une seule action les formats audio, la latence, l'IP automatique et éventuellement le mode réseau du profil à la cible choisie.", "Applies the profile audio formats, latency, automatic IP, and optional network mode to the selected target in one operation.");
         Add(map, "Ouvre une vue TX/RX avec glisser-déposer, affectation en série et grille de patch.", "Opens a Tx/Rx view with drag and drop, sequential assignment, and a patch matrix.");
+        Add(map, "Ouvrir l’aperçu dans une fenêtre séparée", "Open the preview in a separate window");
+        Add(map, "Ouvrir l’aperçu du synoptique dans une fenêtre séparée", "Open the synoptic preview in a separate window");
         Add(map, "Patch RX", "Rx patch");
         Add(map, "Ouvrir Easy patch", "Open Easy patch");
         Add(map, "Affectez des canaux TX disponibles aux entrées RX de cette machine.", "Assign available Tx channels to this device's Rx inputs.");

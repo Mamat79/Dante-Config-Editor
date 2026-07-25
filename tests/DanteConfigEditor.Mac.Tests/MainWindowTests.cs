@@ -37,6 +37,107 @@ public sealed class MainWindowTests
     }
 
     [AvaloniaFact]
+    public void ConfigurationEditorsAreVisibleOnFirstLaunch()
+    {
+        MainWindow window = new();
+        window.Show();
+        try
+        {
+            Assert.True(window.FindControl<TabItem>("ConfigurationTab")!.IsSelected);
+            Assert.True(window.FindControl<Grid>("ConfigurationEditorsGrid")!.IsEffectivelyVisible);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void SynopticPreviewCanOpenInASeparateScalableWindow()
+    {
+        Canvas source = new()
+        {
+            Width = 900,
+            Height = 560,
+            Background = Avalonia.Media.Brushes.White
+        };
+        SynopticPreviewWindow preview = new(source, source.Width, source.Height, UiLanguage.French);
+        preview.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal("Aperçu du synoptique", preview.Title);
+            Assert.True(preview.FindControl<Control>("PreviewSurface")!.IsEffectivelyVisible);
+            Assert.True(preview.FindControl<Slider>("ZoomSlider")!.Value > 0);
+            Assert.Equal("Fermer", preview.FindControl<Button>("CloseButton")!.Content);
+        }
+        finally
+        {
+            preview.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public async Task VisualPatchOpenedFromTheMacAppUsesImmediateMode()
+    {
+        string source = Path.Combine(AppContext.BaseDirectory, "Fixtures", "representative-preset.xml");
+        DanteProject project = DanteProject.Load(source);
+        IReadOnlyList<PatchEditRequest>? applied = null;
+        PatchWorkspaceDialog dialog = new(
+            UiLanguage.French,
+            project,
+            initialTxDeviceName: "DEVICE-A",
+            initialRxDeviceName: "DEVICE-B",
+            immediateApply: edits =>
+            {
+                applied = edits.ToArray();
+                project.ApplyBatch(batch =>
+                {
+                    foreach (PatchEditRequest edit in edits)
+                    {
+                        if (edit.IsRemoval)
+                        {
+                            batch.RemovePatch(edit.RxDeviceName, edit.RxDanteId);
+                        }
+                        else
+                        {
+                            batch.ApplyPatch(
+                                edit.RxDeviceName,
+                                edit.RxDanteId,
+                                edit.TxDeviceName!,
+                                edit.TxChannelName ?? string.Empty);
+                        }
+                    }
+                });
+                return Task.CompletedTask;
+            });
+        dialog.Show();
+        try
+        {
+            Assert.True(dialog.FindControl<CheckBox>("WarnOnExistingPatchCheckBox")!.IsChecked);
+            Assert.False(dialog.FindControl<Button>("ResetPendingButton")!.IsVisible);
+            Assert.False(dialog.FindControl<Button>("ApplyButton")!.IsVisible);
+            Assert.Equal("Appliquer", dialog.FindControl<Button>("PreviewOneToOneButton")!.Content);
+
+            Grid matrix = dialog.FindControl<Grid>("MatrixPanel")!;
+            Button activeCell = matrix.Children.OfType<Button>()
+                .First(button => Equals(button.Content, "●"));
+            activeCell.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
+            await Task.Yield();
+
+            PatchEditRequest edit = Assert.Single(Assert.IsAssignableFrom<IReadOnlyList<PatchEditRequest>>(applied));
+            Assert.True(edit.IsRemoval);
+            Assert.True(project.IsModified);
+            Assert.Empty(dialog.Edits);
+        }
+        finally
+        {
+            dialog.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void LanguageSwitchTranslatesTabHeadersAndComboBoxPlaceholdersBothWays()
     {
         MainWindow window = new();

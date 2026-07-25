@@ -516,6 +516,25 @@ public sealed class PatchAssignmentPlannerTests
         Assert.False(workspace.HasChanges);
     }
 
+    [Fact]
+    public void CommittedPreviewStillDetectsAConflictHiddenByAPendingRemoval()
+    {
+        using TestDirectory directory = new();
+        DanteProject project = DanteProject.Load(directory.CopyFixture("representative-preset.xml"));
+        DanteDevice txDevice = Assert.IsType<DanteDevice>(project.FindDevice("DEVICE-A"));
+        DanteDevice rxDevice = Assert.IsType<DanteDevice>(project.FindDevice("DEVICE-B"));
+        PatchWorkspaceSession workspace = new(project.PatchMatrix.Subscriptions);
+        PatchTargetDescriptor target = TargetFrom(rxDevice.RxChannels[0]);
+        PlannedPatchAssignment replacement = new(
+            SourceFrom(txDevice.TxChannels[1]),
+            target);
+
+        workspace.Remove(target);
+
+        Assert.Equal(1, workspace.BuildPreview([replacement]).CreateCount);
+        Assert.Equal(1, workspace.BuildCommittedPreview([replacement]).ReplaceCount);
+    }
+
     [Theory]
     [InlineData(PatchConflictResolution.Cancel, 0, 0, true)]
     [InlineData(PatchConflictResolution.Skip, 1, 1, false)]

@@ -1564,6 +1564,13 @@
                                             <TextBlock x:Name="SynopticZoomTextBlock" Text="100 %" Width="58" TextAlignment="Center" VerticalAlignment="Center" />
                                             <Button Content="100 %" Margin="5,0,0,0" Click="ResetSynopticZoomButton_Click" ToolTip="Revenir à la taille réelle" />
                                             <Button Content="Ajuster" Margin="5,0,0,0" Click="FitSynopticZoomButton_Click" ToolTip="Afficher tout le synoptique" />
+                                            <Button x:Name="OpenSynopticPreviewWindowButton"
+                                                    Content="↗"
+                                                    Width="36"
+                                                    Margin="5,0,0,0"
+                                                    ToolTip="Ouvrir l’aperçu dans une fenêtre séparée"
+                                                    AutomationProperties.Name="Ouvrir l’aperçu du synoptique dans une fenêtre séparée"
+                                                    Click="OpenSynopticPreviewWindowButton_Click" />
                                         </StackPanel>
                                     </Border>
                                     <ScrollViewer x:Name="SynopticScrollViewer"

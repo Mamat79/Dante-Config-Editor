@@ -128,6 +128,15 @@ public sealed class ChannelLabelUiContractTests
         Assert.Contains("SynopticDevice_PointerMoved", macCode, StringComparison.Ordinal);
         Assert.Contains("UpdateSynopticCablesDuringDrag", windowsCode, StringComparison.Ordinal);
         Assert.Contains("UpdateSynopticCablesDuringDrag", macCode, StringComparison.Ordinal);
+        Assert.Contains("OpenSynopticPreviewWindowButton", windowsXaml, StringComparison.Ordinal);
+        Assert.Contains("OpenSynopticPreviewWindowButton", macXaml, StringComparison.Ordinal);
+        Assert.Contains("new SynopticPreviewWindow", windowsCode, StringComparison.Ordinal);
+        Assert.Contains("new SynopticPreviewWindow", macCode, StringComparison.Ordinal);
+        Assert.Contains("VisualBrush", Read("SynopticPreviewWindow.xaml.cs"), StringComparison.Ordinal);
+        Assert.Contains(
+            "VisualBrush",
+            Read("src", "DanteConfigEditor.Mac", "SynopticPreviewWindow.axaml.cs"),
+            StringComparison.Ordinal);
     }
 
     private static string Read(params string[] parts)

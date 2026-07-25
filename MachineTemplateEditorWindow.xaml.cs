@@ -72,16 +72,16 @@ public partial class MachineTemplateEditorWindow : Window
 
     private void ApplyLanguage()
     {
-        TemplateNameLabel.Content = L("Nom du modèle", "Template name");
+        TemplateNameLabel.Content = L("Nom dans la banque", "Name in the bank");
         ManufacturerLabel.Content = L("Fabricant", "Manufacturer");
-        ModelLabel.Content = L("Modèle", "Model");
+        ModelLabel.Content = L("Modèle matériel", "Hardware model");
         CategoryLabel.Content = L("Catégorie", "Category");
-        TagsLabel.Content = "Tags";
+        TagsLabel.Content = L("Mots-clés", "Keywords");
         TagsHintTextBlock.Text = L(
-            "Séparez les tags par une virgule.",
-            "Separate tags with commas.");
-        DescriptionLabel.Content = L("Description", "Description");
-        ImageLabel.Content = L("Image facultative", "Optional image");
+            "Utilisés pour la recherche, séparés par une virgule (ex. processeur, scène).",
+            "Used for search, separated with commas (for example processor, stage).");
+        DescriptionLabel.Content = L("Description / notes", "Description / notes");
+        ImageLabel.Content = L("Image du modèle (facultative)", "Template image (optional)");
         BrowseImageButton.Content = L("Choisir", "Browse");
         RemoveImageCheckBox.Content = L(
             "Retirer l'image existante",
@@ -96,6 +96,47 @@ public partial class MachineTemplateEditorWindow : Window
         GenerateRxButton.Content = L("Générer RX 1, RX 2...", "Generate RX 1, RX 2...");
         SaveButton.Content = L("Enregistrer", "Save");
         CancelButton.Content = L("Annuler", "Cancel");
+
+        TemplateNameTextBox.ToolTip = L(
+            "Nom affiché dans la liste de la banque. Il peut être différent du nom de la machine dans le projet.",
+            "Name displayed in the bank list. It can differ from the device name in the project.");
+        ManufacturerTextBox.ToolTip = L(
+            "Fabricant du matériel, par exemple Lake, Yamaha ou Allen & Heath.",
+            "Hardware manufacturer, for example Lake, Yamaha or Allen & Heath.");
+        ModelTextBox.ToolTip = L(
+            "Référence du matériel, par exemple LM 44.",
+            "Hardware reference, for example LM 44.");
+        CategoryTextBox.ToolTip = L(
+            "Famille utilisée pour filtrer la banque, par exemple processeur, console ou interface.",
+            "Family used to filter the bank, for example processor, console or interface.");
+        TagsTextBox.ToolTip = TagsHintTextBlock.Text;
+        DescriptionTextBox.ToolTip = L(
+            "Informations libres permettant d'identifier l'usage ou les particularités du modèle.",
+            "Free-form information describing the template's use or characteristics.");
+        ImagePathTextBox.ToolTip = L(
+            "Copie facultative d'une image PNG, JPEG ou WebP dans le dossier du modèle.",
+            "Optional copy of a PNG, JPEG or WebP image into the template folder.");
+        BrowseImageButton.ToolTip = L(
+            "Choisir l'image qui sera copiée dans le dossier du modèle.",
+            "Choose the image that will be copied into the template folder.");
+        TxLabelsGrid.ToolTip = L(
+            "Labels TX proposés par défaut. Double-cliquez une cellule pour la modifier.",
+            "Default Tx labels. Double-click a cell to edit it.");
+        RxLabelsGrid.ToolTip = L(
+            "Labels RX proposés par défaut. Double-cliquez une cellule pour la modifier.",
+            "Default Rx labels. Double-click a cell to edit it.");
+        GenerateTxButton.ToolTip = L(
+            "Remplace tous les labels TX par TX 1, TX 2, etc.",
+            "Replaces all Tx labels with TX 1, TX 2, and so on.");
+        GenerateRxButton.ToolTip = L(
+            "Remplace tous les labels RX par RX 1, RX 2, etc.",
+            "Replaces all Rx labels with RX 1, RX 2, and so on.");
+        SaveButton.ToolTip = L(
+            "Enregistre ce modèle dans la banque sélectionnée.",
+            "Saves this template in the selected bank.");
+        CancelButton.ToolTip = L(
+            "Ferme sans enregistrer les modifications du modèle.",
+            "Closes without saving template changes.");
     }
 
     private void BrowseImageButton_Click(object sender, RoutedEventArgs e)

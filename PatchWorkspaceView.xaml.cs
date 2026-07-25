@@ -24,6 +24,13 @@ public sealed class InlineChannelNavigationRequestEventArgs(
     public bool Matrix { get; } = matrix;
 }
 
+public sealed class DirectPatchRequestEventArgs(
+    IReadOnlyList<PatchEditRequest> edits) : EventArgs
+{
+    public IReadOnlyList<PatchEditRequest> Edits { get; } =
+        edits ?? throw new ArgumentNullException(nameof(edits));
+}
+
 public partial class PatchWorkspaceView : UserControl
 {
     private const double MinimumMatrixZoom = 0.5;
@@ -69,7 +76,8 @@ public partial class PatchWorkspaceView : UserControl
         bool embedded = false,
         Func<string, DanteChannelKind, int, string, bool>? renameChannelAction = null,
         Func<string, DanteChannelKind, IReadOnlyList<int>, int, bool>? extendChannelSeriesAction = null,
-        bool startInAssignmentMode = false)
+        bool startInAssignmentMode = false,
+        bool warnOnExistingPatch = true)
     {
         InitializeComponent();
         // La grille est le mode principal d'Easy patch. La sélection par plage
@@ -92,9 +100,11 @@ public partial class PatchWorkspaceView : UserControl
         _embedded = embedded;
         _renameChannelAction = renameChannelAction;
         _extendChannelSeriesAction = extendChannelSeriesAction;
+        WarnOnExistingPatchCheckBox.IsChecked = warnOnExistingPatch;
         RxChannelListBox.ItemsSource = _rxRows;
         MatrixGrid.ItemsSource = _matrixRows;
 
+        ConfigureWorkflowPresentation();
         ApplyTheme(useLightTheme);
         ApplyLanguage();
         PopulateDeviceSelectors(initialTxDeviceName, initialRxDeviceName);
@@ -111,11 +121,16 @@ public partial class PatchWorkspaceView : UserControl
 
     public bool IsAssignmentModeSelected => AssignmentTab.IsSelected;
 
+    public bool WarnOnExistingPatch =>
+        WarnOnExistingPatchCheckBox.IsChecked != false;
+
     public string? SelectedTxDeviceName => TxDeviceComboBox.SelectedItem as string;
 
     public string? SelectedRxDeviceName => RxDeviceComboBox.SelectedItem as string;
 
     public event EventHandler? ApplyRequested;
+
+    public event EventHandler<DirectPatchRequestEventArgs>? DirectApplyRequested;
 
     public event EventHandler? CancelRequested;
 
@@ -132,6 +147,33 @@ public partial class PatchWorkspaceView : UserControl
         _session.Reset();
         RefreshAllTargetStates();
         SetInfo(L("Tous les changements Easy patch ont été appliqués.", "All Easy patch changes were applied."));
+    }
+
+    private void ConfigureWorkflowPresentation()
+    {
+        if (!_embedded)
+        {
+            return;
+        }
+
+        // Dans l'onglet Easy Patch, chaque commande est appliquée directement.
+        // Les contrôles de lot restent réservés à la fenêtre autonome qui doit
+        // renvoyer ses modifications à la fiche machine lors de sa fermeture.
+        PreviewSelectionButton.Visibility = Visibility.Collapsed;
+        PreviewRangeButton.Visibility = Visibility.Collapsed;
+        PreviewGroupBox.Visibility = Visibility.Collapsed;
+        PendingHeaderTextBlock.Visibility = Visibility.Collapsed;
+        PendingFooterTextBlock.Visibility = Visibility.Collapsed;
+        ResetPendingButton.Visibility = Visibility.Collapsed;
+        CancelButton.Visibility = Visibility.Collapsed;
+        ApplyButton.Visibility = Visibility.Collapsed;
+
+        Grid.SetColumn(ApplySelectionDirectButton, 0);
+        Grid.SetColumnSpan(ApplySelectionDirectButton, 2);
+        ApplySelectionDirectButton.Margin = new Thickness(0, 0, 0, 6);
+        Grid.SetColumn(ApplyRangeDirectButton, 0);
+        Grid.SetColumnSpan(ApplyRangeDirectButton, 2);
+        ApplyRangeDirectButton.Margin = new Thickness(0);
     }
 
     private void PopulateDeviceSelectors(string? initialTxDeviceName, string? initialRxDeviceName)
@@ -223,9 +265,11 @@ public partial class PatchWorkspaceView : UserControl
         RefreshSourceChannelsAndMatrixColumns();
         RefreshTargetRows();
         UpdateDeviceNavigationState();
-        SetInfo(L(
-            "Machines TX et RX inversées. Le lot en attente est conservé.",
-            "Tx and Rx devices swapped. The pending batch was preserved."));
+        SetInfo(_embedded
+            ? L("Machines TX et RX inversées.", "Tx and Rx devices swapped.")
+            : L(
+                "Machines TX et RX inversées. Le lot en attente est conservé.",
+                "Tx and Rx devices swapped. The pending batch was preserved."));
     }
 
     private void TxDeviceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -296,9 +340,13 @@ public partial class PatchWorkspaceView : UserControl
         }
         else
         {
-            SetInfo(L(
-                "Sélectionnez les TX et les RX, puis prévisualisez la sélection ou une plage.",
-                "Select the Tx and Rx channels, then preview the selection or a range."));
+            SetInfo(_embedded
+                ? L(
+                    "Sélectionnez les TX et les RX, puis appliquez la sélection ou une plage.",
+                    "Select Tx and Rx channels, then apply the selection or a range.")
+                : L(
+                    "Sélectionnez les TX et les RX, puis prévisualisez la sélection ou une plage.",
+                    "Select the Tx and Rx channels, then preview the selection or a range."));
         }
     }
 
@@ -912,6 +960,12 @@ public partial class PatchWorkspaceView : UserControl
 
     private void ApplyPlanDirectly(PatchAssignmentPlan plan)
     {
+        if (_embedded)
+        {
+            ApplyPlanImmediately(plan);
+            return;
+        }
+
         if (!SourcesAreUnambiguous(plan.Assignments.Select(assignment => assignment.Source)))
         {
             return;
@@ -955,9 +1009,48 @@ public partial class PatchWorkspaceView : UserControl
         ApplyRequested?.Invoke(this, EventArgs.Empty);
     }
 
+    private void ApplyPlanImmediately(PatchAssignmentPlan plan)
+    {
+        if (!SourcesAreUnambiguous(plan.Assignments.Select(assignment => assignment.Source)))
+        {
+            return;
+        }
+
+        PatchBatchPreview preview = _session.BuildCommittedPreview(plan.Assignments);
+        PatchConflictResolution resolution = ChooseConflictResolution(preview);
+        if (resolution == PatchConflictResolution.Cancel)
+        {
+            SetInfo(L("Patch annulé.", "Patch cancelled."), warning: true);
+            return;
+        }
+
+        PatchEditRequest[] edits = preview.Items
+            .Where(item => item.Action != PatchPreviewAction.Unchanged)
+            .Where(item => item.Action != PatchPreviewAction.Replace
+                || resolution == PatchConflictResolution.Replace)
+            .Select(item => PatchEditRequest.Apply(item.Assignment))
+            .ToArray();
+        if (edits.Length == 0)
+        {
+            SetInfo(
+                resolution == PatchConflictResolution.Skip
+                    ? L("Aucun patch appliqué : les RX déjà utilisés ont été ignorés.", "No patch applied: assigned Rx channels were skipped.")
+                    : L("Le patch demandé est déjà en place.", "The requested patch is already active."),
+                warning: resolution == PatchConflictResolution.Skip);
+            return;
+        }
+
+        DirectApplyRequested?.Invoke(this, new DirectPatchRequestEventArgs(edits));
+    }
+
     private PatchConflictResolution ChooseConflictResolution(PatchBatchPreview preview)
     {
         if (!preview.HasConflicts)
+        {
+            return PatchConflictResolution.Replace;
+        }
+
+        if (!WarnOnExistingPatch)
         {
             return PatchConflictResolution.Replace;
         }
@@ -987,9 +1080,13 @@ public partial class PatchWorkspaceView : UserControl
         }
 
         MessageBoxResult confirmation = ShowConfirmation(
-            L(
-                $"Ajouter la déconnexion de {targets.Length} canal(aux) RX sélectionné(s) au lot ?",
-                $"Add the disconnection of {targets.Length} selected Rx channel(s) to the batch?"),
+            _embedded
+                ? L(
+                    $"Déconnecter immédiatement {targets.Length} canal(aux) RX sélectionné(s) ?",
+                    $"Immediately disconnect {targets.Length} selected Rx channel(s)?")
+                : L(
+                    $"Ajouter la déconnexion de {targets.Length} canal(aux) RX sélectionné(s) au lot ?",
+                    $"Add the disconnection of {targets.Length} selected Rx channel(s) to the batch?"),
             L("Confirmer la déconnexion", "Confirm disconnection"),
             MessageBoxButton.YesNo,
             MessageBoxImage.Warning);
@@ -1000,6 +1097,22 @@ public partial class PatchWorkspaceView : UserControl
 
         try
         {
+            if (_embedded)
+            {
+                PatchEditRequest[] edits = targets
+                    .Where(target => _session.GetCommittedAssignment(target).IsActive)
+                    .Select(PatchEditRequest.Remove)
+                    .ToArray();
+                if (edits.Length == 0)
+                {
+                    SetInfo(L("Les RX sélectionnés sont déjà libres.", "The selected Rx channels are already free."));
+                    return;
+                }
+
+                DirectApplyRequested?.Invoke(this, new DirectPatchRequestEventArgs(edits));
+                return;
+            }
+
             int removed = _session.RemoveMany(targets);
             RefreshTargetStates(targets);
             SetInfo(L($"{removed} déconnexion(s) ajoutée(s) au lot.", $"{removed} disconnection(s) added to the batch."));
@@ -1174,9 +1287,37 @@ public partial class PatchWorkspaceView : UserControl
 
     private void ExecuteMatrixGesture(PatchMatrixCell start, PatchMatrixCell end)
     {
-        if (start.SourceIndex == end.SourceIndex
-            && start.TargetIndex == end.TargetIndex
-            && start.IsAssigned)
+        bool singleCell = start.SourceIndex == end.SourceIndex
+            && start.TargetIndex == end.TargetIndex;
+        if (_embedded && DirectApplyRequested is not null)
+        {
+            try
+            {
+                if (singleCell)
+                {
+                    ApplyMatrixCellDirectly(start);
+                }
+                else
+                {
+                    PatchAssignmentPlan immediatePlan = PatchAssignmentPlanner.PlanMatrixGesture(
+                        _visibleSources,
+                        _visibleTargets,
+                        start.SourceIndex,
+                        start.TargetIndex,
+                        end.SourceIndex,
+                        end.TargetIndex);
+                    ApplyPlanImmediately(immediatePlan);
+                }
+            }
+            catch (Exception exception)
+            {
+                SetInfo(exception.Message, warning: true);
+            }
+
+            return;
+        }
+
+        if (singleCell && start.IsAssigned)
         {
             _session.Remove(start.Target);
             RefreshTargetStates([start.Target]);
@@ -1282,6 +1423,37 @@ public partial class PatchWorkspaceView : UserControl
         }
     }
 
+    private void ApplyMatrixCellDirectly(PatchMatrixCell cell)
+    {
+        if (!SourcesAreUnambiguous([cell.Source]))
+        {
+            return;
+        }
+
+        PatchEditRequest edit;
+        if (cell.IsAssigned)
+        {
+            edit = PatchEditRequest.Remove(cell.Target);
+        }
+        else
+        {
+            PlannedPatchAssignment assignment = new(cell.Source, cell.Target);
+            PatchBatchPreview preview = _session.BuildCommittedPreview([assignment]);
+            PatchConflictResolution resolution = ChooseConflictResolution(preview);
+            if (resolution is PatchConflictResolution.Cancel or PatchConflictResolution.Skip)
+            {
+                SetInfo(
+                    L("Patch immédiat annulé.", "Immediate patch cancelled."),
+                    warning: resolution == PatchConflictResolution.Cancel);
+                return;
+            }
+
+            edit = PatchEditRequest.Apply(assignment);
+        }
+
+        DirectApplyRequested?.Invoke(this, new DirectPatchRequestEventArgs([edit]));
+    }
+
     private void SelectMatrixOneToOneStart(PatchMatrixCell cell)
     {
         _matrixOneToOneStart = cell;
@@ -1315,7 +1487,14 @@ public partial class PatchWorkspaceView : UserControl
                 _visibleTargets,
                 _matrixOneToOneStart.Target,
                 count);
-            StagePlanAsPreview(plan);
+            if (_embedded)
+            {
+                ApplyPlanImmediately(plan);
+            }
+            else
+            {
+                StagePlanAsPreview(plan);
+            }
         }
         catch (Exception exception)
         {
@@ -2026,11 +2205,21 @@ public partial class PatchWorkspaceView : UserControl
     private void ApplyLanguage()
     {
         TitleTextBlock.Text = "Easy patch";
-        IntroTextBlock.Text = L(
-            "Chaque prévisualisation s'ajoute au lot. Appliquez tout en une seule fois quand il est prêt.",
-            "Each preview is added to the batch. Apply everything once when it is ready.");
+        IntroTextBlock.Text = _embedded
+            ? L(
+                "Chaque clic, glissement, sélection ou plage modifie immédiatement le patch.",
+                "Every click, drag, selection or range immediately updates the patch.")
+            : L(
+                "Préparez les affectations puis validez-les dans la fiche machine.",
+                "Stage assignments, then return them to the device details.");
         TxDeviceLabel.Content = L("Machine émettrice TX", "Tx transmitting device");
         RxDeviceLabel.Content = L("Machine réceptrice RX", "Rx receiving device");
+        TxDeviceComboBox.ToolTip = L(
+            "Machine qui fournit les canaux TX affichés dans la grille et la liste.",
+            "Device providing the Tx channels displayed in the matrix and list.");
+        RxDeviceComboBox.ToolTip = L(
+            "Machine dont les canaux RX recevront les patchs.",
+            "Device whose Rx channels will receive subscriptions.");
         PreviousRxDeviceButton.ToolTip = L("Machine RX précédente", "Previous Rx device");
         NextRxDeviceButton.ToolTip = L("Machine RX suivante", "Next Rx device");
         PreviousTxDeviceButton.ToolTip = L("Machine TX précédente", "Previous Tx device");
@@ -2040,46 +2229,117 @@ public partial class PatchWorkspaceView : UserControl
             "Inverser les machines TX et RX sans créer de patch inverse",
             "Swap the Tx and Rx devices without creating reverse subscriptions");
         AssignmentTab.Header = L("Sélection et plage", "Selection and range");
+        AssignmentTab.ToolTip = _embedded
+            ? L(
+                "Sélectionner plusieurs TX et RX ou une plage, puis les appliquer immédiatement.",
+                "Select several Tx and Rx channels or a range, then apply them immediately.")
+            : L(
+                "Sélectionner plusieurs TX et RX et préparer une série.",
+                "Select several Tx and Rx channels and stage a range.");
         MatrixTab.Header = L("Grille de patch", "Patch matrix");
+        MatrixTab.ToolTip = _embedded
+            ? L(
+                "Cliquer ou glisser pour appliquer immédiatement un ou plusieurs patchs.",
+                "Click or drag to apply one or more patches immediately.")
+            : L(
+                "Cliquer ou glisser pour préparer un ou plusieurs patchs.",
+                "Click or drag to stage one or more patches.");
         TxListHeadingTextBlock.Text = L("Canaux TX disponibles", "Available Tx channels");
         RxListHeadingTextBlock.Text = L("Canaux RX et source actuelle", "Rx channels and current source");
+        TxChannelListBox.ToolTip = L(
+            "Sélection multiple possible avec Ctrl ou Maj. Les noms de canaux sont modifiables directement.",
+            "Use Ctrl or Shift for multiple selection. Channel names can be edited directly.");
+        RxChannelListBox.ToolTip = L(
+            "Affiche chaque RX et sa source actuelle. Les noms de canaux sont modifiables directement.",
+            "Shows every Rx channel and its current source. Channel names can be edited directly.");
         SelectAllTxButton.Content = L("Tout sélectionner", "Select all");
+        SelectAllTxButton.ToolTip = L(
+            "Sélectionne tous les TX visibles.",
+            "Selects all visible Tx channels.");
         SelectAllRxButton.Content = L("Tout sélectionner", "Select all");
+        SelectAllRxButton.ToolTip = L(
+            "Sélectionne tous les RX visibles.",
+            "Selects all visible Rx channels.");
         SelectionHintTextBlock.Text = L(
             "Sélection",
             "Selection");
         PreviewSelectionButton.Content = L("Prévisualiser", "Preview");
+        PreviewSelectionButton.ToolTip = L(
+            "Ajoute cette sélection au lot sans modifier immédiatement le XML.",
+            "Adds this selection to the batch without immediately changing the XML.");
         ApplySelectionDirectButton.Content = L("Appliquer", "Apply now");
-        ApplySelectionDirectButton.ToolTip = L(
-            "Applique immédiatement la sélection et les éventuels changements déjà ajoutés au lot.",
-            "Immediately applies the selection and any changes already added to the batch.");
+        ApplySelectionDirectButton.ToolTip = _embedded
+            ? L(
+                "Applique immédiatement les TX sélectionnés aux RX sélectionnés.",
+                "Immediately applies the selected Tx channels to the selected Rx channels.")
+            : L(
+                "Valide cette sélection dans le lot de la fiche machine.",
+                "Adds this selection to the device-details batch.");
         RemoveSelectedRxButton.Content = L("Déconnecter", "Disconnect");
+        RemoveSelectedRxButton.ToolTip = _embedded
+            ? L(
+                "Déconnecte immédiatement les RX sélectionnés après confirmation.",
+                "Immediately disconnects the selected Rx channels after confirmation.")
+            : L(
+                "Ajoute au lot la déconnexion des RX sélectionnés.",
+                "Adds the disconnection of selected Rx channels to the batch.");
         ClearSelectionButton.Content = L("Effacer", "Clear");
+        ClearSelectionButton.ToolTip = L(
+            "Efface uniquement la sélection des listes, sans modifier le patch.",
+            "Clears only the list selection without changing subscriptions.");
         RangeHeadingTextBlock.Text = L("Patch 1:1", "One-to-one patch");
         RangeStartTxLabel.Content = L("Premier TX", "First Tx");
         RangeStartRxLabel.Content = L("Premier RX", "First Rx");
         RangeCountLabel.Content = L("Nombre", "Count");
         PreviewRangeButton.Content = L("Prévisualiser", "Preview");
+        PreviewRangeButton.ToolTip = L(
+            "Ajoute la plage 1:1 au lot sans modifier immédiatement le XML.",
+            "Adds the one-to-one range to the batch without immediately changing the XML.");
         ApplyRangeDirectButton.Content = L("Appliquer", "Apply now");
-        ApplyRangeDirectButton.ToolTip = L(
-            "Applique immédiatement le patch 1:1 et les éventuels changements déjà ajoutés au lot.",
-            "Immediately applies the one-to-one patch and any changes already added to the batch.");
+        ApplyRangeDirectButton.ToolTip = _embedded
+            ? L(
+                "Applique immédiatement cette plage de patchs 1:1.",
+                "Immediately applies this one-to-one patch range.")
+            : L(
+                "Valide cette plage dans le lot de la fiche machine.",
+                "Adds this range to the device-details batch.");
         PreviewGroupBox.Header = L("Lot prévisualisé", "Previewed batch");
         PreviewTargetColumn.Header = L("RX cible", "Target Rx");
         PreviewCurrentColumn.Header = L("Source actuelle", "Current source");
         PreviewProposedColumn.Header = L("Nouvelle source", "New source");
         PreviewActionColumn.Header = L("Action", "Action");
         PreviewSummaryTextBlock.Text = L("Aucun changement dans le lot.", "No changes in the batch.");
-        MatrixHintTextBlock.Text = L(
-            "RX en lignes, TX en colonnes. Cliquez pour un patch, ou maintenez et glissez : horizontal = série TX/RX, vertical = un TX vers plusieurs RX, diagonale = série un-à-un.",
-            "Rx channels are rows and Tx channels are columns. Click for one patch, or hold and drag: horizontal = Tx/Rx range, vertical = one Tx to several Rx channels, diagonal = one-to-one range.");
+        MatrixHintTextBlock.Text = _embedded
+            ? L(
+                "RX en lignes, TX en colonnes. Un clic ou un glissement applique immédiatement le patch.",
+                "Rx channels are rows and Tx channels are columns. A click or drag applies the patch immediately.")
+            : L(
+                "RX en lignes, TX en colonnes. Un clic ou un glissement prépare le patch.",
+                "Rx channels are rows and Tx channels are columns. A click or drag stages the patch.");
+        WarnOnExistingPatchCheckBox.Content = L(
+            "M'avertir si le RX est déjà patché",
+            "Warn me when the Rx channel is already patched");
+        WarnOnExistingPatchCheckBox.ToolTip = L(
+            "Coché par défaut : demande confirmation avant de remplacer la source actuelle d'un RX. Décochez pour remplacer sans message.",
+            "Checked by default: asks for confirmation before replacing an Rx channel's current source. Clear it to replace without a prompt.");
         MatrixOneToOneHeadingTextBlock.Text = L("Patch 1:1 depuis la grille", "One-to-one patch from the matrix");
         MatrixOneToOneCountLabel.Text = L("Nombre", "Count");
         MatrixOneToOneButton.Content = L("PATCH 1:1", "PATCH 1:1");
-        MatrixOneToOneButton.ToolTip = L(
-            "Cliquez d'abord sur le premier point TX/RX de la grille, choisissez le nombre, puis préparez la série 1:1.",
-            "First click the starting Tx/Rx point in the matrix, choose the count, then stage the one-to-one range.");
+        MatrixOneToOneButton.ToolTip = _embedded
+            ? L(
+                "Cliquez sur le premier point TX/RX, choisissez le nombre, puis appliquez immédiatement la série 1:1.",
+                "Click the first Tx/Rx point, choose the count, then immediately apply the one-to-one range.")
+            : L(
+                "Cliquez sur le premier point TX/RX, choisissez le nombre, puis préparez la série 1:1.",
+                "Click the first Tx/Rx point, choose the count, then stage the one-to-one range.");
+        MatrixZoomOutButton.ToolTip = L("Réduire le zoom de la grille", "Zoom out of the matrix");
+        MatrixZoomResetButton.ToolTip = L("Revenir au zoom 100 %", "Reset the matrix to 100% zoom");
+        MatrixZoomInButton.ToolTip = L("Augmenter le zoom de la grille", "Zoom into the matrix");
+        MatrixZoomFitButton.ToolTip = L("Ajuster toute la grille à la zone visible", "Fit the entire matrix to the visible area");
         ResetPendingButton.Content = L("Annuler les changements visuels", "Discard visual changes");
+        ResetPendingButton.ToolTip = L(
+            "Vide uniquement le lot prévisualisé. Les patchs déjà appliqués immédiatement restent dans le projet et peuvent être annulés avec Annuler action.",
+            "Clears only the previewed batch. Immediately applied subscriptions remain in the project and can be reverted with Undo.");
         CancelButton.Content = L("Fermer sans appliquer", "Close without applying");
         CancelButton.Visibility = _embedded ? Visibility.Collapsed : Visibility.Visible;
         ApplyButton.Content = _embedded
@@ -2087,6 +2347,9 @@ public partial class PatchWorkspaceView : UserControl
             : _returnEditsOnly
             ? L("Valider dans le détail machine", "Return to device details")
             : L("Appliquer tout le lot", "Apply entire batch");
+        ApplyButton.ToolTip = L(
+            "Applique uniquement les changements actuellement regroupés dans le lot.",
+            "Applies only the changes currently grouped in the batch.");
 
         AutomationProperties.SetName(TxDeviceComboBox, TxDeviceLabel.Content.ToString()!);
         AutomationProperties.SetName(RxDeviceComboBox, RxDeviceLabel.Content.ToString()!);
@@ -2099,6 +2362,9 @@ public partial class PatchWorkspaceView : UserControl
         AutomationProperties.SetName(RxChannelListBox, RxListHeadingTextBlock.Text);
         AutomationProperties.SetName(ApplySelectionDirectButton, ApplySelectionDirectButton.Content.ToString()!);
         AutomationProperties.SetName(ApplyRangeDirectButton, ApplyRangeDirectButton.Content.ToString()!);
+        AutomationProperties.SetName(
+            WarnOnExistingPatchCheckBox,
+            WarnOnExistingPatchCheckBox.Content.ToString()!);
         AutomationProperties.SetName(MatrixGrid, MatrixTab.Header.ToString()!);
         AutomationProperties.SetName(PreviewGrid, PreviewGroupBox.Header.ToString()!);
         AutomationProperties.SetName(MatrixZoomOutButton, L("Réduire le zoom de la grille", "Zoom out of the matrix"));
@@ -2107,7 +2373,9 @@ public partial class PatchWorkspaceView : UserControl
         AutomationProperties.SetName(MatrixZoomFitButton, L("Ajuster la grille à la fenêtre", "Fit matrix to window"));
         AutomationProperties.SetName(
             MatrixOneToOneButton,
-            L("Préparer un patch un pour un depuis le dernier point cliqué", "Stage a one-to-one patch from the last clicked point"));
+            _embedded
+                ? L("Appliquer un patch un pour un depuis le dernier point cliqué", "Apply a one-to-one patch from the last clicked point")
+                : L("Préparer un patch un pour un depuis le dernier point cliqué", "Stage a one-to-one patch from the last clicked point"));
     }
 
     private string TranslateSwapError(string? french)
@@ -2169,9 +2437,13 @@ public partial class PatchWorkspaceView : UserControl
         bool isAssigned,
         bool isPending)
     {
-        string action = isAssigned
-            ? L("Cliquer pour déconnecter, ou glisser pour préparer une série", "Click to disconnect, or drag to prepare a range")
-            : L("Cliquer pour affecter, ou glisser pour préparer une série", "Click to assign, or drag to prepare a range");
+        string action = _embedded
+            ? isAssigned
+                ? L("Cliquer pour déconnecter immédiatement, ou glisser pour appliquer une série", "Click to disconnect immediately, or drag to apply a range")
+                : L("Cliquer pour affecter immédiatement, ou glisser pour appliquer une série", "Click to assign immediately, or drag to apply a range")
+            : isAssigned
+                ? L("Cliquer pour préparer la déconnexion, ou glisser pour préparer une série", "Click to stage a disconnection, or drag to stage a range")
+                : L("Cliquer pour préparer l'affectation, ou glisser pour préparer une série", "Click to stage an assignment, or drag to stage a range");
         string pending = isPending ? L(" - changement en attente", " - pending change") : string.Empty;
         return $"{target.FullDisplay} <- {source.FullDisplay}\n{action}{pending}";
     }
