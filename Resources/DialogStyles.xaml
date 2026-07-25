@@ -1,0 +1,89 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="DialogWindowBrush" Color="#10141F" />
+    <SolidColorBrush x:Key="DialogSurfaceBrush" Color="#171D2B" />
+    <SolidColorBrush x:Key="DialogTextBrush" Color="#F6F8FB" />
+    <SolidColorBrush x:Key="DialogMutedBrush" Color="#AAB4C5" />
+    <SolidColorBrush x:Key="DialogBorderBrush" Color="#334057" />
+    <SolidColorBrush x:Key="DialogAccentBrush" Color="#2F80ED" />
+    <SolidColorBrush x:Key="DialogInputBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="DialogInputTextBrush" Color="#111827" />
+
+    <Style TargetType="{x:Type Window}">
+        <Setter Property="Background" Value="{DynamicResource DialogWindowBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource DialogTextBrush}" />
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="FontSize" Value="13" />
+    </Style>
+
+    <Style TargetType="{x:Type Label}">
+        <Setter Property="Foreground" Value="{DynamicResource DialogTextBrush}" />
+        <Setter Property="Padding" Value="0,0,0,4" />
+    </Style>
+
+    <Style TargetType="{x:Type Button}">
+        <Setter Property="MinHeight" Value="34" />
+        <Setter Property="MinWidth" Value="92" />
+        <Setter Property="Margin" Value="0,0,8,8" />
+        <Setter Property="Padding" Value="12,6" />
+        <Setter Property="Background" Value="{DynamicResource DialogAccentBrush}" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <Style x:Key="DialogSecondaryButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="{DynamicResource DialogSurfaceBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource DialogTextBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DialogBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <Style TargetType="{x:Type TextBox}">
+        <Setter Property="MinHeight" Value="30" />
+        <Setter Property="Padding" Value="7,5" />
+        <Setter Property="Background" Value="{DynamicResource DialogInputBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource DialogInputTextBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DialogBorderBrush}" />
+    </Style>
+
+    <Style TargetType="{x:Type ComboBox}">
+        <Setter Property="MinHeight" Value="30" />
+        <Setter Property="Padding" Value="5,3" />
+        <Setter Property="Background" Value="{DynamicResource DialogInputBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource DialogInputTextBrush}" />
+    </Style>
+
+    <Style TargetType="{x:Type CheckBox}">
+        <Setter Property="Foreground" Value="{DynamicResource DialogTextBrush}" />
+        <Setter Property="Margin" Value="0,4,12,4" />
+    </Style>
+
+    <Style TargetType="{x:Type GroupBox}">
+        <Setter Property="Foreground" Value="{DynamicResource DialogTextBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DialogBorderBrush}" />
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="Margin" Value="0,0,0,12" />
+    </Style>
+
+    <Style TargetType="{x:Type DataGrid}">
+        <Setter Property="Background" Value="{DynamicResource DialogInputBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource DialogInputTextBrush}" />
+        <Setter Property="RowBackground" Value="White" />
+        <Setter Property="AlternatingRowBackground" Value="#EEF2F7" />
+        <Setter Property="GridLinesVisibility" Value="Horizontal" />
+        <Setter Property="HeadersVisibility" Value="Column" />
+    </Style>
+
+    <Style TargetType="{x:Type DataGridColumnHeader}">
+        <Setter Property="Background" Value="#E5E7EB" />
+        <Setter Property="Foreground" Value="#111827" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Padding" Value="7,5" />
+    </Style>
+
+    <Style TargetType="{x:Type ListBox}">
+        <Setter Property="Background" Value="{DynamicResource DialogInputBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource DialogInputTextBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DialogBorderBrush}" />
+    </Style>
+</ResourceDictionary>

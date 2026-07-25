@@ -476,11 +476,21 @@
                     </StackPanel>
                 </Grid>
 
-                <!-- Les commandes passent sur une seconde ligne si la fenêtre est
-                     étroite, sans masquer les onglets ni le tableau des machines. -->
-                <WrapPanel Grid.Row="1" Margin="0,10,0,0" VerticalAlignment="Center">
-                    <Button Content="Ouvrir XML" Click="OpenButton_Click" ToolTip="Charge un export XML Dante Controller." />
-                    <Button x:Name="MergeXmlButton" Content="Ajouter XML au projet" Style="{StaticResource SecondaryButtonStyle}" Click="MergeXmlButton_Click" ToolTip="Ajoute les machines d'un autre XML au projet ouvert. Les doublons peuvent être renommés." />
+                 <!-- Les commandes passent sur une seconde ligne si la fenêtre est
+                      étroite, sans masquer les onglets ni le tableau des machines. -->
+                 <WrapPanel Grid.Row="1" Margin="0,10,0,0" VerticalAlignment="Center">
+                     <Button x:Name="NewProjectButton"
+                             Content="Nouveau projet (expérimental)"
+                             Style="{StaticResource SecondaryButtonStyle}"
+                             Click="NewProjectButton_Click"
+                             ToolTip="Crée un preset 3.0.0 hors ligne. Un test d'import Dante Controller reste obligatoire." />
+                     <Button Content="Ouvrir XML" Click="OpenButton_Click" ToolTip="Charge un export XML Dante Controller." />
+                     <Button x:Name="OpenMachineBankButton"
+                             Content="Banque de machines"
+                             Style="{StaticResource SecondaryButtonStyle}"
+                             Click="OpenMachineBankButton_Click"
+                             ToolTip="Consulte, importe, exporte et administre les modèles de machines réutilisables." />
+                     <Button x:Name="MergeXmlButton" Content="Ajouter XML au projet" Style="{StaticResource SecondaryButtonStyle}" Click="MergeXmlButton_Click" ToolTip="Ajoute les machines d'un autre XML au projet ouvert. Les doublons peuvent être renommés." />
                     <Button x:Name="SaveAsButton" Content="Enregistrer sous" Click="SaveAsButton_Click" ToolTip="Enregistre un nouveau XML et crée un backup de sécurité." />
                     <Button x:Name="ActivateEditButton" Content="Activer l'édition" Style="{StaticResource SecondaryButtonStyle}" Click="ActivateEditButton_Click" ToolTip="Autorise les modifications dans l'interface. La sauvegarde reste faite sous un nouveau nom." />
                     <Button x:Name="UndoLastButton" Content="Annuler action" Style="{StaticResource SecondaryButtonStyle}" Click="UndoLastButton_Click" IsEnabled="False" ToolTip="Annule la dernière action réalisée dans cette session." />
@@ -637,9 +647,10 @@
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
+                                             <RowDefinition Height="Auto" />
+                                             <RowDefinition Height="Auto" />
+                                             <RowDefinition Height="Auto" />
+                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
@@ -714,9 +725,25 @@
                                                     Style="{StaticResource SecondaryButtonStyle}"
                                                     ToolTip="Supprime la machine et nettoie les patchs qui lui sont associés."
                                                     Click="DeleteDeviceButton_Click" />
-                                        </UniformGrid>
-                                    </Grid>
-                                </GroupBox>
+                                         </UniformGrid>
+
+                                         <UniformGrid Grid.Row="5"
+                                                      Grid.ColumnSpan="2"
+                                                      Columns="2"
+                                                      Margin="0,2,0,0">
+                                             <Button x:Name="DuplicateDeviceButton"
+                                                     Content="Dupliquer"
+                                                     Style="{StaticResource SecondaryButtonStyle}"
+                                                     ToolTip="Crée un rôle générique indépendant sans recopier l'identité matérielle."
+                                                     Click="DuplicateDeviceButton_Click" />
+                                             <Button x:Name="SaveDeviceToBankButton"
+                                                     Content="Enregistrer dans la banque"
+                                                     Style="{StaticResource SecondaryButtonStyle}"
+                                                     ToolTip="Crée un modèle réutilisable et partageable à partir de cette machine."
+                                                     Click="SaveDeviceToBankButton_Click" />
+                                         </UniformGrid>
+                                     </Grid>
+                                 </GroupBox>
 
                                 <GroupBox Grid.Column="2"
                                           Header="Canaux de la machine"
@@ -1678,11 +1705,15 @@
                                     Style="{StaticResource SecondaryButtonStyle}"
                                     Click="OpenQuickStartButton_Click"
                                     ToolTip="Ouvre la notice rapide PDF." />
-                            <Button Content="Notice complète"
-                                    Style="{StaticResource SecondaryButtonStyle}"
-                                    Click="OpenFullNoticeButton_Click"
-                                    ToolTip="Ouvre la notice complète PDF." />
-                        </WrapPanel>
+                             <Button Content="Notice complète"
+                                     Style="{StaticResource SecondaryButtonStyle}"
+                                     Click="OpenFullNoticeButton_Click"
+                                     ToolTip="Ouvre la notice complète PDF." />
+                             <Button Content="Ouvrir les journaux"
+                                     Style="{StaticResource SecondaryButtonStyle}"
+                                     Click="OpenDiagnosticLogsButton_Click"
+                                     ToolTip="Ouvre le dossier des journaux techniques utiles au diagnostic." />
+                         </WrapPanel>
 
                         <Grid Grid.Row="1">
                             <Grid.ColumnDefinitions>

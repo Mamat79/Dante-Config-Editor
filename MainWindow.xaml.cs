@@ -284,6 +284,111 @@ public partial class MainWindow : Window
         LoadProjectFromPath(dialog.FileName);
     }
 
+    private void NewProjectButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_project?.IsModified == true)
+        {
+            MessageBoxResult abandon = MessageBox.Show(
+                this,
+                _language == UiLanguage.English
+                    ? "The current project has unsaved changes. Create another project without saving them?"
+                    : "Le projet courant contient des changements non enregistrés. Créer un autre projet sans les sauvegarder ?",
+                T("Dialog.ConfirmTitle"),
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+            if (abandon != MessageBoxResult.Yes)
+            {
+                return;
+            }
+        }
+
+        NewProjectWindow window = new(
+            _language,
+            ThemeToggleButton.IsChecked == true)
+        {
+            Owner = this
+        };
+        if (window.ShowDialog() != true || window.Result is null)
+        {
+            return;
+        }
+
+        try
+        {
+            NewProjectFormResult form = window.Result;
+            DanteProject created;
+            if (form.TemplateId.HasValue)
+            {
+                MachineTemplatePackage template = new MachineBankRepository(
+                    form.BankPath).Load(form.TemplateId.Value);
+                created = DanteProject.CreateNewFromTemplate(
+                    form.DestinationPath,
+                    form.ProjectName,
+                    form.Description,
+                    template,
+                    form.TemplateOptions
+                        ?? throw new InvalidOperationException(
+                            "Les options d'instance du modèle sont absentes."));
+            }
+            else
+            {
+                created = DanteProject.CreateNew(
+                    form.DestinationPath,
+                    new NewProjectOptions
+                    {
+                        ProjectName = form.ProjectName,
+                        Description = form.Description,
+                        Machines =
+                        [
+                            new NewCustomMachineDefinition
+                            {
+                                Name = form.DeviceName,
+                                TxCount = form.TxCount,
+                                RxCount = form.RxCount,
+                                SampleRate = form.SampleRate,
+                                Encoding = form.Encoding,
+                                UnicastLatency = form.UnicastLatency
+                            }
+                        ]
+                    });
+            }
+
+            created.SaveAs(form.DestinationPath);
+            _project = created;
+            _editModeEnabled = true;
+            _logs.Clear();
+            RecentFilesService.Add(form.DestinationPath);
+            RefreshRecentFiles();
+            AddLog(_language == UiLanguage.English
+                ? $"Experimental project created: {form.DestinationPath}"
+                : $"Projet expérimental créé : {form.DestinationPath}");
+            RefreshAll();
+            SetStatus(_language == UiLanguage.English
+                ? "Experimental project created. Validate it in Dante Controller."
+                : "Projet expérimental créé. Validez-le dans Dante Controller.");
+            MessageBox.Show(
+                this,
+                _language == UiLanguage.English
+                    ? "The XML was created and reloaded by DCE. This validates its internal structure only. "
+                    + "Import it in Dante Controller before production use."
+                    : "Le XML a été créé puis rechargé par DCE. Cela valide seulement sa structure interne. "
+                    + "Importez-le dans Dante Controller avant tout usage en production.",
+                _language == UiLanguage.English
+                    ? "Manual validation required"
+                    : "Validation manuelle obligatoire",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+        }
+        catch (Exception ex)
+        {
+            ShowError(
+                _language == UiLanguage.English
+                    ? "Unable to create project"
+                    : "Création du projet impossible",
+                ex);
+        }
+    }
+
     private void MergeXmlButton_Click(object sender, RoutedEventArgs e)
     {
         if (!EnsureProjectLoaded())
@@ -712,6 +817,188 @@ public partial class MainWindow : Window
             T("Action.DeviceDeleted"),
             () => _project!.DeleteDevice(deviceName),
             Tf("Dialog.DeleteDeviceWarning", deviceName));
+    }
+
+    private void OpenMachineBankButton_Click(object sender, RoutedEventArgs e)
+    {
+        MachineBankWindow window = new(
+            _language,
+            ThemeToggleButton.IsChecked == true,
+            _project?.Devices.Select(device => device.Name) ?? [],
+            _project is not null && _editModeEnabled)
+        {
+            Owner = this
+        };
+        if (window.ShowDialog() != true
+            || window.SelectedPackageToAdd is null
+            || window.SelectedInstanceOptions is null
+            || _project is null)
+        {
+            return;
+        }
+
+        MachineTemplatePackage package = window.SelectedPackageToAdd;
+        MachineInstanceOptions options = window.SelectedInstanceOptions;
+        bool completed = RunProjectAction(
+            _language == UiLanguage.English
+                ? $"Device added from bank: {options.NewName}"
+                : $"Machine ajoutée depuis la banque : {options.NewName}",
+            () => _project.AddDeviceFromTemplate(package, options));
+        if (completed)
+        {
+            DeviceComboBox.SelectedItem = options.NewName;
+        }
+    }
+
+    private void DuplicateDeviceButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (!EnsureProjectLoaded())
+        {
+            return;
+        }
+
+        string? sourceName = DeviceComboBox.SelectedItem as string;
+        DanteDevice? source = _project!.FindDevice(sourceName);
+        if (source is null)
+        {
+            ShowError(
+                LocalizeLiteral("Action impossible"),
+                LocalizeLiteral("Sélectionnez d'abord une machine."));
+            return;
+        }
+
+        HashSet<string> usedNames = _project.Devices
+            .Select(device => device.Name)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        string suggestedName = DanteNameRules.BuildUniqueSuffixedDeviceName(
+            source.Name,
+            _language == UiLanguage.English ? "Copy" : "Copie",
+            usedNames);
+        MachineCloneWindow window = new(
+            _language,
+            ThemeToggleButton.IsChecked == true,
+            source.Name,
+            suggestedName)
+        {
+            Owner = this
+        };
+        if (window.ShowDialog() != true || window.Options is null)
+        {
+            return;
+        }
+
+        string newName = window.Options.NewName;
+        bool completed = RunProjectAction(
+            _language == UiLanguage.English
+                ? $"Device duplicated: {source.Name} -> {newName}"
+                : $"Machine dupliquée : {source.Name} -> {newName}",
+            () => _project.DuplicateDevice(source.Name, window.Options));
+        if (completed)
+        {
+            DeviceComboBox.SelectedItem = newName;
+        }
+    }
+
+    private void SaveDeviceToBankButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (!EnsureProjectLoaded())
+        {
+            return;
+        }
+
+        string? deviceName = DeviceComboBox.SelectedItem as string;
+        DanteDevice? device = _project!.FindDevice(deviceName);
+        if (device is null)
+        {
+            ShowError(
+                LocalizeLiteral("Action impossible"),
+                LocalizeLiteral("Sélectionnez d'abord une machine."));
+            return;
+        }
+
+        string manufacturer = device.Element.ChildValue("manufacturer_name");
+        string model = device.Element.ChildValue("model_name");
+        string suggestedTemplateName = string.Join(
+            " ",
+            new[] { manufacturer, model }
+                .Where(value => !string.IsNullOrWhiteSpace(value)));
+        if (string.IsNullOrWhiteSpace(suggestedTemplateName))
+        {
+            suggestedTemplateName = device.Name;
+        }
+
+        MachineTemplateEditorWindow window = new(
+            _language,
+            ThemeToggleButton.IsChecked == true,
+            _language == UiLanguage.English
+                ? "Save to device bank"
+                : "Enregistrer dans la banque de machines",
+            _language == UiLanguage.English
+                ? $"Prepare a reusable template from {device.Name}. Hardware identity, network addresses, subscriptions and multicast flows will be removed."
+                : $"Préparez un modèle réutilisable à partir de {device.Name}. L'identité matérielle, le réseau, les subscriptions et les flows multicast seront retirés.",
+            suggestedTemplateName,
+            manufacturer,
+            model,
+            string.Empty,
+            string.Empty,
+            [],
+            device.TxChannels.Select(channel => channel.DisplayName),
+            device.RxChannels.Select(channel => channel.DisplayName))
+        {
+            Owner = this
+        };
+        if (window.ShowDialog() != true || window.Result is null)
+        {
+            return;
+        }
+
+        try
+        {
+            MachineTemplateFormResult form = window.Result;
+            MachineTemplatePackage package = MachineTemplateService.CreateFromDevice(
+                device,
+                _project.PresetVersion,
+                new MachineTemplateCreateRequest
+                {
+                    TemplateName = form.TemplateName,
+                    Manufacturer = form.Manufacturer,
+                    Model = form.Model,
+                    Description = form.Description,
+                    Category = form.Category,
+                    Tags = form.Tags,
+                    TxLabels = form.TxLabels,
+                    RxLabels = form.RxLabels,
+                    ImageSourcePath = form.ImageSourcePath
+                });
+            string bankPath = MachineBankLocationService.CreateDefault().Load();
+            MachineTemplateMetadata saved = new MachineBankRepository(bankPath).Save(package);
+            AddLog((_language == UiLanguage.English
+                ? "Device template saved: "
+                : "Modèle de machine enregistré : ") + saved.TemplateName);
+            SetStatus(_language == UiLanguage.English
+                ? "Device template saved."
+                : "Modèle enregistré dans la banque.");
+            MessageBox.Show(
+                this,
+                _language == UiLanguage.English
+                    ? $"“{saved.TemplateName}” was saved in:{Environment.NewLine}{bankPath}"
+                    : $"« {saved.TemplateName} » a été enregistré dans :{Environment.NewLine}{bankPath}",
+                _language == UiLanguage.English ? "Device bank" : "Banque de machines",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            DiagnosticLogService.Default.Write(
+                "MachineBank",
+                "Impossible d'enregistrer un modèle depuis la machine sélectionnée.",
+                ex);
+            ShowError(
+                _language == UiLanguage.English
+                    ? "Unable to save template"
+                    : "Enregistrement du modèle impossible",
+                ex);
+        }
     }
 
     private void ResetDeviceChannelsButton_Click(object sender, RoutedEventArgs e)
@@ -2461,6 +2748,27 @@ public partial class MainWindow : Window
         OpenBundledDocument($"Notice_DanteConfigEditorV3_{DocumentLanguageSuffix()}.pdf");
     }
 
+    private void OpenDiagnosticLogsButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            string directory = DiagnosticLogService.Default.DirectoryPath;
+            Directory.CreateDirectory(directory);
+            Process.Start(new ProcessStartInfo(directory)
+            {
+                UseShellExecute = true
+            });
+        }
+        catch (Exception ex)
+        {
+            ShowError(
+                _language == UiLanguage.English
+                    ? "Unable to open diagnostic logs"
+                    : "Ouverture des journaux impossible",
+                ex);
+        }
+    }
+
     private string DocumentLanguageSuffix()
     {
         return _language == UiLanguage.English ? "EN" : "FR";
@@ -3561,6 +3869,7 @@ public partial class MainWindow : Window
         yield return MergeXmlButton;
         yield return ApplyDeviceSettingsButton;
         yield return DeleteDeviceButton;
+        yield return DuplicateDeviceButton;
         yield return ResetDevicePatchesButton;
         yield return ResetDeviceRxPatchesButton;
         yield return ResetDeviceTxPatchesButton;

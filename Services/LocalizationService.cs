@@ -513,6 +513,10 @@ public static class LocalizationService
         }
 
         Add(map, "Ouvrir XML", "Open XML");
+        Add(map, "Nouveau projet (expérimental)", "New project (experimental)");
+        Add(map, "Crée un preset 3.0.0 hors ligne. Un test d'import Dante Controller reste obligatoire.", "Creates an offline 3.0.0 preset. A Dante Controller import test is still required.");
+        Add(map, "Banque de machines", "Device bank");
+        Add(map, "Consulte, importe, exporte et administre les modèles de machines réutilisables.", "Browses, imports, exports, and manages reusable device templates.");
         Add(map, "Ajouter XML", "Add XML");
         Add(map, "Ajouter XML au projet", "Add XML to project");
         Add(map, "Enregistrer sous", "Save as");
@@ -801,6 +805,12 @@ public static class LocalizationService
         Add(map, "Applique en une seule fois le nom, le mode réseau, la latence et le statut Preferred master.", "Applies the name, network mode, latency, and Preferred Master status in one operation.");
         Add(map, "Ouvre tous les réglages de la machine : IP automatique ou fixe, formats audio et noms des canaux.", "Opens all device settings: automatic or static IP, audio formats, and channel names.");
         Add(map, "Supprime la machine et nettoie les patchs qui lui sont associés.", "Deletes the device and removes its associated subscriptions.");
+        Add(map, "Dupliquer", "Duplicate");
+        Add(map, "Crée un rôle générique indépendant sans recopier l'identité matérielle.", "Creates an independent generic role without copying the hardware identity.");
+        Add(map, "Enregistrer dans la banque", "Save to device bank");
+        Add(map, "Crée un modèle réutilisable et partageable à partir de cette machine.", "Creates a reusable, shareable template from this device.");
+        Add(map, "Ouvrir les journaux", "Open logs");
+        Add(map, "Ouvre le dossier des journaux techniques utiles au diagnostic.", "Opens the technical log folder used for diagnostics.");
         Add(map, "Masque les panneaux de réglage pour agrandir le tableau des machines.", "Hides the settings panels to enlarge the device table.");
         Add(map, "Affiche les panneaux de réglage de la configuration.", "Shows the configuration settings panels.");
         Add(map, "Affiche toutes les différences de machines, canaux et patchs depuis l'ouverture du XML.", "Shows all device, channel, and subscription differences since the XML was opened.");

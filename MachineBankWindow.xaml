@@ -1,0 +1,227 @@
+<Window x:Class="DanteConfigEditor.MachineBankWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Banque de machines"
+        Width="1180"
+        Height="760"
+        MinWidth="940"
+        MinHeight="620"
+        WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/DialogStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid Margin="18">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <TextBlock x:Name="HeadingTextBlock"
+                           Text="Banque de machines"
+                           FontSize="20"
+                           FontWeight="SemiBold" />
+                <TextBlock x:Name="BankPathTextBlock"
+                           Margin="0,5,12,0"
+                           Foreground="{DynamicResource DialogMutedBrush}"
+                           TextTrimming="CharacterEllipsis"
+                           ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" />
+            </StackPanel>
+            <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
+                <Button x:Name="ChangeBankButton"
+                        Content="Changer de banque"
+                        Style="{StaticResource DialogSecondaryButtonStyle}"
+                        Click="ChangeBankButton_Click" />
+                <Button x:Name="OpenBankFolderButton"
+                        Content="Ouvrir le dossier"
+                        Style="{StaticResource DialogSecondaryButtonStyle}"
+                        Click="OpenBankFolderButton_Click" />
+            </WrapPanel>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="0,14,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.5*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="100" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Margin="0,0,8,0">
+                <Label x:Name="SearchLabel" Content="Recherche" />
+                <TextBox x:Name="SearchTextBox" TextChanged="FilterChanged" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                <Label x:Name="ManufacturerFilterLabel" Content="Fabricant" />
+                <ComboBox x:Name="ManufacturerFilterComboBox"
+                          SelectionChanged="FilterChanged" />
+            </StackPanel>
+            <StackPanel Grid.Column="2" Margin="0,0,8,0">
+                <Label x:Name="CategoryFilterLabel" Content="Catégorie" />
+                <ComboBox x:Name="CategoryFilterComboBox"
+                          SelectionChanged="FilterChanged" />
+            </StackPanel>
+            <StackPanel Grid.Column="3" Margin="0,0,8,0">
+                <Label x:Name="MinimumTxLabel" Content="TX min." />
+                <TextBox x:Name="MinimumTxTextBox" TextChanged="FilterChanged" />
+            </StackPanel>
+            <StackPanel Grid.Column="4">
+                <Label x:Name="MinimumRxLabel" Content="RX min." />
+                <TextBox x:Name="MinimumRxTextBox" TextChanged="FilterChanged" />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.55*" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="0.95*" />
+            </Grid.ColumnDefinitions>
+
+            <DataGrid x:Name="TemplatesGrid"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      SelectionMode="Single"
+                      SelectionChanged="TemplatesGrid_SelectionChanged">
+                <DataGrid.Columns>
+                    <DataGridTextColumn x:Name="TemplateNameColumn"
+                                        Header="Modèle de banque"
+                                        Binding="{Binding TemplateName}"
+                                        Width="1.4*" />
+                    <DataGridTextColumn x:Name="ManufacturerColumn"
+                                        Header="Fabricant"
+                                        Binding="{Binding Manufacturer}"
+                                        Width="*" />
+                    <DataGridTextColumn x:Name="ModelColumn"
+                                        Header="Matériel"
+                                        Binding="{Binding Model}"
+                                        Width="*" />
+                    <DataGridTextColumn Header="TX"
+                                        Binding="{Binding TxCount}"
+                                        Width="56" />
+                    <DataGridTextColumn Header="RX"
+                                        Binding="{Binding RxCount}"
+                                        Width="56" />
+                    <DataGridTextColumn x:Name="CategoryColumn"
+                                        Header="Catégorie"
+                                        Binding="{Binding Category}"
+                                        Width="0.8*" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Border Grid.Column="2"
+                    Background="{DynamicResource DialogSurfaceBrush}"
+                    BorderBrush="{DynamicResource DialogBorderBrush}"
+                    BorderThickness="1"
+                    Padding="14">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <Border Height="170"
+                                BorderBrush="{DynamicResource DialogBorderBrush}"
+                                BorderThickness="1"
+                                Background="{DynamicResource DialogWindowBrush}">
+                            <Grid>
+                                <Image x:Name="TemplateImage"
+                                       Margin="8"
+                                       Stretch="Uniform" />
+                                <TextBlock x:Name="NoImageTextBlock"
+                                           Text="Aucune image"
+                                           Foreground="{DynamicResource DialogMutedBrush}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center" />
+                            </Grid>
+                        </Border>
+                        <TextBlock x:Name="SelectedTemplateNameTextBlock"
+                                   Margin="0,12,0,0"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   TextWrapping="Wrap" />
+                        <TextBlock x:Name="SelectedHardwareTextBlock"
+                                   Margin="0,4,0,0"
+                                   Foreground="{DynamicResource DialogMutedBrush}"
+                                   TextWrapping="Wrap" />
+                        <TextBlock x:Name="SelectedCountsTextBlock"
+                                   Margin="0,8,0,0"
+                                   FontWeight="SemiBold" />
+                        <TextBlock x:Name="SelectedDescriptionTextBlock"
+                                   Margin="0,10,0,0"
+                                   TextWrapping="Wrap" />
+                        <TextBlock x:Name="SelectedTagsTextBlock"
+                                   Margin="0,8,0,0"
+                                   Foreground="{DynamicResource DialogMutedBrush}"
+                                   TextWrapping="Wrap" />
+                        <Separator Margin="0,12" />
+                        <TextBlock x:Name="LabelsPreviewHeadingTextBlock"
+                                   Text="Aperçu des labels"
+                                   FontWeight="SemiBold" />
+                        <TextBlock x:Name="LabelsPreviewTextBlock"
+                                   Margin="0,6,0,0"
+                                   FontFamily="Consolas"
+                                   FontSize="12"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="3" Margin="0,14,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <WrapPanel>
+                <Button x:Name="AddToProjectButton"
+                        Content="Ajouter au projet"
+                        Click="AddToProjectButton_Click" />
+                <Button x:Name="EditTemplateButton"
+                        Content="Modifier"
+                        Style="{StaticResource DialogSecondaryButtonStyle}"
+                        Click="EditTemplateButton_Click" />
+                <Button x:Name="DuplicateTemplateButton"
+                        Content="Dupliquer le modèle"
+                        Style="{StaticResource DialogSecondaryButtonStyle}"
+                        Click="DuplicateTemplateButton_Click" />
+                <Button x:Name="DeleteTemplateButton"
+                        Content="Supprimer"
+                        Style="{StaticResource DialogSecondaryButtonStyle}"
+                        Click="DeleteTemplateButton_Click" />
+            </WrapPanel>
+            <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
+                <Button x:Name="ImportTemplateButton"
+                        Content="Importer un modèle"
+                        Style="{StaticResource DialogSecondaryButtonStyle}"
+                        Click="ImportTemplateButton_Click" />
+                <Button x:Name="ExportTemplateButton"
+                        Content="Exporter le modèle"
+                        Style="{StaticResource DialogSecondaryButtonStyle}"
+                        Click="ExportTemplateButton_Click" />
+                <Button x:Name="BackupBankButton"
+                        Content="Sauvegarder la banque"
+                        Style="{StaticResource DialogSecondaryButtonStyle}"
+                        Click="BackupBankButton_Click" />
+                <Button x:Name="RestoreBankButton"
+                        Content="Restaurer une banque"
+                        Style="{StaticResource DialogSecondaryButtonStyle}"
+                        Click="RestoreBankButton_Click" />
+                <Button x:Name="CloseButton"
+                        Content="Fermer"
+                        Style="{StaticResource DialogSecondaryButtonStyle}"
+                        IsCancel="True" />
+            </WrapPanel>
+        </Grid>
+    </Grid>
+</Window>
