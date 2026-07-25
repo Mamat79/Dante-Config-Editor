@@ -310,7 +310,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(T("Dialog.OpenFailedTitle"), ex.Message);
+            ShowError(T("Dialog.OpenFailedTitle"), ex);
             return;
         }
 
@@ -416,7 +416,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(T("Dialog.OpenFailedTitle"), ex.Message);
+            ShowError(T("Dialog.OpenFailedTitle"), ex);
         }
     }
 
@@ -530,7 +530,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(T("Dialog.SaveErrorTitle"), ex.Message);
+            ShowError(T("Dialog.SaveErrorTitle"), ex);
         }
     }
 
@@ -567,7 +567,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(T("Dialog.ReloadErrorTitle"), ex.Message);
+            ShowError(T("Dialog.ReloadErrorTitle"), ex);
         }
     }
 
@@ -588,7 +588,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(T("Dialog.UndoErrorTitle"), ex.Message);
+            ShowError(T("Dialog.UndoErrorTitle"), ex);
         }
     }
 
@@ -2159,7 +2159,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(_language == UiLanguage.English ? "Label import unavailable" : "Import de labels impossible", ex.Message);
+            ShowError(_language == UiLanguage.English ? "Label import unavailable" : "Import de labels impossible", ex);
         }
     }
 
@@ -2176,7 +2176,7 @@ public partial class MainWindow : Window
         {
             ShowError(
                 LocalizeLiteral("Ouverture du projet DMT impossible"),
-                ex.Message);
+                ex);
         }
     }
 
@@ -2233,7 +2233,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(_language == UiLanguage.English ? "Label export unavailable" : "Export de labels impossible", ex.Message);
+            ShowError(_language == UiLanguage.English ? "Label export unavailable" : "Export de labels impossible", ex);
         }
     }
 
@@ -2494,7 +2494,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(T("Dialog.ExportImpossibleTitle"), ex.Message);
+            ShowError(T("Dialog.ExportImpossibleTitle"), ex);
         }
     }
 
@@ -2526,7 +2526,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(T("Dialog.ExportImpossibleTitle"), ex.Message);
+            ShowError(T("Dialog.ExportImpossibleTitle"), ex);
         }
     }
 
@@ -2560,7 +2560,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(T("Dialog.ExportPatchbookImpossibleTitle"), ex.Message);
+            ShowError(T("Dialog.ExportPatchbookImpossibleTitle"), ex);
         }
     }
 
@@ -2593,7 +2593,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(T("Dialog.ExportPatchbookCsvImpossibleTitle"), ex.Message);
+            ShowError(T("Dialog.ExportPatchbookCsvImpossibleTitle"), ex);
         }
     }
 
@@ -2643,7 +2643,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError("Comparaison impossible", ex.Message);
+            ShowError("Comparaison impossible", ex);
         }
     }
 
@@ -3651,7 +3651,7 @@ public partial class MainWindow : Window
             _project?.RestoreLastUndoSnapshot();
             RefreshAll();
             ScheduleRecoverySnapshot();
-            ShowError("Action impossible", ex.Message);
+            ShowError("Action impossible", ex);
             return false;
         }
     }
@@ -3865,7 +3865,16 @@ public partial class MainWindow : Window
     {
         AddLog(title + " - " + message);
         SetStatus(title);
+        DiagnosticLogService.Default.Write("UI", $"{title}: {message}");
         MessageBox.Show(this, message, title, MessageBoxButton.OK, MessageBoxImage.Error);
+    }
+
+    private void ShowError(string title, Exception exception)
+    {
+        AddLog(title + " - " + exception.Message);
+        SetStatus(title);
+        DiagnosticLogService.Default.Write("UI", title, exception);
+        MessageBox.Show(this, exception.Message, title, MessageBoxButton.OK, MessageBoxImage.Error);
     }
 
     private void OpenBundledDocument(string fileName)
