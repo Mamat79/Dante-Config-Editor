@@ -11,8 +11,9 @@
 - Commandes Windows et macOS pour la duplication, la banque, l'ajout de modèle, le nouveau projet et l'ouverture des journaux.
 - Journaux techniques quotidiens et messages de validation plus précis.
 - Corpus local de dix XML, 176 machines et 5 004 labels validé sans modifier les originaux.
-- Suite portée à 258 tests Core/Windows et 16 tests Mac sans écran.
+- Suite portée à 265 tests Core/Windows et 19 tests Mac sans écran.
 - Numéro d'application, installateur, paquets macOS, workflows et notices passés en V3.6.
+- Easy Patch conserve le point de départ et le nombre demandé après un clic immédiat afin que `PATCH 1:1` reste utilisable.
 - Aucun import V3.6 réel dans Dante Controller n'est revendiqué ; la création de projet et les rôles génériques restent à valider manuellement.
 
 ## V3.5 - ajustements de renommage et d'ergonomie

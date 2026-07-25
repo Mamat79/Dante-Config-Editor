@@ -49,6 +49,27 @@ public sealed class PatchWorkspaceUiContractTests
     }
 
     [Fact]
+    public void WindowsImmediatePatchRefreshPreservesMatrixOneToOneStartAndCount()
+    {
+        string workspaceCode = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml.cs"));
+        string mainWindowCode = File.ReadAllText(RepositoryFile("MainWindow.xaml.cs"));
+
+        Assert.Contains("CaptureMatrixOneToOneState()", workspaceCode, StringComparison.Ordinal);
+        Assert.Contains("MatrixOneToOneCountTextBox.Text", workspaceCode, StringComparison.Ordinal);
+        Assert.Contains("_matrixOneToOneStart?.Source.DanteId", workspaceCode, StringComparison.Ordinal);
+        Assert.Contains("_matrixOneToOneStart?.Target.DanteId", workspaceCode, StringComparison.Ordinal);
+        Assert.Contains("RestoreMatrixOneToOneState", workspaceCode, StringComparison.Ordinal);
+        Assert.Contains(
+            "_easyPatchWorkspace?.CaptureMatrixOneToOneState()",
+            mainWindowCode,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "workspace.RestoreMatrixOneToOneState(matrixOneToOneState)",
+            mainWindowCode,
+            StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void WindowsPatchWorkspacePlacesRxOnTheLeftAndTxOnTheRight()
     {
         string xaml = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml"));

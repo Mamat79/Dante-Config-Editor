@@ -2059,6 +2059,9 @@ public partial class MainWindow : Window
             && _easyPatchWorkspace?.IsAssignmentModeSelected == true;
         bool warnOnExistingPatch = !sameProject
             || _easyPatchWorkspace?.WarnOnExistingPatch != false;
+        PatchMatrixOneToOneState? matrixOneToOneState = sameProject
+            ? _easyPatchWorkspace?.CaptureMatrixOneToOneState()
+            : null;
         string? initialTxDevice = sameProject
             ? _easyPatchWorkspace?.SelectedTxDeviceName
             : SourceDeviceComboBox.SelectedItem as string;
@@ -2087,6 +2090,7 @@ public partial class MainWindow : Window
                 extendChannelSeriesAction: ExtendEasyPatchChannelSeries,
                 startInAssignmentMode: startInAssignmentMode,
                 warnOnExistingPatch: warnOnExistingPatch);
+            workspace.RestoreMatrixOneToOneState(matrixOneToOneState);
             workspace.DirectApplyRequested += EasyPatchWorkspace_DirectApplyRequested;
             workspace.InlineChannelNavigationRequested += EasyPatchWorkspace_InlineChannelNavigationRequested;
             _easyPatchProject = _project;

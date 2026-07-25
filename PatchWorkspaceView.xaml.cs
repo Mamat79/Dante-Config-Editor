@@ -31,6 +31,13 @@ public sealed class DirectPatchRequestEventArgs(
         edits ?? throw new ArgumentNullException(nameof(edits));
 }
 
+public sealed record PatchMatrixOneToOneState(
+    string CountText,
+    string? TxDeviceName,
+    int? TxDanteId,
+    string? RxDeviceName,
+    int? RxDanteId);
+
 public partial class PatchWorkspaceView : UserControl
 {
     private const double MinimumMatrixZoom = 0.5;
@@ -140,6 +147,58 @@ public partial class PatchWorkspaceView : UserControl
     {
         Dispatcher.BeginInvoke(new Action(() =>
             FocusInlineChannelEditor(new InlineChannelNavigationTarget(kind, danteId, matrix))));
+    }
+
+    public PatchMatrixOneToOneState CaptureMatrixOneToOneState()
+    {
+        return new PatchMatrixOneToOneState(
+            MatrixOneToOneCountTextBox.Text,
+            _matrixOneToOneStart?.Source.DeviceName,
+            _matrixOneToOneStart?.Source.DanteId,
+            _matrixOneToOneStart?.Target.DeviceName,
+            _matrixOneToOneStart?.Target.DanteId);
+    }
+
+    public void RestoreMatrixOneToOneState(PatchMatrixOneToOneState? state)
+    {
+        if (state is null)
+        {
+            return;
+        }
+
+        // Un patch immédiat reconstruit Easy Patch : les identifiants stables
+        // permettent de retrouver le départ sans dépendre du nom des canaux.
+        bool wasInitializing = _initializing;
+        _initializing = true;
+        try
+        {
+            MatrixOneToOneCountTextBox.Text = state.CountText;
+            _matrixOneToOneStart = state.TxDanteId is int txDanteId
+                && state.RxDanteId is int rxDanteId
+                && !string.IsNullOrWhiteSpace(state.TxDeviceName)
+                && !string.IsNullOrWhiteSpace(state.RxDeviceName)
+                ? _matrixRows
+                    .Where(row =>
+                        row.Target.DanteId == rxDanteId
+                        && string.Equals(
+                            row.Target.DeviceName,
+                            state.RxDeviceName,
+                            StringComparison.OrdinalIgnoreCase))
+                    .SelectMany(row => row.Cells)
+                    .FirstOrDefault(cell =>
+                        cell.Source.DanteId == txDanteId
+                        && string.Equals(
+                            cell.Source.DeviceName,
+                            state.TxDeviceName,
+                            StringComparison.OrdinalIgnoreCase))
+                : null;
+        }
+        finally
+        {
+            _initializing = wasInitializing;
+        }
+
+        UpdateCommandState();
     }
 
     public void ResetPendingChanges()
