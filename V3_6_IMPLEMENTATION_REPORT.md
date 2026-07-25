@@ -1,9 +1,9 @@
 # Rapport final d'implémentation V3.6
 
-Date : 25 juillet 2026  
-Branche : `v3.6`  
-Base V3.5 : `09985050aab242682bab82b792276c68ef3693fb`  
-Commit fonctionnel validé avant ajout de ce rapport : `5f51e7e`
+- Date : 25 juillet 2026
+- Branche : `v3.6`
+- Base V3.5 : `09985050aab242682bab82b792276c68ef3693fb`
+- Commit fonctionnel validé avant ajout de ce rapport : `5f51e7e`
 
 ## 1. Résumé de l'audit
 
@@ -227,9 +227,9 @@ réel, l'absence de validation matérielle et la non-notarisation des DMG.
 
 ## 17. Version finale
 
-Version applicative : **3.6**  
-Version fichier : **3.6.0.0**  
-Installateur : `DanteConfigEditorV3_6_Installer.exe`
+- Version applicative : **3.6**
+- Version fichier : **3.6.0.0**
+- Installateur : `DanteConfigEditorV3_6_Installer.exe`
 
 ## 18. Branche et commits
 
