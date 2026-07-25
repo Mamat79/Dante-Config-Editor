@@ -35,7 +35,7 @@ V3.6 is a Windows and macOS development version based on V3.5. Dante Config Edit
 
 ## Automated validation
 
-- 271 Core/Windows tests passed.
+- 272 Core/Windows tests passed.
 - 20 headless Avalonia/macOS tests passed.
 - Windows and macOS Release builds completed without warnings.
 - The NuGet audit command reported no vulnerable packages.

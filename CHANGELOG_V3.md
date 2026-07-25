@@ -11,7 +11,7 @@
 - Commandes Windows et macOS pour la duplication, la banque, l'ajout de modèle, le nouveau projet et l'ouverture des journaux.
 - Journaux techniques quotidiens et messages de validation plus précis.
 - Corpus local de dix XML, 176 machines et 5 004 labels validé sans modifier les originaux.
-- Suite portée à 271 tests Core/Windows et 20 tests Mac sans écran.
+- Suite portée à 272 tests Core/Windows et 20 tests Mac sans écran.
 - Numéro d'application, installateur, paquets macOS, workflows et notices passés en V3.6.
 - Easy Patch conserve le point de départ et le nombre demandé après un clic immédiat afin que `PATCH 1:1` reste utilisable.
 - L'aperçu séparé du synoptique conserve désormais ses proportions à tous les niveaux de zoom.

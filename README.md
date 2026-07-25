@@ -29,7 +29,7 @@ La V3.6 est développée et testée dans la branche `v3.6`, à partir de la V3.5
 - ajout transactionnel d'une instance indépendante depuis la banque ;
 - création expérimentale d'un projet minimal 3.0.0, à valider impérativement par un import réel dans Dante Controller ;
 - journaux techniques accessibles depuis l'application ;
-- 271 tests Core/Windows et 20 tests Mac sans écran.
+- 272 tests Core/Windows et 20 tests Mac sans écran.
 
 La duplication et la banque ne fabriquent pas un appareil Dante réel. Elles créent des rôles de preset génériques dépourvus de `instance_id` et `device_id`. Aucun import V3.6 n'ayant encore été effectué dans Dante Controller, la compatibilité terrain n'est pas présentée comme garantie.
 

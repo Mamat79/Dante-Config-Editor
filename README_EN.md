@@ -29,7 +29,7 @@ V3.6 is developed and tested on the `v3.6` branch from V3.5. Official V3.4.2 rem
 - transactional insertion of an independent instance from the bank;
 - experimental creation of a minimal 3.0.0 project, which must be validated by an actual Dante Controller import;
 - technical logs available from the application;
-- 271 Core/Windows tests and 20 headless Mac tests.
+- 272 Core/Windows tests and 20 headless Mac tests.
 
 Duplication and the bank do not create real Dante hardware. They create generic preset roles without `instance_id` or `device_id`. No V3.6 output has yet been imported into Dante Controller, so field compatibility is not claimed as guaranteed.
 

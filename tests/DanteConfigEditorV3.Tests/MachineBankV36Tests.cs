@@ -466,6 +466,22 @@ public sealed class MachineBankV36Tests
             MachineBankDistributionService.GitHubBanksUrl);
     }
 
+    [Fact]
+    public void BundledBankFilesKeepStableLineEndingsAcrossGitCheckouts()
+    {
+        string attributes = File.ReadAllText(RepositoryFile(".gitattributes"));
+
+        Assert.Contains(
+            "Resources/MachineBanks/**/*.json text eol=lf",
+            attributes,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "Resources/MachineBanks/**/*.xml text eol=lf",
+            attributes,
+            StringComparison.Ordinal);
+        Assert.Contains("*.zip binary", attributes, StringComparison.Ordinal);
+    }
+
     private static string[] ReadLabels(XDocument document, string channelElementName)
     {
         return document.Root!.Elements()
