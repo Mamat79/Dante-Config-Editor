@@ -23,8 +23,8 @@ from reportlab.platypus import (
 ROOT = Path(__file__).resolve().parent
 # Les quatre PDF sont générés depuis une source unique pour garder les versions
 # française et anglaise synchronisées avec l'application et l'installateur.
-PRODUCT = "Dante Config Editor V3.5"
-VERSION = "3.5"
+PRODUCT = "Dante Config Editor V3.6"
+VERSION = "3.6"
 GITHUB = "github.com/Mamat79/DanteConfigEditorV3"
 
 INK = colors.HexColor("#172033")
@@ -315,9 +315,9 @@ def quick_start(language: str) -> None:
         else "Quick start - offline editing of Dante XML files"
     )
     warning = (
-        "<b>Outil tiers non officiel Audinate.</b> Cette V3.5 est une version de développement et peut encore contenir des bugs. Travaillez sur une copie et validez toujours le XML final par un import dans l'outil Dante officiel adapté avant toute utilisation réelle."
+        "<b>Outil tiers non officiel Audinate.</b> Cette V3.6 est une version de développement et peut encore contenir des bugs. Travaillez sur une copie et validez toujours le XML final par un import dans l'outil Dante officiel adapté avant toute utilisation réelle."
         if french
-        else "<b>Third-party tool, not an official Audinate product.</b> V3.5 is a development version and may still contain bugs. Work on a copy and always validate the final XML by importing it into the appropriate official Dante tool before real use."
+        else "<b>Third-party tool, not an official Audinate product.</b> V3.6 is a development version and may still contain bugs. Work on a copy and always validate the final XML by importing it into the appropriate official Dante tool before real use."
     )
     steps = (
         [
@@ -344,6 +344,7 @@ def quick_start(language: str) -> None:
             ("Récupération", "Une copie est écrite en arrière-plan après un court délai. La nouvelle destination devient la référence après Enregistrer sous."),
             ("Import / Export", "Labels JSON/CSV, XLSX/ODS DMT, CSV A&H et ZIP Yamaha sont regroupés avec des modèles dLive, Avantis, CL et QL inclus."),
             ("Synoptique", "Regroupez les machines par emplacement et exportez un SVG ou PDF en couleur sans modifier le XML Dante."),
+            ("Banque de machines", "Dupliquez un rôle générique, enregistrez-le dans une banque partageable ou ajoutez une instance indépendante à un projet."),
         ]
         if french
         else [
@@ -351,6 +352,7 @@ def quick_start(language: str) -> None:
             ("Recovery", "A copy is written in the background after a short delay. Save as makes the new destination the session reference."),
             ("Import / Export", "JSON/CSV, DMT XLSX/ODS, A&H CSV, and Yamaha ZIP labels are grouped with bundled dLive, Avantis, CL, and QL templates."),
             ("Synoptic", "Group devices by location and export a colored SVG or PDF without changing Dante XML."),
+            ("Machine bank", "Duplicate a generic role, save it in a shareable bank, or add an independent instance to a project."),
         ]
     )
 
@@ -376,7 +378,10 @@ def quick_start(language: str) -> None:
     feature_cells = []
     for heading, text in features:
         feature_cells.append(para(f"<b>{heading}</b><br/>{text}", "small"))
-    feature_table = Table([feature_cells[:2], feature_cells[2:]], colWidths=[84 * mm, 84 * mm])
+    feature_rows = [feature_cells[index:index + 2] for index in range(0, len(feature_cells), 2)]
+    if len(feature_rows[-1]) == 1:
+        feature_rows[-1].append("")
+    feature_table = Table(feature_rows, colWidths=[84 * mm, 84 * mm])
     feature_table.setStyle(
         TableStyle(
             [
@@ -414,13 +419,13 @@ def full_guide(language: str) -> None:
     if french:
         page1 = [
             para("1. Installation et démarrage", "h1"),
-            callout("<b>Important :</b> cette application est un outil tiers non officiel Audinate. La V3.5 est une version de développement et peut encore contenir des bugs. Elle édite des XML hors ligne, sans connexion au réseau Dante ni API Audinate. Conservez l'original et validez le fichier généré dans Dante Controller avant toute utilisation en production."),
+            callout("<b>Important :</b> cette application est un outil tiers non officiel Audinate. La V3.6 est une version de développement et peut encore contenir des bugs. Elle édite des XML hors ligne, sans connexion au réseau Dante ni API Audinate. Conservez l'original et validez le fichier généré dans Dante Controller avant toute utilisation en production."),
             para("L'installateur Windows x64 contient l'application et le runtime .NET 8 nécessaire. Il n'est normalement pas nécessaire d'installer .NET séparément."),
             *bullets([
                 "L'installation proposée par défaut se trouve dans Program Files et crée des raccourcis dans le menu Démarrer et sur le Bureau.",
-                "La V3.5 utilise son propre dossier et ses propres raccourcis afin de pouvoir cohabiter avec la V3.4.2 stable.",
-                "L'installateur V3.5 remplace uniquement une installation V3.5 existante et conserve les données locales de travail.",
-                "Deux DMG V3.5 autonomes sont fournis pour Apple Silicon et Intel. Le bundle V3.5 distinct peut cohabiter avec la V3.4.2.",
+                "Une installation V3.6 neuve utilise son propre dossier et ses propres raccourcis afin de pouvoir cohabiter avec la V3.4.2 stable.",
+                "La V3.6 remplace la ligne de développement V3.5 lorsqu'elle est déjà installée et conserve les données locales de travail.",
+                "Deux DMG V3.6 autonomes sont prévus pour Apple Silicon et Intel. Le bundle V3.6 distinct peut cohabiter avec la V3.4.2.",
                 "Les quatre notices PDF françaises et anglaises sont installées et restent accessibles depuis l'application.",
             ]),
             para("2. Principes de sécurité", "h1"),
@@ -591,7 +596,7 @@ def full_guide(language: str) -> None:
                 [48, 122],
             ),
             para("14. Tests de non-régression", "h1"),
-            para("La suite V3.5 exécute 199 tests Core/Windows et 16 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la suppression complète d'une machine, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch et la cohérence des traductions."),
+            para("La suite V3.6 exécute 258 tests Core/Windows et 16 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la duplication, la banque de machines, la création expérimentale de projet, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch et la cohérence des traductions."),
             para("15. Limites connues", "h1"),
             *bullets([
                 "Aucun pilotage en temps réel et aucune communication avec les appareils.",
@@ -603,7 +608,8 @@ def full_guide(language: str) -> None:
                 "L'onglet Windows Easy patch n'est pas reproduit à l'identique sur Mac, qui conserve l'atelier visuel Avalonia.",
                 "Des noms TX dupliqués sont ambigus dans les subscriptions Dante et doivent être renommés avant Easy patch.",
                 "Les classeurs natifs correspondent aux modèles DMT 2.13.0 observés et aux exemples dLive, Avantis, CL5 et QL5 fournis ; JSON/CSV DMT 2.14.0-RC1 est testé séparément.",
-                "La création de machines génériques et la duplication de rôles ne sont pas proposées sans règle officielle vérifiée pour fabriquer des identifiants techniques importables.",
+                "Les rôles génériques dupliqués ou ajoutés depuis la banque n'emportent aucun identifiant matériel instance_id/device_id ; seule une importation réelle dans Dante Controller peut confirmer leur utilisation avec une version donnée.",
+                "Nouveau projet produit une structure minimale expérimentale au format 3.0.0. Elle doit impérativement être importée et contrôlée dans Dante Controller avant tout usage.",
             ]),
             para("16. Aide et informations", "h1"),
             para(
@@ -611,6 +617,36 @@ def full_guide(language: str) -> None:
                 f"Projet public : {GITHUB} - Crédit : By Mamat et ses agents.",
                 "small",
             ),
+        ]
+        bank_page = [
+            para("Banque de machines et rôles génériques", "h1"),
+            callout("Ces fonctions manipulent des rôles de preset hors ligne, pas des appareils réels. DCE supprime les identifiants matériels de l'instance source et ne prétend pas créer l'identité d'un équipement Dante."),
+            para("Dupliquer une machine", "h2"),
+            *bullets([
+                "Sélectionnez une machine puis choisissez Dupliquer. Donnez un nom de rôle unique.",
+                "Les labels TX/RX peuvent être conservés. Réseau, réglages, flows, Preferred Master et subscriptions sont désactivés par défaut.",
+                "L'original reste inchangé. La copie est ajoutée en une opération annulable et reçoit une identité de session propre à DCE, jamais écrite dans le XML.",
+            ]),
+            para("Enregistrer et partager un modèle", "h2"),
+            *bullets([
+                "Choisissez Enregistrer dans la banque, renseignez fabricant, modèle, catégorie, description, tags et labels génériques.",
+                "Une image PNG, JPEG ou WebP facultative est copiée dans le dossier du modèle ; aucun chemin externe fragile n'est conservé.",
+                "La banque se trouve par défaut dans Documents/Dante Config Editor/Machine Bank. Son emplacement peut être choisi, ouvert, copié ou placé dans un dossier synchronisé.",
+                "L'administration permet recherche, filtres, modification, duplication, suppression confirmée, import/export d'un modèle ZIP et sauvegarde/restauration complète de la banque.",
+            ]),
+            para("Ajouter un modèle au projet", "h2"),
+            *bullets([
+                "Choisissez Ajouter depuis la banque puis configurez le nouveau nom, les labels et les options explicitement souhaitées.",
+                "L'instance ajoutée est indépendante du modèle. Modifier l'une ne modifie jamais l'autre.",
+                "DCE vérifie la version du modèle, son empreinte, le nombre de canaux, le namespace et la version de preset avant une insertion transactionnelle.",
+            ]),
+            para("Nouveau projet expérimental", "h2"),
+            *bullets([
+                "Nouveau projet crée une structure minimale 3.0.0 vide ou contenant un premier rôle issu de la banque.",
+                "Le fichier existant n'est jamais écrasé silencieusement. L'écriture passe par un temporaire puis par validation et remplacement atomique.",
+                "Réouvrez le XML dans DCE, consultez Santé du fichier, puis effectuez obligatoirement un import manuel dans Dante Controller.",
+            ]),
+            callout("Les journaux techniques sont accessibles depuis Sécurité et journal. Ils expliquent les échecs d'import, de validation, de banque et d'export sans modifier le projet.", PALE_GREEN),
         ]
         screen_map = [
             para("Repère des écrans", "h1"),
@@ -675,13 +711,13 @@ def full_guide(language: str) -> None:
     else:
         page1 = [
             para("1. Installation and startup", "h1"),
-            callout("<b>Important:</b> this is a third-party tool, not an official Audinate product. V3.5 is a development version and may still contain bugs. It edits XML files offline without connecting to a Dante network or using an Audinate API. Keep the original and validate the generated file in Dante Controller before production use."),
+            callout("<b>Important:</b> this is a third-party tool, not an official Audinate product. V3.6 is a development version and may still contain bugs. It edits XML files offline without connecting to a Dante network or using an Audinate API. Keep the original and validate the generated file in Dante Controller before production use."),
             para("The Windows x64 installer includes the application and the required .NET 8 runtime. A separate .NET installation is normally not required."),
             *bullets([
                 "The default location is Program Files, with Start menu and desktop shortcuts.",
-                "V3.5 uses its own folder and shortcuts so it can coexist with stable V3.4.2.",
-                "The V3.5 installer replaces only an existing V3.5 installation and preserves local working data.",
-                "Two self-contained V3.5 DMGs are provided for Apple Silicon and Intel. The separate V3.5 bundle can coexist with V3.4.2.",
+                "A fresh V3.6 installation uses its own folder and shortcuts so it can coexist with stable V3.4.2.",
+                "V3.6 upgrades the V3.5 development line when it is already installed and preserves local working data.",
+                "Two self-contained V3.6 DMGs are planned for Apple Silicon and Intel. The separate V3.6 bundle can coexist with V3.4.2.",
                 "All four French and English PDFs are installed and remain available from the application.",
             ]),
             para("2. Safety principles", "h1"),
@@ -852,7 +888,7 @@ def full_guide(language: str) -> None:
                 [48, 122],
             ),
             para("14. Regression tests", "h1"),
-            para("The V3.5 suite runs 199 Core/Windows tests and 16 headless Mac tests. Coverage includes XML guards, save and recovery, IPv4 interfaces, subscriptions, large presets, complete device deletion, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, and translation consistency."),
+            para("The V3.6 suite runs 258 Core/Windows tests and 16 headless Mac tests. Coverage includes XML guards, save and recovery, IPv4 interfaces, subscriptions, large presets, duplication, the machine bank, experimental project creation, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, and translation consistency."),
             para("15. Known limitations", "h1"),
             *bullets([
                 "No real-time Dante control and no communication with devices.",
@@ -864,7 +900,8 @@ def full_guide(language: str) -> None:
                 "The Windows Easy patch tab is not reproduced identically on Mac, which keeps the Avalonia visual patch workshop.",
                 "Duplicate Tx names are ambiguous in Dante subscriptions and must be renamed before using Easy patch.",
                 "Native workbooks match observed DMT 2.13.0 templates and the supplied dLive, Avantis, CL5, and QL5 examples; DMT 2.14.0-RC1 JSON/CSV is tested separately.",
-                "Generic device creation and role duplication are not offered without a verified official rule for generating importable technical identifiers.",
+                "Generic roles duplicated or added from the bank carry no hardware instance_id/device_id. Only an actual Dante Controller import can confirm their use with a given version.",
+                "New project writes an experimental minimal 3.0.0 structure. It must be imported and reviewed in Dante Controller before use.",
             ]),
             para("16. Help and information", "h1"),
             para(
@@ -872,6 +909,36 @@ def full_guide(language: str) -> None:
                 f"Public project: {GITHUB} - Credit: By Mamat et ses agents.",
                 "small",
             ),
+        ]
+        bank_page = [
+            para("Machine bank and generic roles", "h1"),
+            callout("These functions edit offline preset roles, not real devices. DCE removes hardware identifiers from the source instance and does not claim to create a Dante device identity."),
+            para("Duplicate a device", "h2"),
+            *bullets([
+                "Select a device, choose Duplicate, and provide a unique role name.",
+                "TX/RX labels may be retained. Network data, settings, flows, Preferred Master, and subscriptions are disabled by default.",
+                "The source is unchanged. The copy is added as one undoable operation and receives a DCE session identity that is never serialized.",
+            ]),
+            para("Save and share a template", "h2"),
+            *bullets([
+                "Choose Save to machine bank and enter manufacturer, model, category, description, tags, and generic labels.",
+                "An optional PNG, JPEG, or WebP image is copied into the model folder; no fragile external path is kept.",
+                "The default bank is Documents/Dante Config Editor/Machine Bank. You may choose, open, copy, or place it in a synchronized folder.",
+                "Administration supports search, filters, edit, duplicate, confirmed delete, model ZIP import/export, and complete bank backup/restore.",
+            ]),
+            para("Add a template to the project", "h2"),
+            *bullets([
+                "Choose Add from bank, then configure the new name, labels, and only the options you explicitly need.",
+                "The inserted instance is independent from the template. Editing either one never changes the other.",
+                "DCE checks model version, checksum, channel counts, namespace, and preset version before a transactional insertion.",
+            ]),
+            para("Experimental new project", "h2"),
+            *bullets([
+                "New project writes a minimal 3.0.0 structure, either empty or with one initial role from the bank.",
+                "An existing file is never overwritten silently. Writing uses a temporary file followed by validation and atomic replacement.",
+                "Reopen the XML in DCE, review File health, then perform a mandatory manual import into Dante Controller.",
+            ]),
+            callout("Technical logs are available from Safety and log. They explain import, validation, bank, and export failures without changing the project.", PALE_GREEN),
         ]
         screen_map = [
             para("Screen map", "h1"),
@@ -946,6 +1013,7 @@ def full_guide(language: str) -> None:
         visual_patch,
         page4,
         label_page,
+        bank_page,
         visual_health,
         page5,
     ]

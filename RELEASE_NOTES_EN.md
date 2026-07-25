@@ -1,49 +1,52 @@
-# Dante Config Editor V3.5 - development
+# Dante Config Editor V3.6 - development
 
 [Notes de version françaises](RELEASE_NOTES.md)
 
 ## Status
 
-V3.5 is a Windows and macOS development version that can be installed alongside stable V3.4.2. Dante Config Editor remains an unofficial third-party tool, not affiliated with Audinate, and may still contain bugs. Work on copies of Dante XML files and always validate generated files in the appropriate official Dante tool.
+V3.6 is a Windows and macOS development version based on V3.5. Dante Config Editor remains an unofficial third-party tool, not affiliated with Audinate. Work on a copy and always validate generated XML by importing it into the actual Dante Controller version in use.
 
-## Patch and performance
+## XML safety and fidelity
 
-- The visual matrix updates only affected cells instead of rebuilding every control after each click.
-- Changes remain pending until they are explicitly applied to the project.
-- Tx/Rx headers stay visible and scroll bars remain synchronized.
-- One-to-one range patching, selection swap, 50 to 200% zoom, and fit-to-window.
-- Tab and Shift+Tab validate direct renaming and move to the next or previous channel.
+- Targeted edits to the original XML preserve unknown nodes, attributes, namespaces, ordering, and values.
+- Stronger validation of identities, channel references, subscriptions, network structures, and node additions.
+- Atomic Save as with temporary-file reload, semantic comparison, and backup of an existing destination.
+- Import/export/import cycle, default namespace, Unicode, unknown-value, and large-preset tests.
+- Ten local XML files covering 176 devices and 5,004 labels were loaded, validated, saved, semantically compared, and reloaded without changing the originals.
 
-## Label imports
+## Duplication and machine bank
 
-- Separate adapters for JSON, CSV, DMT XLSX/ODS, and console packages.
-- Strict validation for versions, required columns, duplicate channels, and unknown JSON fields.
-- Visible pre-apply report: format, source version, lists, devices, channels, ignored rows, empty labels, duplicates, and warnings.
-- JSON/CSV compatibility tested against DMT 2.14.0-RC1 exporters at commit `3c34052`.
+- Duplicate a device as an independent generic preset role.
+- Hardware `instance_id` and `device_id` values are never copied or invented.
+- Network data, subscriptions, flows, Preferred Master, and sensitive settings are excluded by default.
+- Versioned, shareable bank with metadata, tags, editable labels, and an optional copied PNG/JPEG/WebP image.
+- Search, filters, edit, duplicate, confirmed delete, ZIP import/export, and complete bank backup/restore.
+- Transactional insertion of an independent instance from a template.
+- Experimental minimal 3.0.0 new project, empty or seeded from a template.
 
-## XML safety
+## Diagnostics and interface
 
-- Device deletion and cleanup of associated subscriptions are tested through save and reload.
-- Generic device creation has been abandoned.
-- Role duplication is not offered without Dante Controller import evidence for generated technical identifiers.
-- Atomic saving, recovery, and default blocking of unknown XML paths remain active.
+- Daily technical logs available from the application.
+- Equivalent Windows/macOS commands for duplication, bank administration, template insertion, and project creation.
+- Existing patch, zoom, rename, Enter, Tab, and Shift+Tab behaviors remain covered.
 
-## Documentation
+## Automated validation
 
-- Updated full and quick guides in French and English.
-- Two 55-second presentation videos with no voice-over or audio track and text burned into the image.
-- Screens use only a synthetic anonymized preset.
+- 258 Core/Windows tests passed.
+- 16 headless Avalonia/macOS tests passed.
+- Windows and macOS Release builds completed without warnings.
+- The NuGet audit command reported no vulnerable packages.
 
 ## Distribution
 
-- Self-contained Windows x64 installer: `DanteConfigEditorV3_5_Installer.exe`, including .NET 8.
-- V3.5 uses its own AppId and Program Files folder; it does not replace V3.4.2.
-- Self-contained V3.5 DMGs for Apple Silicon and Intel, including .NET 8 and the FR/EN guides.
-- The V3.5 Mac app uses its own bundle name and identifier, so it can coexist with V3.4.2.
+- Self-contained Windows x64 installer: `DanteConfigEditorV3_6_Installer.exe`, including .NET 8 and FR/EN guides.
+- V3.6 upgrades the V3.5 development line and leaves stable V3.4.2 untouched.
+- macOS packages are planned for Apple Silicon and Intel under the V3.6 name.
 
 ## Limitations
 
-- Only a successful import into Dante Controller or the appropriate official Dante tool confirms final compatibility.
-- Direct renaming of an external Tx source missing from the XML remains blocked.
+- No V3.6 output has yet been imported into Dante Controller: automated tests and structural comparisons are not a field guarantee.
+- A generic preset role is not a physical Dante device identity.
+- Complete project creation remains experimental.
 - The Windows installer is not Authenticode signed.
-- The Mac DMGs are ad hoc signed without an Apple Developer ID certificate or notarization.
+- Mac DMGs are ad hoc signed without an Apple Developer ID certificate or notarization.

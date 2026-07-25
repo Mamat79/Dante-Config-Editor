@@ -1,21 +1,36 @@
-# Dante Config Editor V3.5 - branche de développement
+# Dante Config Editor V3.6 - branche de développement
 
 ## Français
 
-La V3.5 est développée et testée dans la branche `v3.5`. La V3.4.2 officielle reste publiée dans `main`.
+La V3.6 est développée et testée dans la branche `v3.6`, à partir de la V3.5. La V3.4.2 officielle reste publiée dans `main`.
 
 **Version stable : [Release V3.4.2 Windows et macOS](https://github.com/Mamat79/DanteConfigEditorV3/releases/tag/v3.4.2)**
 
-> **Statut : V3.5 en développement. Outil tiers non officiel Audinate.**
+> **Statut : V3.6 en développement. Outil tiers non officiel Audinate.**
 > Cette branche peut encore contenir des bugs. Travaillez toujours sur une copie et validez le XML généré dans les outils Dante officiels.
 
-**Documentation et présentation V3.5 :**
+**Documentation V3.6 :**
 [notice complète FR](docs/Notice_DanteConfigEditorV3_FR.pdf) ·
-[full English guide](docs/Notice_DanteConfigEditorV3_EN.pdf) ·
+[full English guide](docs/Notice_DanteConfigEditorV3_EN.pdf)
+
+**Présentations historiques V3.5 :**
 [vidéo FR](docs/media/dce-v35-presentation-fr.mp4) ·
 [English video](docs/media/dce-v35-presentation-en.mp4)
 
 > **Import et export de labels en JSON, CSV, DMT XLSX/ODS pour dLive et Avantis, A&H CSV et Yamaha CL/QL ZIP/CSV.** Les modèles natifs sont inclus dans l'application : aucun fichier modèle externe n'est nécessaire pour exporter.
+
+## Nouveautés V3.6
+
+- audit documenté de la fidélité XML, des performances et des risques dans [AUDIT_V3_6.md](AUDIT_V3_6.md) ;
+- validation renforcée des identifiants, références, canaux, subscriptions, namespaces et ajouts de nœuds ;
+- duplication prudente d'une machine sous forme de rôle générique, sans recopier les identifiants matériels ;
+- banque de machines versionnée et partageable avec métadonnées, labels, image facultative, recherche, import/export et sauvegarde/restauration ;
+- ajout transactionnel d'une instance indépendante depuis la banque ;
+- création expérimentale d'un projet minimal 3.0.0, à valider impérativement par un import réel dans Dante Controller ;
+- journaux techniques accessibles depuis l'application ;
+- 258 tests Core/Windows et 16 tests Mac sans écran.
+
+La duplication et la banque ne fabriquent pas un appareil Dante réel. Elles créent des rôles de preset génériques dépourvus de `instance_id` et `device_id`. Aucun import V3.6 n'ayant encore été effectué dans Dante Controller, la compatibilité terrain n'est pas présentée comme garantie.
 
 ## Origine et développement assisté
 
@@ -72,6 +87,10 @@ Chaque vidéo dure 55 secondes, sans voix ni piste audio, avec le texte directem
 - Affiche les devices, canaux TX/RX, latences, mode réseau et preferred master.
 - Renomme les devices.
 - Supprime un device et nettoie les subscriptions/patchs qui pointent vers lui.
+- Duplique un device sous forme de rôle générique indépendant, avec conservation optionnelle des labels et réglages sûrs.
+- Enregistre, recherche, modifie, partage, sauvegarde et restaure des modèles dans une banque de machines versionnée.
+- Ajoute au projet une nouvelle instance indépendante issue de la banque.
+- Crée expérimentalement un projet minimal 3.0.0 vide ou amorcé depuis la banque.
 - Ajoute les devices d'un second XML dans le projet ouvert, avec import des machines uniques même en présence de doublons.
 - Propose de renommer automatiquement ou manuellement les machines en doublon pendant l'import XML.
 - Renomme les canaux TX/RX.
@@ -129,6 +148,8 @@ Chaque vidéo dure 55 secondes, sans voix ni piste audio, avec le texte directem
 - Elle travaille uniquement sur des fichiers XML hors ligne.
 - Elle ne contourne aucune protection Audinate et ne réimplémente pas de protocole propriétaire.
 - La compatibilité dépend de la structure réelle du XML fourni.
+- Les rôles génériques ne portent pas d'identité matérielle et doivent être validés dans Dante Controller.
+- La création d'un nouveau projet est expérimentale et ne constitue pas une garantie d'import.
 - Certains champs de patch peuvent ne pas être détectés si le fichier utilise une structure différente de celles actuellement reconnues.
 - `subscribed_device="."` est interprété comme une source locale, c'est-à-dire le device RX lui-même.
 - Un device TX absent du preset est un avertissement, pas forcément une erreur bloquante, car un preset peut être partiel.
@@ -136,9 +157,9 @@ Chaque vidéo dure 55 secondes, sans voix ni piste audio, avec le texte directem
 
 ## Télécharger / installer
 
-La [Release GitHub V3.4.2](https://github.com/Mamat79/DanteConfigEditorV3/releases/tag/v3.4.2) reste la version stable. Les paquets de développement V3.5 sont générés dans les exécutions `Windows CI` et `macOS CI` de la branche `v3.5`.
+La [Release GitHub V3.4.2](https://github.com/Mamat79/DanteConfigEditorV3/releases/tag/v3.4.2) reste la version stable. Les paquets de développement V3.6 sont générés dans les exécutions `Windows CI` et `macOS CI` de la branche `v3.6`.
 
-- Windows x64 : artefact `DCE-v3.5-Windows-Installer`, contenant `DanteConfigEditorV3_5_Installer.exe` et sa somme SHA-256.
+- Windows x64 : artefact `DCE-v3.6-Windows-Installer`, contenant `DanteConfigEditorV3_6_Installer.exe` et sa somme SHA-256.
 
 La version autonome inclut le runtime .NET nécessaire. Sur une machine Windows x64, il ne devrait pas être nécessaire d'installer .NET séparément pour utiliser l'application.
 
@@ -146,10 +167,10 @@ La version autonome inclut le runtime .NET nécessaire. Sur une machine Windows 
 
 Deux DMG autonomes sont fournis :
 
-- `DanteConfigEditorV3_5_macOS_AppleSilicon.dmg` pour les Mac M1, M2, M3, M4 et suivants ;
-- `DanteConfigEditorV3_5_macOS_Intel.dmg` pour les Mac Intel 64 bits.
+- `DanteConfigEditorV3_6_macOS_AppleSilicon.dmg` pour les Mac M1, M2, M3, M4 et suivants ;
+- `DanteConfigEditorV3_6_macOS_Intel.dmg` pour les Mac Intel 64 bits.
 
-Ouvrir le DMG, puis glisser `Dante Config Editor V3.5` dans `Applications`. Le runtime .NET 8 et les notices FR/EN sont inclus. Son bundle distinct permet de conserver la V3.4.2.
+Ouvrir le DMG, puis glisser `Dante Config Editor V3.6` dans `Applications`. Le runtime .NET 8 et les notices FR/EN sont inclus. Son bundle distinct permet de conserver la V3.4.2.
 
 La distribution Mac n'est pas encore notariée avec un compte Apple Developer. Au premier lancement, faire un clic droit sur l'application dans `Applications`, choisir `Ouvrir`, puis confirmer l'ouverture. Les détails de compilation, signature et notarisation sont documentés dans `MACOS_BUILD.md`.
 
@@ -164,12 +185,12 @@ Notices fournies :
 
 Dans l'application, les boutons d'aide ouvrent automatiquement les fichiers FR ou EN selon la langue active.
 
-L'installateur V3.5 remplace uniquement une V3.5 déjà installée. Il possède son propre AppId, son propre dossier `Program Files` et ses propres raccourcis afin de conserver la V3.4.2 stable. Les données locales de travail ne sont pas supprimées par cette mise à niveau.
+L'installateur V3.6 utilise l'AppId de la ligne de développement : il remplace une V3.5 déjà installée, nettoie ses anciens raccourcis et conserve les données locales de travail. Une installation neuve utilise `C:\Program Files\Dante Config Editor V3.6\`. L'AppId distinct de la V3.4.2 stable reste intact.
 
 ## Version distribuée
 
 - La branche `main` contient la V3.4 officielle pour Windows et macOS.
-- La branche `v3.5` contient la version de développement et ses workflows Windows/macOS ; elle ne remplace pas encore la release stable.
+- La branche `v3.6` contient la version de développement et ses workflows Windows/macOS ; elle ne remplace pas encore la release stable.
 - Le tag immuable `v3.4.2` identifie le code source de la Release officielle actuellement marquée `Latest`.
 - Chaque version utilise un tag immuable distinct selon [la politique de publication](RELEASE_POLICY.md).
 - L'historique fonctionnel reste également consultable dans les commits de `main` et dans `CHANGELOG_V3.md`.

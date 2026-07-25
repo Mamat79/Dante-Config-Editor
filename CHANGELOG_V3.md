@@ -1,5 +1,20 @@
 # Changelog V3
 
+## 2026-07-25 - Version 3.6 en développement
+
+- Audit complet de l'architecture, de la fidélité XML, des performances, des dépendances, des traductions et des risques documenté dans `AUDIT_V3_6.md`.
+- Validation renforcée des identifiants, références de canaux, subscriptions, interfaces réseau, namespaces et ajouts de nœuds.
+- Comparaison XML sémantique et tests de cycle import/export/import avec conservation des éléments inconnus.
+- Duplication d'une machine sous forme de rôle générique indépendant sans recopier ni inventer `instance_id` ou `device_id`.
+- Banque de machines versionnée, partageable et transactionnelle avec métadonnées, labels, image facultative, recherche, filtres, import/export et sauvegarde/restauration.
+- Ajout d'une instance indépendante depuis la banque et création expérimentale d'un projet minimal 3.0.0.
+- Commandes Windows et macOS pour la duplication, la banque, l'ajout de modèle, le nouveau projet et l'ouverture des journaux.
+- Journaux techniques quotidiens et messages de validation plus précis.
+- Corpus local de dix XML, 176 machines et 5 004 labels validé sans modifier les originaux.
+- Suite portée à 258 tests Core/Windows et 16 tests Mac sans écran.
+- Numéro d'application, installateur, paquets macOS, workflows et notices passés en V3.6.
+- Aucun import V3.6 réel dans Dante Controller n'est revendiqué ; la création de projet et les rôles génériques restent à valider manuellement.
+
 ## V3.5 - ajustements de renommage et d'ergonomie
 
 - Réorganise les actions machine en deux lignes : Reset RX, Reset TX, Reset RX/TX et Supprimer.

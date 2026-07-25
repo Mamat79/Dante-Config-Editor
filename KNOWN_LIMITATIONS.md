@@ -1,4 +1,4 @@
-# Limites connues - V3.5 en développement
+# Limites connues - V3.6 en développement
 
 ## Compatibilité Dante
 
@@ -30,13 +30,22 @@
 - Le CSV Allen & Heath cible les sections `[Channels]` et les lignes `Input` observées dans les exemples dLive et Avantis fournis. Une évolution du format console peut demander une adaptation.
 - Le support Yamaha cible `InName.csv` dans les packages CL/QL observés. Les autres fichiers du ZIP sont conservés, mais une structure future différente peut être refusée.
 - Les imports et exports de labels ne configurent pas directement une console : ils créent des fichiers à importer ensuite avec les outils du fabricant.
-- La création d'appareils génériques n'est pas intégrée. La duplication d'un rôle de device n'est pas proposée, car aucune règle officielle vérifiée ne permet de fabriquer des `device_id` et `instance_id` arbitraires tout en garantissant l'import Dante Controller.
-
 - Le fichier ouvert doit être sauvegardé sous un nouveau nom avant toute écriture. Le nouveau chemin devient ensuite la référence de session.
 - Une sauvegarde atomique protège la destination contre les échecs testés, mais ne remplace pas une sauvegarde externe du projet.
 - La récupération automatique est temporisée. Une coupure immédiate après une modification peut survenir avant l'écriture de la copie de récupération.
 - La pile d'annulation conserve au maximum 10 états XML pour limiter l'usage mémoire.
 - Les gros presets restent traités en mémoire ; les mesures synthétiques actuelles sont publiées dans `TESTING.md`.
+
+## Duplication, banque et nouveau projet
+
+- DCE duplique des rôles génériques de preset, pas des appareils physiques. `instance_id` et `device_id` sont retirés au lieu d'être copiés ou inventés.
+- Les rôles génériques observés dans Dante Preset Creator utilisent cette absence d'identité matérielle, mais aucun import V3.6 réel dans Dante Controller n'a encore confirmé tous les scénarios DCE.
+- Réseau, subscriptions, flows, Preferred Master et réglages sensibles sont exclus d'une duplication ou insertion par défaut. Leur conservation doit être choisie explicitement.
+- Un modèle de banque doit provenir de la même version de preset et d'un namespace compatible avec le projet cible. Les conversions entre formats Dante ne sont pas inventées.
+- Les images de modèles sont limitées à PNG, JPEG ou WebP et à 10 MiB. Elles servent uniquement à l'interface et ne sont jamais écrites dans le XML Dante.
+- Une sauvegarde complète de banque ne peut être restaurée que vers un dossier vide ou nouveau afin d'éviter un écrasement partiel.
+- Le projet minimal 3.0.0 créé par DCE est expérimental. Il doit être rouvert dans DCE, validé puis importé manuellement dans Dante Controller.
+- DCE ne peut pas connaître les capacités réelles d'un modèle à partir de sa seule banque. Le nombre de flows, les fréquences et les options matérielles restent à vérifier.
 
 ## Réseau
 
@@ -48,7 +57,7 @@
 
 - L'installateur Windows est autonome pour Windows x64 et inclut .NET 8. Les architectures Windows ARM64 et x86 ne sont pas distribuées.
 - L'installateur Windows n'est pas signé avec un certificat Authenticode public. Vérifier le SHA-256 publié avant distribution ; Windows peut afficher un avertissement de réputation.
-- La V3.5 de développement est produite pour Windows x64, macOS Apple Silicon et macOS Intel. Windows ARM64 et x86 ne sont pas distribués.
+- La V3.6 de développement est produite pour Windows x64, macOS Apple Silicon et macOS Intel. Windows ARM64 et x86 ne sont pas distribués.
 - Les DMG macOS sont signés ad hoc, sans certificat Apple Developer ID ni notarisation. Gatekeeper peut demander un clic droit puis `Ouvrir` au premier lancement.
 - Le moteur XML est partagé, mais l'interface Mac n'offre pas encore le nouvel onglet Windows `Easy patch` à l'identique. Elle conserve l'atelier visuel Avalonia avec sélection multiple, glisser-déposer et matrice.
 - Les tests Avalonia sans écran ne remplacent pas une validation manuelle sur plusieurs modèles de Mac, ni un contrôle VoiceOver réel.
@@ -56,4 +65,4 @@
 
 ## Statut de la version
 
-La V3.4.2 reste la version officielle courante de `main` pour Windows et macOS. La V3.5 est une branche de développement et ses paquets ne remplacent pas la release stable. Dante Config Editor reste un outil tiers non officiel Audinate. Toujours travailler sur une copie, lire le rapport avant/après et valider le fichier généré dans l'outil Dante officiel avant une utilisation terrain.
+La V3.4.2 reste la version officielle courante de `main` pour Windows et macOS. La V3.6 est une branche de développement et ses paquets ne remplacent pas la release stable. Dante Config Editor reste un outil tiers non officiel Audinate. Toujours travailler sur une copie, lire le rapport avant/après et valider le fichier généré dans l'outil Dante officiel avant une utilisation terrain.
