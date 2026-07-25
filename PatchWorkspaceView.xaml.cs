@@ -2271,8 +2271,8 @@ public partial class PatchWorkspaceView : UserControl
             : L(
                 "Préparez les affectations puis validez-les dans la fiche machine.",
                 "Stage assignments, then return them to the device details.");
-        TxDeviceLabel.Content = L("Machine émettrice TX", "Tx transmitting device");
-        RxDeviceLabel.Content = L("Machine réceptrice RX", "Rx receiving device");
+        TxDeviceLabel.Content = L("Machine émettrice TX", "Transmitting device (Tx)");
+        RxDeviceLabel.Content = L("Machine réceptrice RX", "Receiving device (Rx)");
         TxDeviceComboBox.ToolTip = L(
             "Machine qui fournit les canaux TX affichés dans la grille et la liste.",
             "Device providing the Tx channels displayed in the matrix and list.");

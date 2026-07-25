@@ -2926,8 +2926,10 @@ public partial class MainWindow : Window
 
         OpenFileDialog dialog = new()
         {
-            Filter = "Fichiers XML (*.xml)|*.xml|Tous les fichiers (*.*)|*.*",
-            Title = "Comparer avec un autre XML"
+            Filter = T("Dialog.XmlFilter"),
+            Title = _language == UiLanguage.English
+                ? "Compare with another XML file"
+                : "Comparer avec un autre XML"
         };
 
         if (dialog.ShowDialog(this) != true)
@@ -2939,19 +2941,28 @@ public partial class MainWindow : Window
         {
             DanteProject otherProject = DanteProject.Load(dialog.FileName);
             ComparisonDisplayRow[] comparisonRows = BuildComparisonRows(otherProject);
-            SaveSummaryTextBox.Text = _project!.CompareWith(otherProject);
+            SaveSummaryTextBox.Text = _project!.CompareWith(otherProject, _language);
             MainTabs.SelectedItem = SafetyTab;
-            ComparisonResultWindow window = new(comparisonRows)
+            ComparisonResultWindow window = new(
+                _language,
+                ThemeToggleButton.IsChecked == true,
+                comparisonRows)
             {
                 Owner = this
             };
             window.Show();
-            AddLog("Comparaison XML effectuée : " + dialog.FileName);
-            SetStatus("Comparaison XML affichée.");
+            AddLog((_language == UiLanguage.English
+                ? "XML comparison completed: "
+                : "Comparaison XML effectuée : ") + dialog.FileName);
+            SetStatus(_language == UiLanguage.English
+                ? "XML comparison displayed."
+                : "Comparaison XML affichée.");
         }
         catch (Exception ex)
         {
-            ShowError("Comparaison impossible", ex);
+            ShowError(
+                _language == UiLanguage.English ? "Comparison failed" : "Comparaison impossible",
+                ex);
         }
     }
 
@@ -2974,12 +2985,20 @@ public partial class MainWindow : Window
 
         foreach (string deviceName in currentDevices.Keys.Except(otherDevices.Keys, StringComparer.OrdinalIgnoreCase).OrderBy(name => name, StringComparer.OrdinalIgnoreCase))
         {
-            rows.Add(new ComparisonDisplayRow("Machine / " + deviceName, "présente", "absente", "Seulement fichier ouvert"));
+            rows.Add(new ComparisonDisplayRow(
+                (_language == UiLanguage.English ? "Device / " : "Machine / ") + deviceName,
+                _language == UiLanguage.English ? "present" : "présente",
+                _language == UiLanguage.English ? "absent" : "absente",
+                _language == UiLanguage.English ? "Open file only" : "Seulement fichier ouvert"));
         }
 
         foreach (string deviceName in otherDevices.Keys.Except(currentDevices.Keys, StringComparer.OrdinalIgnoreCase).OrderBy(name => name, StringComparer.OrdinalIgnoreCase))
         {
-            rows.Add(new ComparisonDisplayRow("Machine / " + deviceName, "absente", "présente", "Seulement fichier comparé"));
+            rows.Add(new ComparisonDisplayRow(
+                (_language == UiLanguage.English ? "Device / " : "Machine / ") + deviceName,
+                _language == UiLanguage.English ? "absent" : "absente",
+                _language == UiLanguage.English ? "present" : "présente",
+                _language == UiLanguage.English ? "Compared file only" : "Seulement fichier comparé"));
         }
 
         foreach (string deviceName in currentDevices.Keys.Intersect(otherDevices.Keys, StringComparer.OrdinalIgnoreCase).OrderBy(name => name, StringComparer.OrdinalIgnoreCase))
@@ -2987,12 +3006,20 @@ public partial class MainWindow : Window
             DanteDevice current = currentDevices[deviceName];
             DanteDevice compared = otherDevices[deviceName];
             AddComparisonRow(rows, $"{deviceName} / Friendly name", current.FriendlyName, compared.FriendlyName);
-            AddComparisonRow(rows, $"{deviceName} / Mode réseau", current.NetworkMode, compared.NetworkMode);
-            AddComparisonRow(rows, $"{deviceName} / Latence", current.LatencyDisplay, compared.LatencyDisplay);
+            AddComparisonRow(rows, $"{deviceName} / {(_language == UiLanguage.English ? "Network mode" : "Mode réseau")}", current.NetworkMode, compared.NetworkMode);
+            AddComparisonRow(rows, $"{deviceName} / {(_language == UiLanguage.English ? "Latency" : "Latence")}", current.LatencyDisplay, compared.LatencyDisplay);
             AddComparisonRow(rows, $"{deviceName} / Sample rate", current.SampleRateDisplay, compared.SampleRateDisplay);
             AddComparisonRow(rows, $"{deviceName} / Bits", current.EncodingDisplay, compared.EncodingDisplay);
             AddComparisonRow(rows, $"{deviceName} / IP", current.IpModeDisplay, compared.IpModeDisplay);
-            AddComparisonRow(rows, $"{deviceName} / Preferred master", current.PreferredMaster ? "oui" : "non", compared.PreferredMaster ? "oui" : "non");
+            AddComparisonRow(
+                rows,
+                $"{deviceName} / Preferred Master",
+                current.PreferredMaster
+                    ? (_language == UiLanguage.English ? "yes" : "oui")
+                    : (_language == UiLanguage.English ? "no" : "non"),
+                compared.PreferredMaster
+                    ? (_language == UiLanguage.English ? "yes" : "oui")
+                    : (_language == UiLanguage.English ? "no" : "non"));
             AddChannelComparisonRows(rows, deviceName, "TX", current.TxChannels, compared.TxChannels);
             AddChannelComparisonRows(rows, deviceName, "RX", current.RxChannels, compared.RxChannels);
         }
@@ -3006,12 +3033,20 @@ public partial class MainWindow : Window
 
         foreach (string patchKey in currentPatches.Keys.Except(otherPatches.Keys, StringComparer.OrdinalIgnoreCase).OrderBy(key => key, StringComparer.OrdinalIgnoreCase))
         {
-            rows.Add(new ComparisonDisplayRow("Patch / " + patchKey, FormatSubscriptionForComparison(currentPatches[patchKey]), "absent", "Seulement fichier ouvert"));
+            rows.Add(new ComparisonDisplayRow(
+                "Patch / " + patchKey,
+                FormatSubscriptionForComparison(currentPatches[patchKey]),
+                "absent",
+                _language == UiLanguage.English ? "Open file only" : "Seulement fichier ouvert"));
         }
 
         foreach (string patchKey in otherPatches.Keys.Except(currentPatches.Keys, StringComparer.OrdinalIgnoreCase).OrderBy(key => key, StringComparer.OrdinalIgnoreCase))
         {
-            rows.Add(new ComparisonDisplayRow("Patch / " + patchKey, "absent", FormatSubscriptionForComparison(otherPatches[patchKey]), "Seulement fichier comparé"));
+            rows.Add(new ComparisonDisplayRow(
+                "Patch / " + patchKey,
+                "absent",
+                FormatSubscriptionForComparison(otherPatches[patchKey]),
+                _language == UiLanguage.English ? "Compared file only" : "Seulement fichier comparé"));
         }
 
         foreach (string patchKey in currentPatches.Keys.Intersect(otherPatches.Keys, StringComparer.OrdinalIgnoreCase).OrderBy(key => key, StringComparer.OrdinalIgnoreCase))
@@ -3021,7 +3056,11 @@ public partial class MainWindow : Window
 
         if (rows.Count == 0)
         {
-            rows.Add(new ComparisonDisplayRow("Champs connus", "identiques", "identiques", "Aucune différence détectée"));
+            rows.Add(new ComparisonDisplayRow(
+                _language == UiLanguage.English ? "Known fields" : "Champs connus",
+                _language == UiLanguage.English ? "identical" : "identiques",
+                _language == UiLanguage.English ? "identical" : "identiques",
+                _language == UiLanguage.English ? "No difference detected" : "Aucune différence détectée"));
         }
 
         return rows.Take(1000).ToArray();
@@ -3043,12 +3082,20 @@ public partial class MainWindow : Window
 
         foreach (int index in currentByIndex.Keys.Except(comparedByIndex.Keys).Order())
         {
-            rows.Add(new ComparisonDisplayRow($"{deviceName} / {channelKind} {index}", currentByIndex[index].DisplayName, "absent", "Seulement fichier ouvert"));
+            rows.Add(new ComparisonDisplayRow(
+                $"{deviceName} / {channelKind} {index}",
+                currentByIndex[index].DisplayName,
+                "absent",
+                _language == UiLanguage.English ? "Open file only" : "Seulement fichier ouvert"));
         }
 
         foreach (int index in comparedByIndex.Keys.Except(currentByIndex.Keys).Order())
         {
-            rows.Add(new ComparisonDisplayRow($"{deviceName} / {channelKind} {index}", "absent", comparedByIndex[index].DisplayName, "Seulement fichier comparé"));
+            rows.Add(new ComparisonDisplayRow(
+                $"{deviceName} / {channelKind} {index}",
+                "absent",
+                comparedByIndex[index].DisplayName,
+                _language == UiLanguage.English ? "Compared file only" : "Seulement fichier comparé"));
         }
 
         foreach (int index in currentByIndex.Keys.Intersect(comparedByIndex.Keys).Order())
@@ -3061,7 +3108,11 @@ public partial class MainWindow : Window
     {
         if (!string.Equals(currentValue, comparedValue, StringComparison.OrdinalIgnoreCase))
         {
-            rows.Add(new ComparisonDisplayRow(item, Blank(currentValue), Blank(comparedValue), "Différent"));
+            rows.Add(new ComparisonDisplayRow(
+                item,
+                Blank(currentValue),
+                Blank(comparedValue),
+                _language == UiLanguage.English ? "Different" : "Différent"));
         }
     }
 
@@ -3070,9 +3121,11 @@ public partial class MainWindow : Window
         return $"{subscription.RxDevice} / RX {subscription.RxDanteId}";
     }
 
-    private static string FormatSubscriptionForComparison(DanteSubscription subscription)
+    private string FormatSubscriptionForComparison(DanteSubscription subscription)
     {
-        return subscription.IsActive ? subscription.SourceFull : "Libre";
+        return subscription.IsActive
+            ? subscription.SourceFull
+            : (_language == UiLanguage.English ? "Free" : "Libre");
     }
 
     private void ThemeToggleButton_Checked(object sender, RoutedEventArgs e)

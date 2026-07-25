@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using DanteConfigEditor.Models;
 using DanteConfigEditor.Services;
 
 namespace DanteConfigEditorV3.Tests;
@@ -38,6 +39,71 @@ public sealed class LocalizationConsistencyTests
             LocalizationService.TranslateLiteral(UiLanguage.English, "plus de 8 caractères"));
         Assert.Equal("characters not supported by DMT/dLive",
             LocalizationService.TranslateLiteral(UiLanguage.English, "caractères non pris en charge par DMT/dLive"));
+        Assert.Equal("Receiving device (Rx)",
+            LocalizationService.TranslateLiteral(UiLanguage.English, "Machine réceptrice RX"));
+        Assert.Equal("Transmitting device (Tx)",
+            LocalizationService.TranslateLiteral(UiLanguage.English, "Machine émettrice TX"));
+        Assert.Equal("All Rx channels", english["Filter.AllRx"]);
+        Assert.Equal("Different bit depth", english["DeviceFilter.EncodingDifferent"]);
+        Assert.Equal("Unlocked devices in current filter", english["Target.FilteredUnlocked"]);
+        Assert.Equal("Unable to open file", english["Dialog.OpenFailedTitle"]);
+    }
+
+    [Fact]
+    public void EnglishTranslationsDoNotContainFrenchResidue()
+    {
+        Regex frenchResidue = new(
+            @"[àâäçéèêëîïôöùûüÿœæÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŸŒÆ]|\b(?:annuler|appliquer|ajouter|aucun|banque|canaux|choisir|enregistrer|fichier|répertoire|supprimer)\b",
+            RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+
+        foreach ((string key, string value) in Dictionary("English"))
+        {
+            Assert.False(
+                frenchResidue.IsMatch(value),
+                $"English dictionary entry '{key}' contains probable French text: {value}");
+        }
+
+        Regex localizedPair = new(
+            @"(?:\bL|\bLocal)\(\s*""(?:[^""\\]|\\.)*""\s*,\s*""(?<english>(?:[^""\\]|\\.)*)""\s*\)",
+            RegexOptions.CultureInvariant);
+        string repository = RepositoryDirectory();
+        IEnumerable<string> sourceFiles = Directory
+            .EnumerateFiles(repository, "*.cs", SearchOption.AllDirectories)
+            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase));
+
+        foreach (string sourceFile in sourceFiles)
+        {
+            string source = File.ReadAllText(sourceFile);
+            foreach (Match match in localizedPair.Matches(source))
+            {
+                string english = match.Groups["english"].Value;
+                Assert.False(
+                    frenchResidue.IsMatch(english),
+                    $"English translation contains probable French text in {Path.GetRelativePath(repository, sourceFile)}: {english}");
+            }
+        }
+    }
+
+    [Fact]
+    public void XmlComparisonReportUsesTheSelectedLanguage()
+    {
+        string source = RepositoryFile(
+            "tests",
+            "DanteConfigEditorV3.Tests",
+            "Fixtures",
+            "representative-preset.xml");
+        DanteProject openProject = DanteProject.Load(source);
+        DanteProject comparedProject = DanteProject.Load(source);
+
+        string english = openProject.CompareWith(comparedProject, UiLanguage.English);
+        string french = openProject.CompareWith(comparedProject, UiLanguage.French);
+
+        Assert.Contains("XML COMPARISON", english, StringComparison.Ordinal);
+        Assert.Contains("No difference detected in known fields.", english, StringComparison.Ordinal);
+        Assert.DoesNotContain("Aucune différence", english, StringComparison.Ordinal);
+        Assert.Contains("COMPARAISON XML", french, StringComparison.Ordinal);
+        Assert.Contains("Aucune différence détectée", french, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -133,6 +199,11 @@ public sealed class LocalizationConsistencyTests
 
     private static string RepositoryFile(params string[] relativeParts)
     {
+        return Path.Combine([RepositoryDirectory(), .. relativeParts]);
+    }
+
+    private static string RepositoryDirectory()
+    {
         DirectoryInfo? directory = new(AppContext.BaseDirectory);
         while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "DanteConfigEditorV3.csproj")))
         {
@@ -140,7 +211,7 @@ public sealed class LocalizationConsistencyTests
         }
 
         Assert.NotNull(directory);
-        return Path.Combine([directory!.FullName, .. relativeParts]);
+        return directory!.FullName;
     }
 
     private static string[] Placeholders(string value) =>

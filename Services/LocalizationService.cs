@@ -246,7 +246,7 @@ public static class LocalizationService
 
         ["Filter.AllSenders"] = "All transmitters",
         ["Filter.AllReceivers"] = "All receivers",
-        ["Filter.AllRx"] = "All Rx",
+        ["Filter.AllRx"] = "All Rx channels",
         ["Filter.ActivePatches"] = "Active subscriptions",
         ["Filter.FreeRx"] = "Free Rx",
         ["Filter.LocalPatches"] = "Local subscriptions",
@@ -277,10 +277,10 @@ public static class LocalizationService
         ["DeviceFilter.Modified"] = "Modified only",
         ["DeviceFilter.WarningSelection"] = "Selected warning",
         ["DeviceFilter.SampleRateDifferent"] = "Different sample rate",
-        ["DeviceFilter.EncodingDifferent"] = "Different bits",
+        ["DeviceFilter.EncodingDifferent"] = "Different bit depth",
         ["Target.AllUnlocked"] = "All unlocked",
         ["Target.SelectedUnlocked"] = "Selected unlocked",
-        ["Target.FilteredUnlocked"] = "Visible filter unlocked",
+        ["Target.FilteredUnlocked"] = "Unlocked devices in current filter",
 
         ["PatchView.Simple"] = "Simple",
         ["PatchView.Expert"] = "Expert",
@@ -360,7 +360,7 @@ public static class LocalizationService
         ["Dialog.NoRecentFileMessage"] = "Select a recent file to open.",
         ["Dialog.FileMissingTitle"] = "File not found",
         ["Dialog.FileMissingMessage"] = "This recent file no longer exists.",
-        ["Dialog.OpenFailedTitle"] = "The file cannot be opened.",
+        ["Dialog.OpenFailedTitle"] = "Unable to open file",
         ["Dialog.SaveImpossibleTitle"] = "Save unavailable",
         ["Dialog.ChooseAnotherNameTitle"] = "Choose another name",
         ["Dialog.ChooseAnotherNameMessage"] = "To protect the original XML, the application does not save over the opened file. Choose a new file name.",
@@ -656,10 +656,10 @@ public static class LocalizationService
         Add(map, "Chargez un XML pour commencer.", "Load an XML file to begin.");
         Add(map, "Cliquez pour affecter ou retirer ce patch. Maintenez et glissez pour préparer une série.", "Click to add or remove this patch. Hold and drag to prepare a range.");
         Add(map, "Machine RX précédente", "Previous Rx device");
-        Add(map, "Machine réceptrice RX", "Rx receiving device");
+        Add(map, "Machine réceptrice RX", "Receiving device (Rx)");
         Add(map, "Machine RX suivante", "Next Rx device");
         Add(map, "Machine TX précédente", "Previous Tx device");
-        Add(map, "Machine émettrice TX", "Tx transmitting device");
+        Add(map, "Machine émettrice TX", "Transmitting device (Tx)");
         Add(map, "Machine TX suivante", "Next Tx device");
         Add(map, "Canaux RX et source actuelle", "Rx channels and current source");
         Add(map, "Canaux TX disponibles", "Available Tx channels");

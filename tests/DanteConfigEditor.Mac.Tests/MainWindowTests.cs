@@ -174,6 +174,61 @@ public sealed class MainWindowTests
     }
 
     [AvaloniaFact]
+    public void SecondaryMacViewsUsePolishedEnglishLabels()
+    {
+        string source = Path.Combine(AppContext.BaseDirectory, "Fixtures", "representative-preset.xml");
+        DanteProject project = DanteProject.Load(source);
+        PatchWorkspaceDialog patch = new(
+            UiLanguage.English,
+            project,
+            initialTxDeviceName: "DEVICE-A",
+            initialRxDeviceName: "DEVICE-B");
+        MachineBankDialog bank = new();
+        Canvas synopticSource = new()
+        {
+            Width = 900,
+            Height = 560,
+            Background = Avalonia.Media.Brushes.White
+        };
+        SynopticPreviewWindow synoptic = new(
+            synopticSource,
+            synopticSource.Width,
+            synopticSource.Height,
+            UiLanguage.English);
+
+        typeof(MachineBankDialog)
+            .GetField("_language", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .SetValue(bank, UiLanguage.English);
+        bank.Title = "Device bank";
+        typeof(MachineBankDialog)
+            .GetMethod("ApplyLanguage", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .Invoke(bank, null);
+
+        patch.Show();
+        bank.Show();
+        synoptic.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal("Transmitting device (Tx)", patch.FindControl<TextBlock>("TxDeviceLabel")!.Text);
+            Assert.Equal("Receiving device (Rx)", patch.FindControl<TextBlock>("RxDeviceLabel")!.Text);
+            Assert.Equal("Selection and one-to-one patch", patch.FindControl<TabItem>("AssignmentTab")!.Header);
+            Assert.Equal("Patch matrix", patch.FindControl<TabItem>("MatrixTab")!.Header);
+            Assert.Equal("GitHub banks", bank.FindControl<Button>("GithubBanksButton")!.Content);
+            Assert.Equal("Export bank", bank.FindControl<Button>("BackupBankButton")!.Content);
+            Assert.Equal("Import bank", bank.FindControl<Button>("RestoreBankButton")!.Content);
+            Assert.Equal("Synoptic preview", synoptic.Title);
+            Assert.Equal("Close", synoptic.FindControl<Button>("CloseButton")!.Content);
+        }
+        finally
+        {
+            synoptic.Close();
+            bank.Close();
+            patch.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void ImportantWarnings_AreKeptInsideProjectSidebar()
     {
         MainWindow window = new();

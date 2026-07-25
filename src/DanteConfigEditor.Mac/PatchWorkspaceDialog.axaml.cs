@@ -1168,8 +1168,8 @@ public sealed partial class PatchWorkspaceDialog : Window
             : L(
                 "Préparez les affectations puis appliquez-les en une seule opération.",
                 "Stage assignments, then apply them in a single operation.");
-        FindControl<TextBlock>("TxDeviceLabel")!.Text = L("Machine émettrice TX", "Tx transmitting device");
-        FindControl<TextBlock>("RxDeviceLabel")!.Text = L("Machine réceptrice RX", "Rx receiving device");
+        FindControl<TextBlock>("TxDeviceLabel")!.Text = L("Machine émettrice TX", "Transmitting device (Tx)");
+        FindControl<TextBlock>("RxDeviceLabel")!.Text = L("Machine réceptrice RX", "Receiving device (Rx)");
         FindControl<TabItem>("AssignmentTab")!.Header = L("Sélection et Patch 1:1", "Selection and one-to-one patch");
         FindControl<TabItem>("MatrixTab")!.Header = L("Grille de patch", "Patch matrix");
         FindControl<TextBlock>("TxListHeading")!.Text = L("Canaux TX disponibles", "Available Tx channels");

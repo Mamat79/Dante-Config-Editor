@@ -1256,7 +1256,9 @@ public partial class MainWindow : Window
         if (path is null) return;
         try
         {
-            FindControl<TextBox>("ReportTextBox")!.Text = _project.CompareWith(DanteProject.Load(path));
+            FindControl<TextBox>("ReportTextBox")!.Text = _project.CompareWith(
+                DanteProject.Load(path),
+                _language);
         }
         catch (Exception exception)
         {
