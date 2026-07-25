@@ -22,6 +22,7 @@ La V3.6 est développée et testée dans la branche `v3.6`, à partir de la V3.5
 ## Nouveautés V3.6
 
 - audit documenté de la fidélité XML, des performances et des risques dans [AUDIT_V3_6.md](AUDIT_V3_6.md) ;
+- bilan détaillé des choix, tests et limites dans [V3_6_IMPLEMENTATION_REPORT.md](V3_6_IMPLEMENTATION_REPORT.md) ;
 - validation renforcée des identifiants, références, canaux, subscriptions, namespaces et ajouts de nœuds ;
 - duplication prudente d'une machine sous forme de rôle générique, sans recopier les identifiants matériels ;
 - banque de machines versionnée et partageable avec métadonnées, labels, image facultative, recherche, import/export et sauvegarde/restauration ;

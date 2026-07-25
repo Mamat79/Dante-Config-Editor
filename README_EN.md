@@ -22,6 +22,7 @@ V3.6 is developed and tested on the `v3.6` branch from V3.5. Official V3.4.2 rem
 ## What is new in V3.6
 
 - documented XML fidelity, performance, and risk audit in [AUDIT_V3_6.md](AUDIT_V3_6.md);
+- detailed implementation, test, and limitation report in [V3_6_IMPLEMENTATION_REPORT.md](V3_6_IMPLEMENTATION_REPORT.md);
 - stronger validation of identities, references, channels, subscriptions, namespaces, and node additions;
 - cautious device duplication as a generic role without copying hardware identifiers;
 - versioned, shareable machine bank with metadata, labels, optional image, search, import/export, backup, and restore;
