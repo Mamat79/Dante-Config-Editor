@@ -2,6 +2,10 @@ using System.Xml.Linq;
 
 namespace DanteConfigEditor.Services;
 
+internal sealed record DanteAuthorizedDeviceAddition(
+    string CurrentDeviceName,
+    XElement BaselineDevice);
+
 public static class DanteXmlChangeGuardService
 {
     private static readonly HashSet<string> AllowedPaths = new(StringComparer.OrdinalIgnoreCase)
@@ -89,6 +93,14 @@ public static class DanteXmlChangeGuardService
 
     public static DanteValidationResult ValidateChanges(XDocument originalDocument, XDocument currentDocument)
     {
+        return ValidateChanges(originalDocument, currentDocument, []);
+    }
+
+    internal static DanteValidationResult ValidateChanges(
+        XDocument originalDocument,
+        XDocument currentDocument,
+        IReadOnlyList<DanteAuthorizedDeviceAddition> authorizedDeviceAdditions)
+    {
         DanteValidationResult result = new();
 
         if (originalDocument.Root is null || currentDocument.Root is null)
@@ -109,7 +121,12 @@ public static class DanteXmlChangeGuardService
             return result;
         }
 
-        CompareElements(originalDocument.Root, currentDocument.Root, "/" + originalDocument.Root.Name.LocalName, result);
+        CompareElements(
+            originalDocument.Root,
+            currentDocument.Root,
+            "/" + originalDocument.Root.Name.LocalName,
+            result,
+            authorizedDeviceAdditions);
 
         if (!result.HasErrors)
         {
@@ -148,6 +165,16 @@ public static class DanteXmlChangeGuardService
 
     private static void CompareElements(XElement original, XElement current, string path, DanteValidationResult result)
     {
+        CompareElements(original, current, path, result, []);
+    }
+
+    private static void CompareElements(
+        XElement original,
+        XElement current,
+        string path,
+        DanteValidationResult result,
+        IReadOnlyList<DanteAuthorizedDeviceAddition> authorizedDeviceAdditions)
+    {
         if (!string.Equals(original.Name.LocalName, current.Name.LocalName, StringComparison.Ordinal))
         {
             AddChangeIssue(result, path, $"Balise modifiée : <{original.Name.LocalName}> -> <{current.Name.LocalName}>.");
@@ -164,7 +191,7 @@ public static class DanteXmlChangeGuardService
 
         if (string.Equals(path, "/preset", StringComparison.OrdinalIgnoreCase))
         {
-            ComparePresetChildren(original, current, result);
+            ComparePresetChildren(original, current, result, authorizedDeviceAdditions);
             return;
         }
 
@@ -185,12 +212,20 @@ public static class DanteXmlChangeGuardService
         CompareGroupedChildren(originalChildren, currentChildren, path, result);
     }
 
-    private static void ComparePresetChildren(XElement original, XElement current, DanteValidationResult result)
+    private static void ComparePresetChildren(
+        XElement original,
+        XElement current,
+        DanteValidationResult result,
+        IReadOnlyList<DanteAuthorizedDeviceAddition> authorizedDeviceAdditions)
     {
         XElement[] originalNonDevices = original.Elements().Where(element => element.Name.LocalName != "device").ToArray();
         XElement[] currentNonDevices = current.Elements().Where(element => element.Name.LocalName != "device").ToArray();
         CompareGroupedChildren(originalNonDevices, currentNonDevices, "/preset", result);
-        CompareDevices(original.Children("device").ToArray(), current.Children("device").ToArray(), result);
+        CompareDevices(
+            original.Children("device").ToArray(),
+            current.Children("device").ToArray(),
+            authorizedDeviceAdditions,
+            result);
     }
 
     private static void CompareGroupedChildren(
@@ -368,14 +403,14 @@ public static class DanteXmlChangeGuardService
     private static void CompareDevices(
         IReadOnlyList<XElement> originalDevices,
         IReadOnlyList<XElement> currentDevices,
+        IReadOnlyList<DanteAuthorizedDeviceAddition> authorizedDeviceAdditions,
         DanteValidationResult result)
     {
         // Le nom visible peut changer. On associe d'abord les machines par
-        // device_id, puis par default_name et enfin par signature matérielle.
+        // identité de session, puis par instance_id et par structure de rôle.
         bool[] matchedCurrentIndexes = new bool[currentDevices.Count];
-        Dictionary<string, Queue<int>>[] currentIndexesByIdentity = DeviceIdentitySelectors
-            .Select(selector => BuildDeviceIndexes(currentDevices, selector))
-            .ToArray();
+        Dictionary<string, Queue<int>>?[] currentIndexesByIdentity =
+            new Dictionary<string, Queue<int>>?[DeviceIdentitySelectors.Length];
         for (int originalIndex = 0; originalIndex < originalDevices.Count; originalIndex++)
         {
             XElement originalDevice = originalDevices[originalIndex];
@@ -388,7 +423,8 @@ public static class DanteXmlChangeGuardService
                 originalIndex);
             if (!currentIndex.HasValue)
             {
-                AddChangeIssue(result, "/preset/device", $"Device supprimé : {DeviceDisplayName(originalDevice, originalIndex + 1)}.");
+                // La suppression d'une machine est une fonction métier prise
+                // en charge par DanteProject, qui nettoie aussi ses patchs.
                 continue;
             }
 
@@ -396,20 +432,65 @@ public static class DanteXmlChangeGuardService
             CompareElements(originalDevice, currentDevices[currentIndex.Value], "/preset/device", result);
         }
 
+        HashSet<int> usedAuthorizations = [];
         for (int currentIndex = 0; currentIndex < currentDevices.Count; currentIndex++)
         {
-            if (!matchedCurrentIndexes[currentIndex])
+            if (matchedCurrentIndexes[currentIndex])
             {
-                AddChangeIssue(result, "/preset/device", $"Device ajouté : {DeviceDisplayName(currentDevices[currentIndex], currentIndex + 1)}.");
+                continue;
+            }
+
+            XElement currentDevice = currentDevices[currentIndex];
+            string currentName = MachineRoleIdentityService.ReadVisibleName(
+                currentDevice,
+                $"position {currentIndex + 1}");
+            int authorizationIndex = FindAuthorizationIndex(
+                authorizedDeviceAdditions,
+                usedAuthorizations,
+                currentName);
+            if (authorizationIndex < 0)
+            {
+                result.AddError(
+                    DanteIssueCategory.SaveSafety,
+                    $"Ajout de device non autorisé par défaut : {currentName}. "
+                    + "Utilisez la duplication, la banque de machines ou l'import XML contrôlé.");
+                continue;
+            }
+
+            usedAuthorizations.Add(authorizationIndex);
+            CompareElements(
+                authorizedDeviceAdditions[authorizationIndex].BaselineDevice,
+                currentDevice,
+                "/preset/device",
+                result);
+        }
+    }
+
+    private static int FindAuthorizationIndex(
+        IReadOnlyList<DanteAuthorizedDeviceAddition> authorizations,
+        IReadOnlySet<int> usedIndexes,
+        string currentName)
+    {
+        for (int index = 0; index < authorizations.Count; index++)
+        {
+            if (!usedIndexes.Contains(index)
+                && string.Equals(
+                    authorizations[index].CurrentDeviceName,
+                    currentName,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                return index;
             }
         }
+
+        return -1;
     }
 
     private static int? FindMatchingDeviceIndex(
         XElement originalDevice,
         int originalDeviceCount,
         IReadOnlyList<XElement> currentDevices,
-        IReadOnlyList<Dictionary<string, Queue<int>>> currentIndexesByIdentity,
+        IList<Dictionary<string, Queue<int>>?> currentIndexesByIdentity,
         IReadOnlyList<bool> matchedCurrentIndexes,
         int originalIndex)
     {
@@ -422,7 +503,9 @@ public static class DanteXmlChangeGuardService
                 continue;
             }
 
-            if (currentIndexesByIdentity[selectorIndex].TryGetValue(originalIdentity, out Queue<int>? candidates))
+            Dictionary<string, Queue<int>> indexes = currentIndexesByIdentity[selectorIndex]
+                ??= BuildDeviceIndexes(currentDevices, identitySelector);
+            if (indexes.TryGetValue(originalIdentity, out Queue<int>? candidates))
             {
                 while (candidates.TryDequeue(out int candidateIndex))
                 {
@@ -475,28 +558,41 @@ public static class DanteXmlChangeGuardService
 
     private static readonly Func<XElement, string>[] DeviceIdentitySelectors =
     [
+        device => MachineRoleIdentityService.TryGetSessionIdentity(device) ?? string.Empty,
         device => device.Child("instance_id").ChildValue("device_id"),
         device => device.ChildValue("default_name"),
-        BuildHardwareIdentity
+        BuildGenericRoleIdentity
     ];
 
-    private static string BuildHardwareIdentity(XElement device)
+    private static string BuildGenericRoleIdentity(XElement device)
     {
-        string[] values =
-        [
+        if (!string.IsNullOrWhiteSpace(MachineRoleIdentityService.ReadTechnicalDeviceId(device))
+            || !string.IsNullOrWhiteSpace(device.ChildValue("default_name")))
+        {
+            return string.Empty;
+        }
+
+        string txSignature = string.Join(
+            ",",
+            device.Children("txchannel").Select(channel =>
+                $"{channel.Attribute("danteId")?.Value}:{channel.Attribute("mediaType")?.Value}"));
+        string rxSignature = string.Join(
+            ",",
+            device.Children("rxchannel").Select(channel =>
+                $"{channel.Attribute("danteId")?.Value}:{channel.Attribute("mediaType")?.Value}"));
+        return string.Join(
+            "|",
+            "generic-role",
             device.ChildValue("manufacturer_id"),
             device.ChildValue("model_id"),
             device.ChildValue("device_type"),
-            device.ChildValue("device_type_string"),
-            device.ChildValue("model_version")
-        ];
-        return values.All(string.IsNullOrWhiteSpace) ? string.Empty : string.Join("|", values);
+            txSignature,
+            rxSignature);
     }
 
     private static string DeviceDisplayName(XElement device, int position)
     {
-        string name = device.ChildValue("name");
-        return string.IsNullOrWhiteSpace(name) ? $"position {position}" : name;
+        return MachineRoleIdentityService.ReadVisibleName(device, $"position {position}");
     }
 
     private static void CompareAttributes(XElement original, XElement current, string path, DanteValidationResult result)

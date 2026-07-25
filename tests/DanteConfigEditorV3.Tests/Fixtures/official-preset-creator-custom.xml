@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<preset version="3.0.0">
+    <name>Official Creator compatible fixture</name>
+    <description>Fixture anonymisée reproduisant la structure générée par Dante Preset Creator.</description>
+    <device>
+        <captureInfo>
+            <device_name />
+            <device_samplerate />
+            <device_encoding />
+            <device_unicast_latency />
+            <txchannel_names />
+            <txflows />
+            <rxchannel_names />
+            <rxchannel_subscriptions />
+            <rxflows />
+        </captureInfo>
+        <friendly_name>CUSTOM-IO</friendly_name>
+        <samplerate>48000</samplerate>
+        <encoding>24</encoding>
+        <unicast_latency>1000</unicast_latency>
+        <txchannel danteId="1" mediaType="audio">
+            <label>Ch 1</label>
+        </txchannel>
+        <txchannel danteId="2" mediaType="audio">
+            <label>Ch 2</label>
+        </txchannel>
+        <rxchannel danteId="1" mediaType="audio">
+            <name>Ch 1</name>
+        </rxchannel>
+        <rxchannel danteId="2" mediaType="audio">
+            <name>Ch 2</name>
+        </rxchannel>
+    </device>
+</preset>

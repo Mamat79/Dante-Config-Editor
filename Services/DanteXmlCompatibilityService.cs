@@ -160,7 +160,7 @@ public static class DanteXmlCompatibilityService
         return new DanteDeviceXmlSignature
         {
             Position = position,
-            Name = device.Child("name")?.Value.Trim() ?? $"Device {position}",
+            Name = MachineRoleIdentityService.ReadVisibleName(device, $"Device {position}"),
             TechnicalElements = device.Elements()
                 .Select(element => element.Name.LocalName)
                 .Where(name => TechnicalDeviceElements.Contains(name, StringComparer.OrdinalIgnoreCase))
@@ -361,8 +361,7 @@ public static class DanteXmlCompatibilityService
 
     private static string ReadDeviceName(XElement device, string fallback)
     {
-        string name = device.Child("name")?.Value.Trim() ?? string.Empty;
-        return string.IsNullOrWhiteSpace(name) ? fallback : name;
+        return MachineRoleIdentityService.ReadVisibleName(device, fallback);
     }
 
     private static int? ParseDanteId(string? value)

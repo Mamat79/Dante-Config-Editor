@@ -92,6 +92,7 @@ public sealed partial class DanteProject
         OriginalFilePath = originalFilePath;
         Document = document;
         _originalDocument = new XDocument(originalDocument ?? document);
+        MachineRoleIdentityService.PairEquivalentDocuments(_originalDocument, Document);
         _originalCompatibilityProfile = DanteXmlCompatibilityService.CaptureProfile(_originalDocument);
         ReloadModel();
     }
@@ -152,12 +153,15 @@ public sealed partial class DanteProject
         // Copie complète du XML : plus lourd qu'une annulation ciblée, mais plus sûr
         // car les modifications peuvent toucher plusieurs balises de patch.
         TrimUndoHistory();
+        XDocument snapshotDocument = new(Document);
+        MachineRoleIdentityService.PairEquivalentDocuments(Document, snapshotDocument);
         _undoSnapshots.Push(new UndoSnapshot(
             label,
-            new XDocument(Document),
+            snapshotDocument,
             IsModified,
             _changes.Count,
-            CaptureModifiedRxReferences()));
+            CaptureModifiedRxReferences(),
+            CaptureAuthorizedDeviceAdditions()));
     }
 
     public void RestoreLastUndoSnapshot()
@@ -190,7 +194,10 @@ public sealed partial class DanteProject
         }
 
         return Devices.FirstOrDefault(device =>
-            string.Equals(device.Element.ChildValue("name"), name, StringComparison.OrdinalIgnoreCase));
+            string.Equals(
+                MachineRoleIdentityService.ReadVisibleName(device.Element),
+                name,
+                StringComparison.OrdinalIgnoreCase));
     }
 
     public void ApplyBatch(Action<DanteProject> mutation)
@@ -220,19 +227,19 @@ public sealed partial class DanteProject
             throw new InvalidOperationException("Le nom actuel et le nouveau nom doivent être renseignés.");
         }
 
-        if (ContainsProblematicCharacters(newName))
-        {
-            throw new InvalidOperationException("Le nouveau nom contient des caractères non imprimables.");
-        }
+        string cleanNewName = DanteNameRules.EnsureValidDeviceName(newName);
 
-        if (Devices.Any(device => string.Equals(device.Name, newName, StringComparison.OrdinalIgnoreCase) && !string.Equals(device.Name, oldName, StringComparison.OrdinalIgnoreCase)))
+        if (Devices.Any(device => string.Equals(device.Name, cleanNewName, StringComparison.OrdinalIgnoreCase) && !string.Equals(device.Name, oldName, StringComparison.OrdinalIgnoreCase)))
         {
             throw new InvalidOperationException("Un autre device porte déjà ce nom.");
         }
 
         DanteDevice device = FindDevice(oldName) ?? throw new InvalidOperationException("Device introuvable.");
-        SetElementValue(device.Element, "name", newName.Trim());
-        SetElementValue(device.Element, "friendly_name", newName.Trim());
+        if (device.Element.Child("name") is not null)
+        {
+            SetElementValue(device.Element, "name", cleanNewName);
+        }
+        SetElementValue(device.Element, "friendly_name", cleanNewName);
 
         // Si le device TX est renommé, les patchs qui pointaient vers son ancien
         // nom doivent suivre pour ne pas casser les abonnements reconnus.
@@ -241,12 +248,12 @@ public sealed partial class DanteProject
             XElement? subscribedDevice = FindFirstElement(rxChannel, SubscriptionDeviceElementNames);
             if (subscribedDevice is not null && string.Equals(subscribedDevice.Value.Trim(), oldName, StringComparison.OrdinalIgnoreCase))
             {
-                subscribedDevice.Value = newName.Trim();
+                subscribedDevice.Value = cleanNewName;
                 _modifiedRxElements[rxChannel] = true;
             }
         }
 
-        RegisterChange("Nom device", $"{oldName} -> {newName.Trim()}");
+        RegisterChange("Nom device", $"{oldName} -> {cleanNewName}");
     }
 
     public void SetNetworkMode(string deviceName, bool redundant)
@@ -382,7 +389,7 @@ public sealed partial class DanteProject
             ?? throw new InvalidOperationException("Canal introuvable.");
 
         string oldName = channel.DisplayName;
-        string trimmedNewName = newName.Trim();
+        string trimmedNewName = DanteNameRules.EnsureValidChannelName(newName);
 
         if (channelKind == DanteChannelKind.Tx)
         {
@@ -649,6 +656,7 @@ public sealed partial class DanteProject
             return result;
         }
 
+        result.Merge(DanteProjectIntegrityValidator.Validate(Document));
         result.Merge(DanteXmlCompatibilityService.ValidateCompatibility(Document, _originalCompatibilityProfile));
         result.Merge(ValidateXmlChangeGuard());
 
@@ -873,7 +881,10 @@ public sealed partial class DanteProject
 
     public DanteValidationResult ValidateXmlChangeGuard()
     {
-        return DanteXmlChangeGuardService.ValidateChanges(_originalDocument, Document);
+        return DanteXmlChangeGuardService.ValidateChanges(
+            _originalDocument,
+            Document,
+            BuildGuardAuthorizations());
     }
 
     private void AddAudioFormatIssues(DanteValidationResult result)
@@ -915,6 +926,7 @@ public sealed partial class DanteProject
         // Restauration utilisée par Annuler action et par les erreurs pendant
         // une action utilisateur.
         Document = new XDocument(snapshot.Document);
+        MachineRoleIdentityService.PairEquivalentDocuments(snapshot.Document, Document);
         IsModified = snapshot.WasModified;
 
         while (_changes.Count > snapshot.ChangeCount)
@@ -923,6 +935,7 @@ public sealed partial class DanteProject
         }
 
         _modifiedRxElements.Clear();
+        RestoreAuthorizedDeviceAdditions(snapshot.AuthorizedDeviceAdditions);
         ReloadModel();
         RestoreModifiedRxReferences(snapshot.ModifiedRxReferences);
         ReloadModel();
@@ -1002,19 +1015,7 @@ public sealed partial class DanteProject
 
     private static string BuildDeviceIdentity(XElement device)
     {
-        string deviceId = device.Child("instance_id").ChildValue("device_id");
-        if (!string.IsNullOrWhiteSpace(deviceId))
-        {
-            return "device-id:" + deviceId;
-        }
-
-        string defaultName = device.ChildValue("default_name");
-        if (!string.IsNullOrWhiteSpace(defaultName))
-        {
-            return "default-name:" + defaultName;
-        }
-
-        return "name:" + ReadDeviceElementValue(device, "name");
+        return MachineRoleIdentityService.GetOrCreateSessionIdentity(device);
     }
 
     private static string ReadDeviceElementValue(XElement? device, string elementName)
@@ -1438,23 +1439,24 @@ public sealed partial class DanteProject
 
     private static void SetChannelDisplayName(DanteChannel channel, string fallbackElementName, string value)
     {
+        string cleanValue = DanteNameRules.EnsureValidChannelName(value);
         // Point important pour la compatibilité : si le nom venait d'un attribut
         // ou d'une balise précise, on écrit au même endroit.
         if (!string.IsNullOrWhiteSpace(channel.NameSource))
         {
             if (channel.NameSourceIsAttribute)
             {
-                channel.Element.SetAttributeValue(channel.NameSource, value);
+                channel.Element.SetAttributeValue(channel.NameSource, cleanValue);
             }
             else
             {
-                SetElementValue(channel.Element, channel.NameSource, value);
+                SetElementValue(channel.Element, channel.NameSource, cleanValue);
             }
 
             return;
         }
 
-        SetElementValue(channel.Element, fallbackElementName, value);
+        SetElementValue(channel.Element, fallbackElementName, cleanValue);
     }
 
     private static void SetBooleanElementAttribute(XElement parent, string elementName, string attributeName, bool value, string afterElementName)
@@ -1741,7 +1743,8 @@ public sealed partial class DanteProject
         XDocument Document,
         bool WasModified,
         int ChangeCount,
-        IReadOnlyList<ModifiedRxReference> ModifiedRxReferences);
+        IReadOnlyList<ModifiedRxReference> ModifiedRxReferences,
+        IReadOnlyList<AuthorizedDeviceAdditionState> AuthorizedDeviceAdditions);
 
     private sealed record ModifiedRxReference(string RxDevice, int RxIndex);
 }
