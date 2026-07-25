@@ -21,6 +21,8 @@ V3.6 is a Windows and macOS development version based on V3.5. Dante Config Edit
 - Network data, subscriptions, flows, Preferred Master, and sensitive settings are excluded by default.
 - Versioned, shareable bank with metadata, tags, editable labels, and an optional copied PNG/JPEG/WebP image.
 - Search, filters, edit, duplicate, confirmed delete, ZIP import/export, and complete bank backup/restore.
+- Bilingual GitHub catalog and verified `*.dce-bank.zip` archive for downloading or sharing a complete bank.
+- Included `DCE Generic Roles 3.6` bank with generic 8x8 and 32x32 roles and no hardware identity, network data, or subscription.
 - Transactional insertion of an independent instance from a template.
 - Experimental minimal 3.0.0 new project, empty or seeded from a template.
 
@@ -29,17 +31,19 @@ V3.6 is a Windows and macOS development version based on V3.5. Dante Config Edit
 - Daily technical logs available from the application.
 - Equivalent Windows/macOS commands for duplication, bank administration, template insertion, and project creation.
 - Existing patch, zoom, rename, Enter, Tab, and Shift+Tab behaviors remain covered.
+- XML comparison, statuses, and results now follow the active language on both Windows and macOS.
 
 ## Automated validation
 
-- 258 Core/Windows tests passed.
-- 16 headless Avalonia/macOS tests passed.
+- 271 Core/Windows tests passed.
+- 20 headless Avalonia/macOS tests passed.
 - Windows and macOS Release builds completed without warnings.
 - The NuGet audit command reported no vulnerable packages.
 
 ## Distribution
 
 - Self-contained Windows x64 installer: `DanteConfigEditorV3_6_Installer.exe`, including .NET 8 and FR/EN guides.
+- Separate choice of active-bank and included-bank folders, without replacing existing banks.
 - V3.6 upgrades the V3.5 development line and leaves stable V3.4.2 untouched.
 - macOS packages are planned for Apple Silicon and Intel under the V3.6 name.
 

@@ -21,6 +21,8 @@ V3.6 est une version de développement Windows et macOS issue de la V3.5. Dante 
 - Réseau, subscriptions, flows, Preferred Master et réglages sensibles restent exclus par défaut.
 - Banque versionnée et partageable avec métadonnées, tags, labels modifiables et image PNG/JPEG/WebP facultative copiée dans le modèle.
 - Recherche, filtres, modification, duplication, suppression confirmée, import/export ZIP, sauvegarde et restauration complète.
+- Catalogue GitHub bilingue et archive `*.dce-bank.zip` vérifiée pour télécharger ou partager une banque complète.
+- Banque fournie `DCE Generic Roles 3.6` avec rôles génériques 8x8 et 32x32, sans identité matérielle, réseau ni abonnement.
 - Ajout transactionnel d'une instance indépendante depuis un modèle.
 - Nouveau projet minimal 3.0.0 expérimental, vide ou amorcé par un modèle.
 
@@ -29,17 +31,19 @@ V3.6 est une version de développement Windows et macOS issue de la V3.5. Dante 
 - Journaux techniques quotidiens accessibles depuis l'application.
 - Commandes équivalentes Windows/macOS pour dupliquer, administrer la banque, ajouter un modèle et créer un projet.
 - Les comportements existants de patch, zoom, renommage, Entrée, Tab et Maj+Tab restent couverts.
+- La comparaison XML, ses statuts et ses résultats sont désormais réellement affichés en anglais lorsque cette langue est active, sur Windows et macOS.
 
 ## Validation automatisée
 
-- 258 tests Core/Windows réussis.
-- 16 tests Avalonia/macOS sans écran réussis.
+- 271 tests Core/Windows réussis.
+- 20 tests Avalonia/macOS sans écran réussis.
 - Builds Windows et macOS Release sans warning.
 - Aucun package NuGet vulnérable signalé par la commande d'audit.
 
 ## Distribution
 
 - Installateur Windows x64 autonome : `DanteConfigEditorV3_6_Installer.exe`, runtime .NET 8 et notices FR/EN inclus.
+- Choix du dossier de banque actif et du dossier des banques fournies, sans remplacement des banques existantes.
 - La V3.6 met à niveau la ligne de développement V3.5 et laisse la V3.4.2 stable intacte.
 - Paquets macOS prévus pour Apple Silicon et Intel sous le nom V3.6.
 

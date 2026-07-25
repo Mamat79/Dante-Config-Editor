@@ -56,6 +56,7 @@ Source: "{#SourceRoot}\docs\QuickStart_DanteConfigEditorV3_FR.pdf"; DestDir: "{a
 Source: "{#SourceRoot}\docs\QuickStart_DanteConfigEditorV3_EN.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourceRoot}\docs\Notice_DanteConfigEditorV3_FR.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourceRoot}\docs\Notice_DanteConfigEditorV3_EN.pdf"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#SourceRoot}\Resources\MachineBanks\Bundled\DCE Generic Roles 3.6\*"; DestDir: "{code:GetBundledBankDestination}"; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist; Check: ShouldInstallBundledBank
 
 [InstallDelete]
 Type: files; Name: "{app}\QuickStart_DanteConfigEditorV3.pdf"
@@ -96,6 +97,10 @@ var
   GithubLabel: TNewStaticText;
   ExistingInstallDir: String;
   ExistingInstallVersion: String;
+  BankDirectoriesPage: TInputDirWizardPage;
+  BankOptionsPage: TInputOptionWizardPage;
+  BundledBankDestination: String;
+  InstallBundledBankFiles: Boolean;
 
 function GetShortcutAppName(Param: String): String;
 begin
@@ -110,6 +115,61 @@ end;
 function IsEnglishLanguage(): Boolean;
 begin
   Result := ActiveLanguage = 'english';
+end;
+
+function InstallerText(FrenchText: String; EnglishText: String): String;
+begin
+  if IsEnglishLanguage() then
+    Result := EnglishText
+  else
+    Result := FrenchText;
+end;
+
+function MachineBankSettingsPath(): String;
+begin
+  Result := ExpandConstant(
+    '{localappdata}\DanteConfigEditorV3.2\machine-bank-location.txt');
+end;
+
+function DefaultMachineBankPath(): String;
+begin
+  Result := ExpandConstant(
+    '{userdocs}\Dante Config Editor\Machine Bank');
+end;
+
+function DefaultBundledBanksPath(): String;
+begin
+  Result := ExpandConstant(
+    '{userdocs}\Dante Config Editor\Included Machine Banks');
+end;
+
+function ConfiguredMachineBankPath(): String;
+var
+  RawContent: AnsiString;
+  Content: String;
+begin
+  Result := DefaultMachineBankPath();
+  if LoadStringFromFile(MachineBankSettingsPath(), RawContent) then
+  begin
+    Content := UTF8Decode(RawContent);
+    StringChangeEx(Content, #13, '', True);
+    StringChangeEx(Content, #10, '', True);
+    Content := Trim(Content);
+    if Content <> '' then
+    begin
+      Result := Content;
+    end;
+  end;
+end;
+
+function GetBundledBankDestination(Param: String): String;
+begin
+  Result := BundledBankDestination;
+end;
+
+function ShouldInstallBundledBank(): Boolean;
+begin
+  Result := InstallBundledBankFiles;
 end;
 
 procedure OpenGithub(Sender: TObject);
@@ -172,6 +232,55 @@ end;
 
 procedure InitializeWizard();
 begin
+  if ActiveLanguage = 'english' then
+  begin
+    BankDirectoriesPage := CreateInputDirPage(
+      wpSelectDir,
+      'Device banks',
+      'Choose where DCE uses and installs device banks.',
+      'The active bank may already exist. The included bank is installed in a separate folder and never overwrites an existing bank.',
+      False,
+      '');
+    BankDirectoriesPage.Add('Active device-bank folder:');
+    BankDirectoriesPage.Add('Folder for included banks:');
+    BankOptionsPage := CreateInputOptionPage(
+      BankDirectoriesPage.ID,
+      'Device-bank options',
+      'Choose the settings to apply.',
+      'These choices can later be changed from the Device bank window.',
+      False,
+      False);
+    BankOptionsPage.Add('Use the selected active-bank folder in DCE');
+    BankOptionsPage.Add('Install the DCE Generic Roles 3.6 bank');
+  end
+  else
+  begin
+    BankDirectoriesPage := CreateInputDirPage(
+      wpSelectDir,
+      'Banques de machines',
+      'Choisissez où DCE utilise et installe les banques de machines.',
+      'La banque active peut déjà exister. La banque fournie est installée dans un dossier séparé et ne remplace jamais une banque existante.',
+      False,
+      '');
+    BankDirectoriesPage.Add('Dossier de la banque active :');
+    BankDirectoriesPage.Add('Dossier des banques fournies :');
+    BankOptionsPage := CreateInputOptionPage(
+      BankDirectoriesPage.ID,
+      'Options des banques de machines',
+      'Choisissez les réglages à appliquer.',
+      'Ces choix restent modifiables depuis la fenêtre Banque de machines.',
+      False,
+      False);
+    BankOptionsPage.Add('Utiliser le dossier de banque active choisi dans DCE');
+    BankOptionsPage.Add('Installer la banque DCE Generic Roles 3.6');
+  end;
+
+  BankDirectoriesPage.Values[0] := ConfiguredMachineBankPath();
+  BankDirectoriesPage.Values[1] := DefaultBundledBanksPath();
+  BankOptionsPage.Values[0] := True;
+  BankOptionsPage.Values[1] := not DirExists(
+    AddBackslash(BankDirectoriesPage.Values[1]) + 'DCE Generic Roles 3.6');
+
   GithubLabel := TNewStaticText.Create(WizardForm);
   GithubLabel.Parent := WizardForm;
   GithubLabel.Caption := 'GitHub public';
@@ -196,6 +305,138 @@ begin
   SignatureAgentsLabel.Top := WizardForm.ClientHeight - ScaleY(22);
   SignatureAgentsLabel.Font.Color := clGray;
   SignatureAgentsLabel.Font.Size := 7;
+end;
+
+function NextButtonClick(CurPageID: Integer): Boolean;
+var
+  MessageText: String;
+begin
+  Result := True;
+  if CurPageID <> BankOptionsPage.ID then
+  begin
+    Exit;
+  end;
+
+  if BankOptionsPage.Values[0]
+    and (Trim(BankDirectoriesPage.Values[0]) = '') then
+  begin
+    if ActiveLanguage = 'english' then
+      MessageText := 'Choose an active device-bank folder.'
+    else
+      MessageText := 'Choisissez un dossier de banque active.';
+    MsgBox(MessageText, mbError, MB_OK);
+    Result := False;
+    Exit;
+  end;
+
+  if BankOptionsPage.Values[1]
+    and (Trim(BankDirectoriesPage.Values[1]) = '') then
+  begin
+    if ActiveLanguage = 'english' then
+      MessageText := 'Choose a folder for the included banks.'
+    else
+      MessageText := 'Choisissez un dossier pour les banques fournies.';
+    MsgBox(MessageText, mbError, MB_OK);
+    Result := False;
+  end;
+end;
+
+function PrepareToInstall(var NeedsRestart: Boolean): String;
+var
+  ActiveBankPath: String;
+  BundledBanksPath: String;
+  BaseDestination: String;
+  Candidate: String;
+  Suffix: Integer;
+begin
+  Result := '';
+  ActiveBankPath := BankDirectoriesPage.Values[0];
+  BundledBanksPath := BankDirectoriesPage.Values[1];
+  if BankOptionsPage.Values[0] then
+  begin
+    if FileExists(ActiveBankPath) then
+    begin
+      Result := InstallerText(
+        'Le chemin de banque active désigne un fichier : ',
+        'The active-bank path points to a file: ') + ActiveBankPath;
+      Exit;
+    end;
+    if not DirExists(ActiveBankPath)
+      and not ForceDirectories(ActiveBankPath) then
+    begin
+      Result := InstallerText(
+        'Impossible de créer le dossier de banque active : ',
+        'Unable to create the active-bank folder: ') + ActiveBankPath;
+      Exit;
+    end;
+  end;
+
+  InstallBundledBankFiles := BankOptionsPage.Values[1];
+  BundledBankDestination := '';
+  if not InstallBundledBankFiles then
+  begin
+    Exit;
+  end;
+
+  if FileExists(BundledBanksPath) then
+  begin
+    Result := InstallerText(
+      'Le chemin des banques fournies désigne un fichier : ',
+      'The included-banks path points to a file: ') + BundledBanksPath;
+    Exit;
+  end;
+  if not DirExists(BundledBanksPath)
+    and not ForceDirectories(BundledBanksPath) then
+  begin
+    Result := InstallerText(
+      'Impossible de créer le dossier des banques fournies : ',
+      'Unable to create the included-banks folder: ') + BundledBanksPath;
+    Exit;
+  end;
+
+  BaseDestination :=
+    AddBackslash(BundledBanksPath) + 'DCE Generic Roles 3.6';
+  Candidate := BaseDestination;
+  Suffix := 2;
+  while DirExists(Candidate) or FileExists(Candidate) do
+  begin
+    Candidate := BaseDestination + ' (' + IntToStr(Suffix) + ')';
+    Suffix := Suffix + 1;
+  end;
+  BundledBankDestination := Candidate;
+end;
+
+procedure SaveMachineBankLocation();
+var
+  BankPath: String;
+  EncodedBankPath: AnsiString;
+  SettingsPath: String;
+  SettingsDirectory: String;
+begin
+  if not BankOptionsPage.Values[0] then
+  begin
+    Exit;
+  end;
+
+  BankPath := BankDirectoriesPage.Values[0];
+  SettingsPath := MachineBankSettingsPath();
+  SettingsDirectory := ExtractFileDir(SettingsPath);
+  ForceDirectories(BankPath);
+  ForceDirectories(SettingsDirectory);
+  if FileExists(SettingsPath) then
+  begin
+    CopyFile(SettingsPath, SettingsPath + '.bak', False);
+  end;
+  EncodedBankPath := UTF8Encode(BankPath + #13#10);
+  SaveStringToFile(SettingsPath, EncodedBankPath, False);
+end;
+
+procedure CurStepChanged(CurStep: TSetupStep);
+begin
+  if CurStep = ssPostInstall then
+  begin
+    SaveMachineBankLocation();
+  end;
 end;
 
 function InitializeSetup(): Boolean;

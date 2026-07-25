@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json;
 using System.Xml.Linq;
 using DanteConfigEditor.Models;
 using DanteConfigEditor.Services;
@@ -405,6 +406,66 @@ public sealed class MachineBankV36Tests
         Assert.Equal("keep", File.ReadAllText(sentinel));
     }
 
+    [Fact]
+    public void BundledGenericBankAndGithubArchiveAreValidAndContainNoProjectIdentity()
+    {
+        string bundledPath = RepositoryFile(
+            "Resources",
+            "MachineBanks",
+            "Bundled",
+            MachineBankDistributionService.BundledBankFolderName);
+        MachineBankRepository bundled = new(bundledPath);
+
+        MachineTemplateMetadata[] templates = bundled.List().ToArray();
+
+        Assert.Equal(2, templates.Length);
+        Assert.Equal([8, 32], templates.Select(item => item.TxCount).Order().ToArray());
+        Assert.Equal([8, 32], templates.Select(item => item.RxCount).Order().ToArray());
+        Assert.All(templates, metadata =>
+        {
+            Assert.Equal("3.0.0", metadata.SourcePresetVersion);
+            MachineTemplatePackage package = bundled.Load(metadata.TemplateId);
+            XElement root = Assert.IsType<XElement>(package.TemplateDocument.Root);
+            Assert.Null(Child(root, "instance_id"));
+            Assert.Null(Child(root, "device_id"));
+            Assert.Null(Child(root, "default_name"));
+            Assert.Empty(Children(root, "interface"));
+            Assert.Empty(Children(root, "txflow"));
+            Assert.All(Children(root, "rxchannel"), channel =>
+            {
+                Assert.Null(Child(channel, "subscribed_device"));
+                Assert.Null(Child(channel, "subscribed_channel"));
+            });
+        });
+
+        string archivePath = RepositoryFile(
+            "machine-banks",
+            "DCE_Generic_Roles_3_6.dce-bank.zip");
+        using JsonDocument catalog = JsonDocument.Parse(
+            File.ReadAllText(RepositoryFile("machine-banks", "catalog.json")));
+        string expectedHash = catalog.RootElement
+            .GetProperty("banks")[0]
+            .GetProperty("sha256")
+            .GetString()!;
+        string actualHash = Convert.ToHexString(
+            System.Security.Cryptography.SHA256.HashData(File.ReadAllBytes(archivePath)))
+            .ToLowerInvariant();
+        Assert.Equal(expectedHash, actualHash);
+
+        using TestWorkspace workspace = new();
+        string restoredPath = Path.Combine(workspace.DirectoryPath, "DownloadedBank");
+        MachineBankArchiveService.RestoreBank(archivePath, restoredPath);
+        Assert.Equal(2, new MachineBankRepository(restoredPath).List().Count);
+    }
+
+    [Fact]
+    public void GithubBankCatalogUsesTheVersionedPublicRepositoryFolder()
+    {
+        Assert.Equal(
+            "https://github.com/Mamat79/DanteConfigEditorV3/tree/v3.6/machine-banks",
+            MachineBankDistributionService.GitHubBanksUrl);
+    }
+
     private static string[] ReadLabels(XDocument document, string channelElementName)
     {
         return document.Root!.Elements()
@@ -423,6 +484,19 @@ public sealed class MachineBankV36Tests
     private static IEnumerable<XElement> Children(XElement? parent, string localName)
     {
         return parent?.Elements().Where(element => element.Name.LocalName == localName) ?? [];
+    }
+
+    private static string RepositoryFile(params string[] relativeParts)
+    {
+        DirectoryInfo? directory = new(AppContext.BaseDirectory);
+        while (directory is not null
+               && !File.Exists(Path.Combine(directory.FullName, "DanteConfigEditorV3.csproj")))
+        {
+            directory = directory.Parent;
+        }
+
+        Assert.NotNull(directory);
+        return Path.Combine([directory!.FullName, .. relativeParts]);
     }
 
     private sealed class TestWorkspace : IDisposable

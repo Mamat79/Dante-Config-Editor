@@ -14,6 +14,7 @@
                 <TextBlock x:Name="BankPathText" Classes="muted" TextTrimming="CharacterEllipsis" />
             </StackPanel>
             <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
+                <Button x:Name="GithubBanksButton" Margin="0,0,8,8" Click="GithubBanksButton_Click" />
                 <Button x:Name="ChangeBankButton" Margin="0,0,8,8" Click="ChangeBankButton_Click" />
                 <Button x:Name="OpenBankFolderButton" Margin="0,0,0,8" Click="OpenBankFolderButton_Click" />
             </WrapPanel>

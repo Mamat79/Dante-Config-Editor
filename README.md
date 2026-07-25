@@ -25,11 +25,11 @@ La V3.6 est développée et testée dans la branche `v3.6`, à partir de la V3.5
 - bilan détaillé des choix, tests et limites dans [V3_6_IMPLEMENTATION_REPORT.md](V3_6_IMPLEMENTATION_REPORT.md) ;
 - validation renforcée des identifiants, références, canaux, subscriptions, namespaces et ajouts de nœuds ;
 - duplication prudente d'une machine sous forme de rôle générique, sans recopier les identifiants matériels ;
-- banque de machines versionnée et partageable avec métadonnées, labels, image facultative, recherche, import/export et sauvegarde/restauration ;
+- banque de machines versionnée et partageable avec métadonnées, labels, image facultative, recherche, import/export et catalogue GitHub ;
 - ajout transactionnel d'une instance indépendante depuis la banque ;
 - création expérimentale d'un projet minimal 3.0.0, à valider impérativement par un import réel dans Dante Controller ;
 - journaux techniques accessibles depuis l'application ;
-- 258 tests Core/Windows et 16 tests Mac sans écran.
+- 271 tests Core/Windows et 20 tests Mac sans écran.
 
 La duplication et la banque ne fabriquent pas un appareil Dante réel. Elles créent des rôles de preset génériques dépourvus de `instance_id` et `device_id`. Aucun import V3.6 n'ayant encore été effectué dans Dante Controller, la compatibilité terrain n'est pas présentée comme garantie.
 
@@ -64,9 +64,17 @@ Les modèles internes ne sont jamais modifiés : chaque export crée un nouveau 
 
 La V3.2 ajoute un synoptique en couleur dans `Import / Export > Synoptique`. Chaque machine peut recevoir un emplacement physique, être affichée ou masquée en un clic et être réordonnée. Les emplacements déjà saisis restent disponibles dans une liste. Les subscriptions consécutives entre deux machines sont regroupées dans un seul câble, par exemple `TX 1-32 vers RX 1-32`, et les liaisons nombreuses sont réparties sur des points d'arrivée distincts.
 
-Le synoptique peut être exporté en SVG ou en PDF vectoriel. Ces exports et le fichier local de mise en page ne modifient jamais le XML Dante chargé.
+Le synoptique peut être ouvert dans une fenêtre séparée, avec un zoom qui conserve toujours ses proportions, puis exporté en SVG ou en PDF vectoriel. Ces exports et le fichier local de mise en page ne modifient jamais le XML Dante chargé.
 
 Les emplacements et choix de présentation sont enregistrés dans un petit fichier local séparé. Ils ne sont jamais ajoutés au XML Dante. L'export SVG contient les machines, les câbles numérotés et une légende détaillée ; il peut être ouvert dans un navigateur, imprimé ou intégré à un dossier technique.
+
+## Banques de machines partageables
+
+La fenêtre `Banque de machines` permet d'exporter une banque complète dans une archive vérifiée `*.dce-bank.zip`, puis d'importer une banque téléchargée dans un dossier neuf ou vide. L'import contrôle le manifeste, les empreintes SHA-256 et chaque modèle avant de changer de banque ; aucun fichier existant n'est remplacé.
+
+Le bouton `Banques GitHub` ouvre le [catalogue public des banques V3.6](machine-banks/README.md). La banque fournie `DCE Generic Roles 3.6` contient deux rôles génériques 8x8 et 32x32 pour les essais et la formation. Ils ne représentent aucun matériel réel et ne contiennent ni identité matérielle, ni IP, ni abonnement.
+
+L'installateur Windows propose séparément le dossier de banque actif et le dossier où placer les banques fournies. Il réutilise le chemin déjà configuré lors d'une mise à jour, ne touche jamais au contenu d'une banque existante et choisit un nouveau nom de dossier si la banque fournie est déjà présente.
 
 ## Notices
 
@@ -89,7 +97,7 @@ Chaque vidéo dure 55 secondes, sans voix ni piste audio, avec le texte directem
 - Renomme les devices.
 - Supprime un device et nettoie les subscriptions/patchs qui pointent vers lui.
 - Duplique un device sous forme de rôle générique indépendant, avec conservation optionnelle des labels et réglages sûrs.
-- Enregistre, recherche, modifie, partage, sauvegarde et restaure des modèles dans une banque de machines versionnée.
+- Enregistre, recherche, modifie et partage des modèles ou des banques complètes, avec accès au catalogue GitHub.
 - Ajoute au projet une nouvelle instance indépendante issue de la banque.
 - Crée expérimentalement un projet minimal 3.0.0 vide ou amorcé depuis la banque.
 - Ajoute les devices d'un second XML dans le projet ouvert, avec import des machines uniques même en présence de doublons.
@@ -103,7 +111,7 @@ Chaque vidéo dure 55 secondes, sans voix ni piste audio, avec le texte directem
 - Réinitialise les noms de canaux.
 - Modifie les paramètres réseau et audio exposés par les fichiers XML reconnus.
 - Affiche une page Patch pour visualiser et modifier les abonnements RX vers TX lorsque le format XML le permet.
-- Ajoute l'onglet Windows `Easy patch` avec RX à gauche, TX à droite, navigation rapide entre machines, lot prévisualisé cumulatif, plages strictes, résolution explicite des conflits et matrice interactive compacte avec glissement en série.
+- Ajoute l'onglet Windows `Easy patch` avec RX à gauche, TX à droite, navigation rapide entre machines, application immédiate, plages strictes, alerte optionnelle pour les RX déjà patchés et matrice interactive compacte avec glissement en série.
 - Dans `Easy patch`, propose un bouton `FLIP TX ⇄ RX` très visible, un patch `1:1` accessible depuis `Sélection et plage` ou directement depuis la grille, et la navigation Tab/Maj+Tab pendant le renommage.
 - Dans la matrice `Easy patch`, un clic sur un libellé TX vertical ouvre son renommage direct ; Entrée valide, Tab/Maj+Tab naviguent, Échap annule.
 - La poignée de recopie n'apparaît que pour un nom terminé par un nombre et conserve les zéros initiaux (`Mic 04` devient `Mic 05`, `Mic 06`, etc.).
@@ -164,6 +172,8 @@ La [Release GitHub V3.4.2](https://github.com/Mamat79/DanteConfigEditorV3/releas
 
 La version autonome inclut le runtime .NET nécessaire. Sur une machine Windows x64, il ne devrait pas être nécessaire d'installer .NET séparément pour utiliser l'application.
 
+L'assistant permet de choisir le dossier de banque actif et le dossier des banques fournies. L'installation de `DCE Generic Roles 3.6` est proposée par défaut lors d'une première installation et reste facultative. Une mise à jour conserve le chemin existant et ne remplace aucune banque.
+
 ### macOS
 
 Deux DMG autonomes sont fournis :
@@ -203,9 +213,9 @@ L'installateur V3.6 utilise l'AppId de la ligne de développement : il remplace 
 3. Sélectionner une copie du fichier de configuration Dante.
 4. Vérifier les devices et paramètres détectés.
 5. Modifier les champs souhaités.
-6. Dans l'onglet `Easy patch`, choisir les machines RX et TX, puis cliquer sur `Prévisualiser` : chaque opération s'ajoute au lot temporaire sans modifier le XML. Dans la grille, cliquer sur le premier point et utiliser `PATCH 1:1` pour préparer rapidement une série.
-7. Répéter l'opération sur autant de machines, sélections ou plages que nécessaire. Les conflits demandent toujours un choix explicite.
-8. Cliquer sur `Appliquer tout le lot` lorsque tout est prêt, ou utiliser `Appliquer` pour valider immédiatement l'opération courante avec le lot déjà accumulé.
+6. Dans l'onglet `Easy patch`, choisir les machines RX et TX, puis cliquer ou glisser dans la grille : chaque point de patch est appliqué immédiatement. `PATCH 1:1` applique directement une série.
+7. Laisser `M'avertir si le RX est déjà patché` coché pour confirmer chaque remplacement, ou le décocher pour remplacer sans cette alerte.
+8. Utiliser `Annuler action` pour revenir sur une opération de patch si nécessaire.
 9. Si besoin, utiliser `Ajouter XML au projet` pour importer les devices d'un autre export XML.
 10. Sauvegarder sous un nouveau nom.
 11. Valider le fichier généré dans l'outil Dante officiel approprié avant usage terrain.

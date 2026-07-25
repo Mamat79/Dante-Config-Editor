@@ -162,6 +162,32 @@ La restauration :
 - exige un dossier de destination neuf ou vide ;
 - n'écrase jamais une banque existante.
 
+## Distribution GitHub et banque fournie
+
+Le dossier public [`machine-banks`](machine-banks/README.md) contient :
+
+- un catalogue `catalog.json` versionné ;
+- les archives téléchargeables `*.dce-bank.zip` ;
+- le SHA-256 de chaque archive ;
+- les consignes bilingues de téléchargement et de contribution.
+
+La banque `DCE Generic Roles 3.6` est générée de façon reproductible par
+`tools/Build-BundledMachineBanks.ps1`. Elle contient uniquement des rôles
+génériques 8x8 et 32x32 dépourvus d'identité matérielle, de réseau, de flows et
+de subscriptions. Le script produit à la fois la banque intégrée à
+l'installateur et son archive GitHub.
+
+L'installateur Windows demande :
+
+1. le dossier de la banque active, mémorisé dans les réglages locaux ;
+2. le dossier réservé aux banques fournies ;
+3. si la banque générique doit être installée.
+
+Une banque fournie existante n'est jamais modifiée. Si l'utilisateur demande
+une nouvelle copie, l'installateur choisit un nom de dossier libre. Sur macOS,
+le même format d'archive est accessible depuis le bouton `Banques GitHub`, puis
+installé depuis la fenêtre Banque de machines.
+
 ## Migration
 
 La V3.6 crée le format 1. Aucun format historique maîtrisé n'existe encore.

@@ -25,11 +25,11 @@ V3.6 is developed and tested on the `v3.6` branch from V3.5. Official V3.4.2 rem
 - detailed implementation, test, and limitation report in [V3_6_IMPLEMENTATION_REPORT.md](V3_6_IMPLEMENTATION_REPORT.md);
 - stronger validation of identities, references, channels, subscriptions, namespaces, and node additions;
 - cautious device duplication as a generic role without copying hardware identifiers;
-- versioned, shareable machine bank with metadata, labels, optional image, search, import/export, backup, and restore;
+- versioned, shareable machine bank with metadata, labels, optional image, search, import/export, and a GitHub catalog;
 - transactional insertion of an independent instance from the bank;
 - experimental creation of a minimal 3.0.0 project, which must be validated by an actual Dante Controller import;
 - technical logs available from the application;
-- 258 Core/Windows tests and 16 headless Mac tests.
+- 271 Core/Windows tests and 20 headless Mac tests.
 
 Duplication and the bank do not create real Dante hardware. They create generic preset roles without `instance_id` or `device_id`. No V3.6 output has yet been imported into Dante Controller, so field compatibility is not claimed as guaranteed.
 
@@ -42,6 +42,24 @@ Renaming on an already patched network was another recurring problem. Changing a
 Finally, because Dante Controller has no offline workflow, this software attempts to meet the need for fast, consolidated preparation. Reviewing, editing, merging and preparing a preset without being connected to the Dante network therefore became one of the project's central goals.
 
 Modern development agents then enabled a much larger step forward: safer saving, regression tests, a bilingual interface, self-contained installers, a macOS build, reports and more advanced patching tools. Product needs, functional decisions and field validation remain directed by Mamat; the agents contribute to analysis, implementation, testing and documentation.
+
+## Shareable device banks
+
+The `Device bank` window exports a complete bank as a verified
+`*.dce-bank.zip` archive and imports a downloaded bank into a new or empty
+folder. Import verifies the manifest, SHA-256 hashes, and every template before
+switching banks; existing files are never replaced.
+
+The `GitHub banks` button opens the
+[public V3.6 bank catalog](machine-banks/README.md). The included
+`DCE Generic Roles 3.6` bank provides generic 8x8 and 32x32 roles for testing
+and training. They do not represent real hardware and contain no hardware
+identity, IP address, or subscription.
+
+The Windows installer separately asks for the active bank folder and the
+folder used for included banks. During an upgrade it reuses the configured
+path, never changes an existing bank, and selects a new folder name if the
+included bank is already present.
 
 ## Importing and exporting labels
 
@@ -64,7 +82,7 @@ Bundled templates are never modified: every export creates a new file. A device 
 
 V3.2 adds a colored synoptic under `Import / Export > Synoptic`. Each device can be assigned to a physical location, shown or hidden with one click, and reordered. Previously entered locations remain available in a list. Consecutive subscriptions between two devices are compressed into one cable, for example `TX 1-32 to RX 1-32`, while dense connections are distributed across distinct connection ports.
 
-The synoptic can be exported as vector SVG or PDF. Neither export nor the local layout sidecar modifies the loaded Dante XML.
+The synoptic can be opened in a separate window whose zoom always preserves its proportions, then exported as vector SVG or PDF. Neither export nor the local layout sidecar modifies the loaded Dante XML.
 
 Locations and presentation choices are saved in a separate local sidecar file. They are never inserted into Dante XML. The SVG export contains devices, numbered cables, and a detailed legend and can be opened in a browser, printed, or included in technical documentation.
 
@@ -95,14 +113,14 @@ Each video lasts 55 seconds, with no voice-over or audio track, and uses text bu
 - Resets channel names.
 - Deletes a device and removes recognized subscriptions that reference it.
 - Duplicates a device as an independent generic role, with optional retention of labels and safe settings.
-- Saves, searches, edits, shares, backs up, and restores versioned templates in a machine bank.
+- Saves, searches, edits, and shares templates or complete banks, with access to the GitHub catalog.
 - Adds an independent project instance from the bank.
 - Experimentally creates an empty or bank-seeded minimal 3.0.0 project.
 - Merges devices from a second XML file into the open project.
 - Handles duplicate device names with manual or automatic renaming during merge.
 - Edits supported audio and network values exposed by recognized XML structures.
 - Provides the classic `Patch` view and the Windows `Easy patch` workspace.
-- Supports cumulative patch previews, direct apply, strict ranges and explicit conflict handling.
+- Supports immediate patching, strict ranges, optional warnings for already-patched Rx channels, and explicit conflict handling.
 - Displays a compact interactive TX/RX patch matrix with horizontal, vertical and diagonal gestures.
 - In `Easy patch`, provides a highly visible `FLIP TX ⇄ RX` button, one-to-one patching from either `Selection and range` or the matrix itself, and Tab/Shift+Tab navigation while renaming.
 - In the `Easy patch` matrix, clicking a vertical Tx label opens direct rename; Enter validates, Tab/Shift+Tab navigate, and Escape cancels.
@@ -144,6 +162,11 @@ Download artifact `DCE-v3.6-Windows-Installer`, containing `DanteConfigEditorV3_
 
 The self-contained installer includes the required .NET 8 runtime, French and English documentation, Start menu and desktop shortcuts, destination selection, and clean uninstall support. A fresh install defaults to `C:\Program Files\Dante Config Editor V3.6\`. It upgrades the V3.5 development line in place, removes obsolete V3.5 shortcuts, preserves local working data, and leaves stable V3.4.2 untouched.
 
+The wizard lets users choose the active device-bank folder and the folder for
+included banks. Installing `DCE Generic Roles 3.6` is proposed by default on a
+first installation and remains optional. An upgrade keeps the existing path
+and never replaces a bank.
+
 ### macOS
 
 - `DanteConfigEditorV3_6_macOS_AppleSilicon.dmg` supports Apple Silicon Macs.
@@ -168,9 +191,9 @@ The macOS builds are ad hoc signed but are not notarized with an Apple Developer
 2. Select `Open XML` and choose a copy of a Dante configuration file.
 3. Review detected devices and warnings.
 4. Make the required changes.
-5. In `Easy patch`, choose RX and TX devices and preview a selection or range. In the matrix, click the first crosspoint and use `PATCH 1:1` to quickly prepare a series.
-6. Repeat as needed; previews accumulate without changing the XML.
-7. Select `Apply the whole batch`, or use direct apply for the current operation.
+5. In `Easy patch`, choose RX and TX devices, then click or drag in the matrix: each crosspoint is applied immediately. `PATCH 1:1` directly applies a series.
+6. Keep `Warn me when the Rx channel is already patched` selected to confirm replacements, or clear it to replace without that warning.
+7. Use `Undo` to revert a patch operation when needed.
 8. Save under a new name.
 9. Import and validate the result in the appropriate official Dante tool before production use.
 

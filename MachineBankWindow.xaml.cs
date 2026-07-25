@@ -53,6 +53,7 @@ public partial class MachineBankWindow : Window
     {
         Title = L("Banque de machines", "Device bank");
         HeadingTextBlock.Text = Title;
+        GithubBanksButton.Content = L("Banques GitHub", "GitHub banks");
         ChangeBankButton.Content = L("Changer de banque", "Change bank");
         OpenBankFolderButton.Content = L("Ouvrir le dossier", "Open folder");
         SearchLabel.Content = L("Recherche", "Search");
@@ -72,8 +73,8 @@ public partial class MachineBankWindow : Window
         DeleteTemplateButton.Content = L("Supprimer", "Delete");
         ImportTemplateButton.Content = L("Importer un modèle", "Import template");
         ExportTemplateButton.Content = L("Exporter le modèle", "Export template");
-        BackupBankButton.Content = L("Sauvegarder la banque", "Back up bank");
-        RestoreBankButton.Content = L("Restaurer une banque", "Restore bank");
+        BackupBankButton.Content = L("Exporter la banque", "Export bank");
+        RestoreBankButton.Content = L("Importer une banque", "Import bank");
         CloseButton.Content = L("Fermer", "Close");
         AddToProjectButton.IsEnabled = _canAddToProject;
         AddToProjectButton.ToolTip = _canAddToProject
@@ -86,6 +87,9 @@ public partial class MachineBankWindow : Window
         ChangeBankButton.ToolTip = L(
             "Choisir un autre dossier de banque, local, partagé ou synchronisé.",
             "Choose another local, shared or synchronized bank folder.");
+        GithubBanksButton.ToolTip = L(
+            "Ouvre le catalogue public de banques DCE sur GitHub pour télécharger ou proposer une banque.",
+            "Opens the public DCE bank catalog on GitHub to download or submit a bank.");
         OpenBankFolderButton.ToolTip = L(
             "Ouvre le dossier actuellement utilisé pour stocker la banque.",
             "Opens the folder currently used to store the bank.");
@@ -123,11 +127,11 @@ public partial class MachineBankWindow : Window
             "Exporte le modèle sélectionné dans une archive partageable.",
             "Exports the selected template to a shareable archive.");
         BackupBankButton.ToolTip = L(
-            "Crée une sauvegarde complète de la banque.",
-            "Creates a complete backup of the bank.");
+            "Exporte toute la banque dans une archive vérifiée et partageable *.dce-bank.zip.",
+            "Exports the complete bank as a verified, shareable *.dce-bank.zip archive.");
         RestoreBankButton.ToolTip = L(
-            "Restaure une sauvegarde dans un nouveau dossier ou un dossier vide.",
-            "Restores a backup into a new or empty folder.");
+            "Installe une banque téléchargée dans un nouveau dossier ou un dossier vide, sans écraser l'existant.",
+            "Installs a downloaded bank into a new or empty folder without overwriting existing data.");
         CloseButton.ToolTip = L("Ferme la banque de machines.", "Closes the device bank.");
     }
 
@@ -481,7 +485,7 @@ public partial class MachineBankWindow : Window
         SaveFileDialog dialog = new()
         {
             Filter = "DCE machine bank (*.dce-bank.zip)|*.dce-bank.zip",
-            Title = L("Sauvegarder la banque", "Back up bank"),
+            Title = L("Exporter la banque", "Export bank"),
             FileName = $"DCE_MachineBank_{DateTime.Now:yyyyMMdd}.dce-bank.zip"
         };
         if (dialog.ShowDialog(this) != true)
@@ -495,7 +499,7 @@ public partial class MachineBankWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(L("Sauvegarde impossible", "Unable to back up bank"), ex);
+            ShowError(L("Export impossible", "Unable to export bank"), ex);
         }
     }
 
@@ -504,7 +508,7 @@ public partial class MachineBankWindow : Window
         OpenFileDialog archiveDialog = new()
         {
             Filter = "DCE machine bank (*.dce-bank.zip)|*.dce-bank.zip",
-            Title = L("Choisir la sauvegarde", "Choose bank backup")
+            Title = L("Choisir la banque téléchargée", "Choose downloaded bank")
         };
         if (archiveDialog.ShowDialog(this) != true)
         {
@@ -515,7 +519,7 @@ public partial class MachineBankWindow : Window
         {
             Title = L(
                 "Choisir un dossier neuf ou vide pour restaurer la banque",
-                "Choose a new or empty folder for the restored bank"),
+                "Choose a new or empty folder for the imported bank"),
             Multiselect = false
         };
         if (folderDialog.ShowDialog(this) != true)
@@ -532,7 +536,22 @@ public partial class MachineBankWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(L("Restauration impossible", "Unable to restore bank"), ex);
+            ShowError(L("Import impossible", "Unable to import bank"), ex);
+        }
+    }
+
+    private void GithubBanksButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo(MachineBankDistributionService.GitHubBanksUrl)
+            {
+                UseShellExecute = true
+            });
+        }
+        catch (Exception ex)
+        {
+            ShowError(L("Ouverture impossible", "Unable to open GitHub"), ex);
         }
     }
 

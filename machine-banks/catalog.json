@@ -1,0 +1,16 @@
+{
+  "formatVersion": 1,
+  "updatedUtc": "2026-07-26T00:00:00+00:00",
+  "banks": [
+    {
+      "id": "dce-generic-roles-3.6",
+      "name": "DCE Generic Roles 3.6",
+      "file": "DCE_Generic_Roles_3_6.dce-bank.zip",
+      "sha256": "72e9fd378f08a39727f5490429712ce21c7bc5cb2937f2c4eafa0b87440ac0ca",
+      "minimumDceVersion": "3.6",
+      "language": "fr-en",
+      "descriptionFr": "Deux rôles génériques 8x8 et 32x32 sans identité matérielle, réseau ni abonnement.",
+      "descriptionEn": "Two generic 8x8 and 32x32 roles without hardware identity, network settings or subscriptions."
+    }
+  ]
+}

@@ -60,6 +60,19 @@ public sealed class InstallerContractTests
         Assert.Contains("Remove-GeneratedPath", buildScript, StringComparison.Ordinal);
         Assert.Contains("Get-FileHash", buildScript, StringComparison.Ordinal);
         Assert.Contains("DanteConfigEditorV3_6_Installer.exe", buildScript, StringComparison.Ordinal);
+        Assert.Contains("Build-BundledMachineBanks.ps1", buildScript, StringComparison.Ordinal);
+        Assert.Contains("CreateInputDirPage", installerScript, StringComparison.Ordinal);
+        Assert.Contains("BankOptionsPage.Values[0]", installerScript, StringComparison.Ordinal);
+        Assert.DoesNotContain("BankOptionsPage.Selected[", installerScript, StringComparison.Ordinal);
+        Assert.Contains("machine-bank-location.txt", installerScript, StringComparison.Ordinal);
+        Assert.Contains("UTF8Decode", installerScript, StringComparison.Ordinal);
+        Assert.Contains("UTF8Encode", installerScript, StringComparison.Ordinal);
+        Assert.Contains("CopyFile(SettingsPath, SettingsPath + '.bak', False)", installerScript, StringComparison.Ordinal);
+        Assert.Contains("DCE Generic Roles 3.6", installerScript, StringComparison.Ordinal);
+        Assert.Contains("onlyifdoesntexist", installerScript, StringComparison.Ordinal);
+        Assert.Contains("ShouldInstallBundledBank", installerScript, StringComparison.Ordinal);
+        Assert.Contains("while DirExists(Candidate) or FileExists(Candidate)", installerScript, StringComparison.Ordinal);
+        Assert.Contains("SaveMachineBankLocation", installerScript, StringComparison.Ordinal);
     }
 
     [Fact]

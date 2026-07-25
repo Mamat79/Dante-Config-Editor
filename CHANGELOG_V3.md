@@ -11,9 +11,15 @@
 - Commandes Windows et macOS pour la duplication, la banque, l'ajout de modèle, le nouveau projet et l'ouverture des journaux.
 - Journaux techniques quotidiens et messages de validation plus précis.
 - Corpus local de dix XML, 176 machines et 5 004 labels validé sans modifier les originaux.
-- Suite portée à 265 tests Core/Windows et 19 tests Mac sans écran.
+- Suite portée à 271 tests Core/Windows et 20 tests Mac sans écran.
 - Numéro d'application, installateur, paquets macOS, workflows et notices passés en V3.6.
 - Easy Patch conserve le point de départ et le nombre demandé après un clic immédiat afin que `PATCH 1:1` reste utilisable.
+- L'aperçu séparé du synoptique conserve désormais ses proportions à tous les niveaux de zoom.
+- Les onglets des fenêtres machine gardent un contraste lisible dans les thèmes clair et sombre, avec RX présenté avant TX.
+- Les notices FR/EN décrivent l'application immédiate d'Easy Patch et l'alerte optionnelle des RX déjà patchés.
+- Les banques complètes utilisent désormais explicitement le format d'échange `*.dce-bank.zip`, avec catalogue GitHub, archive générique 8x8/32x32 vérifiée et accès direct depuis Windows/macOS.
+- L'installateur Windows permet de choisir le dossier de banque actif et celui des banques fournies, sans écraser une banque existante.
+- La comparaison XML et ses résultats suivent maintenant la langue active sur Windows et macOS ; les libellés anglais TX/RX ont également été harmonisés.
 - Aucun import V3.6 réel dans Dante Controller n'est revendiqué ; la création de projet et les rôles génériques restent à valider manuellement.
 
 ## V3.5 - ajustements de renommage et d'ergonomie

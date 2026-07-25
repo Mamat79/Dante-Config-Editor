@@ -40,6 +40,10 @@
                            ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" />
             </StackPanel>
             <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
+                <Button x:Name="GithubBanksButton"
+                        Content="Banques GitHub"
+                        Style="{StaticResource DialogSecondaryButtonStyle}"
+                        Click="GithubBanksButton_Click" />
                 <Button x:Name="ChangeBankButton"
                         Content="Changer de banque"
                         Style="{StaticResource DialogSecondaryButtonStyle}"
@@ -213,11 +217,11 @@
                         Style="{StaticResource DialogSecondaryButtonStyle}"
                         Click="ExportTemplateButton_Click" />
                 <Button x:Name="BackupBankButton"
-                        Content="Sauvegarder la banque"
+                        Content="Exporter la banque"
                         Style="{StaticResource DialogSecondaryButtonStyle}"
                         Click="BackupBankButton_Click" />
                 <Button x:Name="RestoreBankButton"
-                        Content="Restaurer une banque"
+                        Content="Importer une banque"
                         Style="{StaticResource DialogSecondaryButtonStyle}"
                         Click="RestoreBankButton_Click" />
                 <Button x:Name="CloseButton"

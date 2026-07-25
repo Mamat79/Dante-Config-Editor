@@ -340,19 +340,19 @@ def quick_start(language: str) -> None:
     )
     features = (
         [
-            ("Patch visuel", "Sous Windows, chaque prévisualisation rejoint un lot cumulatif et la grille compacte accepte les séries par glissement. Sur Mac, utilisez l'atelier visuel Avalonia."),
+            ("Patch visuel", "Chaque clic ou glissement applique immédiatement le patch. L'alerte de remplacement d'un RX déjà patché reste activée par défaut et peut être désactivée."),
             ("Récupération", "Une copie est écrite en arrière-plan après un court délai. La nouvelle destination devient la référence après Enregistrer sous."),
             ("Import / Export", "Labels JSON/CSV, XLSX/ODS DMT, CSV A&H et ZIP Yamaha sont regroupés avec des modèles dLive, Avantis, CL et QL inclus."),
-            ("Synoptique", "Regroupez les machines par emplacement et exportez un SVG ou PDF en couleur sans modifier le XML Dante."),
-            ("Banque de machines", "Dupliquez un rôle générique, enregistrez-le dans une banque partageable ou ajoutez une instance indépendante à un projet."),
+            ("Synoptique", "Regroupez les machines par emplacement, ouvrez un aperçu séparé aux proportions préservées et exportez un SVG ou PDF sans modifier le XML Dante."),
+            ("Banque de machines", "Exportez ou importez une banque complète, ouvrez le catalogue GitHub et ajoutez au projet une instance indépendante."),
         ]
         if french
         else [
-            ("Visual patch", "On Windows, every preview joins a cumulative batch and the compact matrix supports drag ranges. On Mac, use the Avalonia visual workshop."),
+            ("Visual patch", "Every click or drag applies the patch immediately. Replacement warnings for already-patched Rx channels are enabled by default and can be cleared."),
             ("Recovery", "A copy is written in the background after a short delay. Save as makes the new destination the session reference."),
             ("Import / Export", "JSON/CSV, DMT XLSX/ODS, A&H CSV, and Yamaha ZIP labels are grouped with bundled dLive, Avantis, CL, and QL templates."),
-            ("Synoptic", "Group devices by location and export a colored SVG or PDF without changing Dante XML."),
-            ("Machine bank", "Duplicate a generic role, save it in a shareable bank, or add an independent instance to a project."),
+            ("Synoptic", "Group devices by location, open a separate proportion-preserving preview, and export SVG or PDF without changing Dante XML."),
+            ("Machine bank", "Export or import a complete bank, open the GitHub catalog, and add an independent instance to a project."),
         ]
     )
 
@@ -425,6 +425,7 @@ def full_guide(language: str) -> None:
                 "L'installation proposée par défaut se trouve dans Program Files et crée des raccourcis dans le menu Démarrer et sur le Bureau.",
                 "Une installation V3.6 neuve utilise son propre dossier et ses propres raccourcis afin de pouvoir cohabiter avec la V3.4.2 stable.",
                 "La V3.6 remplace la ligne de développement V3.5 lorsqu'elle est déjà installée et conserve les données locales de travail.",
+                "L'assistant propose le dossier de banque actif et le dossier des banques fournies. La banque générique 8x8/32x32 est facultative et aucun dossier existant n'est remplacé.",
                 "Deux DMG V3.6 autonomes sont prévus pour Apple Silicon et Intel. Le bundle V3.6 distinct peut cohabiter avec la V3.4.2.",
                 "Les quatre notices PDF françaises et anglaises sont installées et restent accessibles depuis l'application.",
             ]),
@@ -506,11 +507,12 @@ def full_guide(language: str) -> None:
                 "Sélectionnez autant de TX que de RX pour un appariement un-à-un, ou un seul TX pour alimenter plusieurs RX.",
                 "Plusieurs TX vers un RX et les sélections multiples de tailles différentes sont refusés.",
                 "Le patch par plage demande un premier TX, un premier RX et une quantité exacte ; une plage incomplète est entièrement bloquée.",
-                "Chaque prévisualisation rejoint automatiquement le lot cumulatif sans modifier le XML. Pour les conflits, choisissez annuler, ignorer ou remplacer.",
+                "Un clic ou un glissement applique immédiatement les points de patch concernés, sans étape de prévisualisation.",
                 "Les clics et glissements mettent uniquement à jour les cellules concernées : la matrice entière n'est plus reconstruite après chaque action.",
-                "Appliquer exécute directement la sélection ou la plage avec le lot déjà accumulé ; Appliquer tout le lot valide tout en une seule fois.",
+                "Les sélections, les plages et PATCH 1:1 sont également appliqués immédiatement.",
+                "L'option M'avertir si le RX est déjà patché est cochée par défaut. Décochez-la uniquement pour remplacer une subscription sans afficher cette alerte.",
                 "Dans la grille compacte, les RX sont en lignes et les TX en colonnes. Cliquez pour une affectation ou maintenez et glissez horizontalement, verticalement ou en diagonale pour une série sûre.",
-                "Les changements ajoutés au lot restent en attente jusqu'à Appliquer tout le lot. Ils sont alors exécutés en une seule étape d'annulation.",
+                "Chaque opération immédiate reste annulable avec Annuler action.",
                 "Dans Détail machine, le menu supérieur passe à une autre machine et protège les modifications non appliquées.",
             ]),
             Spacer(1, 2 * mm),
@@ -542,7 +544,7 @@ def full_guide(language: str) -> None:
                 "Santé du fichier regroupe statistiques, erreurs, warnings, patchs libres/locaux et compatibilité.",
                 "La comparaison XML affiche les différences dans un tableau.",
                 "Les exports TXT/PDF portent la version du logiciel et la signature By Mamat et ses agents.",
-                "Import / Export regroupe Labels, Rapports et patchbook et Synoptique. Le synoptique mémorise les emplacements, affiche ou masque les machines en un clic, espace les arrivées denses et exporte un SVG ou un PDF ; sa mise en page locale ne modifie jamais le XML Dante.",
+                "Import / Export regroupe Labels, Rapports et patchbook et Synoptique. Le synoptique mémorise les emplacements, affiche ou masque les machines, propose un aperçu séparé dont le zoom conserve les proportions et exporte un SVG ou un PDF ; sa mise en page locale ne modifie jamais le XML Dante.",
             ]),
         ]
         label_page = [
@@ -596,7 +598,7 @@ def full_guide(language: str) -> None:
                 [48, 122],
             ),
             para("14. Tests de non-régression", "h1"),
-            para("La suite V3.6 exécute 258 tests Core/Windows et 16 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la duplication, la banque de machines, la création expérimentale de projet, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch et la cohérence des traductions."),
+            para("La suite V3.6 exécute 271 tests Core/Windows et 20 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la duplication, la banque de machines, la création expérimentale de projet, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch et la cohérence des traductions."),
             para("15. Limites connues", "h1"),
             *bullets([
                 "Aucun pilotage en temps réel et aucune communication avec les appareils.",
@@ -632,7 +634,9 @@ def full_guide(language: str) -> None:
                 "Choisissez Enregistrer dans la banque, renseignez fabricant, modèle, catégorie, description, tags et labels génériques.",
                 "Une image PNG, JPEG ou WebP facultative est copiée dans le dossier du modèle ; aucun chemin externe fragile n'est conservé.",
                 "La banque se trouve par défaut dans Documents/Dante Config Editor/Machine Bank. Son emplacement peut être choisi, ouvert, copié ou placé dans un dossier synchronisé.",
-                "L'administration permet recherche, filtres, modification, duplication, suppression confirmée, import/export d'un modèle ZIP et sauvegarde/restauration complète de la banque.",
+                "Exporter la banque crée une archive vérifiée *.dce-bank.zip. Importer une banque exige un dossier neuf ou vide et ne remplace jamais l'existant.",
+                "Banques GitHub ouvre le catalogue public V3.6. La banque DCE Generic Roles 3.6 fournit deux rôles d'essai 8x8 et 32x32 sans identité matérielle, réseau ni abonnement.",
+                "L'administration permet recherche, filtres, modification, duplication, suppression confirmée et import/export d'un modèle ZIP.",
             ]),
             para("Ajouter un modèle au projet", "h2"),
             *bullets([
@@ -656,7 +660,7 @@ def full_guide(language: str) -> None:
                 [
                     ["Configuration", "Vue d'ensemble, machine sélectionnée, canaux, listes rapides, actions globales et tableau des machines."],
                     ["Patch", "Lecture et modification tabulaire des subscriptions RX vers TX, avec filtres et renommage direct."],
-                    ["Easy patch", "Grille visuelle, sélection/plage, prévisualisation et lot de changements différés."],
+                    ["Easy patch", "Grille visuelle, sélection/plage, application immédiate et alerte de remplacement optionnelle."],
                     ["Import / Export > Labels", "Échange JSON/CSV, DMT XLSX/ODS, A&H et Yamaha, avec rapport d'import."],
                     ["Import / Export > Rapports", "Rapports TXT/PDF, patchbooks TXT/CSV et topologie textuelle simple."],
                     ["Import / Export > Synoptique", "Emplacements, ordre, visibilité, zoom, reset et exports SVG/PDF."],
@@ -685,18 +689,18 @@ def full_guide(language: str) -> None:
                 ("Réseau", "IP principale en automatique ou fixe, sans toucher aux interfaces secondaires."),
             ]),
             *bullets([
-                "Les onglets TX et RX permettent de renommer les canaux individuellement.",
+                "Les onglets RX puis TX permettent de renommer les canaux individuellement.",
                 "Patch RX permet de contrôler ou déconnecter les subscriptions reçues par la machine.",
                 "Appliquer valide l'ensemble en une seule opération groupée ; Annuler ne modifie pas le XML.",
             ]),
         ]
         visual_patch = [
             para("Deux façons de travailler sur le patch", "h1"),
-            para("Patch reste l'éditeur tabulaire précis. Easy patch ajoute une sélection visuelle, les plages et un lot cumulatif appliqué en une seule fois."),
+            para("Patch reste l'éditeur tabulaire précis. Easy patch ajoute une sélection visuelle, les plages et une application immédiate."),
             feature_band([
                 ("Patch", "Filtrer les TX/RX, rechercher une source, appliquer ou retirer une subscription."),
-                ("Easy patch", "RX à gauche, TX à droite, sélection multiple, plages et lot cumulatif."),
-                ("Contrôle", "Prévisualiser, résoudre les conflits, puis appliquer directement ou en une seule fois."),
+                ("Easy patch", "RX à gauche, TX à droite, sélection multiple, plages et application immédiate."),
+                ("Contrôle", "Alerte activée par défaut avant le remplacement d'un RX déjà patché."),
             ]),
         ]
         visual_health = [
@@ -717,6 +721,7 @@ def full_guide(language: str) -> None:
                 "The default location is Program Files, with Start menu and desktop shortcuts.",
                 "A fresh V3.6 installation uses its own folder and shortcuts so it can coexist with stable V3.4.2.",
                 "V3.6 upgrades the V3.5 development line when it is already installed and preserves local working data.",
+                "The wizard offers separate active-bank and included-bank folders. The generic 8x8/32x32 bank is optional and no existing folder is replaced.",
                 "Two self-contained V3.6 DMGs are planned for Apple Silicon and Intel. The separate V3.6 bundle can coexist with V3.4.2.",
                 "All four French and English PDFs are installed and remain available from the application.",
             ]),
@@ -798,11 +803,12 @@ def full_guide(language: str) -> None:
                 "Select equal Tx and Rx counts for one-to-one mapping, or one Tx to feed several Rx channels.",
                 "Several Tx channels to one Rx and unequal multiple selections are blocked.",
                 "Range patching requires a first Tx, first Rx, and exact count; an incomplete range is blocked as a whole.",
-                "Every preview automatically joins the cumulative batch without modifying the XML. For conflicts, choose cancel, skip, or replace.",
+                "A click or drag immediately applies the affected crosspoints, with no preview step.",
                 "Clicks and drags update only the affected cells: the entire matrix is no longer rebuilt after every action.",
-                "Apply executes the selection or range with the accumulated batch; Apply entire batch validates everything once.",
+                "Selections, ranges, and PATCH 1:1 are also applied immediately.",
+                "Warn me when the Rx channel is already patched is selected by default. Clear it only to replace a subscription without that warning.",
                 "In the compact matrix, Rx channels are rows and Tx channels are columns. Click for one assignment, or hold and drag horizontally, vertically, or diagonally for a safe range.",
-                "Changes added to the batch remain pending until Apply entire batch. They are then executed in one undo step.",
+                "Each immediate operation remains reversible with Undo.",
                 "In Device details, the top menu switches devices and protects unapplied changes.",
             ]),
             Spacer(1, 2 * mm),
@@ -834,7 +840,7 @@ def full_guide(language: str) -> None:
                 "File health combines statistics, errors, warnings, free/local subscriptions, and compatibility checks.",
                 "XML comparison displays differences in a table.",
                 "TXT/PDF exports include the application version and the By Mamat et ses agents signature.",
-                "Import / Export groups Labels, Reports and patchbook, and Synoptic. The synoptic remembers locations, shows or hides devices with one click, spaces dense connection ports, and exports SVG or PDF; its local layout sidecar never changes Dante XML.",
+                "Import / Export groups Labels, Reports and patchbook, and Synoptic. The synoptic remembers locations, shows or hides devices, provides a separate preview whose zoom preserves proportions, and exports SVG or PDF; its local layout sidecar never changes Dante XML.",
             ]),
         ]
         label_page = [
@@ -888,7 +894,7 @@ def full_guide(language: str) -> None:
                 [48, 122],
             ),
             para("14. Regression tests", "h1"),
-            para("The V3.6 suite runs 258 Core/Windows tests and 16 headless Mac tests. Coverage includes XML guards, save and recovery, IPv4 interfaces, subscriptions, large presets, duplication, the machine bank, experimental project creation, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, and translation consistency."),
+            para("The V3.6 suite runs 271 Core/Windows tests and 20 headless Mac tests. Coverage includes XML guards, save and recovery, IPv4 interfaces, subscriptions, large presets, duplication, the machine bank, experimental project creation, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, and translation consistency."),
             para("15. Known limitations", "h1"),
             *bullets([
                 "No real-time Dante control and no communication with devices.",
@@ -924,7 +930,9 @@ def full_guide(language: str) -> None:
                 "Choose Save to machine bank and enter manufacturer, model, category, description, tags, and generic labels.",
                 "An optional PNG, JPEG, or WebP image is copied into the model folder; no fragile external path is kept.",
                 "The default bank is Documents/Dante Config Editor/Machine Bank. You may choose, open, copy, or place it in a synchronized folder.",
-                "Administration supports search, filters, edit, duplicate, confirmed delete, model ZIP import/export, and complete bank backup/restore.",
+                "Export bank creates a verified *.dce-bank.zip archive. Import bank requires a new or empty folder and never replaces existing data.",
+                "GitHub banks opens the public V3.6 catalog. The DCE Generic Roles 3.6 bank provides generic 8x8 and 32x32 test roles with no hardware identity, network data, or subscription.",
+                "Administration supports search, filters, edit, duplicate, confirmed delete, and model ZIP import/export.",
             ]),
             para("Add a template to the project", "h2"),
             *bullets([
@@ -948,7 +956,7 @@ def full_guide(language: str) -> None:
                 [
                     ["Configuration", "Overview, selected device, channels, quick lists, global actions, and device table."],
                     ["Patch", "Tabular review and editing of Rx-to-Tx subscriptions, with filters and direct renaming."],
-                    ["Easy patch", "Visual matrix, selection/range tools, preview, and deferred change batch."],
+                    ["Easy patch", "Visual matrix, selection/range tools, immediate apply, and optional replacement warning."],
                     ["Import / Export > Labels", "JSON/CSV, DMT XLSX/ODS, A&H, and Yamaha exchange with an import report."],
                     ["Import / Export > Reports", "TXT/PDF reports, TXT/CSV patchbooks, and a simple text topology."],
                     ["Import / Export > Synoptic", "Locations, order, visibility, zoom, reset, and SVG/PDF exports."],
@@ -977,18 +985,18 @@ def full_guide(language: str) -> None:
                 ("Network", "Automatic or static primary IP without changing secondary interfaces."),
             ]),
             *bullets([
-                "The TX and RX tabs rename individual channels.",
+                "The RX then TX tabs rename individual channels.",
                 "Rx patch reviews or disconnects subscriptions received by the device.",
                 "Apply validates the complete edit as one grouped operation; Cancel leaves the XML unchanged.",
             ]),
         ]
         visual_patch = [
             para("Two patching workflows", "h1"),
-            para("Patch remains the precise tabular editor. Easy patch adds visual selection, ranges, and a cumulative batch that is applied once."),
+            para("Patch remains the precise tabular editor. Easy patch adds visual selection, ranges, and immediate apply."),
             feature_band([
                 ("Patch", "Filter TX/RX devices, find a source, and apply or remove a subscription."),
-                ("Easy patch", "RX on the left, TX on the right, multiple selection, ranges, and a cumulative batch."),
-                ("Control", "Preview, resolve conflicts, then apply directly or in one operation."),
+                ("Easy patch", "RX on the left, TX on the right, multiple selection, ranges, and immediate apply."),
+                ("Control", "Warning enabled by default before replacing an already-patched Rx channel."),
             ]),
         ]
         visual_health = [

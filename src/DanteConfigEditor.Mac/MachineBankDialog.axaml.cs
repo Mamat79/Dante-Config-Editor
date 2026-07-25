@@ -72,6 +72,8 @@ internal sealed partial class MachineBankDialog : Window
     private void ApplyLanguage()
     {
         FindControl<TextBlock>("HeadingText")!.Text = Title;
+        Button githubBanksButton = FindControl<Button>("GithubBanksButton")!;
+        githubBanksButton.Content = L("Banques GitHub", "GitHub banks");
         FindControl<Button>("ChangeBankButton")!.Content = L("Changer de banque", "Change bank");
         FindControl<Button>("OpenBankFolderButton")!.Content = L("Ouvrir le dossier", "Open folder");
         FindControl<TextBlock>("SearchLabel")!.Text = L("Recherche", "Search");
@@ -88,13 +90,28 @@ internal sealed partial class MachineBankDialog : Window
         FindControl<TextBlock>("LabelsPreviewHeadingText")!.Text = L("Aperçu des labels", "Label preview");
         FindControl<Button>("ImportTemplateButton")!.Content = L("Importer un modèle", "Import template");
         FindControl<Button>("ExportTemplateButton")!.Content = L("Exporter le modèle", "Export template");
-        FindControl<Button>("BackupBankButton")!.Content = L("Sauvegarder la banque", "Back up bank");
-        FindControl<Button>("RestoreBankButton")!.Content = L("Restaurer une banque", "Restore bank");
+        FindControl<Button>("BackupBankButton")!.Content = L("Exporter la banque", "Export bank");
+        FindControl<Button>("RestoreBankButton")!.Content = L("Importer une banque", "Import bank");
         FindControl<Button>("EditTemplateButton")!.Content = L("Modifier", "Edit");
         FindControl<Button>("DuplicateTemplateButton")!.Content = L("Dupliquer le modèle", "Duplicate template");
         FindControl<Button>("DeleteTemplateButton")!.Content = L("Supprimer", "Delete");
         FindControl<Button>("AddToProjectButton")!.Content = L("Ajouter au projet", "Add to project");
         FindControl<Button>("CloseButton")!.Content = L("Fermer", "Close");
+        ToolTip.SetTip(
+            githubBanksButton,
+            L(
+                "Ouvre le catalogue public de banques DCE sur GitHub.",
+                "Opens the public DCE bank catalog on GitHub."));
+        ToolTip.SetTip(
+            FindControl<Button>("BackupBankButton")!,
+            L(
+                "Exporte toute la banque dans une archive vérifiée et partageable *.dce-bank.zip.",
+                "Exports the complete bank as a verified, shareable *.dce-bank.zip archive."));
+        ToolTip.SetTip(
+            FindControl<Button>("RestoreBankButton")!,
+            L(
+                "Installe une banque téléchargée dans un dossier neuf ou vide, sans écraser l'existant.",
+                "Installs a downloaded bank into a new or empty folder without overwriting existing data."));
     }
 
     private void RefreshBank(Guid? selectTemplateId = null)
@@ -446,14 +463,14 @@ internal sealed partial class MachineBankDialog : Window
         }
         catch (Exception exception)
         {
-            await ShowErrorAsync(L("Sauvegarde impossible", "Unable to back up bank"), exception);
+            await ShowErrorAsync(L("Export impossible", "Unable to export bank"), exception);
         }
     }
 
     private async void RestoreBankButton_Click(object? sender, RoutedEventArgs e)
     {
         string? archive = await PickOpenFileAsync(
-            L("Choisir la sauvegarde", "Choose bank backup"),
+            L("Choisir la banque téléchargée", "Choose downloaded bank"),
             BankArchiveType);
         if (archive is null)
         {
@@ -474,7 +491,22 @@ internal sealed partial class MachineBankDialog : Window
         }
         catch (Exception exception)
         {
-            await ShowErrorAsync(L("Restauration impossible", "Unable to restore bank"), exception);
+            await ShowErrorAsync(L("Import impossible", "Unable to import bank"), exception);
+        }
+    }
+
+    private async void GithubBanksButton_Click(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo(MachineBankDistributionService.GitHubBanksUrl)
+            {
+                UseShellExecute = true
+            });
+        }
+        catch (Exception exception)
+        {
+            await ShowErrorAsync(L("Ouverture impossible", "Unable to open GitHub"), exception);
         }
     }
 
