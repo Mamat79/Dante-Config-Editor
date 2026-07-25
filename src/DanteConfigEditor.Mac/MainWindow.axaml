@@ -32,16 +32,24 @@
                     <Button x:Name="ThemeButton" Grid.Column="4" Click="ThemeButton_Click">Thème clair</Button>
                 </Grid>
 
-                <Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,240,Auto,*" ColumnSpacing="8">
-                    <Button x:Name="OpenButton" Grid.Column="0" Classes="primary" Click="OpenButton_Click" ToolTip.Tip="Charge un export XML Dante Controller.">Ouvrir XML</Button>
-                    <Button x:Name="MergeButton" Grid.Column="1" Click="MergeButton_Click" ToolTip.Tip="Ajoute les machines d'un autre XML au projet ouvert.">Ajouter XML</Button>
-                    <Button x:Name="SaveButton" Grid.Column="2" Classes="primary" Click="SaveButton_Click">Enregistrer sous</Button>
-                    <Button x:Name="EditButton" Grid.Column="3" Click="EditButton_Click">Activer l'édition</Button>
-                    <Button x:Name="UndoButton" Grid.Column="4" Click="UndoButton_Click">Annuler action</Button>
-                    <Button x:Name="RevertButton" Grid.Column="5" Click="RevertButton_Click">Annuler les changements</Button>
-                    <ComboBox x:Name="RecentCombo" Grid.Column="6" PlaceholderText="Fichiers récents" />
-                    <Button x:Name="OpenRecentButton" Grid.Column="7" Click="OpenRecentButton_Click">Ouvrir récent</Button>
-                </Grid>
+                <WrapPanel Grid.Row="1">
+                    <Button x:Name="NewProjectButton"
+                            Margin="0,0,8,8"
+                            Click="NewProjectButton_Click"
+                            ToolTip.Tip="Crée un preset 3.0.0 hors ligne. Un test d'import Dante Controller reste obligatoire.">Nouveau projet (expérimental)</Button>
+                    <Button x:Name="OpenButton" Classes="primary" Margin="0,0,8,8" Click="OpenButton_Click" ToolTip.Tip="Charge un export XML Dante Controller.">Ouvrir XML</Button>
+                    <Button x:Name="MergeButton" Margin="0,0,8,8" Click="MergeButton_Click" ToolTip.Tip="Ajoute les machines d'un autre XML au projet ouvert.">Ajouter XML</Button>
+                    <Button x:Name="OpenMachineBankButton"
+                            Margin="0,0,8,8"
+                            Click="OpenMachineBankButton_Click"
+                            ToolTip.Tip="Consulte, importe, exporte et administre les modèles de machines réutilisables.">Banque de machines</Button>
+                    <Button x:Name="SaveButton" Classes="primary" Margin="0,0,8,8" Click="SaveButton_Click">Enregistrer sous</Button>
+                    <Button x:Name="EditButton" Margin="0,0,8,8" Click="EditButton_Click">Activer l'édition</Button>
+                    <Button x:Name="UndoButton" Margin="0,0,8,8" Click="UndoButton_Click">Annuler action</Button>
+                    <Button x:Name="RevertButton" Margin="0,0,8,8" Click="RevertButton_Click">Annuler les changements</Button>
+                    <ComboBox x:Name="RecentCombo" Width="240" Margin="0,0,8,8" PlaceholderText="Fichiers récents" />
+                    <Button x:Name="OpenRecentButton" Margin="0,0,0,8" Click="OpenRecentButton_Click">Ouvrir récent</Button>
+                </WrapPanel>
             </Grid>
         </Border>
 
@@ -155,6 +163,8 @@
                                             <Button x:Name="ResetRxButton" Margin="0,0,8,8" Click="ResetRxButton_Click">Reset RX</Button>
                                             <Button x:Name="ResetTxButton" Margin="0,0,8,8" Click="ResetTxButton_Click">Reset TX</Button>
                                             <Button x:Name="DeleteDeviceButton" Classes="danger" Margin="0,0,8,8" Click="DeleteDeviceButton_Click">Supprimer</Button>
+                                            <Button x:Name="DuplicateDeviceButton" Margin="0,0,8,8" Click="DuplicateDeviceButton_Click">Dupliquer</Button>
+                                            <Button x:Name="SaveDeviceToBankButton" Margin="0,0,8,8" Click="SaveDeviceToBankButton_Click">Enregistrer dans la banque</Button>
                                         </WrapPanel>
                                     </StackPanel>
                                 </ScrollViewer>
@@ -548,6 +558,9 @@
                                 <Button Margin="0,0,8,8" Click="CompareButton_Click">Comparer XML</Button>
                                 <Button Margin="0,0,8,8" Click="QuickStartButton_Click">Quick start</Button>
                                 <Button Margin="0,0,8,8" Click="FullGuideButton_Click">Notice complète</Button>
+                                <Button x:Name="OpenDiagnosticLogsButton"
+                                        Margin="0,0,8,8"
+                                        Click="OpenDiagnosticLogsButton_Click">Ouvrir les journaux</Button>
                             </WrapPanel>
                         </Border>
 

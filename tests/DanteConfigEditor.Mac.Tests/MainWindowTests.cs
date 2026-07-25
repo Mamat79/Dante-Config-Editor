@@ -52,12 +52,19 @@ public sealed class MainWindowTests
             Assert.Equal("Start channel", window.FindControl<ComboBox>("StartChannelCombo")!.PlaceholderText);
             Assert.Equal("Tx source to apply", window.FindControl<ComboBox>("SourceDeviceCombo")!.PlaceholderText);
             Assert.Equal("Add XML", window.FindControl<Button>("MergeButton")!.Content);
+            Assert.Equal("New project (experimental)", window.FindControl<Button>("NewProjectButton")!.Content);
+            Assert.Equal("Device bank", window.FindControl<Button>("OpenMachineBankButton")!.Content);
+            Assert.Equal("Duplicate", window.FindControl<Button>("DuplicateDeviceButton")!.Content);
+            Assert.Equal("Save to device bank", window.FindControl<Button>("SaveDeviceToBankButton")!.Content);
+            Assert.Equal("Open logs", window.FindControl<Button>("OpenDiagnosticLogsButton")!.Content);
 
             ApplyLanguage(window, UiLanguage.French);
 
             Assert.Equal("Rapports et patchbook", window.FindControl<TabItem>("ReportsExportTab")!.Header);
             Assert.Equal("Synoptique", window.FindControl<TabItem>("SynopticTab")!.Header);
             Assert.Equal("Fichiers récents", window.FindControl<ComboBox>("RecentCombo")!.PlaceholderText);
+            Assert.Equal("Nouveau projet (expérimental)", window.FindControl<Button>("NewProjectButton")!.Content);
+            Assert.Equal("Banque de machines", window.FindControl<Button>("OpenMachineBankButton")!.Content);
         }
         finally
         {
@@ -142,6 +149,8 @@ public sealed class MainWindowTests
         try
         {
             await window.OpenStartupFileAsync(temporaryXml);
+            AssertControlFits(window, window.FindControl<Button>("NewProjectButton")!);
+            AssertControlFits(window, window.FindControl<Button>("OpenMachineBankButton")!);
             window.FindControl<TabItem>("PatchTab")!.IsSelected = true;
             Dispatcher.UIThread.RunJobs();
 

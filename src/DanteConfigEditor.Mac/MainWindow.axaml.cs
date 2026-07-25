@@ -115,6 +115,110 @@ public partial class MainWindow : Window
         }
     }
 
+    private async void NewProjectButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_project?.IsModified == true
+            && !await ConfirmAsync(
+                L("Changements non enregistrés", "Unsaved changes"),
+                L(
+                    "Le projet courant contient des changements non enregistrés. Créer un autre projet sans les sauvegarder ?",
+                    "The current project has unsaved changes. Create another project without saving them?"),
+                L("Continuer", "Continue")))
+        {
+            return;
+        }
+
+        MacNewProjectFormResult? form = await NewProjectDialog.ShowAsync(this, _language);
+        if (form is null)
+        {
+            return;
+        }
+
+        try
+        {
+            DanteProject created;
+            if (form.TemplateId.HasValue)
+            {
+                MachineTemplatePackage template =
+                    new MachineBankRepository(form.BankPath).Load(form.TemplateId.Value);
+                created = DanteProject.CreateNewFromTemplate(
+                    form.DestinationPath,
+                    form.ProjectName,
+                    form.Description,
+                    template,
+                    form.TemplateOptions
+                        ?? throw new InvalidOperationException(
+                            "Les options d'instance du modèle sont absentes."));
+            }
+            else
+            {
+                created = DanteProject.CreateNew(
+                    form.DestinationPath,
+                    new NewProjectOptions
+                    {
+                        ProjectName = form.ProjectName,
+                        Description = form.Description,
+                        Machines =
+                        [
+                            new NewCustomMachineDefinition
+                            {
+                                Name = form.DeviceName,
+                                TxCount = form.TxCount,
+                                RxCount = form.RxCount,
+                                SampleRate = form.SampleRate,
+                                Encoding = form.Encoding,
+                                UnicastLatency = form.UnicastLatency
+                            }
+                        ]
+                    });
+            }
+
+            created.SaveAs(form.DestinationPath);
+            _project = created;
+            _editEnabled = true;
+            RecentFilesService.Add(form.DestinationPath);
+            RefreshRecentFiles();
+            RefreshAll(form.DeviceName);
+            SetStatus(L(
+                "Projet expérimental créé. Validez-le dans Dante Controller.",
+                "Experimental project created. Validate it in Dante Controller."));
+            await ShowInfoAsync(
+                L("Validation manuelle obligatoire", "Manual validation required"),
+                L(
+                    "Le XML a été créé puis rechargé par DCE. Cela valide seulement sa structure interne. "
+                    + "Importez-le dans Dante Controller avant tout usage en production.",
+                    "The XML was created and reloaded by DCE. This validates its internal structure only. "
+                    + "Import it in Dante Controller before production use."));
+        }
+        catch (Exception exception)
+        {
+            await ShowErrorAsync(
+                L("Création du projet impossible", "Unable to create project"),
+                exception);
+        }
+    }
+
+    private async void OpenMachineBankButton_Click(object? sender, RoutedEventArgs e)
+    {
+        MacMachineBankSelection? selection = await MachineBankDialog.ShowAsync(
+            this,
+            _language,
+            _project?.Devices.Select(device => device.Name) ?? [],
+            _project is not null && _editEnabled);
+        if (selection is null || _project is null)
+        {
+            return;
+        }
+
+        await ExecuteMutationAsync(
+            L(
+                $"Machine ajoutée depuis la banque : {selection.Options.NewName}",
+                $"Device added from bank: {selection.Options.NewName}"),
+            L("Machine ajoutée depuis la banque.", "Device added from bank."),
+            project => project.AddDeviceFromTemplate(selection.Package, selection.Options),
+            selection.Options.NewName);
+    }
+
     private async void OpenRecentButton_Click(object? sender, RoutedEventArgs e)
     {
         string? path = FindControl<ComboBox>("RecentCombo")!.SelectedItem as string;
@@ -442,6 +546,118 @@ public partial class MainWindow : Window
     private async void DeviceDetailsButton_Click(object? sender, RoutedEventArgs e)
     {
         await OpenDeviceDetailsAsync();
+    }
+
+    private async void DuplicateDeviceButton_Click(object? sender, RoutedEventArgs e)
+    {
+        DeviceRow? row = SelectedDeviceRow();
+        if (row is null || !await EnsureEditableAsync() || _project is null)
+        {
+            return;
+        }
+
+        DanteDevice source = _project.FindDevice(row.Name)
+            ?? throw new InvalidOperationException("La machine source est introuvable.");
+        HashSet<string> usedNames = _project.Devices
+            .Select(device => device.Name)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        string suggestedName = DanteNameRules.BuildUniqueSuffixedDeviceName(
+            source.Name,
+            L("Copie", "Copy"),
+            usedNames);
+        MachineCloneOptions? options = await MachineCloneDialog.ShowAsync(
+            this,
+            _language,
+            source.Name,
+            suggestedName);
+        if (options is null)
+        {
+            return;
+        }
+
+        await ExecuteMutationAsync(
+            L(
+                $"Machine dupliquée : {source.Name} -> {options.NewName}",
+                $"Device duplicated: {source.Name} -> {options.NewName}"),
+            L("Machine dupliquée.", "Device duplicated."),
+            project => project.DuplicateDevice(source.Name, options),
+            options.NewName);
+    }
+
+    private async void SaveDeviceToBankButton_Click(object? sender, RoutedEventArgs e)
+    {
+        DeviceRow? row = SelectedDeviceRow();
+        DanteDevice? device = row is null ? null : _project?.FindDevice(row.Name);
+        if (device is null || _project is null)
+        {
+            await ShowInfoAsync(
+                L("Aucune machine", "No device"),
+                L("Sélectionnez d'abord une machine.", "Select a device first."));
+            return;
+        }
+
+        string manufacturer = device.Manufacturer;
+        string model = device.Model;
+        string suggestedTemplateName = string.Join(
+            " ",
+            new[] { manufacturer, model }.Where(value => !string.IsNullOrWhiteSpace(value)));
+        if (string.IsNullOrWhiteSpace(suggestedTemplateName))
+        {
+            suggestedTemplateName = device.Name;
+        }
+
+        MacMachineTemplateFormResult? form = await MachineTemplateEditorDialog.ShowAsync(
+            this,
+            _language,
+            L("Enregistrer dans la banque de machines", "Save to device bank"),
+            L(
+                $"Préparez un modèle réutilisable à partir de {device.Name}. L'identité matérielle, le réseau, les subscriptions et les flows multicast seront retirés.",
+                $"Prepare a reusable template from {device.Name}. Hardware identity, network addresses, subscriptions and multicast flows will be removed."),
+            suggestedTemplateName,
+            manufacturer,
+            model,
+            string.Empty,
+            string.Empty,
+            [],
+            device.TxChannels.Select(channel => channel.DisplayName),
+            device.RxChannels.Select(channel => channel.DisplayName));
+        if (form is null)
+        {
+            return;
+        }
+
+        try
+        {
+            MachineTemplatePackage package = MachineTemplateService.CreateFromDevice(
+                device,
+                _project.PresetVersion,
+                new MachineTemplateCreateRequest
+                {
+                    TemplateName = form.TemplateName,
+                    Manufacturer = form.Manufacturer,
+                    Model = form.Model,
+                    Description = form.Description,
+                    Category = form.Category,
+                    Tags = form.Tags,
+                    TxLabels = form.TxLabels,
+                    RxLabels = form.RxLabels,
+                    ImageSourcePath = form.ImageSourcePath
+                });
+            string bankPath = MachineBankLocationService.CreateDefault().Load();
+            MachineTemplateMetadata saved = new MachineBankRepository(bankPath).Save(package);
+            SetStatus(L("Modèle enregistré dans la banque.", "Device template saved."));
+            await ShowInfoAsync(
+                L("Banque de machines", "Device bank"),
+                L(
+                    $"« {saved.TemplateName} » a été enregistré dans :{Environment.NewLine}{bankPath}",
+                    $"“{saved.TemplateName}” was saved in:{Environment.NewLine}{bankPath}"));
+        }
+        catch (Exception exception)
+        {
+            await ShowErrorAsync(
+                L("Enregistrement du modèle impossible", "Unable to save template"),
+                exception);
+        }
     }
 
     private async Task OpenDeviceDetailsAsync()
@@ -1123,6 +1339,22 @@ public partial class MainWindow : Window
     private void FullGuideButton_Click(object? sender, RoutedEventArgs e)
     {
         OpenBundledDocument($"Notice_DanteConfigEditorV3_{DocumentLanguageSuffix()}.pdf");
+    }
+
+    private async void OpenDiagnosticLogsButton_Click(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            string directory = DiagnosticLogService.Default.DirectoryPath;
+            Directory.CreateDirectory(directory);
+            Process.Start(new ProcessStartInfo(directory) { UseShellExecute = true });
+        }
+        catch (Exception exception)
+        {
+            await ShowErrorAsync(
+                L("Ouverture des journaux impossible", "Unable to open diagnostic logs"),
+                exception);
+        }
     }
 
     private void OpenBundledDocument(string fileName)
@@ -1897,6 +2129,7 @@ public partial class MainWindow : Window
 
     private Task<bool> ShowErrorAsync(string title, Exception exception)
     {
+        DiagnosticLogService.Default.Write("UI", title, exception);
         return ShowInfoAsync(title, exception.Message);
     }
 

@@ -1,0 +1,130 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="DanteConfigEditor.Mac.MachineTemplateEditorDialog"
+        Width="940"
+        Height="720"
+        MinWidth="760"
+        MinHeight="600"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner">
+    <Grid RowDefinitions="Auto,*,Auto" Margin="20">
+        <StackPanel Spacing="6" Margin="0,0,0,14">
+            <TextBlock x:Name="HeadingText" FontSize="20" FontWeight="SemiBold" />
+            <TextBlock x:Name="IntroText" Classes="muted" TextWrapping="Wrap" />
+        </StackPanel>
+
+        <Grid Grid.Row="1" RowDefinitions="Auto,*" RowSpacing="12">
+            <Grid ColumnDefinitions="1.4*,1*" ColumnSpacing="12">
+                <Border Classes="panel">
+                    <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,*" RowSpacing="8" ColumnSpacing="10">
+                        <StackPanel Spacing="3">
+                            <TextBlock x:Name="TemplateNameLabel" />
+                            <TextBox x:Name="TemplateNameTextBox" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="3">
+                            <TextBlock x:Name="ManufacturerLabel" />
+                            <TextBox x:Name="ManufacturerTextBox" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Spacing="3">
+                            <TextBlock x:Name="ModelLabel" />
+                            <TextBox x:Name="ModelTextBox" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="1" Spacing="3">
+                            <TextBlock x:Name="CategoryLabel" />
+                            <TextBox x:Name="CategoryTextBox" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Spacing="3">
+                            <TextBlock Text="Tags" />
+                            <TextBox x:Name="TagsTextBox" />
+                            <TextBlock x:Name="TagsHintText" Classes="muted" FontSize="12" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="1" Classes="panel">
+                    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="8">
+                        <TextBlock x:Name="ImageLabel" />
+                        <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <TextBox x:Name="ImagePathTextBox" IsReadOnly="True" TextWrapping="NoWrap" />
+                            <Button x:Name="BrowseImageButton" Grid.Column="1" Click="BrowseImageButton_Click" />
+                        </Grid>
+                        <Grid Grid.Row="2" MinHeight="80">
+                            <Image x:Name="ImagePreview" Stretch="Uniform" />
+                            <TextBlock x:Name="NoImageText"
+                                       Classes="muted"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                            <CheckBox x:Name="RemoveImageCheckBox"
+                                      VerticalAlignment="Bottom"
+                                      IsVisible="False" />
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <Grid Grid.Row="1" ColumnDefinitions="1.15*,1.15*,1*" ColumnSpacing="12">
+                <Border Classes="panel">
+                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="8">
+                        <TextBlock x:Name="TxHeading" FontWeight="SemiBold" />
+                        <DataGrid x:Name="TxLabelsGrid"
+                                  Grid.Row="1"
+                                  AutoGenerateColumns="False"
+                                  CanUserResizeColumns="True"
+                                  IsReadOnly="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="#" Binding="{Binding Number}" IsReadOnly="True" Width="58" />
+                                <DataGridTextColumn Binding="{Binding Label, Mode=TwoWay}" Width="*" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Button x:Name="GenerateTxButton"
+                                Grid.Row="2"
+                                HorizontalAlignment="Left"
+                                Click="GenerateTxButton_Click" />
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="1" Classes="panel">
+                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="8">
+                        <TextBlock x:Name="RxHeading" FontWeight="SemiBold" />
+                        <DataGrid x:Name="RxLabelsGrid"
+                                  Grid.Row="1"
+                                  AutoGenerateColumns="False"
+                                  CanUserResizeColumns="True"
+                                  IsReadOnly="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="#" Binding="{Binding Number}" IsReadOnly="True" Width="58" />
+                                <DataGridTextColumn Binding="{Binding Label, Mode=TwoWay}" Width="*" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Button x:Name="GenerateRxButton"
+                                Grid.Row="2"
+                                HorizontalAlignment="Left"
+                                Click="GenerateRxButton_Click" />
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="2" Classes="panel">
+                    <StackPanel Spacing="6">
+                        <TextBlock x:Name="DescriptionLabel" FontWeight="SemiBold" />
+                        <TextBox x:Name="DescriptionTextBox"
+                                 AcceptsReturn="True"
+                                 TextWrapping="Wrap"
+                                 MinHeight="160" />
+                        <TextBlock x:Name="LabelsHintText"
+                                   Classes="muted"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="8"
+                    Margin="0,16,0,0">
+            <Button x:Name="CancelButton" MinWidth="100" Click="CancelButton_Click" />
+            <Button x:Name="SaveButton" Classes="primary" MinWidth="120" Click="SaveButton_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

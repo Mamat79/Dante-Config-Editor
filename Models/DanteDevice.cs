@@ -11,6 +11,8 @@ public sealed class DanteDevice
         Element = element;
         Name = MachineRoleIdentityService.ReadVisibleName(element);
         FriendlyName = ReadElementValue(element, "friendly_name");
+        Manufacturer = ReadElementValue(element, "manufacturer_name");
+        Model = ReadElementValue(element, "model_name");
         string technicalDeviceId = element.Child("instance_id").ChildValue("device_id");
         TechnicalDeviceId = technicalDeviceId.Trim();
         ProcessId = element.Child("instance_id").ChildValue("process_id");
@@ -41,6 +43,12 @@ public sealed class DanteDevice
     public string Name { get; }
 
     public string FriendlyName { get; }
+
+    // Métadonnées intrinsèques exposées sans donner à l'interface un accès
+    // direct au document XML mutable.
+    public string Manufacturer { get; }
+
+    public string Model { get; }
 
     // Identité de session utilisée par les données annexes de l'application.
     // Elle n'est jamais écrite dans le XML et reste stable après un renommage.

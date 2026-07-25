@@ -916,8 +916,8 @@ public partial class MainWindow : Window
             return;
         }
 
-        string manufacturer = device.Element.ChildValue("manufacturer_name");
-        string model = device.Element.ChildValue("model_name");
+        string manufacturer = device.Manufacturer;
+        string model = device.Model;
         string suggestedTemplateName = string.Join(
             " ",
             new[] { manufacturer, model }

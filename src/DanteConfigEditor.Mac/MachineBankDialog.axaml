@@ -1,0 +1,117 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="DanteConfigEditor.Mac.MachineBankDialog"
+        Width="1180"
+        Height="760"
+        MinWidth="920"
+        MinHeight="620"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner">
+    <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="18">
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+            <StackPanel Spacing="4">
+                <TextBlock x:Name="HeadingText" FontSize="20" FontWeight="SemiBold" />
+                <TextBlock x:Name="BankPathText" Classes="muted" TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+            <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
+                <Button x:Name="ChangeBankButton" Margin="0,0,8,8" Click="ChangeBankButton_Click" />
+                <Button x:Name="OpenBankFolderButton" Margin="0,0,0,8" Click="OpenBankFolderButton_Click" />
+            </WrapPanel>
+        </Grid>
+
+        <Border Grid.Row="1" Classes="panel" Margin="0,12,0,12">
+            <Grid ColumnDefinitions="2*,1.2*,1.2*,85,85" ColumnSpacing="8">
+                <StackPanel Spacing="3">
+                    <TextBlock x:Name="SearchLabel" Classes="muted" />
+                    <TextBox x:Name="SearchTextBox" TextChanged="FilterTextChanged" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Spacing="3">
+                    <TextBlock x:Name="ManufacturerFilterLabel" Classes="muted" />
+                    <ComboBox x:Name="ManufacturerFilterComboBox"
+                              SelectionChanged="FilterSelectionChanged" />
+                </StackPanel>
+                <StackPanel Grid.Column="2" Spacing="3">
+                    <TextBlock x:Name="CategoryFilterLabel" Classes="muted" />
+                    <ComboBox x:Name="CategoryFilterComboBox"
+                              SelectionChanged="FilterSelectionChanged" />
+                </StackPanel>
+                <StackPanel Grid.Column="3" Spacing="3">
+                    <TextBlock x:Name="MinimumTxLabel" Classes="muted" />
+                    <TextBox x:Name="MinimumTxTextBox" Text="0" TextChanged="FilterTextChanged" />
+                </StackPanel>
+                <StackPanel Grid.Column="4" Spacing="3">
+                    <TextBlock x:Name="MinimumRxLabel" Classes="muted" />
+                    <TextBox x:Name="MinimumRxTextBox" Text="0" TextChanged="FilterTextChanged" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="2" ColumnDefinitions="1.2*,0.8*" ColumnSpacing="12">
+            <DataGrid x:Name="TemplatesGrid"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      SelectionMode="Single"
+                      SelectionChanged="TemplatesGrid_SelectionChanged">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding TemplateName}" Width="2*" />
+                    <DataGridTextColumn Binding="{Binding Manufacturer}" Width="*" />
+                    <DataGridTextColumn Binding="{Binding Model}" Width="*" />
+                    <DataGridTextColumn Binding="{Binding Category}" Width="*" />
+                    <DataGridTextColumn Header="TX" Binding="{Binding TxCount}" Width="64" />
+                    <DataGridTextColumn Header="RX" Binding="{Binding RxCount}" Width="64" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Border Grid.Column="1" Classes="panel">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="7">
+                        <TextBlock x:Name="SelectedTemplateNameText"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   TextWrapping="Wrap" />
+                        <TextBlock x:Name="SelectedHardwareText" Classes="muted" TextWrapping="Wrap" />
+                        <TextBlock x:Name="SelectedCountsText" Classes="muted" />
+                        <TextBlock x:Name="SelectedDescriptionText" TextWrapping="Wrap" />
+                        <TextBlock x:Name="SelectedTagsText" Classes="muted" TextWrapping="Wrap" />
+                        <Border Height="150"
+                                BorderBrush="{DynamicResource PanelBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="5"
+                                Margin="0,4">
+                            <Grid>
+                                <Image x:Name="TemplateImage" Stretch="Uniform" />
+                                <TextBlock x:Name="NoImageText"
+                                           Classes="muted"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
+                            </Grid>
+                        </Border>
+                        <TextBlock x:Name="LabelsPreviewHeadingText" FontWeight="SemiBold" />
+                        <TextBox x:Name="LabelsPreviewTextBox"
+                                 IsReadOnly="True"
+                                 AcceptsReturn="True"
+                                 TextWrapping="NoWrap"
+                                 FontFamily="Menlo,Consolas,monospace"
+                                 MinHeight="190" />
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="3" ColumnDefinitions="*,Auto" Margin="0,14,0,0">
+            <WrapPanel>
+                <Button x:Name="ImportTemplateButton" Margin="0,0,8,8" Click="ImportTemplateButton_Click" />
+                <Button x:Name="ExportTemplateButton" Margin="0,0,8,8" Click="ExportTemplateButton_Click" />
+                <Button x:Name="BackupBankButton" Margin="0,0,8,8" Click="BackupBankButton_Click" />
+                <Button x:Name="RestoreBankButton" Margin="0,0,8,8" Click="RestoreBankButton_Click" />
+            </WrapPanel>
+            <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
+                <Button x:Name="EditTemplateButton" Margin="0,0,8,8" Click="EditTemplateButton_Click" />
+                <Button x:Name="DuplicateTemplateButton" Margin="0,0,8,8" Click="DuplicateTemplateButton_Click" />
+                <Button x:Name="DeleteTemplateButton" Classes="danger" Margin="0,0,8,8" Click="DeleteTemplateButton_Click" />
+                <Button x:Name="AddToProjectButton" Classes="primary" Margin="0,0,8,8" Click="AddToProjectButton_Click" />
+                <Button x:Name="CloseButton" Margin="0,0,0,8" Click="CloseButton_Click" />
+            </WrapPanel>
+        </Grid>
+    </Grid>
+</Window>
