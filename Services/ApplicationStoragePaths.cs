@@ -4,8 +4,8 @@ namespace DanteConfigEditor.Services;
 
 public static class ApplicationStoragePaths
 {
-    // La V3.5 réutilise l'espace V3.2 afin de préserver les préférences et les
-    // récupérations lors de la mise à niveau demandée par l'utilisateur.
+    // Les versions récentes réutilisent l'espace V3.2 afin de préserver les
+    // préférences, récupérations et chemins de banque lors des mises à niveau.
     public const string RootFolderName = "DanteConfigEditorV3.2";
 
     public static string RootPath { get; } = Path.Combine(

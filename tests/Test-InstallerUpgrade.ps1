@@ -1,6 +1,6 @@
 param(
     [string]$InstallerPath = "",
-    [string]$ExpectedVersion = "3.5",
+    [string]$ExpectedVersion = "3.6",
     [switch]$AllowCustomInstallLocation
 )
 
@@ -8,7 +8,7 @@ $ErrorActionPreference = "Stop"
 
 $root = Split-Path $PSScriptRoot -Parent
 if ([string]::IsNullOrWhiteSpace($InstallerPath)) {
-    $InstallerPath = Join-Path $root "dist\DanteConfigEditorV3_5_Installer.exe"
+    $InstallerPath = Join-Path $root "dist\DanteConfigEditorV3_6_Installer.exe"
 }
 
 $installer = (Resolve-Path -LiteralPath $InstallerPath -ErrorAction Stop).Path
@@ -24,7 +24,7 @@ $targetRegistryPaths = @(
 )
 
 # V3.4.2 reste la version stable installée en parallèle. Le test vérifie que
-# l'installation et la mise à niveau V3.5 ne modifient jamais cette entrée.
+# l'installation et la mise à niveau V3.6 ne modifient jamais cette entrée.
 $stableRegistryPaths = @(
     "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{76E68F80-5C89-4415-A090-370CA60EB3AD}_is1",
     "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{76E68F80-5C89-4415-A090-370CA60EB3AD}_is1"
@@ -100,7 +100,7 @@ function Assert-InstalledState {
 
     $targetRecords = @(Get-TargetInstallRecords)
     if ($targetRecords.Count -ne 1) {
-        throw "$Step : une seule entrée V3.5 était attendue, trouvé $($targetRecords.Count)."
+        throw "$Step : une seule entrée V3.6 était attendue, trouvé $($targetRecords.Count)."
     }
 
     $record = $targetRecords[0]
@@ -136,14 +136,14 @@ function Assert-InstalledState {
         }
     }
 
-    $shortcut = Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonPrograms)) "Dante Config Editor V3.5\DCE V3.5.lnk"
+    $shortcut = Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonPrograms)) "Dante Config Editor V3.6\DCE V3.6.lnk"
     if (-not (Test-Path -LiteralPath $shortcut)) {
         throw "$Step : raccourci Menu Démarrer manquant : $shortcut"
     }
 
     $desktopShortcutCandidates = @(
-        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::DesktopDirectory)) "DCE V3.5.lnk"),
-        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonDesktopDirectory)) "DCE V3.5.lnk")
+        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::DesktopDirectory)) "DCE V3.6.lnk"),
+        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonDesktopDirectory)) "DCE V3.6.lnk")
     ) | Select-Object -Unique
     if (-not ($desktopShortcutCandidates | Where-Object { Test-Path -LiteralPath $_ })) {
         throw "$Step : raccourci Bureau manquant. Chemins vérifiés : $($desktopShortcutCandidates -join ', ')"
@@ -155,7 +155,7 @@ function Assert-InstalledState {
 $stableSnapshotBefore = @(Get-StableSnapshot)
 $targetInstallRecordsBefore = @(Get-TargetInstallRecords).Count
 
-Invoke-InstallerPass -Name "Installation V3.5"
+Invoke-InstallerPass -Name "Installation V3.6"
 $firstRecord = Assert-InstalledState -Step "Après le premier passage"
 Assert-StableInstallUnchanged -Step "Après le premier passage" -ExpectedSnapshot $stableSnapshotBefore
 

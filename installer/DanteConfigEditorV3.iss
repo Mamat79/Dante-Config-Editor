@@ -1,8 +1,8 @@
-#define MyAppName "Dante Config Editor V3.5"
-#define MyAppVersion "3.5"
+#define MyAppName "Dante Config Editor V3.6"
+#define MyAppVersion "3.6"
 #define MyAppPublisher "Mamat"
 #define MyAppExeName "DanteConfigEditorV3.exe"
-#define MyAppShortcutName "DCE V3.5"
+#define MyAppShortcutName "DCE V3.6"
 #define SourceRoot ".."
 
 [Setup]
@@ -10,12 +10,12 @@ AppId={{A11FA3C8-3461-46CA-AC61-6A14316E8DBB}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
-DefaultDirName={autopf}\Dante Config Editor V3.5
-DefaultGroupName=Dante Config Editor V3.5
+DefaultDirName={autopf}\Dante Config Editor V3.6
+DefaultGroupName=Dante Config Editor V3.6
 DisableProgramGroupPage=no
 AllowNoIcons=yes
 OutputDir={#SourceRoot}\dist
-OutputBaseFilename=DanteConfigEditorV3_5_Installer
+OutputBaseFilename=DanteConfigEditorV3_6_Installer
 SetupIconFile={#SourceRoot}\DanteEdit.ico
 Compression=lzma2
 SolidCompression=yes
@@ -24,14 +24,14 @@ ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 PrivilegesRequired=admin
 UninstallDisplayIcon={app}\{#MyAppExeName}
-VersionInfoVersion=3.5.0
+VersionInfoVersion=3.6.0
 VersionInfoCompany={#MyAppPublisher}
-VersionInfoDescription=Dante Config Editor V3.5 installer
+VersionInfoDescription=Dante Config Editor V3.6 installer
 VersionInfoProductName={#MyAppName}
 SetupLogging=yes
 CloseApplications=yes
 RestartApplications=no
-UsePreviousAppDir=no
+UsePreviousAppDir=yes
 UsePreviousGroup=no
 
 [Languages]
@@ -60,6 +60,8 @@ Type: files; Name: "{app}\QuickStart_DanteConfigEditorV3.pdf"
 Type: files; Name: "{app}\Notice_DanteConfigEditorV3.pdf"
 Type: files; Name: "{group}\Quick start PDF.lnk"
 Type: files; Name: "{group}\Notice PDF.lnk"
+Type: filesandordirs; Name: "{commonprograms}\Dante Config Editor V3.5"
+Type: files; Name: "{commondesktop}\DCE V3.5.lnk"
 
 [Icons]
 Name: "{group}\{code:GetShortcutAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"; IconFilename: "{app}\DanteEdit.ico"
@@ -75,7 +77,7 @@ Name: "{group}\Désinstaller {code:GetShortcutAppName}"; Filename: "{uninstallex
 Name: "{autodesktop}\{code:GetShortcutAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"; IconFilename: "{app}\DanteEdit.ico"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,Dante Config Editor V3.5}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,Dante Config Editor V3.6}"; Flags: nowait postinstall skipifsilent
 Filename: "{app}\RELEASE_NOTES.md"; Description: "Ouvrir les notes de version"; Flags: postinstall shellexec unchecked skipifsilent; Check: IsFrenchLanguage
 Filename: "{app}\RELEASE_NOTES_EN.md"; Description: "Open the release notes"; Flags: postinstall shellexec unchecked skipifsilent; Check: IsEnglishLanguage
 Filename: "{app}\QuickStart_DanteConfigEditorV3_FR.pdf"; Description: "Ouvrir le démarrage rapide en français"; Flags: postinstall shellexec unchecked skipifsilent; Check: IsFrenchLanguage
@@ -147,7 +149,7 @@ begin
   if ActiveLanguage = 'english' then
   begin
     Result :=
-      'An existing Dante Config Editor V3.5 installation was found.' + #13#10#13#10 +
+      'An existing Dante Config Editor installation was found.' + #13#10#13#10 +
       'Detected version: ' + ExistingInstallVersion + #13#10 +
       'Folder: ' + ExistingInstallDir + #13#10#13#10 +
       'Yes = replace/update this installation.' + #13#10 +
@@ -156,7 +158,7 @@ begin
   else
   begin
     Result :=
-      'Une installation de Dante Config Editor V3.5 est déjà présente.' + #13#10#13#10 +
+      'Une installation de Dante Config Editor est déjà présente.' + #13#10#13#10 +
       'Version détectée : ' + ExistingInstallVersion + #13#10 +
       'Dossier : ' + ExistingInstallDir + #13#10#13#10 +
       'Oui = remplacer / mettre à jour cette installation.' + #13#10 +

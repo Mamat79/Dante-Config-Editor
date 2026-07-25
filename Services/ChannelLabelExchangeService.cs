@@ -318,7 +318,7 @@ public static class ChannelLabelExchangeService
         string? informationalVersion = typeof(ChannelLabelExchangeService).Assembly
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
             ?.InformationalVersion;
-        return string.IsNullOrWhiteSpace(informationalVersion) ? "3.5" : informationalVersion;
+        return string.IsNullOrWhiteSpace(informationalVersion) ? "3.6" : informationalVersion;
     }
 
     private static string DirectionToken(ChannelLabelDirection direction) => direction switch

@@ -1283,7 +1283,7 @@ public partial class MainWindow : Window
         if (path is null) return;
         try
         {
-            ReportExportService.ExportPdf(path, "Dante Config Editor V3.5", _project.BuildReportText());
+            ReportExportService.ExportPdf(path, "Dante Config Editor V3.6", _project.BuildReportText());
             SetStatus(LocalizationService.Text(_language, "Status.PdfExported"));
         }
         catch (Exception exception)
@@ -2010,7 +2010,7 @@ public partial class MainWindow : Window
         FindControl<TextBox>("SearchTextBox")!.Watermark = L("Machine ou canal", "Device or channel");
         ApplyDeviceFilterLanguage();
 
-        Title = L("Dante Config Editor V3.5 - macOS", "Dante Config Editor V3.5 - macOS");
+        Title = L("Dante Config Editor V3.6 - macOS", "Dante Config Editor V3.6 - macOS");
         FindControl<Button>("ThemeButton")!.Content = _darkTheme ? L("Thème clair", "Light theme") : L("Thème sombre", "Dark theme");
     }
 

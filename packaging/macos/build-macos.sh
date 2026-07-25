@@ -22,14 +22,14 @@ esac
 PROJECT="$ROOT/src/DanteConfigEditor.Mac/DanteConfigEditor.Mac.csproj"
 STAGING="$ROOT/tmp/macos/$RID"
 PUBLISH="$STAGING/publish"
-APP="$STAGING/Dante Config Editor V3.5.app"
+APP="$STAGING/Dante Config Editor V3.6.app"
 CONTENTS="$APP/Contents"
 MACOS="$CONTENTS/MacOS"
 RESOURCES="$CONTENTS/Resources"
 ICONSET="$STAGING/DanteEdit.iconset"
 DMG_STAGE="$STAGING/dmg"
 DIST="$ROOT/dist/macos"
-DMG="$DIST/DanteConfigEditorV3_5_macOS_${ARCH_LABEL}.dmg"
+DMG="$DIST/DanteConfigEditorV3_6_macOS_${ARCH_LABEL}.dmg"
 
 rm -rf "$STAGING"
 mkdir -p "$PUBLISH" "$MACOS" "$RESOURCES/Docs" "$ICONSET" "$DMG_STAGE" "$DIST"
@@ -79,7 +79,7 @@ cp -R "$APP" "$DMG_STAGE/"
 ln -s /Applications "$DMG_STAGE/Applications"
 rm -f "$DMG"
 hdiutil create \
-  -volname "Dante Config Editor V3.5" \
+  -volname "Dante Config Editor V3.6" \
   -srcfolder "$DMG_STAGE" \
   -ov \
   -format UDZO \

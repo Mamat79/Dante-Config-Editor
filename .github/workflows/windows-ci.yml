@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - v3.5
+      - v3.6
       - "agent/**"
   pull_request:
     branches:
@@ -63,7 +63,7 @@ jobs:
           dotnet publish .\DanteConfigEditorV3.csproj
           -c Release
           -r win-x64
-          --self-contained false
+          --self-contained true
           -o .\artifacts\publish
 
       - name: Upload test results
@@ -78,7 +78,7 @@ jobs:
       - name: Upload published application
         uses: actions/upload-artifact@v7
         with:
-          name: DanteConfigEditorV3-win-x64
+          name: DanteConfigEditorV3-6-win-x64
           path: .\artifacts\publish
           if-no-files-found: error
           retention-days: 14
@@ -86,9 +86,9 @@ jobs:
       - name: Upload Windows installer
         uses: actions/upload-artifact@v7
         with:
-          name: DCE-v3.5-Windows-Installer
+          name: DCE-v3.6-Windows-Installer
           path: |
-            .\dist\DanteConfigEditorV3_5_Installer.exe
-            .\dist\DanteConfigEditorV3_5_Installer.exe.sha256
+            .\dist\DanteConfigEditorV3_6_Installer.exe
+            .\dist\DanteConfigEditorV3_6_Installer.exe.sha256
           if-no-files-found: error
           retention-days: 14
