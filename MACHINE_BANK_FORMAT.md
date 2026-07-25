@@ -15,7 +15,7 @@ La banque doit être :
 
 ## Emplacement
 
-Par défaut sous Windows :
+Par défaut sous Windows et macOS, dans le dossier Documents de l'utilisateur :
 
 ```text
 Documents/
@@ -194,4 +194,3 @@ L'ajout d'un modèle dans un projet réalise une copie profonde. Le projet ne
 conserve aucun lien dynamique avec le dossier de banque. Modifier les labels ou
 le patch de la nouvelle machine ne change donc ni `machine.json` ni
 `template.xml`.
-

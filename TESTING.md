@@ -1,5 +1,43 @@
 # Tests et historique V3
 
+## Validation locale de la branche V3.6 du 2026-07-25
+
+Périmètre :
+
+- branche : `v3.6`, issue du commit V3.5 `09985050aab242682bab82b792276c68ef3693fb` ;
+- système : Windows `10.0.26200`, .NET SDK `8.0.423`, runtime `8.0.29` ;
+- Inno Setup `6.7.3` ;
+- aucun Mac physique, matériel Dante ni import Dante Controller utilisé.
+
+Résultats :
+
+- 258 tests Core/Windows réussis, 0 échec, 0 ignoré ;
+- 16 tests Avalonia/macOS sans écran réussis, 0 échec, 0 ignoré ;
+- builds Windows et macOS Release réussis, 0 warning, 0 erreur ;
+- publications autonomes `win-x64`, `osx-arm64` et `osx-x64` réussies ;
+- audit NuGet : aucun package vulnérable signalé avec les sources consultées ;
+- dix XML locaux copiés vers un temporaire, soit 176 machines et 5 004 labels, chargés, validés, sauvegardés, comparés sémantiquement et relus ; originaux inchangés ;
+- Quick Start FR/EN : 1 page chacun ; notices complètes FR/EN : 15 pages chacune ;
+- extraction de texte et rendu visuel des 32 pages contrôlés sans `Ø` parasite, caractère de remplacement, chevauchement ni troncature visible ;
+- installateur `DanteConfigEditorV3_6_Installer.exe` : 67 322 778 octets, version produit `3.6`, version fichier `3.6.0`, SHA-256 `321D40BAC7BF99BD66E988810AC81EB3AEE14B0C4B1B7C6D8F78B31A69AA4DAB`, non signé ;
+- installation puis second passage de mise à niveau réussis avec code 0 : une entrée DCE V3.6, un groupe Démarrer, un raccourci Bureau, un désinstalleur et aucune trace de raccourci V3.5 ;
+- lancement de l'exécutable autonome et installé : processus répondant, titre `Dante Config Editor V3.6`, version `3.6.0.0`.
+
+Benchmark synthétique Release, médiane de trois exécutions, 64 TX et 64 RX par machine :
+
+| Machines | Chargement | Modification groupée | Garde-fou | Sauvegarde | Allocation sauvegarde |
+|---:|---:|---:|---:|---:|---:|
+| 10 | 57,4 ms | 109,8 ms | 18,8 ms | 206,5 ms | 22,6 Mio |
+| 50 | 188,8 ms | 393,8 ms | 31,9 ms | 386,1 ms | 110,6 Mio |
+| 200 | 433,8 ms | 1 081,4 ms | 142,8 ms | 996,9 ms | 440,8 Mio |
+
+Limites de preuve :
+
+- aucun XML V3.6 n'a été importé réellement dans Dante Controller ;
+- les publications macOS ont été produites sur Windows, mais les bundles `.app`, signatures ad hoc et DMG doivent être assemblés et vérifiés sur un runner ou un Mac réel ;
+- le contrôle visuel automatisé Windows n'a pas reçu l'autorisation de prise de contrôle dans le délai imparti ;
+- les échelles 125 %, 150 %, 200 %, le contraste élevé, les lecteurs d'écran et VoiceOver restent à tester manuellement.
+
 ## Validation locale de la branche V3.5 du 2026-07-23
 
 Périmètre :

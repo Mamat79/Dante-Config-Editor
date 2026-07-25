@@ -43,11 +43,17 @@ Résultats :
 - CI Windows du commit de départ : réussie ;
 - CI macOS du commit de départ : réussie.
 
-Après le premier lot V3.6 :
+Après le lot V3.6 final :
 
-- tests métier et XML : 257 réussis, 0 échec ;
+- tests métier, XML et contrats Windows : 258 réussis, 0 échec ;
 - tests macOS headless : 16 réussis, 0 échec ;
-- build Windows Release : réussi, 0 warning, 0 erreur, 8,01 s.
+- build Windows Release : réussi, 0 warning, 0 erreur ;
+- build macOS Release : réussi, 0 warning, 0 erreur ;
+- publication autonome Windows `win-x64` : réussie ;
+- publications croisées macOS `osx-arm64` et `osx-x64` : réussies ;
+- installateur Inno Setup 6.7.3 : compilé et installé deux fois sans doublon ;
+- lancement de l'exécutable autonome et de l'exécutable installé : processus
+  répondant, titre V3.6 et version fichier 3.6.0.0.
 
 ## Architecture constatée
 
@@ -70,10 +76,10 @@ Les plus grands fichiers au moment de l'audit sont :
 
 | Fichier | Lignes | Risque |
 |---|---:|---|
-| `MainWindow.xaml.cs` | 3 967 | logique UI, orchestration et erreurs fortement couplées |
+| `MainWindow.xaml.cs` | 4 276 | logique UI, orchestration et erreurs fortement couplées |
 | `PatchWorkspaceView.xaml.cs` | 2 358 | patch, navigation et édition réunis |
-| `src/DanteConfigEditor.Mac/MainWindow.axaml.cs` | 1 988 | duplication de logique UI |
-| `MainWindow.xaml` | 1 842 | coût élevé de modification et de revue visuelle |
+| `src/DanteConfigEditor.Mac/MainWindow.axaml.cs` | 2 221 | duplication de logique UI |
+| `MainWindow.xaml` | 1 873 | coût élevé de modification et de revue visuelle |
 | `Models/DanteProject.cs` | 1 750 | trop de responsabilités métier dans une classe |
 | `MachineBankRepository.cs` | 734 | persistance, images et archives encore regroupées |
 | `DanteXmlChangeGuardService.cs` | 672 | comparaison de sécurité complexe |
@@ -225,20 +231,20 @@ machine, trois exécutions, médiane, configuration Release.
 | 50 | 0,780 Mio | 88,6 ms | 148,9 ms | 26,8 ms | 203,4 ms | 147,2 Mio |
 | 200 | 3,122 Mio | 365,8 ms | 580,3 ms | 99,7 ms | 1 032,5 ms | 586,2 Mio |
 
-### Mesure V3.6 de travail
+### Mesure V3.6 finale
 
 | Machines | Chargement | Modification groupée | Garde-fou | Sauvegarde | Allocation sauvegarde |
 |---:|---:|---:|---:|---:|---:|
-| 10 | 78,8 ms | 122,9 ms | 23,9 ms | 223,2 ms | 22,6 Mio |
-| 50 | 224,9 ms | 395,4 ms | 37,0 ms | 399,5 ms | 110,6 Mio |
-| 200 | 526,6 ms | 945,4 ms | 145,6 ms | 1 176,4 ms | 440,8 Mio |
+| 10 | 57,4 ms | 109,8 ms | 18,8 ms | 206,5 ms | 22,6 Mio |
+| 50 | 188,8 ms | 393,8 ms | 31,9 ms | 386,1 ms | 110,6 Mio |
+| 200 | 433,8 ms | 1 081,4 ms | 142,8 ms | 996,9 ms | 440,8 Mio |
 
-La machine était nettement plus chargée pendant la seconde série. Une mesure
-V3.5 réalisée dans le même créneau donnait 1 592,8 ms pour la sauvegarde à 200
-machines, contre 1 176,4 ms pour la V3.6. L'allocation de sauvegarde baisse
-d'environ 25 % sur ce cas. Les temps absolus doivent être revalidés dans une
-session dédiée avant publication ; aucune accélération générale n'est annoncée
-à partir de données aussi variables.
+La mesure finale confirme surtout une baisse reproductible de l'allocation de
+sauvegarde d'environ 25 % : 586,2 Mio en V3.5 contre 440,8 Mio en V3.6 sur 200
+machines. La sauvegarde finale est légèrement plus rapide que la baseline sur
+les trois tailles, mais les temps de chargement et de modification restent
+variables selon la charge de la machine. Aucune accélération générale n'est
+présentée comme garantie.
 
 Le coût principal restant est la copie complète du document pour l'annulation
 et certaines validations. À 200 machines, une modification groupée alloue
@@ -274,12 +280,19 @@ Déjà présent :
 - troncatures en français et en anglais ;
 - apparence native réelle sur macOS Intel et Apple Silicon.
 
+Une tentative de contrôle visuel automatisé Windows a été interrompue faute
+d'autorisation de prise de contrôle dans le délai imparti. Les tests de
+structure, de dimensions, de lancement et de processus sont réussis, mais les
+nouveaux dialogues ne sont pas déclarés validés manuellement sur les échelles
+ci-dessus.
+
 ## Recommandations
 
-1. Terminer l'interface de banque sur les deux plateformes.
-2. Exécuter la checklist d'import Dante Controller avec un preset 3.0.0 créé,
+1. Exécuter la checklist d'import Dante Controller avec un preset 3.0.0 créé,
    une duplication et une insertion depuis la banque.
-3. Conserver le statut expérimental de « Nouveau projet » jusqu'à cette preuve.
+2. Conserver le statut expérimental de « Nouveau projet » jusqu'à cette preuve.
+3. Valider manuellement les nouveaux dialogues à 125 %, 150 %, 200 % et sur
+   macOS réel.
 4. Scinder progressivement `MainWindow.xaml.cs` et
    `MachineBankRepository.cs`.
 5. Ajouter ultérieurement des migrations seulement à partir de vrais anciens
@@ -292,4 +305,3 @@ Déjà présent :
 - [Audinate - Preset elements](https://dev.audinate.com/GA/dante-controller/userguide/webhelp/content/preset_elements_-_configuration_parameters.htm)
 - [Dante Preset Creator](https://www.getdante.com/products/software-essentials/dante-preset-creator/)
 - [Preset Creator support](https://support.getdante.com/hc/en-gb/articles/5767408604191-Dante-Preset-Creator)
-
