@@ -56,6 +56,9 @@ The `GitHub banks` button opens the
 and training. They do not represent real hardware and contain no hardware
 identity, IP address, or subscription.
 
+The catalog also provides an illustrated community bank containing Yamaha QL1
+and Fohhn DI4.1000 templates.
+
 The Windows installer separately asks for the active bank folder and the
 folder used for included banks. During an upgrade it reuses the configured
 path, never changes an existing bank, and selects a new folder name if the

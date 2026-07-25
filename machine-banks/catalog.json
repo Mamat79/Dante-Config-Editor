@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "updatedUtc": "2026-07-26T00:00:00+00:00",
+  "updatedUtc": "2026-07-25T23:46:00+00:00",
   "banks": [
     {
       "id": "dce-generic-roles-3.6",
@@ -11,6 +11,16 @@
       "language": "fr-en",
       "descriptionFr": "Deux rôles génériques 8x8 et 32x32 sans identité matérielle, réseau ni abonnement.",
       "descriptionEn": "Two generic 8x8 and 32x32 roles without hardware identity, network settings or subscriptions."
+    },
+    {
+      "id": "yamaha-ql1-fohhn-di4-1000",
+      "name": "Yamaha QL1 + Fohhn DI4.1000",
+      "file": "Yamaha_QL1_Fohhn_DI4_1000.dce-bank.zip",
+      "sha256": "f7b2f3cd41a3e3b7dcd23314b5fe7568d17e0baeaf55bed305fce3d71f6d5e8e",
+      "minimumDceVersion": "3.6",
+      "language": "fr-en",
+      "descriptionFr": "Deux modèles illustrés : Yamaha QL1 (32 TX / 32 RX) et Fohhn DI4.1000 (0 TX / 4 RX), sans identité matérielle, réseau ni abonnement.",
+      "descriptionEn": "Two illustrated templates: Yamaha QL1 (32 Tx / 32 Rx) and Fohhn DI4.1000 (0 Tx / 4 Rx), without hardware identity, network settings or subscriptions."
     }
   ]
 }

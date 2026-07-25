@@ -74,6 +74,9 @@ La fenêtre `Banque de machines` permet d'exporter une banque complète dans une
 
 Le bouton `Banques GitHub` ouvre le [catalogue public des banques V3.6](machine-banks/README.md). La banque fournie `DCE Generic Roles 3.6` contient deux rôles génériques 8x8 et 32x32 pour les essais et la formation. Ils ne représentent aucun matériel réel et ne contiennent ni identité matérielle, ni IP, ni abonnement.
 
+Le catalogue propose également une banque communautaire illustrée contenant
+les modèles Yamaha QL1 et Fohhn DI4.1000.
+
 L'installateur Windows propose séparément le dossier de banque actif et le dossier où placer les banques fournies. Il réutilise le chemin déjà configuré lors d'une mise à jour, ne touche jamais au contenu d'une banque existante et choisit un nouveau nom de dossier si la banque fournie est déjà présente.
 
 ## Notices

@@ -456,6 +456,60 @@ public sealed class MachineBankV36Tests
         string restoredPath = Path.Combine(workspace.DirectoryPath, "DownloadedBank");
         MachineBankArchiveService.RestoreBank(archivePath, restoredPath);
         Assert.Equal(2, new MachineBankRepository(restoredPath).List().Count);
+
+        JsonElement communityEntry = catalog.RootElement
+            .GetProperty("banks")
+            .EnumerateArray()
+            .Single(item => item.GetProperty("id").GetString()
+                == "yamaha-ql1-fohhn-di4-1000");
+        string communityArchivePath = RepositoryFile(
+            "machine-banks",
+            communityEntry.GetProperty("file").GetString()!);
+        string communityHash = Convert.ToHexString(
+            System.Security.Cryptography.SHA256.HashData(
+                File.ReadAllBytes(communityArchivePath)))
+            .ToLowerInvariant();
+        Assert.Equal(communityEntry.GetProperty("sha256").GetString(), communityHash);
+
+        using TestWorkspace communityWorkspace = new();
+        string communityPath = Path.Combine(
+            communityWorkspace.DirectoryPath,
+            "CommunityBank");
+        MachineBankArchiveService.RestoreBank(communityArchivePath, communityPath);
+        MachineBankRepository communityRepository = new(communityPath);
+        MachineTemplateMetadata[] communityTemplates = communityRepository
+            .List()
+            .OrderBy(item => item.TemplateName, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Equal(["DI4.1000", "QL1"], communityTemplates
+            .Select(item => item.TemplateName)
+            .ToArray());
+        Assert.Equal([(0, 4), (32, 32)], communityTemplates
+            .Select(item => (item.TxCount, item.RxCount))
+            .ToArray());
+        Assert.All(communityTemplates, metadata =>
+        {
+            Assert.False(string.IsNullOrWhiteSpace(metadata.ImageFileName));
+            Assert.True(File.Exists(Path.Combine(
+                communityPath,
+                "machines",
+                metadata.TemplateId.ToString(),
+                metadata.ImageFileName)));
+
+            XElement root = Assert.IsType<XElement>(
+                communityRepository.Load(metadata.TemplateId).TemplateDocument.Root);
+            Assert.Null(Child(root, "instance_id"));
+            Assert.Null(Child(root, "device_id"));
+            Assert.Null(Child(root, "default_name"));
+            Assert.Empty(Children(root, "interface"));
+            Assert.Empty(Children(root, "txflow"));
+            Assert.All(Children(root, "rxchannel"), channel =>
+            {
+                Assert.Null(Child(channel, "subscribed_device"));
+                Assert.Null(Child(channel, "subscribed_channel"));
+            });
+        });
     }
 
     [Fact]
