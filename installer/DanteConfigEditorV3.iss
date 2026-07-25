@@ -23,6 +23,8 @@ WizardStyle=modern
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 PrivilegesRequired=admin
+; La mise à niveau nettoie uniquement les anciens raccourcis V3.5 du profil courant.
+UsedUserAreasWarning=no
 UninstallDisplayIcon={app}\{#MyAppExeName}
 VersionInfoVersion=3.6.0
 VersionInfoCompany={#MyAppPublisher}
@@ -61,7 +63,9 @@ Type: files; Name: "{app}\Notice_DanteConfigEditorV3.pdf"
 Type: files; Name: "{group}\Quick start PDF.lnk"
 Type: files; Name: "{group}\Notice PDF.lnk"
 Type: filesandordirs; Name: "{commonprograms}\Dante Config Editor V3.5"
+Type: filesandordirs; Name: "{userprograms}\Dante Config Editor V3.5"
 Type: files; Name: "{commondesktop}\DCE V3.5.lnk"
+Type: files; Name: "{userdesktop}\DCE V3.5.lnk"
 
 [Icons]
 Name: "{group}\{code:GetShortcutAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"; IconFilename: "{app}\DanteEdit.ico"

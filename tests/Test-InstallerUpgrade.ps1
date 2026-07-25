@@ -149,6 +149,17 @@ function Assert-InstalledState {
         throw "$Step : raccourci Bureau manquant. Chemins vérifiés : $($desktopShortcutCandidates -join ', ')"
     }
 
+    $legacyShortcutCandidates = @(
+        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::Programs)) "Dante Config Editor V3.5"),
+        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonPrograms)) "Dante Config Editor V3.5"),
+        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::DesktopDirectory)) "DCE V3.5.lnk"),
+        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonDesktopDirectory)) "DCE V3.5.lnk")
+    ) | Select-Object -Unique
+    $remainingLegacyShortcuts = @($legacyShortcutCandidates | Where-Object { Test-Path -LiteralPath $_ })
+    if ($remainingLegacyShortcuts.Count -gt 0) {
+        throw "$Step : ancien raccourci V3.5 encore présent : $($remainingLegacyShortcuts -join ', ')"
+    }
+
     return $record
 }
 
