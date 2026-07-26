@@ -40,8 +40,8 @@ validation matérielle ou d'un import confirmé dans Dante Controller.
 
 | Banque | Contenu | Téléchargement | SHA-256 |
 |---|---|---|---|
-| DCE Generic Roles 3.6 | Rôles génériques 8x8 et 32x32 | [Télécharger](DCE_Generic_Roles_3_6.dce-bank.zip) | `72e9fd378f08a39727f5490429712ce21c7bc5cb2937f2c4eafa0b87440ac0ca` |
-| DCE Community Devices 3.6 | Cinq modèles illustrés | [Télécharger](DCE_Community_Devices_3_6.dce-bank.zip) | `ecde3005ead3d5f8a234a82c65306939ce11fdf0625d4f1976c41813c64bd10c` |
+| DCE Generic Roles 3.6 | Rôles génériques 8x8 et 32x32 | [Télécharger](DCE_Generic_Roles_3_6.dce-bank.zip) | `b21af68d167041edf91a797f8ca15e16cd3e3f8a27e5b533961862bb87c5a35d` |
+| DCE Community Devices 3.6 | Cinq modèles illustrés | [Télécharger](DCE_Community_Devices_3_6.dce-bank.zip) | `1bb203ad8882f709342a319835498dcbebf9011e2432d4b1870009d9b308af2d` |
 
 ### Partager une banque
 
@@ -100,8 +100,8 @@ physical hardware or through a confirmed Dante Controller import.
 
 | Bank | Contents | Download | SHA-256 |
 |---|---|---|---|
-| DCE Generic Roles 3.6 | Generic 8x8 and 32x32 roles | [Download](DCE_Generic_Roles_3_6.dce-bank.zip) | `72e9fd378f08a39727f5490429712ce21c7bc5cb2937f2c4eafa0b87440ac0ca` |
-| DCE Community Devices 3.6 | Five illustrated templates | [Download](DCE_Community_Devices_3_6.dce-bank.zip) | `ecde3005ead3d5f8a234a82c65306939ce11fdf0625d4f1976c41813c64bd10c` |
+| DCE Generic Roles 3.6 | Generic 8x8 and 32x32 roles | [Download](DCE_Generic_Roles_3_6.dce-bank.zip) | `b21af68d167041edf91a797f8ca15e16cd3e3f8a27e5b533961862bb87c5a35d` |
+| DCE Community Devices 3.6 | Five illustrated templates | [Download](DCE_Community_Devices_3_6.dce-bank.zip) | `1bb203ad8882f709342a319835498dcbebf9011e2432d4b1870009d9b308af2d` |
 
 ### Share a bank
 

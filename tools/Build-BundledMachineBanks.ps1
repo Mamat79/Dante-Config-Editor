@@ -151,7 +151,7 @@ function New-DeterministicZip {
                 "/")
             $entry = $archive.CreateEntry(
                 $relative,
-                [System.IO.Compression.CompressionLevel]::Optimal)
+                [System.IO.Compression.CompressionLevel]::NoCompression)
             $entry.LastWriteTime = $fixedDate
             $entryStream = $entry.Open()
             $sourceStream = $file.OpenRead()

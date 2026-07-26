@@ -470,6 +470,10 @@ public sealed class MachineBankV36Tests
                 File.ReadAllBytes(communityArchivePath)))
             .ToLowerInvariant();
         Assert.Equal(communityEntry.GetProperty("sha256").GetString(), communityHash);
+        string bankReadme = File.ReadAllText(
+            RepositoryFile("machine-banks", "README.md"));
+        Assert.Contains(expectedHash, bankReadme, StringComparison.Ordinal);
+        Assert.Contains(communityHash, bankReadme, StringComparison.Ordinal);
 
         using TestWorkspace communityWorkspace = new();
         string communityPath = Path.Combine(
