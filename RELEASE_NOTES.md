@@ -23,6 +23,7 @@ V3.6 est une version de développement Windows et macOS issue de la V3.5. Dante 
 - Recherche, filtres, modification, duplication, suppression confirmée, import/export ZIP, sauvegarde et restauration complète.
 - Catalogue GitHub bilingue et archive `*.dce-bank.zip` vérifiée pour télécharger ou partager une banque complète.
 - Banque fournie `DCE Generic Roles 3.6` avec rôles génériques 8x8 et 32x32, sans identité matérielle, réseau ni abonnement.
+- Banque communautaire optionnelle `Yamaha QL1 + Fohhn DI4.1000`, illustrée et assainie avant distribution.
 - Ajout transactionnel d'une instance indépendante depuis un modèle.
 - Nouveau projet minimal 3.0.0 expérimental, vide ou amorcé par un modèle.
 
@@ -43,7 +44,8 @@ V3.6 est une version de développement Windows et macOS issue de la V3.5. Dante 
 ## Distribution
 
 - Installateur Windows x64 autonome : `DanteConfigEditorV3_6_Installer.exe`, runtime .NET 8 et notices FR/EN inclus.
-- Choix du dossier de banque actif et du dossier des banques fournies, sans remplacement des banques existantes.
+- Choix du dossier de banque actif et du dossier des banques fournies ; les banques générique et Yamaha/Fohhn sont sélectionnables séparément, sans remplacement des banques existantes.
+- Les DMG macOS contiennent les deux archives de banques dans un dossier `Machine Banks`.
 - La V3.6 met à niveau la ligne de développement V3.5 et laisse la V3.4.2 stable intacte.
 - Paquets macOS prévus pour Apple Silicon et Intel sous le nom V3.6.
 

@@ -57,6 +57,7 @@ Source: "{#SourceRoot}\docs\QuickStart_DanteConfigEditorV3_EN.pdf"; DestDir: "{a
 Source: "{#SourceRoot}\docs\Notice_DanteConfigEditorV3_FR.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourceRoot}\docs\Notice_DanteConfigEditorV3_EN.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourceRoot}\Resources\MachineBanks\Bundled\DCE Generic Roles 3.6\*"; DestDir: "{code:GetBundledBankDestination}"; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist; Check: ShouldInstallBundledBank
+Source: "{#SourceRoot}\Resources\MachineBanks\Bundled\Yamaha QL1 + Fohhn DI4.1000\*"; DestDir: "{code:GetCommunityBankDestination}"; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist; Check: ShouldInstallCommunityBank
 
 [InstallDelete]
 Type: files; Name: "{app}\QuickStart_DanteConfigEditorV3.pdf"
@@ -100,7 +101,9 @@ var
   BankDirectoriesPage: TInputDirWizardPage;
   BankOptionsPage: TInputOptionWizardPage;
   BundledBankDestination: String;
+  CommunityBankDestination: String;
   InstallBundledBankFiles: Boolean;
+  InstallCommunityBankFiles: Boolean;
 
 function GetShortcutAppName(Param: String): String;
 begin
@@ -172,6 +175,16 @@ begin
   Result := InstallBundledBankFiles;
 end;
 
+function GetCommunityBankDestination(Param: String): String;
+begin
+  Result := CommunityBankDestination;
+end;
+
+function ShouldInstallCommunityBank(): Boolean;
+begin
+  Result := InstallCommunityBankFiles;
+end;
+
 procedure OpenGithub(Sender: TObject);
 var
   ErrorCode: Integer;
@@ -238,7 +251,7 @@ begin
       wpSelectDir,
       'Device banks',
       'Choose where DCE uses and installs device banks.',
-      'The active bank may already exist. The included bank is installed in a separate folder and never overwrites an existing bank.',
+      'The active bank may already exist. Each included bank is installed in a separate folder and never overwrites an existing bank.',
       False,
       '');
     BankDirectoriesPage.Add('Active device-bank folder:');
@@ -252,6 +265,7 @@ begin
       False);
     BankOptionsPage.Add('Use the selected active-bank folder in DCE');
     BankOptionsPage.Add('Install the DCE Generic Roles 3.6 bank');
+    BankOptionsPage.Add('Install the Yamaha QL1 + Fohhn DI4.1000 bank');
   end
   else
   begin
@@ -259,7 +273,7 @@ begin
       wpSelectDir,
       'Banques de machines',
       'Choisissez où DCE utilise et installe les banques de machines.',
-      'La banque active peut déjà exister. La banque fournie est installée dans un dossier séparé et ne remplace jamais une banque existante.',
+      'La banque active peut déjà exister. Chaque banque fournie est installée dans un dossier séparé et ne remplace jamais une banque existante.',
       False,
       '');
     BankDirectoriesPage.Add('Dossier de la banque active :');
@@ -273,6 +287,7 @@ begin
       False);
     BankOptionsPage.Add('Utiliser le dossier de banque active choisi dans DCE');
     BankOptionsPage.Add('Installer la banque DCE Generic Roles 3.6');
+    BankOptionsPage.Add('Installer la banque Yamaha QL1 + Fohhn DI4.1000');
   end;
 
   BankDirectoriesPage.Values[0] := ConfiguredMachineBankPath();
@@ -280,6 +295,8 @@ begin
   BankOptionsPage.Values[0] := True;
   BankOptionsPage.Values[1] := not DirExists(
     AddBackslash(BankDirectoriesPage.Values[1]) + 'DCE Generic Roles 3.6');
+  BankOptionsPage.Values[2] := not DirExists(
+    AddBackslash(BankDirectoriesPage.Values[1]) + 'Yamaha QL1 + Fohhn DI4.1000');
 
   GithubLabel := TNewStaticText.Create(WizardForm);
   GithubLabel.Parent := WizardForm;
@@ -329,7 +346,7 @@ begin
     Exit;
   end;
 
-  if BankOptionsPage.Values[1]
+  if (BankOptionsPage.Values[1] or BankOptionsPage.Values[2])
     and (Trim(BankDirectoriesPage.Values[1]) = '') then
   begin
     if ActiveLanguage = 'english' then
@@ -341,13 +358,29 @@ begin
   end;
 end;
 
+function FindAvailableBankDestination(
+  BanksRoot: String;
+  BankFolderName: String): String;
+var
+  BaseDestination: String;
+  Candidate: String;
+  Suffix: Integer;
+begin
+  BaseDestination := AddBackslash(BanksRoot) + BankFolderName;
+  Candidate := BaseDestination;
+  Suffix := 2;
+  while DirExists(Candidate) or FileExists(Candidate) do
+  begin
+    Candidate := BaseDestination + ' (' + IntToStr(Suffix) + ')';
+    Suffix := Suffix + 1;
+  end;
+  Result := Candidate;
+end;
+
 function PrepareToInstall(var NeedsRestart: Boolean): String;
 var
   ActiveBankPath: String;
   BundledBanksPath: String;
-  BaseDestination: String;
-  Candidate: String;
-  Suffix: Integer;
 begin
   Result := '';
   ActiveBankPath := BankDirectoriesPage.Values[0];
@@ -372,8 +405,11 @@ begin
   end;
 
   InstallBundledBankFiles := BankOptionsPage.Values[1];
+  InstallCommunityBankFiles := BankOptionsPage.Values[2];
   BundledBankDestination := '';
-  if not InstallBundledBankFiles then
+  CommunityBankDestination := '';
+  if not InstallBundledBankFiles
+    and not InstallCommunityBankFiles then
   begin
     Exit;
   end;
@@ -394,16 +430,18 @@ begin
     Exit;
   end;
 
-  BaseDestination :=
-    AddBackslash(BundledBanksPath) + 'DCE Generic Roles 3.6';
-  Candidate := BaseDestination;
-  Suffix := 2;
-  while DirExists(Candidate) or FileExists(Candidate) do
+  if InstallBundledBankFiles then
   begin
-    Candidate := BaseDestination + ' (' + IntToStr(Suffix) + ')';
-    Suffix := Suffix + 1;
+    BundledBankDestination := FindAvailableBankDestination(
+      BundledBanksPath,
+      'DCE Generic Roles 3.6');
   end;
-  BundledBankDestination := Candidate;
+  if InstallCommunityBankFiles then
+  begin
+    CommunityBankDestination := FindAvailableBankDestination(
+      BundledBanksPath,
+      'Yamaha QL1 + Fohhn DI4.1000');
+  end;
 end;
 
 procedure SaveMachineBankLocation();

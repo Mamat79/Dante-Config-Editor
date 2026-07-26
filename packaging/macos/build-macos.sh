@@ -76,6 +76,13 @@ codesign --force --deep --sign - --timestamp=none "$APP"
 codesign --verify --deep --strict "$APP"
 
 cp -R "$APP" "$DMG_STAGE/"
+mkdir -p "$DMG_STAGE/Machine Banks"
+cp "$ROOT/machine-banks/DCE_Generic_Roles_3_6.dce-bank.zip" \
+  "$DMG_STAGE/Machine Banks/"
+cp "$ROOT/machine-banks/Yamaha_QL1_Fohhn_DI4_1000.dce-bank.zip" \
+  "$DMG_STAGE/Machine Banks/"
+cp "$ROOT/machine-banks/README.md" \
+  "$DMG_STAGE/Machine Banks/README.md"
 ln -s /Applications "$DMG_STAGE/Applications"
 rm -f "$DMG"
 hdiutil create \

@@ -74,10 +74,10 @@ La fenêtre `Banque de machines` permet d'exporter une banque complète dans une
 
 Le bouton `Banques GitHub` ouvre le [catalogue public des banques V3.6](machine-banks/README.md). La banque fournie `DCE Generic Roles 3.6` contient deux rôles génériques 8x8 et 32x32 pour les essais et la formation. Ils ne représentent aucun matériel réel et ne contiennent ni identité matérielle, ni IP, ni abonnement.
 
-Le catalogue propose également une banque communautaire illustrée contenant
-les modèles Yamaha QL1 et Fohhn DI4.1000.
+Le catalogue et les nouveaux installateurs proposent également une banque
+communautaire illustrée contenant les modèles Yamaha QL1 et Fohhn DI4.1000.
 
-L'installateur Windows propose séparément le dossier de banque actif et le dossier où placer les banques fournies. Il réutilise le chemin déjà configuré lors d'une mise à jour, ne touche jamais au contenu d'une banque existante et choisit un nouveau nom de dossier si la banque fournie est déjà présente.
+L'installateur Windows propose séparément le dossier de banque actif et le dossier où placer les banques fournies. Les banques `DCE Generic Roles 3.6` et `Yamaha QL1 + Fohhn DI4.1000` sont sélectionnables indépendamment. L'assistant réutilise le chemin déjà configuré lors d'une mise à jour, ne touche jamais au contenu d'une banque existante et choisit un nouveau nom de dossier si une banque fournie est déjà présente.
 
 ## Notices
 
@@ -175,7 +175,7 @@ La [Release GitHub V3.4.2](https://github.com/Mamat79/DanteConfigEditorV3/releas
 
 La version autonome inclut le runtime .NET nécessaire. Sur une machine Windows x64, il ne devrait pas être nécessaire d'installer .NET séparément pour utiliser l'application.
 
-L'assistant permet de choisir le dossier de banque actif et le dossier des banques fournies. L'installation de `DCE Generic Roles 3.6` est proposée par défaut lors d'une première installation et reste facultative. Une mise à jour conserve le chemin existant et ne remplace aucune banque.
+L'assistant permet de choisir le dossier de banque actif et le dossier des banques fournies. L'installation de `DCE Generic Roles 3.6` et de `Yamaha QL1 + Fohhn DI4.1000` est proposée par défaut lors d'une première installation ; chaque banque reste facultative. Une mise à jour conserve le chemin existant et ne remplace aucune banque.
 
 ### macOS
 
@@ -183,6 +183,9 @@ Deux DMG autonomes sont fournis :
 
 - `DanteConfigEditorV3_6_macOS_AppleSilicon.dmg` pour les Mac M1, M2, M3, M4 et suivants ;
 - `DanteConfigEditorV3_6_macOS_Intel.dmg` pour les Mac Intel 64 bits.
+
+Chaque DMG contient aussi un dossier `Machine Banks` avec les deux archives de
+banques vérifiées, importables depuis la fenêtre Banque de machines.
 
 Ouvrir le DMG, puis glisser `Dante Config Editor V3.6` dans `Applications`. Le runtime .NET 8 et les notices FR/EN sont inclus. Son bundle distinct permet de conserver la V3.4.2.
 

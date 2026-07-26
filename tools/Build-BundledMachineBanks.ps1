@@ -2,9 +2,11 @@ $ErrorActionPreference = "Stop"
 
 $root = [System.IO.Path]::GetFullPath((Split-Path $PSScriptRoot -Parent))
 $bundledRoot = Join-Path $root "Resources\MachineBanks\Bundled"
-$bankRoot = Join-Path $bundledRoot "DCE Generic Roles 3.6"
+$genericBankRoot = Join-Path $bundledRoot "DCE Generic Roles 3.6"
+$communityBankRoot = Join-Path $bundledRoot "Yamaha QL1 + Fohhn DI4.1000"
 $githubRoot = Join-Path $root "machine-banks"
-$archivePath = Join-Path $githubRoot "DCE_Generic_Roles_3_6.dce-bank.zip"
+$genericArchivePath = Join-Path $githubRoot "DCE_Generic_Roles_3_6.dce-bank.zip"
+$communityArchivePath = Join-Path $githubRoot "Yamaha_QL1_Fohhn_DI4_1000.dce-bank.zip"
 $catalogPath = Join-Path $githubRoot "catalog.json"
 $utf8 = [System.Text.UTF8Encoding]::new($false)
 $fixedDate = [DateTimeOffset]::Parse(
@@ -168,6 +170,121 @@ function New-DeterministicZip {
     }
 }
 
+function Assert-CommunityBank {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$BankDirectory
+    )
+
+    $manifestPath = Join-Path $BankDirectory "bank.json"
+    $machinesPath = Join-Path $BankDirectory "machines"
+    if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+        throw "Manifeste de banque communautaire absent : $manifestPath"
+    }
+    if (-not (Test-Path -LiteralPath $machinesPath -PathType Container)) {
+        throw "Dossier de modèles communautaires absent : $machinesPath"
+    }
+
+    $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+    if ($manifest.formatVersion -ne 1) {
+        throw "Version de banque communautaire non prise en charge : $($manifest.formatVersion)"
+    }
+
+    $expectedTemplates = @{
+        "QL1" = @{
+            manufacturer = "Yamaha Corporation"
+            tx = 32
+            rx = 32
+            image = "image.jpg"
+        }
+        "DI4.1000" = @{
+            manufacturer = "Fohhn"
+            tx = 0
+            rx = 4
+            image = "image.png"
+        }
+    }
+    $forbiddenXmlElements = @(
+        "instance_id",
+        "device_id",
+        "default_name",
+        "interface",
+        "txflow",
+        "rxflow",
+        "subscribed_device",
+        "subscribed_channel",
+        "ip_address",
+        "gateway",
+        "dns"
+    )
+
+    $templateDirectories = @(Get-ChildItem -LiteralPath $machinesPath -Directory)
+    if ($templateDirectories.Count -ne $expectedTemplates.Count) {
+        throw "La banque communautaire doit contenir exactement deux modèles."
+    }
+
+    $seenNames = @()
+    foreach ($templateDirectory in $templateDirectories) {
+        $metadataPath = Join-Path $templateDirectory.FullName "machine.json"
+        $templatePath = Join-Path $templateDirectory.FullName "template.xml"
+        $hasRequiredFiles =
+            (Test-Path -LiteralPath $metadataPath -PathType Leaf) -and
+            (Test-Path -LiteralPath $templatePath -PathType Leaf)
+        if (-not $hasRequiredFiles) {
+            throw "Modèle communautaire incomplet : $($templateDirectory.FullName)"
+        }
+
+        $metadata = Get-Content -LiteralPath $metadataPath -Raw | ConvertFrom-Json
+        $expected = $expectedTemplates[$metadata.templateName]
+        if ($null -eq $expected) {
+            throw "Modèle communautaire inattendu : $($metadata.templateName)"
+        }
+        if ($seenNames -contains $metadata.templateName) {
+            throw "Modèle communautaire dupliqué : $($metadata.templateName)"
+        }
+        $seenNames += $metadata.templateName
+
+        $templateId = [Guid]::Parse([string]$metadata.templateId).ToString("D")
+        $hasMatchingIdentity =
+            ($templateDirectory.Name -eq $templateId) -and
+            (@($manifest.templateIds) -contains $templateId)
+        if (-not $hasMatchingIdentity) {
+            throw "Identifiant incohérent pour le modèle $($metadata.templateName)."
+        }
+        $hasExpectedMetadata =
+            ($metadata.manufacturer -eq $expected.manufacturer) -and
+            ($metadata.txCount -eq $expected.tx) -and
+            ($metadata.rxCount -eq $expected.rx) -and
+            ($metadata.imageFileName -eq $expected.image)
+        if (-not $hasExpectedMetadata) {
+            throw "Métadonnées inattendues pour le modèle $($metadata.templateName)."
+        }
+
+        $actualTemplateHash = (
+            Get-FileHash -LiteralPath $templatePath -Algorithm SHA256
+        ).Hash
+        if (-not $actualTemplateHash.Equals(
+            [string]$metadata.templateSha256,
+            [System.StringComparison]::OrdinalIgnoreCase)) {
+            throw "Empreinte XML invalide pour le modèle $($metadata.templateName)."
+        }
+
+        $imagePath = Join-Path $templateDirectory.FullName $metadata.imageFileName
+        if (-not (Test-Path -LiteralPath $imagePath -PathType Leaf)) {
+            throw "Image absente pour le modèle $($metadata.templateName)."
+        }
+
+        [xml]$templateXml = Get-Content -LiteralPath $templatePath -Raw
+        $forbiddenNodes = @($templateXml.SelectNodes("//*") | Where-Object {
+            $forbiddenXmlElements -contains $_.LocalName
+        })
+        if ($forbiddenNodes.Count -gt 0) {
+            $names = ($forbiddenNodes | ForEach-Object LocalName | Sort-Object -Unique) -join ", "
+            throw "Données de projet interdites dans $($metadata.templateName) : $names"
+        }
+    }
+}
+
 $templates = @(
     [ordered]@{
         id = "4f58fe46-7259-4af7-b355-20277376a408"
@@ -185,16 +302,16 @@ $templates = @(
     }
 )
 
-if (Test-Path -LiteralPath $bankRoot) {
-    Remove-Item -LiteralPath (Assert-RepositoryPath $bankRoot) -Recurse -Force
+if (Test-Path -LiteralPath $genericBankRoot) {
+    Remove-Item -LiteralPath (Assert-RepositoryPath $genericBankRoot) -Recurse -Force
 }
 
-New-Item -ItemType Directory -Force -Path $bankRoot, $githubRoot | Out-Null
+New-Item -ItemType Directory -Force -Path $genericBankRoot, $githubRoot | Out-Null
 $templateIds = @()
 foreach ($template in $templates) {
     $templateId = [Guid]::Parse($template.id)
     $templateIds += $templateId
-    $templateDirectory = Join-Path $bankRoot ("machines\" + $templateId.ToString("D"))
+    $templateDirectory = Join-Path $genericBankRoot ("machines\" + $templateId.ToString("D"))
     New-Item -ItemType Directory -Force -Path $templateDirectory | Out-Null
     $xmlPath = Join-Path $templateDirectory "template.xml"
     Write-Utf8File -Path $xmlPath -Content (
@@ -229,10 +346,17 @@ $manifest = [ordered]@{
     updatedUtc = $fixedDate
     templateIds = $templateIds
 }
-Write-JsonFile -Path (Join-Path $bankRoot "bank.json") -Value $manifest
+Write-JsonFile -Path (Join-Path $genericBankRoot "bank.json") -Value $manifest
 
-New-DeterministicZip -SourceDirectory $bankRoot -DestinationArchive $archivePath
-$archiveHash = (Get-FileHash -LiteralPath $archivePath -Algorithm SHA256).Hash.ToLowerInvariant()
+Assert-CommunityBank -BankDirectory $communityBankRoot
+New-DeterministicZip -SourceDirectory $genericBankRoot -DestinationArchive $genericArchivePath
+New-DeterministicZip -SourceDirectory $communityBankRoot -DestinationArchive $communityArchivePath
+$genericArchiveHash = (
+    Get-FileHash -LiteralPath $genericArchivePath -Algorithm SHA256
+).Hash.ToLowerInvariant()
+$communityArchiveHash = (
+    Get-FileHash -LiteralPath $communityArchivePath -Algorithm SHA256
+).Hash.ToLowerInvariant()
 $catalog = [ordered]@{
     formatVersion = 1
     updatedUtc = $fixedDate
@@ -240,17 +364,30 @@ $catalog = [ordered]@{
         [ordered]@{
             id = "dce-generic-roles-3.6"
             name = "DCE Generic Roles 3.6"
-            file = [System.IO.Path]::GetFileName($archivePath)
-            sha256 = $archiveHash
+            file = [System.IO.Path]::GetFileName($genericArchivePath)
+            sha256 = $genericArchiveHash
             minimumDceVersion = "3.6"
             language = "fr-en"
             descriptionFr = "Deux rôles génériques 8x8 et 32x32 sans identité matérielle, réseau ni abonnement."
             descriptionEn = "Two generic 8x8 and 32x32 roles without hardware identity, network settings or subscriptions."
+        },
+        [ordered]@{
+            id = "yamaha-ql1-fohhn-di4-1000"
+            name = "Yamaha QL1 + Fohhn DI4.1000"
+            file = [System.IO.Path]::GetFileName($communityArchivePath)
+            sha256 = $communityArchiveHash
+            minimumDceVersion = "3.6"
+            language = "fr-en"
+            descriptionFr = "Deux modèles illustrés : Yamaha QL1 (32 TX / 32 RX) et Fohhn DI4.1000 (0 TX / 4 RX), sans identité matérielle, réseau ni abonnement."
+            descriptionEn = "Two illustrated templates: Yamaha QL1 (32 Tx / 32 Rx) and Fohhn DI4.1000 (0 Tx / 4 Rx), without hardware identity, network settings or subscriptions."
         }
     )
 }
 Write-JsonFile -Path $catalogPath -Value $catalog
 
-Write-Host "Banque fournie générée : $bankRoot"
-Write-Host "Archive GitHub générée : $archivePath"
-Write-Host "SHA-256 : $archiveHash"
+Write-Host "Banque générique générée : $genericBankRoot"
+Write-Host "Archive générique : $genericArchivePath"
+Write-Host "SHA-256 générique : $genericArchiveHash"
+Write-Host "Banque communautaire vérifiée : $communityBankRoot"
+Write-Host "Archive communautaire : $communityArchivePath"
+Write-Host "SHA-256 communautaire : $communityArchiveHash"

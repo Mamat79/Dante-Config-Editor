@@ -407,7 +407,7 @@ public sealed class MachineBankV36Tests
     }
 
     [Fact]
-    public void BundledGenericBankAndGithubArchiveAreValidAndContainNoProjectIdentity()
+    public void BundledAndGithubBanksAreValidAndContainNoProjectIdentity()
     {
         string bundledPath = RepositoryFile(
             "Resources",
@@ -482,12 +482,29 @@ public sealed class MachineBankV36Tests
             .OrderBy(item => item.TemplateName, StringComparer.Ordinal)
             .ToArray();
 
+        string installedCommunityPath = RepositoryFile(
+            "Resources",
+            "MachineBanks",
+            "Bundled",
+            "Yamaha QL1 + Fohhn DI4.1000");
+        MachineBankRepository installedCommunityRepository = new(installedCommunityPath);
+        MachineTemplateMetadata[] installedCommunityTemplates = installedCommunityRepository
+            .List()
+            .OrderBy(item => item.TemplateName, StringComparer.Ordinal)
+            .ToArray();
+
         Assert.Equal(["DI4.1000", "QL1"], communityTemplates
             .Select(item => item.TemplateName)
             .ToArray());
         Assert.Equal([(0, 4), (32, 32)], communityTemplates
             .Select(item => (item.TxCount, item.RxCount))
             .ToArray());
+        Assert.Equal(
+            communityTemplates.Select(item => item.TemplateId),
+            installedCommunityTemplates.Select(item => item.TemplateId));
+        Assert.Equal(
+            communityTemplates.Select(item => item.TemplateSha256),
+            installedCommunityTemplates.Select(item => item.TemplateSha256));
         Assert.All(communityTemplates, metadata =>
         {
             Assert.False(string.IsNullOrWhiteSpace(metadata.ImageFileName));
@@ -509,6 +526,11 @@ public sealed class MachineBankV36Tests
                 Assert.Null(Child(channel, "subscribed_device"));
                 Assert.Null(Child(channel, "subscribed_channel"));
             });
+        });
+        Assert.All(installedCommunityTemplates, metadata =>
+        {
+            MachineTemplatePackage package = installedCommunityRepository.Load(metadata.TemplateId);
+            Assert.True(File.Exists(package.ImagePath));
         });
     }
 

@@ -69,10 +69,25 @@ public sealed class InstallerContractTests
         Assert.Contains("UTF8Encode", installerScript, StringComparison.Ordinal);
         Assert.Contains("CopyFile(SettingsPath, SettingsPath + '.bak', False)", installerScript, StringComparison.Ordinal);
         Assert.Contains("DCE Generic Roles 3.6", installerScript, StringComparison.Ordinal);
+        Assert.Contains("Yamaha QL1 + Fohhn DI4.1000", installerScript, StringComparison.Ordinal);
         Assert.Contains("onlyifdoesntexist", installerScript, StringComparison.Ordinal);
         Assert.Contains("ShouldInstallBundledBank", installerScript, StringComparison.Ordinal);
+        Assert.Contains("ShouldInstallCommunityBank", installerScript, StringComparison.Ordinal);
+        Assert.Contains("GetCommunityBankDestination", installerScript, StringComparison.Ordinal);
+        Assert.Contains("BankOptionsPage.Values[2]", installerScript, StringComparison.Ordinal);
+        Assert.Contains("FindAvailableBankDestination", installerScript, StringComparison.Ordinal);
         Assert.Contains("while DirExists(Candidate) or FileExists(Candidate)", installerScript, StringComparison.Ordinal);
         Assert.Contains("SaveMachineBankLocation", installerScript, StringComparison.Ordinal);
+
+        string bankBuilder = File.ReadAllText(RepositoryFile("tools", "Build-BundledMachineBanks.ps1"));
+        Assert.Contains("Assert-CommunityBank", bankBuilder, StringComparison.Ordinal);
+        Assert.Contains("Yamaha_QL1_Fohhn_DI4_1000.dce-bank.zip", bankBuilder, StringComparison.Ordinal);
+        Assert.Contains("yamaha-ql1-fohhn-di4-1000", bankBuilder, StringComparison.Ordinal);
+
+        string macPackaging = File.ReadAllText(RepositoryFile("packaging", "macos", "build-macos.sh"));
+        Assert.Contains("Machine Banks", macPackaging, StringComparison.Ordinal);
+        Assert.Contains("DCE_Generic_Roles_3_6.dce-bank.zip", macPackaging, StringComparison.Ordinal);
+        Assert.Contains("Yamaha_QL1_Fohhn_DI4_1000.dce-bank.zip", macPackaging, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -113,12 +128,18 @@ public sealed class InstallerContractTests
     public void WindowsWorkflowPublishesSelfContainedV36Artifacts()
     {
         string workflow = File.ReadAllText(RepositoryFile(".github", "workflows", "windows-ci.yml"));
+        string bankAudit = File.ReadAllText(RepositoryFile(".github", "workflows", "machine-bank-audit.yml"));
 
         Assert.Contains("- v3.6", workflow, StringComparison.Ordinal);
         Assert.Contains("--self-contained true", workflow, StringComparison.Ordinal);
         Assert.Contains("DanteConfigEditorV3-6-win-x64", workflow, StringComparison.Ordinal);
         Assert.Contains("DCE-v3.6-Windows-Installer", workflow, StringComparison.Ordinal);
         Assert.Contains("DanteConfigEditorV3_6_Installer.exe", workflow, StringComparison.Ordinal);
+        Assert.Contains("schedule:", bankAudit, StringComparison.Ordinal);
+        Assert.Contains("Build-BundledMachineBanks.ps1", bankAudit, StringComparison.Ordinal);
+        Assert.Contains("git diff --exit-code", bankAudit, StringComparison.Ordinal);
+        Assert.Contains("MachineBankV36Tests", bankAudit, StringComparison.Ordinal);
+        Assert.Contains("contents: read", bankAudit, StringComparison.Ordinal);
     }
 
     [Fact]

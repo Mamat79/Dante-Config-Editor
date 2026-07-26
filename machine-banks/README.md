@@ -40,7 +40,7 @@ validation matérielle ou d'un import confirmé dans Dante Controller.
 | Banque | Contenu | Téléchargement | SHA-256 |
 |---|---|---|---|
 | DCE Generic Roles 3.6 | Rôles génériques 8x8 et 32x32 | [Télécharger](DCE_Generic_Roles_3_6.dce-bank.zip) | `72e9fd378f08a39727f5490429712ce21c7bc5cb2937f2c4eafa0b87440ac0ca` |
-| Yamaha QL1 + Fohhn DI4.1000 | Deux modèles illustrés | [Télécharger](Yamaha_QL1_Fohhn_DI4_1000.dce-bank.zip) | `f7b2f3cd41a3e3b7dcd23314b5fe7568d17e0baeaf55bed305fce3d71f6d5e8e` |
+| Yamaha QL1 + Fohhn DI4.1000 | Deux modèles illustrés | [Télécharger](Yamaha_QL1_Fohhn_DI4_1000.dce-bank.zip) | `16a0dfea68ab55b9d79658fe9c75201e7573d4b50d727afe1c108f5dcff881d6` |
 
 ### Partager une banque
 
@@ -54,6 +54,11 @@ validation matérielle ou d'un import confirmé dans Dante Controller.
 Les modèles de matériels réels doivent provenir d'un XML que leur auteur est
 autorisé à partager. DCE assainit les identités, le réseau et les abonnements,
 mais l'auteur reste responsable du contenu publié.
+
+Le workflow GitHub `Machine-bank audit` reconstruit et vérifie chaque semaine
+les archives publiques, leurs empreintes, leurs manifestes et l'absence de
+données de projet interdites. Il fonctionne en lecture seule et ne publie
+jamais automatiquement une banque personnelle.
 
 ## English
 
@@ -94,7 +99,7 @@ physical hardware or through a confirmed Dante Controller import.
 | Bank | Contents | Download | SHA-256 |
 |---|---|---|---|
 | DCE Generic Roles 3.6 | Generic 8x8 and 32x32 roles | [Download](DCE_Generic_Roles_3_6.dce-bank.zip) | `72e9fd378f08a39727f5490429712ce21c7bc5cb2937f2c4eafa0b87440ac0ca` |
-| Yamaha QL1 + Fohhn DI4.1000 | Two illustrated templates | [Download](Yamaha_QL1_Fohhn_DI4_1000.dce-bank.zip) | `f7b2f3cd41a3e3b7dcd23314b5fe7568d17e0baeaf55bed305fce3d71f6d5e8e` |
+| Yamaha QL1 + Fohhn DI4.1000 | Two illustrated templates | [Download](Yamaha_QL1_Fohhn_DI4_1000.dce-bank.zip) | `16a0dfea68ab55b9d79658fe9c75201e7573d4b50d727afe1c108f5dcff881d6` |
 
 ### Share a bank
 
@@ -108,3 +113,7 @@ physical hardware or through a confirmed Dante Controller import.
 Real-hardware templates must come from XML that the author is allowed to
 share. DCE removes identities, network settings and subscriptions, but the
 publisher remains responsible for the shared content.
+
+The `Machine-bank audit` GitHub workflow rebuilds and validates the public
+archives, hashes, manifests, and forbidden project-data checks every week. It
+runs read-only and never publishes a personal bank automatically.

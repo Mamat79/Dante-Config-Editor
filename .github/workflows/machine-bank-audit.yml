@@ -1,0 +1,51 @@
+name: Machine-bank audit
+
+on:
+  schedule:
+    - cron: "17 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: machine-bank-audit-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify public and bundled banks
+    runs-on: windows-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install .NET 8 SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Rebuild deterministic bank archives
+        shell: pwsh
+        run: ./tools/Build-BundledMachineBanks.ps1
+
+      - name: Check generated catalog and archives
+        shell: pwsh
+        run: |
+          git diff --exit-code -- `
+            Resources/MachineBanks/Bundled `
+            machine-banks/catalog.json `
+            machine-banks/DCE_Generic_Roles_3_6.dce-bank.zip `
+            machine-banks/Yamaha_QL1_Fohhn_DI4_1000.dce-bank.zip
+
+      - name: Restore bank tests
+        run: dotnet restore ./tests/DanteConfigEditorV3.Tests/DanteConfigEditorV3.Tests.csproj
+
+      - name: Validate bank manifests, hashes and sanitized XML
+        run: >-
+          dotnet test ./tests/DanteConfigEditorV3.Tests/DanteConfigEditorV3.Tests.csproj
+          -c Release
+          --no-restore
+          --filter "FullyQualifiedName~MachineBankV36Tests"

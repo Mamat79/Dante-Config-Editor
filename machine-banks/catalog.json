@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "updatedUtc": "2026-07-25T23:46:00+00:00",
+  "updatedUtc": "2026-07-26T00:00:00+00:00",
   "banks": [
     {
       "id": "dce-generic-roles-3.6",
@@ -16,7 +16,7 @@
       "id": "yamaha-ql1-fohhn-di4-1000",
       "name": "Yamaha QL1 + Fohhn DI4.1000",
       "file": "Yamaha_QL1_Fohhn_DI4_1000.dce-bank.zip",
-      "sha256": "f7b2f3cd41a3e3b7dcd23314b5fe7568d17e0baeaf55bed305fce3d71f6d5e8e",
+      "sha256": "16a0dfea68ab55b9d79658fe9c75201e7573d4b50d727afe1c108f5dcff881d6",
       "minimumDceVersion": "3.6",
       "language": "fr-en",
       "descriptionFr": "Deux modèles illustrés : Yamaha QL1 (32 TX / 32 RX) et Fohhn DI4.1000 (0 TX / 4 RX), sans identité matérielle, réseau ni abonnement.",

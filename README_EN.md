@@ -56,13 +56,14 @@ The `GitHub banks` button opens the
 and training. They do not represent real hardware and contain no hardware
 identity, IP address, or subscription.
 
-The catalog also provides an illustrated community bank containing Yamaha QL1
-and Fohhn DI4.1000 templates.
+The catalog and new installers also provide an illustrated community bank
+containing Yamaha QL1 and Fohhn DI4.1000 templates.
 
 The Windows installer separately asks for the active bank folder and the
-folder used for included banks. During an upgrade it reuses the configured
-path, never changes an existing bank, and selects a new folder name if the
-included bank is already present.
+folder used for included banks. `DCE Generic Roles 3.6` and
+`Yamaha QL1 + Fohhn DI4.1000` can be selected independently. During an upgrade
+the installer reuses the configured path, never changes an existing bank, and
+selects a new folder name if an included bank is already present.
 
 ## Importing and exporting labels
 
@@ -166,14 +167,18 @@ Download artifact `DCE-v3.6-Windows-Installer`, containing `DanteConfigEditorV3_
 The self-contained installer includes the required .NET 8 runtime, French and English documentation, Start menu and desktop shortcuts, destination selection, and clean uninstall support. A fresh install defaults to `C:\Program Files\Dante Config Editor V3.6\`. It upgrades the V3.5 development line in place, removes obsolete V3.5 shortcuts, preserves local working data, and leaves stable V3.4.2 untouched.
 
 The wizard lets users choose the active device-bank folder and the folder for
-included banks. Installing `DCE Generic Roles 3.6` is proposed by default on a
-first installation and remains optional. An upgrade keeps the existing path
-and never replaces a bank.
+included banks. Installing `DCE Generic Roles 3.6` and
+`Yamaha QL1 + Fohhn DI4.1000` is proposed by default on a first installation;
+each bank remains optional. An upgrade keeps the existing path and never
+replaces a bank.
 
 ### macOS
 
 - `DanteConfigEditorV3_6_macOS_AppleSilicon.dmg` supports Apple Silicon Macs.
-- `DanteConfigEditorV3_6_macOS_Intel.dmg` supports Intel 64-bit Macs.
+- `DanteConfigEditorV3_6_macOS_Intel.dmg` supports 64-bit Intel Macs.
+
+Each DMG also contains a `Machine Banks` folder with both verified bank
+archives, ready to import from the Device bank window.
 
 Open the DMG and drag `Dante Config Editor V3.6` into `Applications`. The .NET runtime and both language manuals are included. Its separate bundle lets it coexist with V3.4.2.
 
