@@ -154,12 +154,24 @@ function New-DeterministicZip {
                 [System.IO.Compression.CompressionLevel]::NoCompression)
             $entry.LastWriteTime = $fixedDate
             $entryStream = $entry.Open()
-            $sourceStream = $file.OpenRead()
             try {
-                $sourceStream.CopyTo($entryStream)
+                if ($file.Extension -in @(".json", ".xml")) {
+                    $content = [System.IO.File]::ReadAllText($file.FullName)
+                    $normalized = $content.Replace("`r`n", "`n").Replace("`r", "`n")
+                    $bytes = $utf8.GetBytes($normalized)
+                    $entryStream.Write($bytes, 0, $bytes.Length)
+                }
+                else {
+                    $sourceStream = $file.OpenRead()
+                    try {
+                        $sourceStream.CopyTo($entryStream)
+                    }
+                    finally {
+                        $sourceStream.Dispose()
+                    }
+                }
             }
             finally {
-                $sourceStream.Dispose()
                 $entryStream.Dispose()
             }
         }
