@@ -493,7 +493,10 @@ Pour lancer les tests automatiques :
 
 Dante Config Editor reste entièrement gratuit et toutes ses fonctions sont disponibles sans contribution.
 
-Si DCE vous fait gagner du temps, vous pouvez **[soutenir son développement par PayPal](https://www.paypal.com/qrcodes/p2pqrc/EQYCCDK8XFN5Y)**. La page s'ouvre dans votre navigateur habituel ; aucun paiement n'est intégré à l'application et aucune connexion n'est effectuée au démarrage.
+Si DCE vous fait gagner du temps, vous pouvez **[soutenir son développement en
+scannant le QR PayPal](docs/SUPPORT_DCE.md)**. Le QR s'affiche directement dans
+DCE et un bouton PayPal.Me est disponible sur ordinateur ; aucun paiement
+n'est intégré à l'application et aucune connexion n'est effectuée au démarrage.
 
 Vous pouvez aussi aider gratuitement en ajoutant une étoile au projet GitHub ou en partageant un retour. Et si vous êtes vraiment fous, vous pouvez même faire les deux !
 

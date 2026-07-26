@@ -623,7 +623,7 @@ def full_guide(language: str) -> None:
             para("Dante Config Editor reste entièrement gratuit et toutes ses fonctions sont disponibles sans contribution."),
             *bullets([
                 "Le bouton Soutenir DCE se trouve dans Sécurité et journal.",
-                "PayPal s'ouvre dans le navigateur habituel ; aucun paiement n'est intégré à DCE et aucune connexion n'est effectuée au démarrage.",
+                "Le bouton Soutenir DCE affiche le QR PayPal à scanner avec l'application du téléphone et un bouton PayPal.Me pour ordinateur ; aucun paiement n'est intégré à DCE et aucune connexion n'est effectuée au démarrage.",
                 "Le rappel local n'apparaît pas au premier lancement. Il peut être reporté de 20 lancements ou désactivé définitivement.",
                 "Une étoile sur GitHub ou un retour utilisateur aide aussi gratuitement. Et si vous êtes vraiment fous, vous pouvez même faire les deux !",
             ]),
@@ -927,7 +927,7 @@ def full_guide(language: str) -> None:
             para("Dante Config Editor remains completely free, and every feature is available without contributing."),
             *bullets([
                 "The Support DCE button is available in Safety and log.",
-                "PayPal opens in the usual web browser; DCE contains no payment system and performs no network request at startup.",
+                "The Support DCE button displays the PayPal QR code for the phone app and a PayPal.Me button for computers; DCE contains no payment system and performs no network request at startup.",
                 "The local reminder does not appear on first launch. It can be postponed for 20 launches or disabled permanently.",
                 "Starring the GitHub project or sharing feedback also helps for free. And if you are truly crazy, you can even do both!",
             ]),

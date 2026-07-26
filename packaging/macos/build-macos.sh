@@ -33,6 +33,7 @@ DMG="$DIST/DanteConfigEditorV3_6_macOS_${ARCH_LABEL}.dmg"
 
 rm -rf "$STAGING"
 mkdir -p "$PUBLISH" "$MACOS" "$RESOURCES/Docs" "$ICONSET" "$DMG_STAGE" "$DIST"
+mkdir -p "$RESOURCES/Resources/Support"
 
 dotnet publish "$PROJECT" \
   -c Release \
@@ -52,6 +53,8 @@ if [[ -d "$MACOS/Docs" ]]; then
 fi
 
 cp "$ROOT/packaging/macos/Info.plist" "$CONTENTS/Info.plist"
+cp "$ROOT/Resources/Support/paypal-support-qr.png" \
+  "$RESOURCES/Resources/Support/paypal-support-qr.png"
 
 # L'icône historique est déclinée aux tailles attendues par iconutil.
 ICON_SOURCE="$ROOT/packaging/macos/DanteEdit.png"

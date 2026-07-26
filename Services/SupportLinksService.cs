@@ -4,11 +4,11 @@ namespace DanteConfigEditor.Services;
 
 public static class SupportLinksService
 {
-    public const string PayPalSupportUrl = "https://www.paypal.com/qrcodes/p2pqrc/EQYCCDK8XFN5Y";
+    public const string PayPalMeSupportUrl = "https://www.paypal.com/paypalme/MamatLeroy";
 
-    public static bool IsTrustedPayPalUrl(string? url)
+    public static bool IsTrustedPayPalMeUrl(string? url)
     {
-        if (!string.Equals(url, PayPalSupportUrl, StringComparison.Ordinal)
+        if (!string.Equals(url, PayPalMeSupportUrl, StringComparison.Ordinal)
             || !Uri.TryCreate(url, UriKind.Absolute, out Uri? uri))
         {
             return false;
@@ -16,24 +16,25 @@ public static class SupportLinksService
 
         return uri.Scheme == Uri.UriSchemeHttps
             && string.Equals(uri.Host, "www.paypal.com", StringComparison.OrdinalIgnoreCase)
+            && string.Equals(uri.AbsolutePath, "/paypalme/MamatLeroy", StringComparison.Ordinal)
             && string.IsNullOrEmpty(uri.UserInfo)
             && uri.Port == 443;
     }
 
-    public static bool TryOpenPayPal(
+    public static bool TryOpenPayPalMe(
         out string? error,
         Action<ProcessStartInfo>? launcher = null)
     {
         error = null;
-        if (!IsTrustedPayPalUrl(PayPalSupportUrl))
+        if (!IsTrustedPayPalMeUrl(PayPalMeSupportUrl))
         {
-            error = "L'adresse de soutien PayPal n'est pas valide.";
+            error = "L'adresse PayPal.Me de soutien n'est pas valide.";
             return false;
         }
 
         try
         {
-            ProcessStartInfo startInfo = new(PayPalSupportUrl)
+            ProcessStartInfo startInfo = new(PayPalMeSupportUrl)
             {
                 UseShellExecute = true
             };

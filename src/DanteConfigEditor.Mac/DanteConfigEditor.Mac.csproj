@@ -7,10 +7,10 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AssemblyName>DanteConfigEditorV3.Mac</AssemblyName>
     <RootNamespace>DanteConfigEditor.Mac</RootNamespace>
-    <Version>3.6.0</Version>
-    <AssemblyVersion>3.6.0.0</AssemblyVersion>
-    <FileVersion>3.6.0.0</FileVersion>
-    <InformationalVersion>3.6</InformationalVersion>
+    <Version>3.6.1</Version>
+    <AssemblyVersion>3.6.1.0</AssemblyVersion>
+    <FileVersion>3.6.1.0</FileVersion>
+    <InformationalVersion>3.6.1</InformationalVersion>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <RuntimeIdentifiers>osx-arm64;osx-x64;win-x64</RuntimeIdentifiers>
   </PropertyGroup>
@@ -37,6 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <AvaloniaResource Include="..\..\Resources\Support\paypal-support-qr.png" Link="Assets\paypal-support-qr.png" />
     <None Include="..\..\docs\QuickStart_DanteConfigEditorV3_FR.pdf" Link="Docs\QuickStart_DanteConfigEditorV3_FR.pdf" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\docs\QuickStart_DanteConfigEditorV3_EN.pdf" Link="Docs\QuickStart_DanteConfigEditorV3_EN.pdf" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\docs\Notice_DanteConfigEditorV3_FR.pdf" Link="Docs\Notice_DanteConfigEditorV3_FR.pdf" CopyToOutputDirectory="PreserveNewest" />

@@ -157,10 +157,10 @@ public sealed class InstallerContractTests
         string packaging = File.ReadAllText(RepositoryFile("packaging", "macos", "build-macos.sh"));
         string workflow = File.ReadAllText(RepositoryFile(".github", "workflows", "macos-ci.yml"));
 
-        Assert.Contains("<InformationalVersion>3.6</InformationalVersion>", project, StringComparison.Ordinal);
+        Assert.Contains("<InformationalVersion>3.6.1</InformationalVersion>", project, StringComparison.Ordinal);
         Assert.Contains("<string>Dante Config Editor V3.6</string>", plist, StringComparison.Ordinal);
         Assert.Contains("<string>fr.mamat.danteconfigeditor.v36</string>", plist, StringComparison.Ordinal);
-        Assert.Contains("<string>3.6.0</string>", plist, StringComparison.Ordinal);
+        Assert.Contains("<string>3.6.1</string>", plist, StringComparison.Ordinal);
         Assert.Contains("Dante Config Editor V3.6.app", packaging, StringComparison.Ordinal);
         Assert.Contains("DanteConfigEditorV3_6_macOS_", packaging, StringComparison.Ordinal);
         Assert.Contains("shasum -a 256 \"$DMG_NAME\"", packaging, StringComparison.Ordinal);

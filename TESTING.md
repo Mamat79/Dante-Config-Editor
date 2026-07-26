@@ -5,7 +5,7 @@
 Périmètre :
 
 - branche : `v3.6` ;
-- ajout PayPal uniquement, sans GitHub Sponsors dans cette étape ;
+- affichage local du QR PayPal et lien PayPal.Me validé, sans paiement intégré ;
 - aucun SDK de paiement, formulaire intégré, WebView, télémétrie ou connexion réseau au démarrage ;
 - aucun XML de production ni code de modification Dante changé.
 
@@ -14,9 +14,9 @@ Résultats :
 - 283 tests Core/Windows réussis, 0 échec, 0 ignoré ;
 - 20 tests Avalonia/macOS sans écran réussis, 0 échec, 0 ignoré ;
 - builds Windows et macOS Release réussis, 0 warning, 0 erreur ;
-- URL PayPal exacte, HTTPS et limitée à `www.paypal.com`, ouverture par le navigateur système testée avec lanceur simulé ;
+- ressource QR identique sur Windows et macOS, avec ouverture explicite de PayPal.Me dans le navigateur système ;
 - rappel local testé : absent au premier lancement, visible au vingtième, report de 20 lancements, désactivation définitive, récupération après fichier de préférence corrompu et absence pendant les tests ;
-- GitHub Funding vérifié avec le seul lien PayPal approuvé ;
+- GitHub Funding vérifié avec le seul lien PayPal.Me approuvé ;
 - fenêtre `Soutenir DCE` vérifiée dans l'application Windows installée en français et en anglais par l'arbre d'accessibilité, avec noms et descriptions de boutons ;
 - notices complètes FR/EN régénérées en 15 pages et dernière page rendue visuellement sans texte tronqué ni caractère accentué incorrect ;
 - installateur final : `67 812 681` octets, SHA-256 `C16EC7AD735EB7C3A8E105505CAD8A9414847AFFD0CDC72F14631D822295E39D` ;

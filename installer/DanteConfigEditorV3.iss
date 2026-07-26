@@ -1,5 +1,5 @@
 #define MyAppName "Dante Config Editor V3.6"
-#define MyAppVersion "3.6"
+#define MyAppVersion "3.6.1"
 #define MyAppPublisher "Mamat"
 #define MyAppExeName "DanteConfigEditorV3.exe"
 #define MyAppShortcutName "DCE V3.6"
@@ -26,7 +26,7 @@ PrivilegesRequired=admin
 ; La mise à niveau nettoie uniquement les anciens raccourcis V3.5 du profil courant.
 UsedUserAreasWarning=no
 UninstallDisplayIcon={app}\{#MyAppExeName}
-VersionInfoVersion=3.6.0
+VersionInfoVersion=3.6.1
 VersionInfoCompany={#MyAppPublisher}
 VersionInfoDescription=Dante Config Editor V3.6 installer
 VersionInfoProductName={#MyAppName}
@@ -57,6 +57,7 @@ Source: "{#SourceRoot}\docs\QuickStart_DanteConfigEditorV3_EN.pdf"; DestDir: "{a
 Source: "{#SourceRoot}\docs\Notice_DanteConfigEditorV3_FR.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourceRoot}\docs\Notice_DanteConfigEditorV3_EN.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourceRoot}\docs\SUPPORT_DCE.md"; DestDir: "{app}\docs"; Flags: ignoreversion
+Source: "{#SourceRoot}\Resources\Support\paypal-support-qr.png"; DestDir: "{app}\Resources\Support"; Flags: ignoreversion
 Source: "{#SourceRoot}\Resources\MachineBanks\Bundled\DCE Generic Roles 3.6\*"; DestDir: "{code:GetBundledBankDestination}"; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist; Check: ShouldInstallBundledBank
 Source: "{#SourceRoot}\Resources\MachineBanks\Bundled\DCE Community Devices 3.6\*"; DestDir: "{code:GetCommunityBankDestination}"; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist; Check: ShouldInstallCommunityBank
 

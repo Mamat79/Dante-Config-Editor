@@ -1,5 +1,15 @@
 # Changelog V3
 
+## 2026-07-26 - Version 3.6.1
+
+- La fenêtre `Soutenir DCE` affiche directement le QR PayPal fourni par Mamat
+  Leroy sur Windows et macOS.
+- Un bouton ouvre également la page PayPal.Me `MamatLeroy` sur ordinateur.
+- Suppression du bouton qui ouvrait une redirection PayPal inadaptée aux
+  navigateurs sur ordinateur.
+- La documentation de soutien GitHub explique le scan du QR sur téléphone.
+- Aucun paiement ni aucune donnée financière ne transitent par DCE.
+
 ## 2026-07-25 - Version 3.6 en développement
 
 - Audit complet de l'architecture, de la fidélité XML, des performances, des dépendances, des traductions et des risques documenté dans `AUDIT_V3_6.md`.
@@ -20,9 +30,9 @@
 - L'installateur Windows permet de choisir le dossier de banque actif et celui des banques fournies, sans écraser une banque existante.
 - Les modèles Yamaha QL1 et Rio1608-D2, Fohhn DI4.1000, Lake LM 44 et RME Digiface Dante sont distribués dans une banque communautaire assainie, proposée séparément par l'installateur Windows et incluse dans les DMG macOS.
 - La comparaison XML et ses résultats suivent maintenant la langue active sur Windows et macOS ; les libellés anglais TX/RX ont également été harmonisés.
-- Ajout d'une page bilingue `Soutenir DCE` dans `Sécurité et journal`, avec ouverture PayPal explicite dans le navigateur et sans paiement intégré.
+- Ajout d'une page bilingue `Soutenir DCE` dans `Sécurité et journal`, sans paiement intégré.
 - Ajout d'un rappel local facultatif après 20 lancements, reportable ou désactivable définitivement, sans télémétrie ni connexion au démarrage.
-- Ajout du lien PayPal dans GitHub Funding, le README français/anglais et les notices complètes.
+- Ajout de la page de soutien dans GitHub Funding, le README français/anglais et les notices complètes.
 - Suite portée à 283 tests Core/Windows et 20 tests Mac sans écran.
 - Aucun import V3.6 réel dans Dante Controller n'est revendiqué ; la création de projet et les rôles génériques restent à valider manuellement.
 

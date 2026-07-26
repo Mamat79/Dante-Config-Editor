@@ -24,16 +24,16 @@ public partial class SupportDceWindow : Window
         FreeTextBlock.Text = Text("Support.Free");
         SupportTextBlock.Text = Text("Support.PayPalDescription");
         OtherWaysTextBlock.Text = Text("Support.OtherWays");
-        PayPalButton.Content = Text("Support.PayPalButton");
+        PayPalMeButton.Content = Text("Support.PayPalMeButton");
         CloseButton.Content = Text("Support.Close");
-        AutomationProperties.SetName(PayPalButton, Text("Support.PayPalAutomation"));
-        AutomationProperties.SetHelpText(PayPalButton, Text("Support.PayPalHelp"));
+        AutomationProperties.SetName(PayPalMeButton, Text("Support.PayPalMeAutomation"));
+        AutomationProperties.SetHelpText(PayPalMeButton, Text("Support.PayPalMeHelp"));
         AutomationProperties.SetName(CloseButton, Text("Support.CloseAutomation"));
     }
 
-    private void PayPalButton_Click(object sender, RoutedEventArgs e)
+    private void PayPalMeButton_Click(object sender, RoutedEventArgs e)
     {
-        if (SupportLinksService.TryOpenPayPal(out string? error))
+        if (SupportLinksService.TryOpenPayPalMe(out string? error))
         {
             return;
         }

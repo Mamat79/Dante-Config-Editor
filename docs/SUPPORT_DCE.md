@@ -2,11 +2,18 @@
 
 Dante Config Editor reste entièrement gratuit et toutes ses fonctions sont disponibles sans contribution.
 
-Si DCE vous fait gagner du temps, vous pouvez soutenir son développement par PayPal :
+Si DCE vous fait gagner du temps, vous pouvez soutenir son développement en
+scannant ce QR code avec l'application PayPal de votre téléphone :
 
-**[Soutenir DCE avec PayPal](https://www.paypal.com/qrcodes/p2pqrc/EQYCCDK8XFN5Y)**
+![QR code PayPal de Mamat Leroy](../Resources/Support/paypal-support-qr.png)
 
-La page PayPal s'ouvre dans le navigateur habituel et affiche le nom public **Matthieu Leroy**. DCE n'intègre aucun paiement, ne transmet aucune donnée et n'effectue aucune connexion au démarrage.
+Le QR est affiché directement pour éviter une redirection PayPal inadaptée aux
+navigateurs sur ordinateur. DCE n'intègre aucun paiement, ne transmet aucune
+donnée financière et n'effectue aucune connexion au démarrage.
+
+Depuis un ordinateur, utilisez directement :
+
+**[Ouvrir PayPal.Me - MamatLeroy](https://www.paypal.com/paypalme/MamatLeroy)**
 
 Vous pouvez aussi aider gratuitement en ajoutant une étoile au [projet GitHub](https://github.com/Mamat79/DanteConfigEditorV3) ou en partageant un retour. Et si vous êtes vraiment fous, vous pouvez même faire les deux !
 
@@ -24,11 +31,18 @@ Le rappel facultatif intégré à l'application :
 
 Dante Config Editor remains completely free, and every feature is available without contributing.
 
-If DCE saves you time, you can support its development through PayPal:
+If DCE saves you time, you can support its development by scanning this QR code
+with the PayPal app on your phone:
 
-**[Support DCE with PayPal](https://www.paypal.com/qrcodes/p2pqrc/EQYCCDK8XFN5Y)**
+![Mamat Leroy's PayPal QR code](../Resources/Support/paypal-support-qr.png)
 
-The PayPal page opens in your usual browser and displays the public name **Matthieu Leroy**. DCE contains no payment system, sends no data, and performs no network request at startup.
+The QR code is displayed directly to avoid an unsuitable PayPal redirect in
+desktop browsers. DCE contains no payment system, sends no financial data, and
+performs no network request at startup.
+
+From a computer, use:
+
+**[Open PayPal.Me - MamatLeroy](https://www.paypal.com/paypalme/MamatLeroy)**
 
 You can also help for free by starring the [GitHub project](https://github.com/Mamat79/DanteConfigEditorV3) or sharing feedback. And if you are truly crazy, you can even do both!
 

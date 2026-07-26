@@ -1,10 +1,10 @@
-# Dante Config Editor V3.6 - développement
+# Dante Config Editor V3.6.1
 
 [English release notes](RELEASE_NOTES_EN.md)
 
 ## Statut
 
-V3.6 est une version de développement Windows et macOS issue de la V3.5. Dante Config Editor reste un outil tiers non officiel Audinate. Travaillez sur une copie et validez toujours le XML généré par un import dans la version de Dante Controller réellement utilisée.
+V3.6.1 corrige l'écran de soutien de la V3.6 sur Windows et macOS. Dante Config Editor reste un outil tiers non officiel Audinate. Travaillez sur une copie et validez toujours le XML généré par un import dans la version de Dante Controller réellement utilisée.
 
 ## Sécurité et fidélité XML
 
@@ -33,7 +33,7 @@ V3.6 est une version de développement Windows et macOS issue de la V3.5. Dante 
 - Commandes équivalentes Windows/macOS pour dupliquer, administrer la banque, ajouter un modèle et créer un projet.
 - Les comportements existants de patch, zoom, renommage, Entrée, Tab et Maj+Tab restent couverts.
 - La comparaison XML, ses statuts et ses résultats sont désormais réellement affichés en anglais lorsque cette langue est active, sur Windows et macOS.
-- `Soutenir DCE` est disponible dans `Sécurité et journal`, en français et en anglais, avec ouverture PayPal dans le navigateur habituel.
+- `Soutenir DCE` est disponible dans `Sécurité et journal`, en français et en anglais, avec le QR PayPal et un bouton PayPal.Me pour ordinateur.
 - Le rappel facultatif apparaît après 20 lancements, peut être reporté ou désactivé définitivement et reste strictement local, sans télémétrie ni connexion au démarrage.
 
 ## Validation automatisée

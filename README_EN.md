@@ -344,7 +344,10 @@ https://github.com/Mamat79/DanteConfigEditorV3
 
 Dante Config Editor remains completely free, and every feature is available without contributing.
 
-If DCE saves you time, you can **[support its development through PayPal](https://www.paypal.com/qrcodes/p2pqrc/EQYCCDK8XFN5Y)**. The page opens in your usual browser; the application contains no payment system and performs no network request at startup.
+If DCE saves you time, you can **[support its development by scanning the
+PayPal QR code](docs/SUPPORT_DCE.md)**. The QR code is displayed directly in
+DCE and a PayPal.Me button is available on computers; the application contains
+no payment system and performs no network request at startup.
 
 You can also help for free by starring the GitHub project or sharing feedback. And if you are truly crazy, you can even do both!
 

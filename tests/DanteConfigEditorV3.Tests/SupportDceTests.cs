@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Security.Cryptography;
 using DanteConfigEditor.Services;
 
 namespace DanteConfigEditorV3.Tests;
@@ -6,43 +7,51 @@ namespace DanteConfigEditorV3.Tests;
 public sealed class SupportDceTests
 {
     [Fact]
-    public void PayPalSupportLinkIsExactHttpsAndRestrictedToPayPal()
+    public void PayPalQrAssetIsTheApprovedImage()
     {
+        string path = RepositoryFile("Resources", "Support", "paypal-support-qr.png");
+        byte[] bytes = File.ReadAllBytes(path);
+
+        Assert.Equal([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A], bytes[..8]);
         Assert.Equal(
-            "https://www.paypal.com/qrcodes/p2pqrc/EQYCCDK8XFN5Y",
-            SupportLinksService.PayPalSupportUrl);
-        Assert.True(SupportLinksService.IsTrustedPayPalUrl(SupportLinksService.PayPalSupportUrl));
-        Assert.False(SupportLinksService.IsTrustedPayPalUrl("http://www.paypal.com/qrcodes/p2pqrc/EQYCCDK8XFN5Y"));
-        Assert.False(SupportLinksService.IsTrustedPayPalUrl("https://example.com/qrcodes/p2pqrc/EQYCCDK8XFN5Y"));
-        Assert.False(SupportLinksService.IsTrustedPayPalUrl("javascript:alert(1)"));
-        Assert.False(SupportLinksService.IsTrustedPayPalUrl("file:///tmp/paypal.html"));
+            "C9205EB4CDE2EF04A9944C6696DCF6007FD512C9400DEAABFB9FAA803638495C",
+            Convert.ToHexString(SHA256.HashData(bytes)));
     }
 
     [Fact]
-    public void PayPalSupportLinkUsesTheSystemBrowser()
+    public void PayPalMeLinkIsExactTrustedAndUsesTheSystemBrowser()
     {
-        ProcessStartInfo? captured = null;
+        Assert.Equal(
+            "https://www.paypal.com/paypalme/MamatLeroy",
+            SupportLinksService.PayPalMeSupportUrl);
+        Assert.True(SupportLinksService.IsTrustedPayPalMeUrl(SupportLinksService.PayPalMeSupportUrl));
+        Assert.False(SupportLinksService.IsTrustedPayPalMeUrl("http://www.paypal.com/paypalme/MamatLeroy"));
+        Assert.False(SupportLinksService.IsTrustedPayPalMeUrl("https://example.com/paypalme/MamatLeroy"));
+        Assert.False(SupportLinksService.IsTrustedPayPalMeUrl("https://www.paypal.com/qrcodes/managed/example"));
 
-        bool opened = SupportLinksService.TryOpenPayPal(
+        ProcessStartInfo? captured = null;
+        bool opened = SupportLinksService.TryOpenPayPalMe(
             out string? error,
             startInfo => captured = startInfo);
 
         Assert.True(opened);
         Assert.Null(error);
         Assert.NotNull(captured);
-        Assert.Equal(SupportLinksService.PayPalSupportUrl, captured!.FileName);
+        Assert.Equal(SupportLinksService.PayPalMeSupportUrl, captured!.FileName);
         Assert.True(captured.UseShellExecute);
     }
 
     [Fact]
-    public void PayPalSupportLinkReportsLauncherFailure()
+    public void SupportQrIsDeclaredForWindowsAndMac()
     {
-        bool opened = SupportLinksService.TryOpenPayPal(
-            out string? error,
-            _ => throw new InvalidOperationException("browser unavailable"));
+        string windowsProject = File.ReadAllText(RepositoryFile("DanteConfigEditorV3.csproj"));
+        string macProject = File.ReadAllText(RepositoryFile(
+            "src",
+            "DanteConfigEditor.Mac",
+            "DanteConfigEditor.Mac.csproj"));
 
-        Assert.False(opened);
-        Assert.Contains("browser unavailable", error, StringComparison.Ordinal);
+        Assert.Contains(@"Resources\Support\paypal-support-qr.png", windowsProject, StringComparison.Ordinal);
+        Assert.Contains(@"Assets\paypal-support-qr.png", macProject, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -129,11 +138,12 @@ public sealed class SupportDceTests
     }
 
     [Fact]
-    public void GitHubFundingUsesOnlyTheApprovedPayPalLink()
+    public void GitHubFundingUsesOnlyTheApprovedPayPalMeLink()
     {
         string funding = File.ReadAllText(RepositoryFile(".github", "FUNDING.yml"));
 
-        Assert.Contains(SupportLinksService.PayPalSupportUrl, funding, StringComparison.Ordinal);
+        Assert.Contains(SupportLinksService.PayPalMeSupportUrl, funding, StringComparison.Ordinal);
+        Assert.DoesNotContain("paypal.com/qrcodes", funding, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("github:", funding, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("patreon", funding, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("ko_fi", funding, StringComparison.OrdinalIgnoreCase);
@@ -152,13 +162,15 @@ public sealed class SupportDceTests
         Assert.Contains("x:Name=\"SupportDceButton\"", windowsXaml, StringComparison.Ordinal);
         Assert.Contains("x:Name=\"SupportReminderBorder\"", windowsXaml, StringComparison.Ordinal);
         Assert.Contains("SupportReminderSettingsService.IsAutomatedTestProcess()", windowsCode, StringComparison.Ordinal);
-        Assert.Contains("x:Name=\"PayPalButton\"", windowsDialog, StringComparison.Ordinal);
+        Assert.Contains("paypal-support-qr.png", windowsDialog, StringComparison.Ordinal);
+        Assert.Contains("PayPalMeButton", windowsDialog, StringComparison.Ordinal);
         Assert.DoesNotContain("WebBrowser", windowsDialog, StringComparison.OrdinalIgnoreCase);
 
         Assert.Contains("x:Name=\"SupportDceButton\"", macXaml, StringComparison.Ordinal);
         Assert.Contains("x:Name=\"SupportReminderBorder\"", macXaml, StringComparison.Ordinal);
         Assert.Contains("SupportReminderSettingsService.IsAutomatedTestProcess()", macCode, StringComparison.Ordinal);
-        Assert.Contains("x:Name=\"PayPalButton\"", macDialog, StringComparison.Ordinal);
+        Assert.Contains("paypal-support-qr.png", macDialog, StringComparison.Ordinal);
+        Assert.Contains("PayPalMeButton", macDialog, StringComparison.Ordinal);
         Assert.DoesNotContain("WebView", macDialog, StringComparison.OrdinalIgnoreCase);
 
         string installer = File.ReadAllText(RepositoryFile("installer", "DanteConfigEditorV3.iss"));
@@ -177,9 +189,10 @@ public sealed class SupportDceTests
         string english = File.ReadAllText(RepositoryFile("README_EN.md"));
 
         Assert.Contains("reste entièrement gratuit", french, StringComparison.Ordinal);
-        Assert.Contains(SupportLinksService.PayPalSupportUrl, french, StringComparison.Ordinal);
+        Assert.Contains("docs/SUPPORT_DCE.md", french, StringComparison.Ordinal);
+        Assert.Contains(SupportLinksService.PayPalMeSupportUrl, File.ReadAllText(RepositoryFile("docs", "SUPPORT_DCE.md")), StringComparison.Ordinal);
         Assert.Contains("remains completely free", english, StringComparison.Ordinal);
-        Assert.Contains(SupportLinksService.PayPalSupportUrl, english, StringComparison.Ordinal);
+        Assert.Contains("docs/SUPPORT_DCE.md", english, StringComparison.Ordinal);
     }
 
     private static string RepositoryFile(params string[] relativeParts)

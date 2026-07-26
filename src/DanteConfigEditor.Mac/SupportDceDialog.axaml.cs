@@ -31,13 +31,13 @@ internal sealed partial class SupportDceDialog : Window
         FindControl<TextBlock>("FreeText")!.Text = Text("Support.Free");
         FindControl<TextBlock>("SupportText")!.Text = Text("Support.PayPalDescription");
         FindControl<TextBlock>("OtherWaysText")!.Text = Text("Support.OtherWays");
-        FindControl<Button>("PayPalButton")!.Content = Text("Support.PayPalButton");
+        FindControl<Button>("PayPalMeButton")!.Content = Text("Support.PayPalMeButton");
         FindControl<Button>("CloseButton")!.Content = Text("Support.Close");
     }
 
-    private async void PayPalButton_Click(object? sender, RoutedEventArgs e)
+    private async void PayPalMeButton_Click(object? sender, RoutedEventArgs e)
     {
-        if (SupportLinksService.TryOpenPayPal(out string? error))
+        if (SupportLinksService.TryOpenPayPalMe(out string? error))
         {
             return;
         }
