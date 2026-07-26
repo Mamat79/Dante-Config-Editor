@@ -598,7 +598,7 @@ def full_guide(language: str) -> None:
                 [48, 122],
             ),
             para("14. Tests de non-régression", "h1"),
-            para("La suite V3.6 exécute 272 tests Core/Windows et 20 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la duplication, la banque de machines, la création expérimentale de projet, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch et la cohérence des traductions."),
+            para("La suite V3.6 exécute 283 tests Core/Windows et 20 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la duplication, la banque de machines, la création expérimentale de projet, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch, le soutien facultatif et la cohérence des traductions."),
             para("15. Limites connues", "h1"),
             *bullets([
                 "Aucun pilotage en temps réel et aucune communication avec les appareils.",
@@ -619,6 +619,14 @@ def full_guide(language: str) -> None:
                 f"Projet public : {GITHUB} - Crédit : By Mamat et ses agents.",
                 "small",
             ),
+            para("17. Soutenir DCE", "h1"),
+            para("Dante Config Editor reste entièrement gratuit et toutes ses fonctions sont disponibles sans contribution."),
+            *bullets([
+                "Le bouton Soutenir DCE se trouve dans Sécurité et journal.",
+                "PayPal s'ouvre dans le navigateur habituel ; aucun paiement n'est intégré à DCE et aucune connexion n'est effectuée au démarrage.",
+                "Le rappel local n'apparaît pas au premier lancement. Il peut être reporté de 20 lancements ou désactivé définitivement.",
+                "Une étoile sur GitHub ou un retour utilisateur aide aussi gratuitement. Et si vous êtes vraiment fous, vous pouvez même faire les deux !",
+            ]),
         ]
         bank_page = [
             para("Banque de machines et rôles génériques", "h1"),
@@ -665,7 +673,7 @@ def full_guide(language: str) -> None:
                     ["Import / Export > Rapports", "Rapports TXT/PDF, patchbooks TXT/CSV et topologie textuelle simple."],
                     ["Import / Export > Synoptique", "Emplacements, ordre, visibilité, zoom, reset et exports SVG/PDF."],
                     ["Santé du fichier", "Erreurs, avertissements, informations de patch et filtres de contrôle."],
-                    ["Sécurité et journal", "Validation, rapport final, compatibilité, historique, comparaison XML et notices."],
+                    ["Sécurité et journal", "Validation, rapport final, compatibilité, historique, comparaison XML, notices et soutien facultatif."],
                     ["Atomic Bomb", "Création hors ligne d'un exercice de dépannage configurable et annulable."],
                 ],
                 [54, 116],
@@ -894,7 +902,7 @@ def full_guide(language: str) -> None:
                 [48, 122],
             ),
             para("14. Regression tests", "h1"),
-            para("The V3.6 suite runs 272 Core/Windows tests and 20 headless Mac tests. Coverage includes XML guards, save and recovery, IPv4 interfaces, subscriptions, large presets, duplication, the machine bank, experimental project creation, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, and translation consistency."),
+            para("The V3.6 suite runs 283 Core/Windows tests and 20 headless Mac tests. Coverage includes XML guards, save and recovery, IPv4 interfaces, subscriptions, large presets, duplication, the machine bank, experimental project creation, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, optional support, and translation consistency."),
             para("15. Known limitations", "h1"),
             *bullets([
                 "No real-time Dante control and no communication with devices.",
@@ -915,6 +923,14 @@ def full_guide(language: str) -> None:
                 f"Public project: {GITHUB} - Credit: By Mamat et ses agents.",
                 "small",
             ),
+            para("17. Support DCE", "h1"),
+            para("Dante Config Editor remains completely free, and every feature is available without contributing."),
+            *bullets([
+                "The Support DCE button is available in Safety and log.",
+                "PayPal opens in the usual web browser; DCE contains no payment system and performs no network request at startup.",
+                "The local reminder does not appear on first launch. It can be postponed for 20 launches or disabled permanently.",
+                "Starring the GitHub project or sharing feedback also helps for free. And if you are truly crazy, you can even do both!",
+            ]),
         ]
         bank_page = [
             para("Machine bank and generic roles", "h1"),
@@ -961,7 +977,7 @@ def full_guide(language: str) -> None:
                     ["Import / Export > Reports", "TXT/PDF reports, TXT/CSV patchbooks, and a simple text topology."],
                     ["Import / Export > Synoptic", "Locations, order, visibility, zoom, reset, and SVG/PDF exports."],
                     ["File health", "Errors, warnings, subscription information, and review filters."],
-                    ["Safety and log", "Validation, final report, compatibility, history, XML comparison, and user guides."],
+                    ["Safety and log", "Validation, final report, compatibility, history, XML comparison, user guides, and optional support."],
                     ["Atomic Bomb", "Configurable, undoable, offline troubleshooting exercise generation."],
                 ],
                 [54, 116],

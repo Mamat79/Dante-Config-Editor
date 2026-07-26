@@ -41,6 +41,7 @@
     <None Include="..\..\docs\QuickStart_DanteConfigEditorV3_EN.pdf" Link="Docs\QuickStart_DanteConfigEditorV3_EN.pdf" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\docs\Notice_DanteConfigEditorV3_FR.pdf" Link="Docs\Notice_DanteConfigEditorV3_FR.pdf" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\docs\Notice_DanteConfigEditorV3_EN.pdf" Link="Docs\Notice_DanteConfigEditorV3_EN.pdf" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\docs\SUPPORT_DCE.md" Link="Docs\SUPPORT_DCE.md" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\Resources\ChannelLabelTemplates\DMT_LICENSE.txt" Link="DMT_LICENSE.txt" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

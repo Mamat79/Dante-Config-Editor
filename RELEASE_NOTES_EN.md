@@ -33,17 +33,19 @@ V3.6 is a Windows and macOS development version based on V3.5. Dante Config Edit
 - Equivalent Windows/macOS commands for duplication, bank administration, template insertion, and project creation.
 - Existing patch, zoom, rename, Enter, Tab, and Shift+Tab behaviors remain covered.
 - XML comparison, statuses, and results now follow the active language on both Windows and macOS.
+- `Support DCE` is available from `Safety and log` in French and English, with PayPal opening in the usual web browser.
+- The optional reminder appears after 20 launches, can be postponed or permanently disabled, and remains strictly local with no telemetry or startup network request.
 
 ## Automated validation
 
-- 272 Core/Windows tests passed.
+- 283 Core/Windows tests passed.
 - 20 headless Avalonia/macOS tests passed.
 - Windows and macOS Release builds completed without warnings.
 - The NuGet audit command reported no vulnerable packages.
 
 ## Distribution
 
-- Self-contained Windows x64 installer: `DanteConfigEditorV3_6_Installer.exe`, including .NET 8 and FR/EN guides.
+- Self-contained Windows x64 installer: `DanteConfigEditorV3_6_Installer.exe`, including .NET 8, FR/EN guides, and support documentation.
 - Separate choice of active-bank and included-bank folders; the generic and community banks can be selected independently without replacing existing banks.
 - macOS DMGs contain both bank archives in a `Machine Banks` folder.
 - V3.6 upgrades the V3.5 development line and leaves stable V3.4.2 untouched.

@@ -231,6 +231,26 @@ public static class LocalizationService
         ["ChannelLabel.Warning.UnsupportedDmtCharacters"] = "caractères non pris en charge par DMT/dLive",
         ["Ui.Placeholder.RecentFiles"] = "Fichiers récents",
 
+        ["Support.Title"] = "Soutenir DCE",
+        ["Support.Subtitle"] = "Un geste entièrement facultatif pour accompagner ce projet gratuit.",
+        ["Support.Free"] = "Dante Config Editor reste entièrement gratuit et toutes ses fonctions sont disponibles sans contribution.",
+        ["Support.PayPalDescription"] = "Si DCE vous fait gagner du temps, vous pouvez soutenir son développement par PayPal. La page sécurisée s’ouvrira dans votre navigateur habituel.",
+        ["Support.OtherWays"] = "Vous pouvez aussi aider gratuitement en ajoutant une étoile au projet GitHub ou en partageant un retour. Et si vous êtes vraiment fous, vous pouvez même faire les deux !",
+        ["Support.PayPalButton"] = "Soutenir avec PayPal",
+        ["Support.PayPalAutomation"] = "Soutenir DCE avec PayPal",
+        ["Support.PayPalHelp"] = "Ouvre la page PayPal dans le navigateur par défaut.",
+        ["Support.Close"] = "Fermer",
+        ["Support.CloseAutomation"] = "Fermer la fenêtre de soutien",
+        ["Support.OpenErrorTitle"] = "Ouverture de PayPal impossible",
+        ["Support.OpenError"] = "La page PayPal n’a pas pu être ouverte dans le navigateur.",
+        ["Support.Reminder"] = "DCE vous fait gagner du temps ? Vous pouvez soutenir son développement, sans aucune obligation.",
+        ["Support.Later"] = "Pas maintenant",
+        ["Support.Never"] = "Ne plus afficher",
+        ["Support.Tooltip"] = "Présente les moyens facultatifs de soutenir ce projet gratuit.",
+        ["Support.ReminderTooltip"] = "Affiche les moyens facultatifs de soutenir le projet.",
+        ["Support.LaterTooltip"] = "Masque ce rappel pendant 20 lancements.",
+        ["Support.NeverTooltip"] = "Désactive définitivement ce rappel local.",
+
         ["Blank"] = "(vide)"
     };
 
@@ -462,6 +482,26 @@ public static class LocalizationService
         ["ChannelLabel.Warning.MoreThanEightCharacters"] = "more than 8 characters",
         ["ChannelLabel.Warning.UnsupportedDmtCharacters"] = "characters not supported by DMT/dLive",
         ["Ui.Placeholder.RecentFiles"] = "Recent files",
+
+        ["Support.Title"] = "Support DCE",
+        ["Support.Subtitle"] = "A completely optional way to support this free project.",
+        ["Support.Free"] = "Dante Config Editor remains completely free, and every feature is available without contributing.",
+        ["Support.PayPalDescription"] = "If DCE saves you time, you can support its development through PayPal. The secure page will open in your usual web browser.",
+        ["Support.OtherWays"] = "You can also help for free by starring the GitHub project or sharing feedback. And if you are truly crazy, you can even do both!",
+        ["Support.PayPalButton"] = "Support with PayPal",
+        ["Support.PayPalAutomation"] = "Support DCE with PayPal",
+        ["Support.PayPalHelp"] = "Opens the PayPal page in the default web browser.",
+        ["Support.Close"] = "Close",
+        ["Support.CloseAutomation"] = "Close the support window",
+        ["Support.OpenErrorTitle"] = "Unable to open PayPal",
+        ["Support.OpenError"] = "The PayPal page could not be opened in the browser.",
+        ["Support.Reminder"] = "Does DCE save you time? You can support its development, with no obligation.",
+        ["Support.Later"] = "Not now",
+        ["Support.Never"] = "Do not show again",
+        ["Support.Tooltip"] = "Shows optional ways to support this free project.",
+        ["Support.ReminderTooltip"] = "Shows optional ways to support the project.",
+        ["Support.LaterTooltip"] = "Hides this reminder for 20 launches.",
+        ["Support.NeverTooltip"] = "Permanently disables this local reminder.",
 
         ["Blank"] = "(empty)"
     };

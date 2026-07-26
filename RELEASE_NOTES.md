@@ -33,17 +33,19 @@ V3.6 est une version de développement Windows et macOS issue de la V3.5. Dante 
 - Commandes équivalentes Windows/macOS pour dupliquer, administrer la banque, ajouter un modèle et créer un projet.
 - Les comportements existants de patch, zoom, renommage, Entrée, Tab et Maj+Tab restent couverts.
 - La comparaison XML, ses statuts et ses résultats sont désormais réellement affichés en anglais lorsque cette langue est active, sur Windows et macOS.
+- `Soutenir DCE` est disponible dans `Sécurité et journal`, en français et en anglais, avec ouverture PayPal dans le navigateur habituel.
+- Le rappel facultatif apparaît après 20 lancements, peut être reporté ou désactivé définitivement et reste strictement local, sans télémétrie ni connexion au démarrage.
 
 ## Validation automatisée
 
-- 272 tests Core/Windows réussis.
+- 283 tests Core/Windows réussis.
 - 20 tests Avalonia/macOS sans écran réussis.
 - Builds Windows et macOS Release sans warning.
 - Aucun package NuGet vulnérable signalé par la commande d'audit.
 
 ## Distribution
 
-- Installateur Windows x64 autonome : `DanteConfigEditorV3_6_Installer.exe`, runtime .NET 8 et notices FR/EN inclus.
+- Installateur Windows x64 autonome : `DanteConfigEditorV3_6_Installer.exe`, runtime .NET 8, notices FR/EN et aide au soutien inclus.
 - Choix du dossier de banque actif et du dossier des banques fournies ; les banques générique et communautaire sont sélectionnables séparément, sans remplacement des banques existantes.
 - Les DMG macOS contiennent les deux archives de banques dans un dossier `Machine Banks`.
 - La V3.6 met à niveau la ligne de développement V3.5 et laisse la V3.4.2 stable intacte.

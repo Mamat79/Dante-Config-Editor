@@ -32,6 +32,7 @@ public partial class MainWindow : Window
     private readonly HashSet<string> _lockedDeviceNames = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _warningDeviceNames = new(StringComparer.OrdinalIgnoreCase);
     private readonly DispatcherTimer _recoveryTimer;
+    private readonly SupportReminderSettingsService _supportReminderSettings = new();
     private CancellationTokenSource? _recoveryWriteCancellation;
     private string? _selectedWarningKey;
     private readonly LatencyChoice[] _latencies =
@@ -266,6 +267,7 @@ public partial class MainWindow : Window
         RefreshRecentFiles();
         RefreshAll();
         UpdateResponsiveConfigurationLayout(ActualWidth, ActualHeight);
+        InitializeSupportReminder();
     }
 
     private void OpenButton_Click(object sender, RoutedEventArgs e)
@@ -2746,6 +2748,83 @@ public partial class MainWindow : Window
     private void OpenFullNoticeButton_Click(object sender, RoutedEventArgs e)
     {
         OpenBundledDocument($"Notice_DanteConfigEditorV3_{DocumentLanguageSuffix()}.pdf");
+    }
+
+    private void SupportDceButton_Click(object sender, RoutedEventArgs e)
+    {
+        ShowSupportDceWindow();
+    }
+
+    private void SupportReminderOpenButton_Click(object sender, RoutedEventArgs e)
+    {
+        PostponeSupportReminder();
+        ShowSupportDceWindow();
+    }
+
+    private void SupportReminderLaterButton_Click(object sender, RoutedEventArgs e)
+    {
+        PostponeSupportReminder();
+    }
+
+    private void SupportReminderNeverButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            _supportReminderSettings.Suppress();
+        }
+        catch (Exception exception)
+        {
+            DiagnosticLogService.Default.Write("Support", "Impossible de mémoriser la désactivation du rappel.", exception);
+        }
+
+        SupportReminderBorder.Visibility = Visibility.Collapsed;
+    }
+
+    private void InitializeSupportReminder()
+    {
+        if (SupportReminderSettingsService.IsAutomatedTestProcess())
+        {
+            return;
+        }
+
+        try
+        {
+            string version = GetType().Assembly.GetName().Version?.ToString(2) ?? "3.6";
+            SupportReminderDecision decision = _supportReminderSettings.RegisterSuccessfulLaunch(version);
+            SupportReminderBorder.Visibility = decision.ShouldShow
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+        }
+        catch (Exception exception)
+        {
+            // Le rappel est accessoire : une préférence locale inaccessible
+            // ne doit jamais perturber l'ouverture de l'éditeur.
+            DiagnosticLogService.Default.Write("Support", "Rappel de soutien indisponible.", exception);
+            SupportReminderBorder.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    private void PostponeSupportReminder()
+    {
+        try
+        {
+            _supportReminderSettings.Postpone();
+        }
+        catch (Exception exception)
+        {
+            DiagnosticLogService.Default.Write("Support", "Impossible de reporter le rappel.", exception);
+        }
+
+        SupportReminderBorder.Visibility = Visibility.Collapsed;
+    }
+
+    private void ShowSupportDceWindow()
+    {
+        SupportDceWindow dialog = new(_language, ThemeToggleButton.IsChecked == true)
+        {
+            Owner = this
+        };
+        dialog.ShowDialog();
     }
 
     private void OpenDiagnosticLogsButton_Click(object sender, RoutedEventArgs e)

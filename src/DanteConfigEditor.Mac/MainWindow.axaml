@@ -12,7 +12,7 @@
         MinWidth="1120"
         MinHeight="720"
         WindowStartupLocation="CenterScreen">
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
         <Border Background="{DynamicResource PanelBrush}"
                 BorderBrush="{DynamicResource PanelBorderBrush}"
                 BorderThickness="0,0,0,1"
@@ -53,7 +53,37 @@
             </Grid>
         </Border>
 
-        <Grid Grid.Row="1" ColumnDefinitions="200,*">
+        <Border x:Name="SupportReminderBorder"
+                Grid.Row="1"
+                IsVisible="False"
+                Background="{DynamicResource PanelAltBrush}"
+                BorderBrush="{DynamicResource AccentBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="14,8">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="18">
+                <TextBlock x:Name="SupportReminderText"
+                           VerticalAlignment="Center"
+                           FontWeight="SemiBold"
+                           TextWrapping="Wrap"
+                           Text="DCE vous fait gagner du temps ? Vous pouvez soutenir son développement, sans aucune obligation." />
+                <WrapPanel Grid.Column="1">
+                    <Button x:Name="SupportReminderOpenButton"
+                            Margin="0,0,8,0"
+                            Classes="primary"
+                            Click="SupportReminderOpenButton_Click"
+                            ToolTip.Tip="Affiche les moyens facultatifs de soutenir le projet.">Soutenir DCE</Button>
+                    <Button x:Name="SupportReminderLaterButton"
+                            Margin="0,0,8,0"
+                            Click="SupportReminderLaterButton_Click"
+                            ToolTip.Tip="Masque ce rappel pendant 20 lancements.">Pas maintenant</Button>
+                    <Button x:Name="SupportReminderNeverButton"
+                            Click="SupportReminderNeverButton_Click"
+                            ToolTip.Tip="Désactive définitivement ce rappel local.">Ne plus afficher</Button>
+                </WrapPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="2" ColumnDefinitions="200,*">
             <Border x:Name="ProjectSidebar"
                     Grid.Column="0"
                     Background="{DynamicResource PanelBrush}"
@@ -563,6 +593,10 @@
                                 <Button Margin="0,0,8,8" Click="CompareButton_Click">Comparer XML</Button>
                                 <Button Margin="0,0,8,8" Click="QuickStartButton_Click">Quick start</Button>
                                 <Button Margin="0,0,8,8" Click="FullGuideButton_Click">Notice complète</Button>
+                                <Button x:Name="SupportDceButton"
+                                        Margin="0,0,8,8"
+                                        Click="SupportDceButton_Click"
+                                        ToolTip.Tip="Présente les moyens facultatifs de soutenir ce projet gratuit.">Soutenir DCE</Button>
                                 <Button x:Name="OpenDiagnosticLogsButton"
                                         Margin="0,0,8,8"
                                         Click="OpenDiagnosticLogsButton_Click">Ouvrir les journaux</Button>
@@ -648,7 +682,7 @@
             </TabControl>
         </Grid>
 
-        <Border Grid.Row="2"
+        <Border Grid.Row="3"
                 Background="{DynamicResource PanelBrush}"
                 BorderBrush="{DynamicResource PanelBorderBrush}"
                 BorderThickness="0,1,0,0"

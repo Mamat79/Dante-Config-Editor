@@ -1,0 +1,50 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="DanteConfigEditor.Mac.SupportDceDialog"
+        Width="620"
+        Height="440"
+        MinWidth="520"
+        MinHeight="390"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource AppBackgroundBrush}">
+    <Grid RowDefinitions="Auto,*,Auto" Margin="24" RowSpacing="18">
+        <StackPanel Spacing="6">
+            <TextBlock x:Name="TitleText"
+                       FontSize="24"
+                       FontWeight="SemiBold"
+                       TextWrapping="Wrap" />
+            <TextBlock x:Name="SubtitleText"
+                       Classes="muted"
+                       TextWrapping="Wrap" />
+        </StackPanel>
+
+        <Border Grid.Row="1" Classes="panel" Padding="18">
+            <StackPanel VerticalAlignment="Center" Spacing="14">
+                <TextBlock x:Name="FreeText"
+                           FontSize="15"
+                           TextWrapping="Wrap" />
+                <TextBlock x:Name="SupportText"
+                           TextWrapping="Wrap" />
+                <TextBlock x:Name="OtherWaysText"
+                           Classes="muted"
+                           TextWrapping="Wrap" />
+            </StackPanel>
+        </Border>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="10">
+            <Button x:Name="PayPalButton"
+                    Classes="primary"
+                    MinWidth="175"
+                    MinHeight="38"
+                    Click="PayPalButton_Click" />
+            <Button x:Name="CloseButton"
+                    MinWidth="100"
+                    MinHeight="38"
+                    Click="CloseButton_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

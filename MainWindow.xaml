@@ -412,6 +412,7 @@
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -505,8 +506,40 @@
             </Grid>
         </Border>
 
+        <Border x:Name="SupportReminderBorder"
+                Grid.Row="1"
+                Visibility="Collapsed"
+                Background="{DynamicResource SurfaceAltBrush}"
+                BorderBrush="{DynamicResource AccentBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="14,8"
+                AutomationProperties.Name="Rappel facultatif pour soutenir DCE">
+            <DockPanel LastChildFill="True">
+                <WrapPanel DockPanel.Dock="Right" Margin="18,0,0,0">
+                    <Button x:Name="SupportReminderOpenButton"
+                            Content="Soutenir DCE"
+                            Click="SupportReminderOpenButton_Click"
+                            ToolTip="Affiche les moyens facultatifs de soutenir le projet." />
+                    <Button x:Name="SupportReminderLaterButton"
+                            Content="Pas maintenant"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            Click="SupportReminderLaterButton_Click"
+                            ToolTip="Masque ce rappel pendant 20 lancements." />
+                    <Button x:Name="SupportReminderNeverButton"
+                            Content="Ne plus afficher"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            Click="SupportReminderNeverButton_Click"
+                            ToolTip="Désactive définitivement ce rappel local." />
+                </WrapPanel>
+                <TextBlock x:Name="SupportReminderTextBlock"
+                           VerticalAlignment="Center"
+                           FontWeight="SemiBold"
+                           Text="DCE vous fait gagner du temps ? Vous pouvez soutenir son développement, sans aucune obligation." />
+            </DockPanel>
+        </Border>
+
         <!-- Corps principal : navigation à gauche, onglets de travail à droite. -->
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="220" />
                 <ColumnDefinition Width="*" />
@@ -1716,6 +1749,11 @@
                                      Style="{StaticResource SecondaryButtonStyle}"
                                      Click="OpenFullNoticeButton_Click"
                                      ToolTip="Ouvre la notice complète PDF." />
+                             <Button x:Name="SupportDceButton"
+                                     Content="Soutenir DCE"
+                                     Style="{StaticResource SecondaryButtonStyle}"
+                                     Click="SupportDceButton_Click"
+                                     ToolTip="Présente les moyens facultatifs de soutenir ce projet gratuit." />
                              <Button Content="Ouvrir les journaux"
                                      Style="{StaticResource SecondaryButtonStyle}"
                                      Click="OpenDiagnosticLogsButton_Click"
@@ -1823,7 +1861,7 @@
 
         <!-- Une grille dédiée garantit que le crédit reste visible à droite.
              Le StatusBar natif compressait son dernier élément sur deux lignes. -->
-        <Border Grid.Row="2"
+        <Border Grid.Row="3"
                 MinHeight="34"
                 Background="{DynamicResource SurfaceBrush}"
                 BorderBrush="{DynamicResource BorderLineBrush}"

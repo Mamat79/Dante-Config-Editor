@@ -340,6 +340,16 @@ The macOS packaging process is documented in `MACOS_BUILD.md`.
 
 https://github.com/Mamat79/DanteConfigEditorV3
 
+## Support DCE
+
+Dante Config Editor remains completely free, and every feature is available without contributing.
+
+If DCE saves you time, you can **[support its development through PayPal](https://www.paypal.com/qrcodes/p2pqrc/EQYCCDK8XFN5Y)**. The page opens in your usual browser; the application contains no payment system and performs no network request at startup.
+
+You can also help for free by starring the GitHub project or sharing feedback. And if you are truly crazy, you can even do both!
+
+Details about the optional local reminder and privacy are available in **[Support DCE](docs/SUPPORT_DCE.md#support-dce)**.
+
 ## Credit
 
 **By Mamat**<br>

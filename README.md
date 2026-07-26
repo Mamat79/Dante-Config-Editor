@@ -489,6 +489,16 @@ Pour lancer les tests automatiques :
 - Tester le fichier final dans les outils Dante officiels avant exploitation.
 - L'application vérifie la cohérence du XML généré, mais la validation définitive doit être faite par un import dans Dante Controller avant toute utilisation en production.
 
+## Soutenir DCE
+
+Dante Config Editor reste entièrement gratuit et toutes ses fonctions sont disponibles sans contribution.
+
+Si DCE vous fait gagner du temps, vous pouvez **[soutenir son développement par PayPal](https://www.paypal.com/qrcodes/p2pqrc/EQYCCDK8XFN5Y)**. La page s'ouvre dans votre navigateur habituel ; aucun paiement n'est intégré à l'application et aucune connexion n'est effectuée au démarrage.
+
+Vous pouvez aussi aider gratuitement en ajoutant une étoile au projet GitHub ou en partageant un retour. Et si vous êtes vraiment fous, vous pouvez même faire les deux !
+
+Le détail du rappel local facultatif et de la confidentialité est disponible dans **[Soutenir DCE](docs/SUPPORT_DCE.md)**.
+
 ## Crédit
 
 **By Mamat**<br>

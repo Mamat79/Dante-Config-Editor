@@ -11,7 +11,6 @@
 - Commandes Windows et macOS pour la duplication, la banque, l'ajout de modèle, le nouveau projet et l'ouverture des journaux.
 - Journaux techniques quotidiens et messages de validation plus précis.
 - Corpus local de dix XML, 176 machines et 5 004 labels validé sans modifier les originaux.
-- Suite portée à 272 tests Core/Windows et 20 tests Mac sans écran.
 - Numéro d'application, installateur, paquets macOS, workflows et notices passés en V3.6.
 - Easy Patch conserve le point de départ et le nombre demandé après un clic immédiat afin que `PATCH 1:1` reste utilisable.
 - L'aperçu séparé du synoptique conserve désormais ses proportions à tous les niveaux de zoom.
@@ -21,6 +20,10 @@
 - L'installateur Windows permet de choisir le dossier de banque actif et celui des banques fournies, sans écraser une banque existante.
 - Les modèles Yamaha QL1 et Rio1608-D2, Fohhn DI4.1000, Lake LM 44 et RME Digiface Dante sont distribués dans une banque communautaire assainie, proposée séparément par l'installateur Windows et incluse dans les DMG macOS.
 - La comparaison XML et ses résultats suivent maintenant la langue active sur Windows et macOS ; les libellés anglais TX/RX ont également été harmonisés.
+- Ajout d'une page bilingue `Soutenir DCE` dans `Sécurité et journal`, avec ouverture PayPal explicite dans le navigateur et sans paiement intégré.
+- Ajout d'un rappel local facultatif après 20 lancements, reportable ou désactivable définitivement, sans télémétrie ni connexion au démarrage.
+- Ajout du lien PayPal dans GitHub Funding, le README français/anglais et les notices complètes.
+- Suite portée à 283 tests Core/Windows et 20 tests Mac sans écran.
 - Aucun import V3.6 réel dans Dante Controller n'est revendiqué ; la création de projet et les rôles génériques restent à valider manuellement.
 
 ## V3.5 - ajustements de renommage et d'ergonomie

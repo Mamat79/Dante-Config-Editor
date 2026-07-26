@@ -56,6 +56,7 @@ Source: "{#SourceRoot}\docs\QuickStart_DanteConfigEditorV3_FR.pdf"; DestDir: "{a
 Source: "{#SourceRoot}\docs\QuickStart_DanteConfigEditorV3_EN.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourceRoot}\docs\Notice_DanteConfigEditorV3_FR.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourceRoot}\docs\Notice_DanteConfigEditorV3_EN.pdf"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#SourceRoot}\docs\SUPPORT_DCE.md"; DestDir: "{app}\docs"; Flags: ignoreversion
 Source: "{#SourceRoot}\Resources\MachineBanks\Bundled\DCE Generic Roles 3.6\*"; DestDir: "{code:GetBundledBankDestination}"; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist; Check: ShouldInstallBundledBank
 Source: "{#SourceRoot}\Resources\MachineBanks\Bundled\DCE Community Devices 3.6\*"; DestDir: "{code:GetCommunityBankDestination}"; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist; Check: ShouldInstallCommunityBank
 

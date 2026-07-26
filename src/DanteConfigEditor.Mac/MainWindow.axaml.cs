@@ -46,6 +46,7 @@ public partial class MainWindow : Window
     };
 
     private readonly DispatcherTimer _recoveryTimer;
+    private readonly SupportReminderSettingsService _supportReminderSettings = new();
     private CancellationTokenSource? _recoveryCancellation;
     private DanteProject? _project;
     private UiLanguage _language;
@@ -87,6 +88,7 @@ public partial class MainWindow : Window
         FindControl<ComboBox>("LanguageCombo")!.SelectedIndex = _language == UiLanguage.English ? 1 : 0;
         ApplyLanguageToVisualTree();
         _initializing = false;
+        InitializeSupportReminder();
     }
 
     private void MainWindow_Closing(object? sender, WindowClosingEventArgs e)
@@ -1336,6 +1338,74 @@ public partial class MainWindow : Window
     private void FullGuideButton_Click(object? sender, RoutedEventArgs e)
     {
         OpenBundledDocument($"Notice_DanteConfigEditorV3_{DocumentLanguageSuffix()}.pdf");
+    }
+
+    private async void SupportDceButton_Click(object? sender, RoutedEventArgs e)
+    {
+        await SupportDceDialog.ShowAsync(this, _language);
+    }
+
+    private async void SupportReminderOpenButton_Click(object? sender, RoutedEventArgs e)
+    {
+        PostponeSupportReminder();
+        await SupportDceDialog.ShowAsync(this, _language);
+    }
+
+    private void SupportReminderLaterButton_Click(object? sender, RoutedEventArgs e)
+    {
+        PostponeSupportReminder();
+    }
+
+    private void SupportReminderNeverButton_Click(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            _supportReminderSettings.Suppress();
+        }
+        catch (Exception exception)
+        {
+            DiagnosticLogService.Default.Write("Support", "Unable to save support reminder preference.", exception);
+        }
+
+        FindControl<Border>("SupportReminderBorder")!.IsVisible = false;
+    }
+
+    private void InitializeSupportReminder()
+    {
+        if (SupportReminderSettingsService.IsAutomatedTestProcess())
+        {
+            return;
+        }
+
+        Border reminder = FindControl<Border>("SupportReminderBorder")!;
+        try
+        {
+            string version = GetType().Assembly.GetName().Version?.ToString(2) ?? "3.6";
+            reminder.IsVisible = _supportReminderSettings
+                .RegisterSuccessfulLaunch(version)
+                .ShouldShow;
+        }
+        catch (Exception exception)
+        {
+            // Le rappel reste strictement accessoire et ne doit jamais bloquer
+            // l'ouverture de l'application.
+            DiagnosticLogService.Default.Write("Support", "Support reminder unavailable.", exception);
+            reminder.IsVisible = false;
+        }
+    }
+
+    private void PostponeSupportReminder()
+    {
+        try
+        {
+            _supportReminderSettings.Postpone();
+        }
+        catch (Exception exception)
+        {
+            DiagnosticLogService.Default.Write("Support", "Unable to postpone support reminder.", exception);
+        }
+
+        FindControl<Border>("SupportReminderBorder")!.IsVisible = false;
     }
 
     private async void OpenDiagnosticLogsButton_Click(object? sender, RoutedEventArgs e)
