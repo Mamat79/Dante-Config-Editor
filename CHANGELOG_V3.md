@@ -19,7 +19,7 @@
 - Les notices FR/EN décrivent l'application immédiate d'Easy Patch et l'alerte optionnelle des RX déjà patchés.
 - Les banques complètes utilisent désormais explicitement le format d'échange `*.dce-bank.zip`, avec catalogue GitHub, archive générique 8x8/32x32 vérifiée et accès direct depuis Windows/macOS.
 - L'installateur Windows permet de choisir le dossier de banque actif et celui des banques fournies, sans écraser une banque existante.
-- Les modèles Yamaha QL1 et Fohhn DI4.1000 sont distribués dans une banque communautaire assainie, proposée séparément par l'installateur Windows et incluse dans les DMG macOS.
+- Les modèles Yamaha QL1 et Rio1608-D2, Fohhn DI4.1000, Lake LM 44 et RME Digiface Dante sont distribués dans une banque communautaire assainie, proposée séparément par l'installateur Windows et incluse dans les DMG macOS.
 - La comparaison XML et ses résultats suivent maintenant la langue active sur Windows et macOS ; les libellés anglais TX/RX ont également été harmonisés.
 - Aucun import V3.6 réel dans Dante Controller n'est revendiqué ; la création de projet et les rôles génériques restent à valider manuellement.
 

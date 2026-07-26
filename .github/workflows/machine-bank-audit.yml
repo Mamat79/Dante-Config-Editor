@@ -38,7 +38,7 @@ jobs:
             Resources/MachineBanks/Bundled `
             machine-banks/catalog.json `
             machine-banks/DCE_Generic_Roles_3_6.dce-bank.zip `
-            machine-banks/Yamaha_QL1_Fohhn_DI4_1000.dce-bank.zip
+            machine-banks/DCE_Community_Devices_3_6.dce-bank.zip
 
       - name: Restore bank tests
         run: dotnet restore ./tests/DanteConfigEditorV3.Tests/DanteConfigEditorV3.Tests.csproj

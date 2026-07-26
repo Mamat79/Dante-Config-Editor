@@ -23,7 +23,7 @@ V3.6 is a Windows and macOS development version based on V3.5. Dante Config Edit
 - Search, filters, edit, duplicate, confirmed delete, ZIP import/export, and complete bank backup/restore.
 - Bilingual GitHub catalog and verified `*.dce-bank.zip` archive for downloading or sharing a complete bank.
 - Included `DCE Generic Roles 3.6` bank with generic 8x8 and 32x32 roles and no hardware identity, network data, or subscription.
-- Optional illustrated `Yamaha QL1 + Fohhn DI4.1000` community bank, sanitized before distribution.
+- Optional illustrated and sanitized `DCE Community Devices 3.6` bank with Yamaha QL1 and Rio1608-D2, Fohhn DI4.1000, Lake LM 44, and RME Digiface Dante.
 - Transactional insertion of an independent instance from a template.
 - Experimental minimal 3.0.0 new project, empty or seeded from a template.
 
@@ -44,7 +44,7 @@ V3.6 is a Windows and macOS development version based on V3.5. Dante Config Edit
 ## Distribution
 
 - Self-contained Windows x64 installer: `DanteConfigEditorV3_6_Installer.exe`, including .NET 8 and FR/EN guides.
-- Separate choice of active-bank and included-bank folders; the generic and Yamaha/Fohhn banks can be selected independently without replacing existing banks.
+- Separate choice of active-bank and included-bank folders; the generic and community banks can be selected independently without replacing existing banks.
 - macOS DMGs contain both bank archives in a `Machine Banks` folder.
 - V3.6 upgrades the V3.5 development line and leaves stable V3.4.2 untouched.
 - macOS packages are planned for Apple Silicon and Intel under the V3.6 name.

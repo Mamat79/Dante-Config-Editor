@@ -56,12 +56,13 @@ The `GitHub banks` button opens the
 and training. They do not represent real hardware and contain no hardware
 identity, IP address, or subscription.
 
-The catalog and new installers also provide an illustrated community bank
-containing Yamaha QL1 and Fohhn DI4.1000 templates.
+The catalog and new installers also provide `DCE Community Devices 3.6`, an
+illustrated community bank containing Yamaha QL1 and Rio1608-D2, Fohhn
+DI4.1000, Lake LM 44, and RME Digiface Dante templates.
 
 The Windows installer separately asks for the active bank folder and the
 folder used for included banks. `DCE Generic Roles 3.6` and
-`Yamaha QL1 + Fohhn DI4.1000` can be selected independently. During an upgrade
+`DCE Community Devices 3.6` can be selected independently. During an upgrade
 the installer reuses the configured path, never changes an existing bank, and
 selects a new folder name if an included bank is already present.
 
@@ -168,7 +169,7 @@ The self-contained installer includes the required .NET 8 runtime, French and En
 
 The wizard lets users choose the active device-bank folder and the folder for
 included banks. Installing `DCE Generic Roles 3.6` and
-`Yamaha QL1 + Fohhn DI4.1000` is proposed by default on a first installation;
+`DCE Community Devices 3.6` is proposed by default on a first installation;
 each bank remains optional. An upgrade keeps the existing path and never
 replaces a bank.
 

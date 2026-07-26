@@ -3,10 +3,10 @@ $ErrorActionPreference = "Stop"
 $root = [System.IO.Path]::GetFullPath((Split-Path $PSScriptRoot -Parent))
 $bundledRoot = Join-Path $root "Resources\MachineBanks\Bundled"
 $genericBankRoot = Join-Path $bundledRoot "DCE Generic Roles 3.6"
-$communityBankRoot = Join-Path $bundledRoot "Yamaha QL1 + Fohhn DI4.1000"
+$communityBankRoot = Join-Path $bundledRoot "DCE Community Devices 3.6"
 $githubRoot = Join-Path $root "machine-banks"
 $genericArchivePath = Join-Path $githubRoot "DCE_Generic_Roles_3_6.dce-bank.zip"
-$communityArchivePath = Join-Path $githubRoot "Yamaha_QL1_Fohhn_DI4_1000.dce-bank.zip"
+$communityArchivePath = Join-Path $githubRoot "DCE_Community_Devices_3_6.dce-bank.zip"
 $catalogPath = Join-Path $githubRoot "catalog.json"
 $utf8 = [System.Text.UTF8Encoding]::new($false)
 $fixedDate = [DateTimeOffset]::Parse(
@@ -193,15 +193,38 @@ function Assert-CommunityBank {
     $expectedTemplates = @{
         "QL1" = @{
             manufacturer = "Yamaha Corporation"
+            model = "QL1"
             tx = 32
             rx = 32
             image = "image.jpg"
         }
         "DI4.1000" = @{
             manufacturer = "Fohhn"
+            model = "DI-AMP DAN"
             tx = 0
             rx = 4
             image = "image.png"
+        }
+        "LM 44 - 4 4RX" = @{
+            manufacturer = "Lake"
+            model = "LM 44"
+            tx = 0
+            rx = 4
+            image = "image.jpg"
+        }
+        "Rio1608-D2" = @{
+            manufacturer = "Yamaha Corporation"
+            model = "Rio1608-D2"
+            tx = 16
+            rx = 8
+            image = "image.jpg"
+        }
+        "Digiface Dante" = @{
+            manufacturer = "RME GmbH"
+            model = "Digiface Dante"
+            tx = 64
+            rx = 64
+            image = "image.jpg"
         }
     }
     $forbiddenXmlElements = @(
@@ -220,7 +243,16 @@ function Assert-CommunityBank {
 
     $templateDirectories = @(Get-ChildItem -LiteralPath $machinesPath -Directory)
     if ($templateDirectories.Count -ne $expectedTemplates.Count) {
-        throw "La banque communautaire doit contenir exactement deux modèles."
+        throw "Nombre inattendu de modèles dans la banque communautaire."
+    }
+    $manifestTemplateIds = @($manifest.templateIds | ForEach-Object {
+        [Guid]::Parse([string]$_).ToString("D")
+    })
+    $hasExpectedManifestIds =
+        ($manifestTemplateIds.Count -eq $expectedTemplates.Count) -and
+        (@($manifestTemplateIds | Sort-Object -Unique).Count -eq $expectedTemplates.Count)
+    if (-not $hasExpectedManifestIds) {
+        throw "Le manifeste de la banque communautaire contient des identifiants incohérents."
     }
 
     $seenNames = @()
@@ -247,12 +279,13 @@ function Assert-CommunityBank {
         $templateId = [Guid]::Parse([string]$metadata.templateId).ToString("D")
         $hasMatchingIdentity =
             ($templateDirectory.Name -eq $templateId) -and
-            (@($manifest.templateIds) -contains $templateId)
+            ($manifestTemplateIds -contains $templateId)
         if (-not $hasMatchingIdentity) {
             throw "Identifiant incohérent pour le modèle $($metadata.templateName)."
         }
         $hasExpectedMetadata =
             ($metadata.manufacturer -eq $expected.manufacturer) -and
+            ($metadata.model -eq $expected.model) -and
             ($metadata.txCount -eq $expected.tx) -and
             ($metadata.rxCount -eq $expected.rx) -and
             ($metadata.imageFileName -eq $expected.image)
@@ -372,14 +405,14 @@ $catalog = [ordered]@{
             descriptionEn = "Two generic 8x8 and 32x32 roles without hardware identity, network settings or subscriptions."
         },
         [ordered]@{
-            id = "yamaha-ql1-fohhn-di4-1000"
-            name = "Yamaha QL1 + Fohhn DI4.1000"
+            id = "dce-community-devices-3.6"
+            name = "DCE Community Devices 3.6"
             file = [System.IO.Path]::GetFileName($communityArchivePath)
             sha256 = $communityArchiveHash
             minimumDceVersion = "3.6"
             language = "fr-en"
-            descriptionFr = "Deux modèles illustrés : Yamaha QL1 (32 TX / 32 RX) et Fohhn DI4.1000 (0 TX / 4 RX), sans identité matérielle, réseau ni abonnement."
-            descriptionEn = "Two illustrated templates: Yamaha QL1 (32 Tx / 32 Rx) and Fohhn DI4.1000 (0 Tx / 4 Rx), without hardware identity, network settings or subscriptions."
+            descriptionFr = "Cinq modèles illustrés : Yamaha QL1 et Rio1608-D2, Fohhn DI4.1000, Lake LM 44 et RME Digiface Dante, sans identité matérielle, réseau ni abonnement."
+            descriptionEn = "Five illustrated templates: Yamaha QL1 and Rio1608-D2, Fohhn DI4.1000, Lake LM 44 and RME Digiface Dante, without hardware identity, network settings or subscriptions."
         }
     )
 }

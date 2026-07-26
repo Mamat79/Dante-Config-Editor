@@ -57,7 +57,7 @@ Source: "{#SourceRoot}\docs\QuickStart_DanteConfigEditorV3_EN.pdf"; DestDir: "{a
 Source: "{#SourceRoot}\docs\Notice_DanteConfigEditorV3_FR.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourceRoot}\docs\Notice_DanteConfigEditorV3_EN.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourceRoot}\Resources\MachineBanks\Bundled\DCE Generic Roles 3.6\*"; DestDir: "{code:GetBundledBankDestination}"; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist; Check: ShouldInstallBundledBank
-Source: "{#SourceRoot}\Resources\MachineBanks\Bundled\Yamaha QL1 + Fohhn DI4.1000\*"; DestDir: "{code:GetCommunityBankDestination}"; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist; Check: ShouldInstallCommunityBank
+Source: "{#SourceRoot}\Resources\MachineBanks\Bundled\DCE Community Devices 3.6\*"; DestDir: "{code:GetCommunityBankDestination}"; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist; Check: ShouldInstallCommunityBank
 
 [InstallDelete]
 Type: files; Name: "{app}\QuickStart_DanteConfigEditorV3.pdf"
@@ -264,8 +264,8 @@ begin
       False,
       False);
     BankOptionsPage.Add('Use the selected active-bank folder in DCE');
-    BankOptionsPage.Add('Install the DCE Generic Roles 3.6 bank');
-    BankOptionsPage.Add('Install the Yamaha QL1 + Fohhn DI4.1000 bank');
+    BankOptionsPage.Add('Install DCE Generic Roles 3.6');
+    BankOptionsPage.Add('Install DCE Community Devices 3.6');
   end
   else
   begin
@@ -286,8 +286,8 @@ begin
       False,
       False);
     BankOptionsPage.Add('Utiliser le dossier de banque active choisi dans DCE');
-    BankOptionsPage.Add('Installer la banque DCE Generic Roles 3.6');
-    BankOptionsPage.Add('Installer la banque Yamaha QL1 + Fohhn DI4.1000');
+    BankOptionsPage.Add('Installer DCE Generic Roles 3.6');
+    BankOptionsPage.Add('Installer DCE Community Devices 3.6');
   end;
 
   BankDirectoriesPage.Values[0] := ConfiguredMachineBankPath();
@@ -296,7 +296,7 @@ begin
   BankOptionsPage.Values[1] := not DirExists(
     AddBackslash(BankDirectoriesPage.Values[1]) + 'DCE Generic Roles 3.6');
   BankOptionsPage.Values[2] := not DirExists(
-    AddBackslash(BankDirectoriesPage.Values[1]) + 'Yamaha QL1 + Fohhn DI4.1000');
+    AddBackslash(BankDirectoriesPage.Values[1]) + 'DCE Community Devices 3.6');
 
   GithubLabel := TNewStaticText.Create(WizardForm);
   GithubLabel.Parent := WizardForm;
@@ -440,7 +440,7 @@ begin
   begin
     CommunityBankDestination := FindAvailableBankDestination(
       BundledBanksPath,
-      'Yamaha QL1 + Fohhn DI4.1000');
+      'DCE Community Devices 3.6');
   end;
 end;
 

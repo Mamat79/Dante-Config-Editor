@@ -13,14 +13,14 @@
       "descriptionEn": "Two generic 8x8 and 32x32 roles without hardware identity, network settings or subscriptions."
     },
     {
-      "id": "yamaha-ql1-fohhn-di4-1000",
-      "name": "Yamaha QL1 + Fohhn DI4.1000",
-      "file": "Yamaha_QL1_Fohhn_DI4_1000.dce-bank.zip",
-      "sha256": "16a0dfea68ab55b9d79658fe9c75201e7573d4b50d727afe1c108f5dcff881d6",
+      "id": "dce-community-devices-3.6",
+      "name": "DCE Community Devices 3.6",
+      "file": "DCE_Community_Devices_3_6.dce-bank.zip",
+      "sha256": "ecde3005ead3d5f8a234a82c65306939ce11fdf0625d4f1976c41813c64bd10c",
       "minimumDceVersion": "3.6",
       "language": "fr-en",
-      "descriptionFr": "Deux modèles illustrés : Yamaha QL1 (32 TX / 32 RX) et Fohhn DI4.1000 (0 TX / 4 RX), sans identité matérielle, réseau ni abonnement.",
-      "descriptionEn": "Two illustrated templates: Yamaha QL1 (32 Tx / 32 Rx) and Fohhn DI4.1000 (0 Tx / 4 Rx), without hardware identity, network settings or subscriptions."
+      "descriptionFr": "Cinq modèles illustrés : Yamaha QL1 et Rio1608-D2, Fohhn DI4.1000, Lake LM 44 et RME Digiface Dante, sans identité matérielle, réseau ni abonnement.",
+      "descriptionEn": "Five illustrated templates: Yamaha QL1 and Rio1608-D2, Fohhn DI4.1000, Lake LM 44 and RME Digiface Dante, without hardware identity, network settings or subscriptions."
     }
   ]
 }

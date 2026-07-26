@@ -178,7 +178,7 @@ de subscriptions. Le script produit à la fois la banque intégrée à
 l'installateur et son archive GitHub.
 
 Le même script vérifie puis archive de façon reproductible la banque
-communautaire `Yamaha QL1 + Fohhn DI4.1000`. Il contrôle les noms attendus, le
+communautaire `DCE Community Devices 3.6`. Il contrôle les noms attendus, le
 nombre de canaux, les images, les empreintes XML et l'absence d'identités,
 d'interfaces, d'adresses, de flows ou de subscriptions propres au projet
 source. Un échec de contrôle bloque la construction de l'installateur.
@@ -188,7 +188,7 @@ L'installateur Windows demande :
 1. le dossier de la banque active, mémorisé dans les réglages locaux ;
 2. le dossier réservé aux banques fournies ;
 3. si la banque générique doit être installée ;
-4. si la banque communautaire Yamaha/Fohhn doit être installée.
+4. si la banque communautaire doit être installée.
 
 Une banque fournie existante n'est jamais modifiée. Si l'utilisateur demande
 une nouvelle copie, l'installateur choisit un nom de dossier libre. Sur macOS,

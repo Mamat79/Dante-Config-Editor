@@ -461,7 +461,7 @@ public sealed class MachineBankV36Tests
             .GetProperty("banks")
             .EnumerateArray()
             .Single(item => item.GetProperty("id").GetString()
-                == "yamaha-ql1-fohhn-di4-1000");
+                == "dce-community-devices-3.6");
         string communityArchivePath = RepositoryFile(
             "machine-banks",
             communityEntry.GetProperty("file").GetString()!);
@@ -486,18 +486,27 @@ public sealed class MachineBankV36Tests
             "Resources",
             "MachineBanks",
             "Bundled",
-            "Yamaha QL1 + Fohhn DI4.1000");
+            "DCE Community Devices 3.6");
         MachineBankRepository installedCommunityRepository = new(installedCommunityPath);
         MachineTemplateMetadata[] installedCommunityTemplates = installedCommunityRepository
             .List()
             .OrderBy(item => item.TemplateName, StringComparer.Ordinal)
             .ToArray();
 
-        Assert.Equal(["DI4.1000", "QL1"], communityTemplates
+        Assert.Equal(
+            ["DI4.1000", "Digiface Dante", "LM 44 - 4 4RX", "QL1", "Rio1608-D2"],
+            communityTemplates
             .Select(item => item.TemplateName)
             .ToArray());
-        Assert.Equal([(0, 4), (32, 32)], communityTemplates
+        Assert.Equal(
+            [(0, 4), (64, 64), (0, 4), (32, 32), (16, 8)],
+            communityTemplates
             .Select(item => (item.TxCount, item.RxCount))
+            .ToArray());
+        Assert.Equal(
+            ["Fohhn", "RME GmbH", "Lake", "Yamaha Corporation", "Yamaha Corporation"],
+            communityTemplates
+            .Select(item => item.Manufacturer)
             .ToArray());
         Assert.Equal(
             communityTemplates.Select(item => item.TemplateId),

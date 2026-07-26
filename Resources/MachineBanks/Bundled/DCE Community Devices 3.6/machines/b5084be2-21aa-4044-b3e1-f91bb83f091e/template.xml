@@ -2,13 +2,8 @@
 <device>
         <captureInfo>
             <device_name />
-            <device_redundancy />
-            <device_switch_vlan />
-            <interface_ipv4_addresses />
             <device_samplerate />
-            <device_encoding />
             <device_unicast_latency />
-            <rtp />
             <clock />
             <clock_priority />
             <txchannel_names />
@@ -20,21 +15,16 @@
 
 
 
-        <manufacturer_id>466F68686E000000</manufacturer_id>
-        <manufacturer_name>Fohhn</manufacturer_name>
-        <model_id>444934416D700000</model_id>
-        <model_name>DI-AMP DAN</model_name>
-        <model_version>1.2.1</model_version>
-        <device_type>426B6C796E320000</device_type>
-        <device_type_string>Brooklyn II</device_type_string>
+        <manufacturer_id>4C616B6500000000</manufacturer_id>
+        <manufacturer_name>Lake</manufacturer_name>
+        <model_id>4C4D34340032306B</model_id>
+        <model_name>LM 44</model_name>
+        <model_version>3.86.0</model_version>
+        <device_type>4C616B6500000000</device_type>
         <friendly_name>MACHINE-TEMPLATE</friendly_name>
-        <redundancy value="false" />
-        <switch_vlan value="1" />
         <preferred_master value="false" />
         <samplerate>48000</samplerate>
-        <encoding>24</encoding>
-        <unicast_latency>250</unicast_latency>
-
+        <unicast_latency>1000</unicast_latency>
         <rxchannel danteId="1" mediaType="audio">
             <name>RX 1</name>
 
@@ -47,27 +37,17 @@
         </rxchannel>
         <rxchannel danteId="3" mediaType="audio">
             <name>RX 3</name>
-
-
         </rxchannel>
         <rxchannel danteId="4" mediaType="audio">
             <name>RX 4</name>
-
-
         </rxchannel>
-        <rtp>
-            <interop_mode>none</interop_mode>
-            <aes67_multicast_address_prefix>4014276608</aes67_multicast_address_prefix>
-        </rtp>
         <clock>
             <subdomain_name>_DFLT</subdomain_name>
-            <v1_unicast_delay_requests>false</v1_unicast_delay_requests>
-            <v2_unicast_delay_requests>false</v2_unicast_delay_requests>
-            <v1_enabled>true</v1_enabled>
+            <unicast_delay_requests>false</unicast_delay_requests>
+            <v1_enabled>false</v1_enabled>
             <v2_enabled>false</v2_enabled>
         </clock>
         <clock_priority>
-            <preferred>false</preferred>
-            <follower_only>false</follower_only>
+            <preferred>true</preferred>
         </clock_priority>
     </device>

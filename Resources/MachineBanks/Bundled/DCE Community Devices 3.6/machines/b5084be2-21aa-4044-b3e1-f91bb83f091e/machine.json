@@ -1,0 +1,19 @@
+{
+  "formatVersion": 1,
+  "templateId": "b5084be2-21aa-4044-b3e1-f91bb83f091e",
+  "templateName": "LM 44 - 4 4RX",
+  "manufacturer": "Lake",
+  "model": "LM 44",
+  "description": "",
+  "category": "Processeur",
+  "tags": [],
+  "txCount": 0,
+  "rxCount": 4,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "3.6",
+  "createdUtc": "2026-07-26T01:51:20.7559596+02:00",
+  "modifiedUtc": "2026-07-26T01:51:20.806026+02:00",
+  "templateSha256": "0CFB8A4B2977953A08738C4B1A2F0968C61A02FD88BAFD2741158C9E5C48BD50",
+  "imageFileName": "image.jpg"
+}

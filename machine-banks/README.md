@@ -18,9 +18,10 @@ ce dépôt ne constitue pas une validation d'import par Dante Controller.
 
 ### Banque communautaire
 
-- **Yamaha QL1 + Fohhn DI4.1000** : Yamaha QL1 avec 32 TX / 32 RX et Fohhn
-  DI4.1000 avec 0 TX / 4 RX. Les labels sont génériques et les deux modèles
-  incluent une image.
+- **DCE Community Devices 3.6** : Yamaha QL1 (32 TX / 32 RX), Yamaha
+  Rio1608-D2 (16 TX / 8 RX), Fohhn DI4.1000 (0 TX / 4 RX), Lake LM 44
+  (0 TX / 4 RX) et RME Digiface Dante (64 TX / 64 RX). Les labels sont
+  génériques et les cinq modèles incluent une image.
 
 Les identités matérielles, paramètres réseau et abonnements du projet source
 ont été retirés. Les images ont été fournies et autorisées à la publication par
@@ -40,7 +41,7 @@ validation matérielle ou d'un import confirmé dans Dante Controller.
 | Banque | Contenu | Téléchargement | SHA-256 |
 |---|---|---|---|
 | DCE Generic Roles 3.6 | Rôles génériques 8x8 et 32x32 | [Télécharger](DCE_Generic_Roles_3_6.dce-bank.zip) | `72e9fd378f08a39727f5490429712ce21c7bc5cb2937f2c4eafa0b87440ac0ca` |
-| Yamaha QL1 + Fohhn DI4.1000 | Deux modèles illustrés | [Télécharger](Yamaha_QL1_Fohhn_DI4_1000.dce-bank.zip) | `16a0dfea68ab55b9d79658fe9c75201e7573d4b50d727afe1c108f5dcff881d6` |
+| DCE Community Devices 3.6 | Cinq modèles illustrés | [Télécharger](DCE_Community_Devices_3_6.dce-bank.zip) | `ecde3005ead3d5f8a234a82c65306939ce11fdf0625d4f1976c41813c64bd10c` |
 
 ### Partager une banque
 
@@ -78,9 +79,10 @@ repository is not proof of a successful Dante Controller import.
 
 ### Community bank
 
-- **Yamaha QL1 + Fohhn DI4.1000**: Yamaha QL1 with 32 Tx / 32 Rx and Fohhn
-  DI4.1000 with 0 Tx / 4 Rx. Labels are generic and both templates include an
-  image.
+- **DCE Community Devices 3.6**: Yamaha QL1 (32 Tx / 32 Rx), Yamaha
+  Rio1608-D2 (16 Tx / 8 Rx), Fohhn DI4.1000 (0 Tx / 4 Rx), Lake LM 44
+  (0 Tx / 4 Rx), and RME Digiface Dante (64 Tx / 64 Rx). Labels are generic
+  and all five templates include an image.
 
 Hardware identities, network settings and source-project subscriptions were
 removed. The images were supplied and approved for publication by the
@@ -99,7 +101,7 @@ physical hardware or through a confirmed Dante Controller import.
 | Bank | Contents | Download | SHA-256 |
 |---|---|---|---|
 | DCE Generic Roles 3.6 | Generic 8x8 and 32x32 roles | [Download](DCE_Generic_Roles_3_6.dce-bank.zip) | `72e9fd378f08a39727f5490429712ce21c7bc5cb2937f2c4eafa0b87440ac0ca` |
-| Yamaha QL1 + Fohhn DI4.1000 | Two illustrated templates | [Download](Yamaha_QL1_Fohhn_DI4_1000.dce-bank.zip) | `16a0dfea68ab55b9d79658fe9c75201e7573d4b50d727afe1c108f5dcff881d6` |
+| DCE Community Devices 3.6 | Five illustrated templates | [Download](DCE_Community_Devices_3_6.dce-bank.zip) | `ecde3005ead3d5f8a234a82c65306939ce11fdf0625d4f1976c41813c64bd10c` |
 
 ### Share a bank
 
