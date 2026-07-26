@@ -1,6 +1,13 @@
 name: Machine-bank audit
 
 on:
+  push:
+    paths:
+      - ".github/workflows/machine-bank-audit.yml"
+      - "Resources/MachineBanks/Bundled/**"
+      - "machine-banks/**"
+      - "tools/Build-BundledMachineBanks.ps1"
+      - "tests/DanteConfigEditorV3.Tests/MachineBankV36Tests.cs"
   schedule:
     - cron: "17 5 * * 1"
   workflow_dispatch:
