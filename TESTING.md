@@ -1,4 +1,56 @@
-# Tests et historique V3
+# Tests et historique DCE
+
+## Validation performance et corpus 2026.1 du 2026-07-27
+
+Périmètre :
+
+- branche : `2026.1` ;
+- référence avant optimisation : `79d02b3` ;
+- moteur optimisé : `4971c0d` ;
+- corpus exclusivement synthétique et anonymisé ;
+- aucun XML de production ajouté au dépôt ;
+- aucun import Dante Controller exécuté avec cette révision précise.
+
+Résultats :
+
+- 364 tests Core/Windows réussis, 0 échec, 0 ignoré ;
+- 20 tests Avalonia/macOS sans écran réussis, 0 échec, 0 ignoré ;
+- build Windows Release réussi, 0 warning, 0 erreur ;
+- sept fixtures passent ouverture, validation, sauvegarde sans modification,
+  comparaison XML sémantique et réouverture ;
+- presets synthétiques 10, 50 et 200 machines, avec 64 TX et 64 RX par
+  machine, exécutés par le banc ;
+- à 200 machines, l'édition groupée passe de `317,410 ms` à `38,092 ms` et
+  ses allocations de `390,759 Mio` à `29,358 Mio` ;
+- à 200 machines, la validation passe de `86,948 ms` à `36,062 ms`.
+
+Rapports :
+
+- `docs/2026.1/PERFORMANCE_REPORT.md` ;
+- `docs/2026.1/COMPATIBILITY_CORPUS.md` ;
+- `docs/2026.1/DANTE_CONTROLLER_MANUAL_VALIDATION.md` ;
+- `COMPATIBILITY_MATRIX.md`.
+
+Commandes :
+
+```powershell
+dotnet test .\tests\DanteConfigEditorV3.Tests\DanteConfigEditorV3.Tests.csproj -c Release
+dotnet test .\tests\DanteConfigEditor.Mac.Tests\DanteConfigEditor.Mac.Tests.csproj -c Release
+dotnet build .\DanteConfigEditorV3.csproj -c Release
+dotnet run --project .\benchmarks\DanteConfigEditorV3.Benchmarks\DanteConfigEditorV3.Benchmarks.csproj -c Release -- --phase 2026.1 --commit 4971c0d --output .\benchmarks\results\2026.1.json
+```
+
+Le corpus réel facultatif est lancé uniquement depuis des copies locales :
+
+```powershell
+$env:DANTE_REAL_XML_ROOT = 'D:\chemin\vers\copies-anonymisees'
+$env:DANTE_REAL_XML_REQUIRED = '1'
+dotnet test .\tests\DanteConfigEditorV3.Tests\DanteConfigEditorV3.Tests.csproj -c Release --filter Category=LocalIntegration
+```
+
+La V3.6 a été validée par le mainteneur dans Dante Controller. Pour la sortie
+2026.1, la validation structurelle automatisée est acquise mais un nouvel
+import manuel reste à consigner avec la checklist dédiée.
 
 ## Validation du soutien facultatif V3.6 du 2026-07-26
 

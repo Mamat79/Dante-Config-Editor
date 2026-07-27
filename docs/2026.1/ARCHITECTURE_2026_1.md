@@ -98,6 +98,28 @@ catégorie, cible, détail technique et éventuel chemin XML. Le Centre de
 validation distingue toujours validation interne DCE et validation manuelle
 Dante Controller.
 
+## Indexation et caches
+
+`DanteProject` conserve des index dérivés du document courant :
+
+- machines par nom et par identité stable ;
+- RX par identité stable et Dante Id ;
+- TX par numéro et par label, sans masquer les labels ambigus.
+
+Un renommage groupé de TX met d'abord à jour les canaux, puis parcourt les RX
+une seule fois par machine source. Cette règle évite un rechargement complet du
+modèle après chaque canal et conserve une seule transaction annulable.
+
+Les résultats du garde-fou et de la validation sont mis en cache uniquement
+tant que le document ne change pas. L'événement `XDocument.Changed` invalide
+les index et les caches, y compris lorsqu'un test ou un adaptateur historique
+modifie directement le XML. Les résultats rendus aux appelants sont copiés :
+aucune vue ne peut altérer le cache partagé.
+
+Ces caches ne remplacent jamais la validation initiale. Ils évitent seulement
+de recalculer un résultat déjà obtenu sur la même révision du document. Les
+mesures et leurs limites sont consignées dans `PERFORMANCE_REPORT.md`.
+
 ## Flux de sauvegarde XML
 
 1. La session refuse l'action si le profil n'autorise pas la sauvegarde.
