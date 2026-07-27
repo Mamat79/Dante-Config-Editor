@@ -1,11 +1,13 @@
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Xml.Linq;
 
 namespace DanteConfigEditor.Models;
 
 public sealed record MachineTemplateMetadata
 {
-    public const int CurrentFormatVersion = 1;
+    public const int CurrentFormatVersion = 2;
 
     public int FormatVersion { get; init; } = CurrentFormatVersion;
 
@@ -40,6 +42,11 @@ public sealed record MachineTemplateMetadata
     public string TemplateSha256 { get; init; } = string.Empty;
 
     public string? ImageFileName { get; init; }
+
+    public string? ImageSha256 { get; init; }
+
+    [JsonExtensionData]
+    public Dictionary<string, JsonElement>? AdditionalData { get; init; }
 }
 
 public sealed class MachineTemplateCreateRequest

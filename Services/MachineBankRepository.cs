@@ -3,6 +3,7 @@ using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Xml;
 using System.Xml.Linq;
 using DanteConfigEditor.Models;
@@ -12,6 +13,9 @@ namespace DanteConfigEditor.Services;
 public sealed class MachineBankRepository
 {
     private const long MaximumImageBytes = 10 * 1024 * 1024;
+    private const int MaximumTemplateArchiveEntries = 16;
+    private const long MaximumTemplateArchiveEntryBytes = 25L * 1024 * 1024;
+    private const long MaximumTemplateArchiveBytes = 40L * 1024 * 1024;
     private static readonly UTF8Encoding Utf8WithoutBom = new(false);
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -31,6 +35,8 @@ public sealed class MachineBankRepository
     }
 
     public string RootPath { get; }
+
+    public int GetFormatVersion() => LoadOrCreateManifest().FormatVersion;
 
     public MachineTemplateMetadata Save(MachineTemplatePackage package)
     {
@@ -56,20 +62,11 @@ public sealed class MachineBankRepository
         Directory.CreateDirectory(stagingDirectory);
         try
         {
-            string templatePath = Path.Combine(stagingDirectory, "template.xml");
-            WriteXml(package.TemplateDocument, templatePath);
-            string templateHash = ComputeSha256(File.ReadAllBytes(templatePath));
-            string? imageFileName = CopyImageIntoDirectory(package.ImageSourcePath, stagingDirectory);
+            MachineTemplateMetadata savedMetadata = WritePackageToDirectory(
+                package,
+                stagingDirectory,
+                manifest.FormatVersion);
             DateTimeOffset now = DateTimeOffset.UtcNow;
-            MachineTemplateMetadata savedMetadata = package.Metadata with
-            {
-                FormatVersion = MachineTemplateMetadata.CurrentFormatVersion,
-                ModifiedUtc = now,
-                CreatedUtc = package.Metadata.CreatedUtc == default ? now : package.Metadata.CreatedUtc,
-                TemplateSha256 = templateHash,
-                ImageFileName = imageFileName
-            };
-            WriteJson(Path.Combine(stagingDirectory, "machine.json"), savedMetadata);
 
             string finalDirectory = GetTemplateDirectory(templateId);
             Directory.Move(stagingDirectory, finalDirectory);
@@ -126,7 +123,10 @@ public sealed class MachineBankRepository
         Directory.CreateDirectory(stagingDirectory);
         try
         {
-            MachineTemplateMetadata savedMetadata = WritePackageToDirectory(package, stagingDirectory);
+            MachineTemplateMetadata savedMetadata = WritePackageToDirectory(
+                package,
+                stagingDirectory,
+                manifest.FormatVersion);
             Directory.Move(currentDirectory, rollbackDirectory);
             try
             {
@@ -168,14 +168,20 @@ public sealed class MachineBankRepository
             throw new FileNotFoundException($"Le modèle {templateId:D} n'est pas référencé dans la banque.");
         }
 
-        return LoadPackageFromDirectory(GetTemplateDirectory(templateId), expectedTemplateId: templateId);
+        return LoadPackageFromDirectory(
+            GetTemplateDirectory(templateId),
+            expectedTemplateId: templateId,
+            expectedFormatVersion: manifest.FormatVersion);
     }
 
     public IReadOnlyList<MachineTemplateMetadata> List()
     {
         MachineBankManifest manifest = LoadOrCreateManifest();
         return manifest.TemplateIds
-            .Select(templateId => LoadMetadataFromDirectory(GetTemplateDirectory(templateId), templateId))
+            .Select(templateId => LoadMetadataFromDirectory(
+                GetTemplateDirectory(templateId),
+                templateId,
+                manifest.FormatVersion))
             .OrderBy(metadata => metadata.Manufacturer, StringComparer.OrdinalIgnoreCase)
             .ThenBy(metadata => metadata.Model, StringComparer.OrdinalIgnoreCase)
             .ThenBy(metadata => metadata.TemplateName, StringComparer.OrdinalIgnoreCase)
@@ -266,12 +272,13 @@ public sealed class MachineBankRepository
 
         Directory.CreateDirectory(RootPath);
         Directory.CreateDirectory(MachinesPath);
-        string stagingDirectory = BuildStagingDirectory();
-        Directory.CreateDirectory(stagingDirectory);
+        string extractionDirectory = BuildStagingDirectory();
+        string preparedDirectory = BuildStagingDirectory();
+        Directory.CreateDirectory(extractionDirectory);
         try
         {
-            ExtractArchiveSafely(archivePath, stagingDirectory);
-            MachineTemplatePackage package = LoadPackageFromDirectory(stagingDirectory);
+            ExtractArchiveSafely(archivePath, extractionDirectory);
+            MachineTemplatePackage package = LoadPackageFromDirectory(extractionDirectory);
             MachineBankManifest manifest = LoadOrCreateManifest();
             Guid templateId = package.Metadata.TemplateId;
             string finalDirectory = GetTemplateDirectory(templateId);
@@ -281,7 +288,12 @@ public sealed class MachineBankRepository
                     $"Le modèle {templateId:D} existe déjà. L'import n'a remplacé aucun fichier.");
             }
 
-            Directory.Move(stagingDirectory, finalDirectory);
+            Directory.CreateDirectory(preparedDirectory);
+            MachineTemplateMetadata importedMetadata = WritePackageToDirectory(
+                package,
+                preparedDirectory,
+                manifest.FormatVersion);
+            Directory.Move(preparedDirectory, finalDirectory);
             try
             {
                 manifest.TemplateIds.Add(templateId);
@@ -298,13 +310,17 @@ public sealed class MachineBankRepository
                 throw;
             }
 
-            return package.Metadata;
+            return importedMetadata;
         }
         finally
         {
-            if (Directory.Exists(stagingDirectory))
+            if (Directory.Exists(extractionDirectory))
             {
-                Directory.Delete(stagingDirectory, recursive: true);
+                Directory.Delete(extractionDirectory, recursive: true);
+            }
+            if (Directory.Exists(preparedDirectory))
+            {
+                Directory.Delete(preparedDirectory, recursive: true);
             }
         }
     }
@@ -340,7 +356,7 @@ public sealed class MachineBankRepository
                 throw new MachineBankCorruptionException("Le fichier bank.json est vide.");
             }
 
-            MachineBankMigrationService.EnsureCurrentBankFormat(manifest.FormatVersion);
+            MachineBankMigrationService.EnsureSupportedBankFormat(manifest.FormatVersion);
 
             if (manifest.BankId == Guid.Empty)
             {
@@ -398,7 +414,8 @@ public sealed class MachineBankRepository
 
     private MachineTemplatePackage LoadPackageFromDirectory(
         string directory,
-        Guid? expectedTemplateId = null)
+        Guid? expectedTemplateId = null,
+        int? expectedFormatVersion = null)
     {
         try
         {
@@ -418,7 +435,7 @@ public sealed class MachineBankRepository
                 throw new MachineBankCorruptionException("Le fichier machine.json est vide.");
             }
 
-            ValidateMetadata(metadata, expectedTemplateId);
+            ValidateMetadata(metadata, expectedTemplateId, expectedFormatVersion);
             byte[] templateBytes = File.ReadAllBytes(templatePath);
             string actualHash = ComputeSha256(templateBytes);
             if (!string.Equals(actualHash, metadata.TemplateSha256, StringComparison.OrdinalIgnoreCase))
@@ -435,12 +452,20 @@ public sealed class MachineBankRepository
             string? imagePath = null;
             if (!string.IsNullOrWhiteSpace(metadata.ImageFileName))
             {
+                ValidateStoredImageFileName(metadata.ImageFileName);
                 imagePath = Path.Combine(directory, metadata.ImageFileName);
                 if (!File.Exists(imagePath))
                 {
                     throw new MachineBankCorruptionException(
                         $"L'image déclarée '{metadata.ImageFileName}' est absente du modèle.");
                 }
+                ValidateStoredImage(imagePath, metadata);
+            }
+            else if (metadata.FormatVersion >= 2
+                     && !string.IsNullOrWhiteSpace(metadata.ImageSha256))
+            {
+                throw new MachineBankCorruptionException(
+                    "Le modèle déclare une empreinte d'image sans image associée.");
             }
 
             return new MachineTemplatePackage(metadata, templateDocument, storedImagePath: imagePath);
@@ -459,7 +484,8 @@ public sealed class MachineBankRepository
 
     private static MachineTemplateMetadata LoadMetadataFromDirectory(
         string directory,
-        Guid expectedTemplateId)
+        Guid expectedTemplateId,
+        int expectedFormatVersion)
     {
         try
         {
@@ -479,7 +505,7 @@ public sealed class MachineBankRepository
                     $"Le fichier machine.json du modèle {expectedTemplateId:D} est vide.");
             }
 
-            ValidateMetadata(metadata, expectedTemplateId);
+            ValidateMetadata(metadata, expectedTemplateId, expectedFormatVersion);
             return metadata;
         }
         catch (MachineBankCorruptionException)
@@ -496,9 +522,17 @@ public sealed class MachineBankRepository
 
     private static void ValidateMetadata(
         MachineTemplateMetadata metadata,
-        Guid? expectedTemplateId)
+        Guid? expectedTemplateId,
+        int? expectedFormatVersion = null)
     {
-        MachineBankMigrationService.EnsureCurrentTemplateFormat(metadata.FormatVersion);
+        MachineBankMigrationService.EnsureSupportedTemplateFormat(metadata.FormatVersion);
+        if (expectedFormatVersion.HasValue
+            && metadata.FormatVersion != expectedFormatVersion.Value)
+        {
+            throw new MachineBankCorruptionException(
+                $"Le modèle utilise le format {metadata.FormatVersion}, "
+                + $"mais la banque déclare le format {expectedFormatVersion.Value}.");
+        }
 
         if (metadata.TemplateId == Guid.Empty
             || (expectedTemplateId.HasValue && metadata.TemplateId != expectedTemplateId.Value))
@@ -577,20 +611,23 @@ public sealed class MachineBankRepository
 
     private static MachineTemplateMetadata WritePackageToDirectory(
         MachineTemplatePackage package,
-        string directory)
+        string directory,
+        int targetFormatVersion)
     {
+        MachineBankMigrationService.EnsureSupportedBankFormat(targetFormatVersion);
         string templatePath = Path.Combine(directory, "template.xml");
         WriteXml(package.TemplateDocument, templatePath);
         string templateHash = ComputeSha256(File.ReadAllBytes(templatePath));
-        string? imageFileName = CopyImageIntoDirectory(package.ImageSourcePath, directory);
+        StoredImage? image = CopyImageIntoDirectory(package.ImagePath, directory);
         DateTimeOffset now = DateTimeOffset.UtcNow;
         MachineTemplateMetadata savedMetadata = package.Metadata with
         {
-            FormatVersion = MachineTemplateMetadata.CurrentFormatVersion,
+            FormatVersion = targetFormatVersion,
             ModifiedUtc = now,
             CreatedUtc = package.Metadata.CreatedUtc == default ? now : package.Metadata.CreatedUtc,
             TemplateSha256 = templateHash,
-            ImageFileName = imageFileName
+            ImageFileName = image?.FileName,
+            ImageSha256 = targetFormatVersion >= 2 ? image?.Sha256 : null
         };
         WriteJson(Path.Combine(directory, "machine.json"), savedMetadata);
         return savedMetadata;
@@ -633,7 +670,9 @@ public sealed class MachineBankRepository
         File.WriteAllText(path, json + Environment.NewLine, Utf8WithoutBom);
     }
 
-    private static string? CopyImageIntoDirectory(string? sourcePath, string destinationDirectory)
+    private static StoredImage? CopyImageIntoDirectory(
+        string? sourcePath,
+        string destinationDirectory)
     {
         if (string.IsNullOrWhiteSpace(sourcePath))
         {
@@ -662,8 +701,64 @@ public sealed class MachineBankRepository
         ValidateImageSignature(fullSourcePath, extension);
         string normalizedExtension = extension == ".jpeg" ? ".jpg" : extension;
         string imageFileName = "image" + normalizedExtension;
-        File.Copy(fullSourcePath, Path.Combine(destinationDirectory, imageFileName), overwrite: false);
-        return imageFileName;
+        string destinationPath = Path.Combine(destinationDirectory, imageFileName);
+        File.Copy(fullSourcePath, destinationPath, overwrite: false);
+        return new StoredImage(
+            imageFileName,
+            ComputeSha256(File.ReadAllBytes(destinationPath)));
+    }
+
+    private static void ValidateStoredImageFileName(string imageFileName)
+    {
+        string extension = Path.GetExtension(imageFileName).ToLowerInvariant();
+        if (!string.Equals(
+                Path.GetFileName(imageFileName),
+                imageFileName,
+                StringComparison.Ordinal)
+            || !imageFileName.StartsWith("image.", StringComparison.OrdinalIgnoreCase)
+            || extension is not ".png" and not ".jpg" and not ".webp")
+        {
+            throw new MachineBankCorruptionException(
+                $"Nom d'image non sûr ou format non pris en charge : {imageFileName}.");
+        }
+    }
+
+    private static void ValidateStoredImage(
+        string imagePath,
+        MachineTemplateMetadata metadata)
+    {
+        string extension = Path.GetExtension(imagePath).ToLowerInvariant();
+        try
+        {
+            ValidateImageSignature(imagePath, extension);
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new MachineBankCorruptionException(
+                $"L'image du modèle '{metadata.TemplateName}' est invalide.",
+                ex);
+        }
+
+        if (metadata.FormatVersion < 2)
+        {
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(metadata.ImageSha256))
+        {
+            throw new MachineBankCorruptionException(
+                $"L'empreinte de l'image du modèle '{metadata.TemplateName}' est absente.");
+        }
+
+        string actualHash = ComputeSha256(File.ReadAllBytes(imagePath));
+        if (!string.Equals(
+                actualHash,
+                metadata.ImageSha256,
+                StringComparison.OrdinalIgnoreCase))
+        {
+            throw new MachineBankCorruptionException(
+                $"Contrôle SHA-256 invalide pour l'image de {metadata.TemplateName}. "
+                + $"Attendu {metadata.ImageSha256}, obtenu {actualHash}.");
+        }
     }
 
     private static void ValidateImageSignature(string path, string extension)
@@ -696,16 +791,49 @@ public sealed class MachineBankRepository
 
     private static void ExtractArchiveSafely(string archivePath, string destinationDirectory)
     {
-        string destinationRoot = Path.GetFullPath(destinationDirectory).TrimEnd(Path.DirectorySeparatorChar)
+        StringComparison pathComparison = OperatingSystem.IsWindows()
+            ? StringComparison.OrdinalIgnoreCase
+            : StringComparison.Ordinal;
+        string destinationRoot = Path.GetFullPath(destinationDirectory)
+            .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
             + Path.DirectorySeparatorChar;
         using ZipArchive archive = ZipFile.OpenRead(archivePath);
+        if (archive.Entries.Count > MaximumTemplateArchiveEntries)
+        {
+            throw new MachineBankCorruptionException(
+                $"L'archive contient trop d'entrées ({archive.Entries.Count}).");
+        }
+
+        long totalBytes = 0;
+        HashSet<string> extractedPaths = new(
+            OperatingSystem.IsWindows()
+                ? StringComparer.OrdinalIgnoreCase
+                : StringComparer.Ordinal);
         foreach (ZipArchiveEntry entry in archive.Entries)
         {
+            if (entry.Length > MaximumTemplateArchiveEntryBytes)
+            {
+                throw new MachineBankCorruptionException(
+                    $"L'entrée '{entry.FullName}' dépasse la taille autorisée.");
+            }
+
+            totalBytes = checked(totalBytes + entry.Length);
+            if (totalBytes > MaximumTemplateArchiveBytes)
+            {
+                throw new MachineBankCorruptionException(
+                    "La taille décompressée du modèle dépasse la limite autorisée.");
+            }
+
             string destinationPath = Path.GetFullPath(Path.Combine(destinationDirectory, entry.FullName));
-            if (!destinationPath.StartsWith(destinationRoot, StringComparison.OrdinalIgnoreCase))
+            if (!destinationPath.StartsWith(destinationRoot, pathComparison))
             {
                 throw new MachineBankCorruptionException(
                     $"Archive refusée : chemin hors du modèle ({entry.FullName}).");
+            }
+            if (!extractedPaths.Add(destinationPath))
+            {
+                throw new MachineBankCorruptionException(
+                    $"Archive refusée : chemin dupliqué ({entry.FullName}).");
             }
 
             if (string.IsNullOrEmpty(entry.Name))
@@ -730,5 +858,10 @@ public sealed class MachineBankRepository
         public DateTimeOffset UpdatedUtc { get; set; }
 
         public List<Guid> TemplateIds { get; set; } = [];
+
+        [JsonExtensionData]
+        public Dictionary<string, JsonElement>? AdditionalData { get; set; }
     }
+
+    private sealed record StoredImage(string FileName, string Sha256);
 }

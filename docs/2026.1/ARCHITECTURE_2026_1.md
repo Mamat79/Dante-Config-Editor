@@ -167,6 +167,9 @@ Réalisé :
   vérifiée et idempotente ;
 - récupération `.dceproj` validée avec basculement atomique et maintien du
   snapshot précédent en cas d'échec ;
+- banque format 2, lecture du format V3.6, migration par copie, empreintes
+  d'images et conservation des champs JSON inconnus ;
+- commandes transactionnelles de duplication et d'ajout depuis la banque ;
 - tests d'architecture et de profils.
 
 À poursuivre :

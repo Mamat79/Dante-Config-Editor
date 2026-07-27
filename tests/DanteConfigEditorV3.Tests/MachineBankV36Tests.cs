@@ -249,7 +249,7 @@ public sealed class MachineBankV36Tests
             "machine.json");
         string metadata = File.ReadAllText(metadataPath, Encoding.UTF8);
         string unsupported = metadata.Replace(
-            "\"formatVersion\": 1",
+            $"\"formatVersion\": {MachineTemplateMetadata.CurrentFormatVersion}",
             "\"formatVersion\": 0",
             StringComparison.Ordinal);
         File.WriteAllText(metadataPath, unsupported, new UTF8Encoding(false));
