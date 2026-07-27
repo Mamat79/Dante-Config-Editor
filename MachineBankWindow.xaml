@@ -44,6 +44,11 @@
                         Content="Banques GitHub"
                         Style="{StaticResource DialogSecondaryButtonStyle}"
                         Click="GithubBanksButton_Click" />
+                <Button x:Name="MigrateBankButton"
+                        Content="Migrer une copie"
+                        Style="{StaticResource DialogSecondaryButtonStyle}"
+                        Visibility="Collapsed"
+                        Click="MigrateBankButton_Click" />
                 <Button x:Name="ChangeBankButton"
                         Content="Changer de banque"
                         Style="{StaticResource DialogSecondaryButtonStyle}"

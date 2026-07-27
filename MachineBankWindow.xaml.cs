@@ -2,8 +2,10 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using DanteConfigEditor.Infrastructure.Migration;
 using DanteConfigEditor.Models;
 using DanteConfigEditor.Services;
 using Microsoft.Win32;
@@ -54,6 +56,7 @@ public partial class MachineBankWindow : Window
         Title = L("Banque de machines", "Device bank");
         HeadingTextBlock.Text = Title;
         GithubBanksButton.Content = L("Banques GitHub", "GitHub banks");
+        MigrateBankButton.Content = L("Migrer une copie", "Migrate a copy");
         ChangeBankButton.Content = L("Changer de banque", "Change bank");
         OpenBankFolderButton.Content = L("Ouvrir le dossier", "Open folder");
         SearchLabel.Content = L("Recherche", "Search");
@@ -90,6 +93,15 @@ public partial class MachineBankWindow : Window
         GithubBanksButton.ToolTip = L(
             "Ouvre le catalogue public de banques DCE sur GitHub pour télécharger ou proposer une banque.",
             "Opens the public DCE bank catalog on GitHub to download or submit a bank.");
+        MigrateBankButton.ToolTip = L(
+            "Crée une banque au format 2026.1 dans un nouveau dossier, avec sauvegarde, sans modifier cette banque V3.6.",
+            "Creates a 2026.1-format bank in a new folder with a backup, without modifying this V3.6 bank.");
+        AutomationProperties.SetName(
+            MigrateBankButton,
+            MigrateBankButton.Content?.ToString() ?? string.Empty);
+        AutomationProperties.SetHelpText(
+            MigrateBankButton,
+            MigrateBankButton.ToolTip?.ToString() ?? string.Empty);
         OpenBankFolderButton.ToolTip = L(
             "Ouvre le dossier actuellement utilisé pour stocker la banque.",
             "Opens the folder currently used to store the bank.");
@@ -140,7 +152,12 @@ public partial class MachineBankWindow : Window
         try
         {
             _allTemplates = _repository.List();
-            BankPathTextBlock.Text = _bankPath;
+            int formatVersion = _repository.GetFormatVersion();
+            BankPathTextBlock.Text = $"{_bankPath}  ·  format {formatVersion}";
+            MigrateBankButton.Visibility = formatVersion
+                < MachineBankMigrationService.CurrentBankFormatVersion
+                ? Visibility.Visible
+                : Visibility.Collapsed;
             RefreshFilterSources();
             ApplyFilters(selectTemplateId);
         }
@@ -552,6 +569,44 @@ public partial class MachineBankWindow : Window
         catch (Exception ex)
         {
             ShowError(L("Ouverture impossible", "Unable to open GitHub"), ex);
+        }
+    }
+
+    private void MigrateBankButton_Click(object sender, RoutedEventArgs e)
+    {
+        OpenFolderDialog dialog = new()
+        {
+            Title = L(
+                "Choisir un dossier neuf ou vide pour la copie 2026.1",
+                "Choose a new or empty folder for the 2026.1 copy"),
+            InitialDirectory = Path.GetDirectoryName(_bankPath)
+                ?? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            Multiselect = false
+        };
+        if (dialog.ShowDialog(this) != true)
+        {
+            return;
+        }
+
+        try
+        {
+            MachineBankV2MigrationResult result =
+                new MachineBankV2MigrationService().Migrate(
+                    _bankPath,
+                    dialog.FolderName);
+            SwitchBank(result.DestinationBankPath);
+            MessageBox.Show(
+                this,
+                L(
+                    $"La copie 2026.1 est prête. La banque V3.6 est intacte.{Environment.NewLine}{Environment.NewLine}Sauvegarde : {result.BackupArchivePath}",
+                    $"The 2026.1 copy is ready. The V3.6 bank is unchanged.{Environment.NewLine}{Environment.NewLine}Backup: {result.BackupArchivePath}"),
+                L("Migration terminée", "Migration complete"),
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            ShowError(L("Migration impossible", "Unable to migrate bank"), ex);
         }
     }
 
