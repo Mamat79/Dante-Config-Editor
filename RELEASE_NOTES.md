@@ -1,68 +1,84 @@
-# Dante Config Editor V3.6.1
+# Dante Config Editor 2026.1 Beta
 
 [English release notes](RELEASE_NOTES_EN.md)
 
 ## Statut
 
-V3.6.1 corrige l'écran de soutien de la V3.6 sur Windows et macOS. Dante Config Editor reste un outil tiers non officiel Audinate. Travaillez sur une copie et validez toujours le XML généré par un import dans la version de Dante Controller réellement utilisée.
+`2026.1.0-beta.1` est une refondation progressive de DCE à partir de la V3.6
+stabilisée. Elle ne remplace pas la V3.6 : les applications, raccourcis,
+identifiants d’installation et profils locaux sont distincts.
 
-## Sécurité et fidélité XML
+DCE reste un outil tiers non officiel, sans affiliation avec Audinate. Il
+travaille uniquement sur des fichiers hors ligne.
 
-- Modification ciblée du document XML d'origine afin de conserver nœuds, attributs, namespaces, ordre et valeurs inconnues.
-- Validation renforcée des identifiants, références de canaux, subscriptions, structures réseau et ajouts de nœuds.
-- Sauvegarde sous atomique avec relecture du temporaire, comparaison sémantique et sauvegarde de la destination existante.
-- Tests de cycle import/export/import, namespace par défaut, Unicode, valeurs inconnues et gros presets.
-- Corpus local de dix XML : 176 machines et 5 004 labels chargés, validés, sauvegardés, comparés sémantiquement et relus sans toucher aux originaux.
+## Principales évolutions
 
-## Duplication et banque de machines
+- séparation Domain, DanteXml, Application et Infrastructure ;
+- session centrale, commandes transactionnelles, Annuler/Rétablir et historique ;
+- projet `.dceproj` versionné pour la disposition, les notes et les ressources
+  propres à DCE, sans pollution du XML Dante ;
+- shell Windows 2026.1 avec navigation latérale et inspecteur ;
+- espace Patch unique avec tableau, matrice, Easy Patch, sélection et 1:1 ;
+- synoptique interactif synchronisé avec la sélection et le patch ;
+- Centre de validation filtrable et exportable ;
+- profils XML capables de limiter une structure inconnue ou de l’ouvrir en
+  lecture seule ;
+- banque format 2 et migration V3.6 par copie vérifiée ;
+- profil local 2026.1 isolé.
 
-- Duplication d'une machine sous forme de rôle générique indépendant.
-- Les identifiants matériels `instance_id` et `device_id` ne sont jamais recopiés ni inventés.
-- Réseau, subscriptions, flows, Preferred Master et réglages sensibles restent exclus par défaut.
-- Banque versionnée et partageable avec métadonnées, tags, labels modifiables et image PNG/JPEG/WebP facultative copiée dans le modèle.
-- Recherche, filtres, modification, duplication, suppression confirmée, import/export ZIP, sauvegarde et restauration complète.
-- Catalogue GitHub bilingue et archive `*.dce-bank.zip` vérifiée pour télécharger ou partager une banque complète.
-- Banque fournie `DCE Generic Roles 3.6` avec rôles génériques 8x8 et 32x32, sans identité matérielle, réseau ni abonnement.
-- Banque communautaire optionnelle `DCE Community Devices 3.6`, illustrée et assainie, avec Yamaha QL1 et Rio1608-D2, Fohhn DI4.1000, Lake LM 44, RME Digiface Dante, Glensound Divine, Beatrice D8 et AOIP22, et Allen & Heath SDante 64x64.
-- Ajout transactionnel d'une instance indépendante depuis un modèle.
-- Nouveau projet minimal 3.0.0 expérimental, vide ou amorcé par un modèle.
+## Fidélité XML
 
-## Diagnostic et interface
+Le document original reste la source. DCE effectue des mutations ciblées et
+conserve les nœuds, attributs, namespaces, ordre et valeurs inconnues. Une
+sauvegarde utilise un temporaire, une relecture, une validation, une copie de
+sécurité et un remplacement atomique.
 
-- Journaux techniques quotidiens accessibles depuis l'application.
-- Commandes équivalentes Windows/macOS pour dupliquer, administrer la banque, ajouter un modèle et créer un projet.
-- Les comportements existants de patch, zoom, renommage, Entrée, Tab et Maj+Tab restent couverts.
-- La comparaison XML, ses statuts et ses résultats sont désormais réellement affichés en anglais lorsque cette langue est active, sur Windows et macOS.
-- `Soutenir DCE` est disponible dans `Sécurité et journal`, en français et en anglais, avec le QR PayPal et un bouton PayPal.Me pour ordinateur.
-- Le rappel facultatif apparaît après 20 lancements, peut être reporté ou désactivé définitivement et reste strictement local, sans télémétrie ni connexion au démarrage.
+Le corpus automatisé couvre notamment les presets partiels, TX ou RX seuls,
+subscriptions locales `.`, sources absentes, canaux absents, namespace par
+défaut, Unicode, extensions inconnues, interfaces multiples et modes audio
+mixtes.
+
+La V3.6 a été importée avec succès dans Dante Controller par le mainteneur.
+Pour cette bêta 2026.1, **validation manuelle Dante Controller requise** avec
+la checklist `docs/2026.1/DANTE_CONTROLLER_MANUAL_VALIDATION.md`.
+
+## Performance
+
+Sur le preset synthétique de 200 machines avec 64 TX et 64 RX chacune :
+
+- édition groupée : `317,410 ms` vers `38,092 ms` ;
+- allocations d’édition : `390,759 Mio` vers `29,358 Mio` ;
+- validation : `86,948 ms` vers `36,062 ms` ;
+- sauvegarde XML : `501,695 ms` vers `363,457 ms`.
 
 ## Validation automatisée
 
-- 283 tests Core/Windows réussis.
-- 20 tests Avalonia/macOS sans écran réussis.
-- Builds Windows et macOS Release sans warning.
-- Aucun package NuGet vulnérable signalé par la commande d'audit.
+- 364 tests Core/Windows réussis ;
+- 20 tests Avalonia/macOS sans écran réussis ;
+- build Windows Release sans warning ;
+- corpus synthétique sauvegardé et comparé sémantiquement sans perte.
 
-## Documentation
+Les nombres finaux de l’artefact livré sont consignés dans le rapport bêta.
 
-- Notices complètes française et anglaise de 26 pages avec captures annotées.
-- Procédures détaillées pour les profils, le renommage direct et en série,
-  Patch, Easy Patch, FLIP, PATCH 1:1, fusion d'un second XML, banque de
-  machines, import/export de labels, synoptique, contrôle du fichier et
-  sauvegarde finale.
+## Installation
 
-## Distribution
+### Windows
 
-- Installateur Windows x64 autonome : `DanteConfigEditorV3_6_Installer.exe`, runtime .NET 8, notices FR/EN et aide au soutien inclus.
-- Choix du dossier de banque actif et du dossier des banques fournies ; les banques générique et communautaire sont sélectionnables séparément, sans remplacement des banques existantes.
-- Les DMG macOS contiennent les deux archives de banques dans un dossier `Machine Banks`.
-- La V3.6 met à niveau la ligne de développement V3.5 et laisse la V3.4.2 stable intacte.
-- Paquets macOS prévus pour Apple Silicon et Intel sous le nom V3.6.
+`DanteConfigEditor2026_1_Beta_Installer.exe` inclut le runtime .NET 8 et les
+notices bilingues. Le dossier proposé est
+`C:\Program Files\Dante Config Editor 2026.1 Beta\`.
+
+### macOS
+
+Deux DMG autonomes sont prévus pour Apple Silicon et Intel. Ils sont signés ad
+hoc mais non notariés.
 
 ## Limites
 
-- La V3.6 a été importée et testée avec succès dans Dante Controller par le mainteneur sur des XML modifiés par DCE. La version exacte de Dante Controller et le détail anonymisé des scénarios restent à consigner dans la matrice de compatibilité.
-- Un rôle générique de preset n'est pas l'identité d'un appareil Dante physique.
-- La création d'un projet complet reste expérimentale.
-- L'installateur Windows n'est pas signé Authenticode.
-- Les DMG Mac sont signés ad hoc, sans certificat Apple Developer ID ni notarisation.
+- création complète de projet toujours expérimentale ;
+- aucune identité matérielle réelle créée lors d’une duplication ou insertion
+  depuis une banque ;
+- interface 2026.1 complète actuellement centrée sur Windows ;
+- installateur Windows non signé Authenticode ;
+- DMG non notariés ;
+- aucune Release GitHub publiée automatiquement.

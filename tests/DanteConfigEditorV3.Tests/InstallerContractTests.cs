@@ -53,6 +53,7 @@ public sealed class InstallerContractTests
         Assert.Contains("By Mamat et ses agents", File.ReadAllText(RepositoryFile("packaging", "macos", "Info.plist")), StringComparison.Ordinal);
         Assert.Contains("By Mamat et ses agents", File.ReadAllText(RepositoryFile("docs", "generate_guides.py")), StringComparison.Ordinal);
         Assert.Contains("README_EN.md", installerScript, StringComparison.Ordinal);
+        Assert.Contains("CHANGELOG.md", installerScript, StringComparison.Ordinal);
         Assert.Contains("RELEASE_NOTES_EN.md", installerScript, StringComparison.Ordinal);
         Assert.Contains("Name: \"desktopicon\"", installerScript, StringComparison.Ordinal);
         Assert.DoesNotContain("Name: \"desktopicon\"; Description: \"{cm:CreateDesktopIcon}\"; GroupDescription: \"{cm:AdditionalIcons}\"; Flags: unchecked", installerScript, StringComparison.Ordinal);

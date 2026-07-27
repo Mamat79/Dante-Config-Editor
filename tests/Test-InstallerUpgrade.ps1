@@ -139,6 +139,7 @@ function Assert-InstalledState {
         "Notice_DanteConfigEditorV3_EN.pdf",
         "README.md",
         "README_EN.md",
+        "CHANGELOG.md",
         "RELEASE_NOTES.md",
         "RELEASE_NOTES_EN.md",
         "unins000.exe"

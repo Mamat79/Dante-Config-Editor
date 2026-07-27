@@ -27,8 +27,8 @@ from reportlab.platypus import (
 ROOT = Path(__file__).resolve().parent
 # Les quatre PDF sont générés depuis une source unique pour garder les versions
 # française et anglaise synchronisées avec l'application et l'installateur.
-PRODUCT = "Dante Config Editor V3.6"
-VERSION = "3.6"
+PRODUCT = "Dante Config Editor 2026.1 Beta"
+VERSION = "2026.1.0-beta.1"
 GITHUB = "github.com/Mamat79/DanteConfigEditorV3"
 
 INK = colors.HexColor("#172033")
@@ -416,9 +416,9 @@ def quick_start(language: str) -> None:
         else "Quick start - offline editing of Dante XML files"
     )
     warning = (
-        "<b>Outil tiers non officiel Audinate.</b> Cette V3.6 est une version de développement et peut encore contenir des bugs. Travaillez sur une copie et validez toujours le XML final par un import dans l'outil Dante officiel adapté avant toute utilisation réelle."
+        "<b>Outil tiers non officiel Audinate.</b> Cette version 2026.1 est une bêta et peut encore contenir des bugs. Travaillez sur une copie et validez toujours le XML final par un import dans l'outil Dante officiel adapté avant toute utilisation réelle."
         if french
-        else "<b>Third-party tool, not an official Audinate product.</b> V3.6 is a development version and may still contain bugs. Work on a copy and always validate the final XML by importing it into the appropriate official Dante tool before real use."
+        else "<b>Third-party tool, not an official Audinate product.</b> Version 2026.1 is a beta and may still contain bugs. Work on a copy and always validate the final XML by importing it into the appropriate official Dante tool before real use."
     )
     steps = (
         [
@@ -520,14 +520,14 @@ def full_guide(language: str) -> None:
     if french:
         page1 = [
             para("1. Installation et démarrage", "h1"),
-            callout("<b>Important :</b> cette application est un outil tiers non officiel Audinate. La V3.6 est une version de développement et peut encore contenir des bugs. Elle édite des XML hors ligne, sans connexion au réseau Dante ni API Audinate. Conservez l'original et validez le fichier généré dans Dante Controller avant toute utilisation en production."),
+            callout("<b>Important :</b> cette application est un outil tiers non officiel Audinate. La 2026.1 est une version bêta et peut encore contenir des bugs. Elle édite des XML hors ligne, sans connexion au réseau Dante ni API Audinate. Conservez l'original et validez le fichier généré dans Dante Controller avant toute utilisation en production."),
             para("L'installateur Windows x64 contient l'application et le runtime .NET 8 nécessaire. Il n'est normalement pas nécessaire d'installer .NET séparément."),
             *bullets([
                 "L'installation proposée par défaut se trouve dans Program Files et crée des raccourcis dans le menu Démarrer et sur le Bureau.",
-                "Une installation V3.6 neuve utilise son propre dossier et ses propres raccourcis afin de pouvoir cohabiter avec la V3.4.2 stable.",
-                "La V3.6 remplace la ligne de développement V3.5 lorsqu'elle est déjà installée et conserve les données locales de travail.",
+                "Une installation 2026.1 Beta utilise son propre AppId, son dossier Program Files, ses raccourcis et son profil local afin de cohabiter avec la V3.6.",
+                "La 2026.1 peut copier les réglages V3.6 vers son profil, mais ne modifie jamais le profil V3.6 en place.",
                 "L'assistant propose le dossier de banque actif et le dossier des banques fournies. Les banques DCE Generic Roles 3.6 et DCE Community Devices 3.6 sont facultatives, sélectionnables séparément et aucun dossier existant n'est remplacé.",
-                "Deux DMG V3.6 autonomes sont prévus pour Apple Silicon et Intel. Ils contiennent les deux archives dans le dossier Machine Banks ; le bundle V3.6 distinct peut cohabiter avec la V3.4.2.",
+                "Deux DMG 2026.1 Beta autonomes sont prévus pour Apple Silicon et Intel. Ils contiennent les deux archives dans le dossier Machine Banks ; leur bundle distinct peut cohabiter avec la V3.6.",
                 "Les quatre notices PDF françaises et anglaises sont installées et restent accessibles depuis l'application.",
             ]),
             para("2. Principes de sécurité", "h1"),
@@ -539,6 +539,18 @@ def full_guide(language: str) -> None:
             ]),
             para("3. Ouvrir un projet", "h1"),
             para("Cliquez sur Ouvrir XML, sélectionnez le fichier, puis contrôlez les compteurs de machines, canaux TX/RX et patchs actifs. Les XML avec namespace par défaut sont pris en charge. La langue et le thème restent modifiables à tout moment."),
+        ]
+        beta_page = [
+            para("4. Espace de travail 2026.1", "h1"),
+            para("La version Windows organise le travail par intention : Accueil, Vue d'ensemble, Machines, Patch, Synoptique, Banque, Import / Export, Validation, Sécurité et Atomic Bomb."),
+            *bullets([
+                "La barre supérieure conserve le fichier actif, Enregistrer sous, Annuler et Rétablir.",
+                "L'inspecteur de droite affiche le contexte de la sélection sans changer de page.",
+                "Patch, Easy Patch et le synoptique partagent les mêmes identités stables et la même session.",
+                "Le Centre de validation sépare contrôles internes DCE et validation manuelle Dante Controller.",
+                "Un XML Dante reste le fichier d'échange officiel ; un .dceproj conserve en plus la disposition, les notes, les ressources et l'historique DCE.",
+            ]),
+            callout("Les captures de cette notice sont de vraies captures de la V3.5 sur un preset synthétique. Elles illustrent les fonctions conservées ; la navigation et l'habillage 2026.1 diffèrent.", PALE_BLUE),
         ]
         page2 = [
             para("4. Page Configuration", "h1"),
@@ -699,7 +711,7 @@ def full_guide(language: str) -> None:
                 [48, 122],
             ),
             para("14. Tests de non-régression", "h1"),
-            para("La suite V3.6 exécute 283 tests Core/Windows et 20 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la duplication, la banque de machines, la création expérimentale de projet, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch, le soutien facultatif et la cohérence des traductions."),
+            para("La suite 2026.1 exécute 364 tests Core/Windows et 20 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la duplication, la banque de machines, la création expérimentale de projet, le format .dceproj, les profils XML, les commandes, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch, le soutien facultatif et la cohérence des traductions."),
             para("15. Limites connues", "h1"),
             *bullets([
                 "Aucun pilotage en temps réel et aucune communication avec les appareils.",
@@ -744,7 +756,7 @@ def full_guide(language: str) -> None:
                 "Une image PNG, JPEG ou WebP facultative est copiée dans le dossier du modèle ; aucun chemin externe fragile n'est conservé.",
                 "La banque se trouve par défaut dans Documents/Dante Config Editor/Machine Bank. Son emplacement peut être choisi, ouvert, copié ou placé dans un dossier synchronisé.",
                 "Exporter la banque crée une archive vérifiée *.dce-bank.zip. Importer une banque exige un dossier neuf ou vide et ne remplace jamais l'existant.",
-                "Banques GitHub ouvre le catalogue public V3.6. DCE Generic Roles 3.6 fournit deux rôles d'essai 8x8 et 32x32. DCE Community Devices 3.6 fournit neuf modèles illustrés assainis : Yamaha QL1 et Rio1608-D2, Fohhn DI4.1000, Lake LM 44, RME Digiface Dante, Glensound Divine, Beatrice D8 et AOIP22, et Allen & Heath SDante 64x64. Ces banques ne contiennent ni identité matérielle, ni donnée réseau, ni abonnement.",
+                "Banques GitHub ouvre le catalogue public dans main. Les banques gardent leur nom historique 3.6 : DCE Generic Roles 3.6 fournit deux rôles d'essai 8x8 et 32x32. DCE Community Devices 3.6 fournit neuf modèles illustrés assainis : Yamaha QL1 et Rio1608-D2, Fohhn DI4.1000, Lake LM 44, RME Digiface Dante, Glensound Divine, Beatrice D8 et AOIP22, et Allen & Heath SDante 64x64. Ces banques ne contiennent ni identité matérielle, ni donnée réseau, ni abonnement.",
                 "L'administration permet recherche, filtres, modification, duplication, suppression confirmée et import/export d'un modèle ZIP.",
             ]),
             para("Ajouter un modèle au projet", "h2"),
@@ -1098,14 +1110,14 @@ def full_guide(language: str) -> None:
     else:
         page1 = [
             para("1. Installation and startup", "h1"),
-            callout("<b>Important:</b> this is a third-party tool, not an official Audinate product. V3.6 is a development version and may still contain bugs. It edits XML files offline without connecting to a Dante network or using an Audinate API. Keep the original and validate the generated file in Dante Controller before production use."),
+            callout("<b>Important:</b> this is a third-party tool, not an official Audinate product. Version 2026.1 is a beta and may still contain bugs. It edits XML files offline without connecting to a Dante network or using an Audinate API. Keep the original and validate the generated file in Dante Controller before production use."),
             para("The Windows x64 installer includes the application and the required .NET 8 runtime. A separate .NET installation is normally not required."),
             *bullets([
                 "The default location is Program Files, with Start menu and desktop shortcuts.",
-                "A fresh V3.6 installation uses its own folder and shortcuts so it can coexist with stable V3.4.2.",
-                "V3.6 upgrades the V3.5 development line when it is already installed and preserves local working data.",
+                "A 2026.1 Beta installation uses its own AppId, Program Files folder, shortcuts, and local profile so it can coexist with V3.6.",
+                "2026.1 may copy V3.6 settings into its own profile but never modifies the V3.6 profile in place.",
                 "The wizard offers separate active-bank and included-bank folders. DCE Generic Roles 3.6 and DCE Community Devices 3.6 are optional, can be selected independently, and no existing folder is replaced.",
-                "Two self-contained V3.6 DMGs are planned for Apple Silicon and Intel. They include both archives in the Machine Banks folder; the separate V3.6 bundle can coexist with V3.4.2.",
+                "Two self-contained 2026.1 Beta DMGs are planned for Apple Silicon and Intel. They include both archives in the Machine Banks folder, and their separate bundle can coexist with V3.6.",
                 "All four French and English PDFs are installed and remain available from the application.",
             ]),
             para("2. Safety principles", "h1"),
@@ -1117,6 +1129,18 @@ def full_guide(language: str) -> None:
             ]),
             para("3. Open a project", "h1"),
             para("Click Open XML, choose the file, then review device, TX/RX channel, and active subscription counts. XML files with a default namespace are supported. Language and theme can be changed at any time."),
+        ]
+        beta_page = [
+            para("4. 2026.1 workspace", "h1"),
+            para("The Windows build organizes work by intent: Home, Overview, Devices, Patch, Synoptic, Device bank, Import / Export, Validation, Safety, and Atomic Bomb."),
+            *bullets([
+                "The top bar keeps the active file, Save as, Undo, and Redo available.",
+                "The right inspector shows selection context without changing pages.",
+                "Patch, Easy Patch, and the synoptic share stable identities and one session.",
+                "The Validation Center separates internal DCE checks from manual Dante Controller validation.",
+                "Dante XML remains the official exchange file; a .dceproj additionally stores DCE layout, notes, assets, and history.",
+            ]),
+            callout("Screenshots in this guide are real V3.5 captures using a synthetic preset. They illustrate retained workflows; 2026.1 navigation and styling differ.", PALE_BLUE),
         ]
         page2 = [
             para("4. Configuration page", "h1"),
@@ -1277,7 +1301,7 @@ def full_guide(language: str) -> None:
                 [48, 122],
             ),
             para("14. Regression tests", "h1"),
-            para("The V3.6 suite runs 283 Core/Windows tests and 20 headless Mac tests. Coverage includes XML guards, save and recovery, IPv4 interfaces, subscriptions, large presets, duplication, the machine bank, experimental project creation, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, optional support, and translation consistency."),
+            para("The 2026.1 suite runs 364 Core/Windows tests and 20 headless Mac tests. Coverage includes XML guards, save and recovery, IPv4 interfaces, subscriptions, large presets, duplication, the device bank, experimental project creation, .dceproj packages, XML profiles, commands, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, optional support, and translation consistency."),
             para("15. Known limitations", "h1"),
             *bullets([
                 "No real-time Dante control and no communication with devices.",
@@ -1322,7 +1346,7 @@ def full_guide(language: str) -> None:
                 "An optional PNG, JPEG, or WebP image is copied into the model folder; no fragile external path is kept.",
                 "The default bank is Documents/Dante Config Editor/Machine Bank. You may choose, open, copy, or place it in a synchronized folder.",
                 "Export bank creates a verified *.dce-bank.zip archive. Import bank requires a new or empty folder and never replaces existing data.",
-                "GitHub banks opens the public V3.6 catalog. DCE Generic Roles 3.6 provides generic 8x8 and 32x32 test roles. DCE Community Devices 3.6 provides nine sanitized illustrated templates: Yamaha QL1 and Rio1608-D2, Fohhn DI4.1000, Lake LM 44, RME Digiface Dante, Glensound Divine, Beatrice D8 and AOIP22, and Allen & Heath SDante 64x64. These banks contain no hardware identity, network data, or subscription.",
+                "GitHub banks opens the public catalog in main. Banks retain their historical 3.6 names: DCE Generic Roles 3.6 provides generic 8x8 and 32x32 test roles. DCE Community Devices 3.6 provides nine sanitized illustrated templates: Yamaha QL1 and Rio1608-D2, Fohhn DI4.1000, Lake LM 44, RME Digiface Dante, Glensound Divine, Beatrice D8 and AOIP22, and Allen & Heath SDante 64x64. These banks contain no hardware identity, network data, or subscription.",
                 "Administration supports search, filters, edit, duplicate, confirmed delete, and model ZIP import/export.",
             ]),
             para("Add a template to the project", "h2"),
@@ -1678,6 +1702,7 @@ def full_guide(language: str) -> None:
     pages = [
         cover_page(language),
         page1,
+        beta_page,
         screen_map,
         visual_overview,
         page2,
