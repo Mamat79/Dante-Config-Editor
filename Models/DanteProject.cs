@@ -1746,5 +1746,5 @@ public sealed partial class DanteProject
         IReadOnlyList<ModifiedRxReference> ModifiedRxReferences,
         IReadOnlyList<AuthorizedDeviceAdditionState> AuthorizedDeviceAdditions);
 
-    private sealed record ModifiedRxReference(string RxDevice, int RxIndex);
+    internal sealed record ModifiedRxReference(string RxDevice, int RxIndex);
 }

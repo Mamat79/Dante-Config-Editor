@@ -155,11 +155,16 @@ Réalisé :
 - aucun code-behind desktop ne manipule LINQ to XML ;
 - couche Domain indépendante ;
 - couche DanteXml et profils de capacités ;
+- session de projet centrale ;
+- dispatcher de commandes transactionnelles ;
+- Annuler, Rétablir et historique borné ;
+- commandes typées pour renommages, plages, patch, suppression et format audio ;
 - tests d'architecture et de profils.
 
 À poursuivre :
 
-- session unique et commandes ;
+- branchement progressif de toutes les vues sur la session ;
+- remplacement progressif des snapshots par des deltas ciblés ;
 - paquet `.dceproj` ;
 - infrastructure et migration ;
 - branchement progressif des vues Windows sur la session ;

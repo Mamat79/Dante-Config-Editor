@@ -195,7 +195,7 @@ public sealed partial class DanteProject
             new AuthorizedDeviceAdditionState(item.RoleIdentity, new XElement(item.BaselineDevice))));
     }
 
-    private sealed record AuthorizedDeviceAdditionState(
+    internal sealed record AuthorizedDeviceAdditionState(
         string RoleIdentity,
         XElement BaselineDevice);
 }

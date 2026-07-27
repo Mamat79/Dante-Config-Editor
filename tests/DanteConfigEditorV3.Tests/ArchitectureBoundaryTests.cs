@@ -121,6 +121,43 @@ public sealed class ArchitectureBoundaryTests
         }
     }
 
+    [Fact]
+    public void ApplicationLayerDoesNotManipulateXmlOrFilesDirectly()
+    {
+        string applicationRoot = RepositoryFile("src", "DanteConfigEditor.Application");
+        IEnumerable<string> applicationSources = Directory
+            .EnumerateFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
+            .Where(path => !path.Contains(
+                $"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}",
+                StringComparison.OrdinalIgnoreCase))
+            .Where(path => !path.Contains(
+                $"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}",
+                StringComparison.OrdinalIgnoreCase));
+        string[] forbiddenTokens =
+        [
+            "System.Xml",
+            "XDocument",
+            "XElement",
+            "XAttribute",
+            "File.",
+            "Directory.",
+            "FileStream",
+            "System.Windows",
+            "Avalonia"
+        ];
+
+        foreach (string sourcePath in applicationSources)
+        {
+            string source = File.ReadAllText(sourcePath);
+            foreach (string token in forbiddenTokens)
+            {
+                Assert.False(
+                    source.Contains(token, StringComparison.Ordinal),
+                    $"Application access '{token}' found in {Path.GetRelativePath(applicationRoot, sourcePath)}");
+            }
+        }
+    }
+
     private static string RepositoryFile(params string[] relativeParts) =>
         Path.Combine([RepositoryDirectory(), .. relativeParts]);
 
