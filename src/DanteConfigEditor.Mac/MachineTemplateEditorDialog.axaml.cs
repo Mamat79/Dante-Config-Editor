@@ -108,6 +108,40 @@ internal sealed partial class MachineTemplateEditorDialog : Window
             "Labels remain editable before each insertion. Hardware identities, addresses, subscriptions, and flows are never stored in the template.");
         FindControl<Button>("SaveButton")!.Content = L("Enregistrer", "Save");
         FindControl<Button>("CancelButton")!.Content = L("Annuler", "Cancel");
+
+        ToolTip.SetTip(
+            FindControl<TextBox>("TemplateNameTextBox")!,
+            L(
+                "Nom affiché dans la banque ; il peut être différent du modèle matériel.",
+                "Name displayed in the bank; it may differ from the hardware model."));
+        ToolTip.SetTip(
+            FindControl<TextBox>("ManufacturerTextBox")!,
+            L("Fabricant utilisé pour la recherche et les filtres.", "Manufacturer used by search and filters."));
+        ToolTip.SetTip(
+            FindControl<TextBox>("ModelTextBox")!,
+            L("Référence du matériel représenté par ce modèle.", "Hardware reference represented by this template."));
+        ToolTip.SetTip(
+            FindControl<TextBox>("CategoryTextBox")!,
+            L("Famille libre utilisée pour classer la banque.", "Free-form family used to organize the bank."));
+        ToolTip.SetTip(
+            FindControl<TextBox>("TagsTextBox")!,
+            L("Mots-clés de recherche séparés par des virgules.", "Search keywords separated with commas."));
+        ToolTip.SetTip(
+            FindControl<Button>("BrowseImageButton")!,
+            L(
+                "Copie une image PNG, JPEG ou WebP dans le dossier du modèle.",
+                "Copies a PNG, JPEG, or WebP image into the template folder."));
+        ToolTip.SetTip(
+            FindControl<Button>("GenerateRxButton")!,
+            L("Remplace les labels RX par RX 1, RX 2, etc.", "Replaces Rx labels with Rx 1, Rx 2, and so on."));
+        ToolTip.SetTip(
+            FindControl<Button>("GenerateTxButton")!,
+            L("Remplace les labels TX par TX 1, TX 2, etc.", "Replaces Tx labels with Tx 1, Tx 2, and so on."));
+        ToolTip.SetTip(
+            FindControl<Button>("SaveButton")!,
+            L(
+                "Valide puis enregistre ce modèle indépendant dans la banque.",
+                "Validates and saves this independent template in the bank."));
     }
 
     private async void BrowseImageButton_Click(object? sender, RoutedEventArgs e)

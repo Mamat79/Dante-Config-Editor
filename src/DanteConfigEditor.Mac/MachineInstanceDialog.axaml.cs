@@ -66,6 +66,37 @@ internal sealed partial class MachineInstanceDialog : Window
             ? L("Continuer", "Continue")
             : L("Ajouter au projet", "Add to project");
         FindControl<Button>("CancelButton")!.Content = L("Annuler", "Cancel");
+
+        ToolTip.SetTip(
+            FindControl<TextBox>("NameTextBox")!,
+            L(
+                "Nom unique de cette nouvelle instance dans le projet.",
+                "Unique name of this new instance in the project."));
+        ToolTip.SetTip(
+            FindControl<CheckBox>("UseRxLabelsCheckBox")!,
+            L(
+                "Conserve les labels RX proposés par le modèle de banque.",
+                "Keeps the Rx labels supplied by the bank template."));
+        ToolTip.SetTip(
+            FindControl<TextBox>("RxPrefixTextBox")!,
+            L(
+                "Préfixe utilisé pour générer RX 1, RX 2, etc. lorsque les labels du modèle sont désactivés.",
+                "Prefix used to generate Rx 1, Rx 2, and so on when template labels are disabled."));
+        ToolTip.SetTip(
+            FindControl<CheckBox>("UseTxLabelsCheckBox")!,
+            L(
+                "Conserve les labels TX proposés par le modèle de banque.",
+                "Keeps the Tx labels supplied by the bank template."));
+        ToolTip.SetTip(
+            FindControl<TextBox>("TxPrefixTextBox")!,
+            L(
+                "Préfixe utilisé pour générer TX 1, TX 2, etc. lorsque les labels du modèle sont désactivés.",
+                "Prefix used to generate Tx 1, Tx 2, and so on when template labels are disabled."));
+        ToolTip.SetTip(
+            FindControl<Button>("ConfirmButton")!,
+            L(
+                "Ajoute une instance indépendante avec de nouveaux identifiants techniques.",
+                "Adds an independent instance with new technical identifiers."));
     }
 
     private void LabelModeChanged(object? sender, RoutedEventArgs e)

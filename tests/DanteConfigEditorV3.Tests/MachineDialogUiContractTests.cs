@@ -76,6 +76,16 @@ public sealed class MachineDialogUiContractTests
             "src",
             "DanteConfigEditor.Mac",
             "DeviceDetailsDialog.axaml"));
+        string clone = File.ReadAllText(RepositoryFile("MachineCloneWindow.xaml"));
+        string instance = File.ReadAllText(RepositoryFile("MachineInstanceWindow.xaml"));
+        string macClone = File.ReadAllText(RepositoryFile(
+            "src",
+            "DanteConfigEditor.Mac",
+            "MachineCloneDialog.axaml"));
+        string macInstance = File.ReadAllText(RepositoryFile(
+            "src",
+            "DanteConfigEditor.Mac",
+            "MachineInstanceDialog.axaml"));
 
         Assert.True(
             template.IndexOf("x:Name=\"RxTabItem\"", StringComparison.Ordinal)
@@ -99,6 +109,18 @@ public sealed class MachineDialogUiContractTests
         Assert.True(
             macDetails.IndexOf("x:Name=\"RxTab\"", StringComparison.Ordinal)
             < macDetails.IndexOf("x:Name=\"TxTab\"", StringComparison.Ordinal));
+        Assert.True(
+            clone.IndexOf("PreserveRxLabelsCheckBox", StringComparison.Ordinal)
+            < clone.IndexOf("PreserveTxLabelsCheckBox", StringComparison.Ordinal));
+        Assert.True(
+            instance.IndexOf("x:Name=\"RxGroupBox\"", StringComparison.Ordinal)
+            < instance.IndexOf("x:Name=\"TxGroupBox\"", StringComparison.Ordinal));
+        Assert.True(
+            macClone.IndexOf("PreserveRxLabelsCheckBox", StringComparison.Ordinal)
+            < macClone.IndexOf("PreserveTxLabelsCheckBox", StringComparison.Ordinal));
+        Assert.True(
+            macInstance.IndexOf("UseRxLabelsCheckBox", StringComparison.Ordinal)
+            < macInstance.IndexOf("UseTxLabelsCheckBox", StringComparison.Ordinal));
     }
 
     [Fact]

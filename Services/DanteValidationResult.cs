@@ -125,19 +125,24 @@ public sealed class DanteValidationResult
         }
     }
 
-    public string ToDisplayText()
+    public string ToDisplayText() => ToDisplayText(UiLanguage.French);
+
+    public string ToDisplayText(UiLanguage language)
     {
         List<string> lines = [];
 
         if (Errors.Count == 0 && Warnings.Count == 0 && Infos.Count == 0)
         {
-            return "Aucune anomalie bloquante détectée.";
+            return language == UiLanguage.English
+                ? "No blocking issue detected."
+                : "Aucune anomalie bloquante détectée.";
         }
 
         if (Errors.Count > 0)
         {
-            lines.Add("Erreurs bloquantes :");
-            lines.AddRange(Errors.Select(error => "- " + error));
+            lines.Add(language == UiLanguage.English ? "Blocking errors:" : "Erreurs bloquantes :");
+            lines.AddRange(Errors.Select(error =>
+                "- " + LocalizationService.TranslateValidationMessage(language, error)));
         }
 
         if (Warnings.Count > 0)
@@ -147,8 +152,9 @@ public sealed class DanteValidationResult
                 lines.Add(string.Empty);
             }
 
-            lines.Add("Points à vérifier :");
-            lines.AddRange(Warnings.Select(warning => "- " + warning));
+            lines.Add(language == UiLanguage.English ? "Items to check:" : "Points à vérifier :");
+            lines.AddRange(Warnings.Select(warning =>
+                "- " + LocalizationService.TranslateValidationMessage(language, warning)));
         }
 
         if (Infos.Count > 0)
@@ -158,11 +164,14 @@ public sealed class DanteValidationResult
                 lines.Add(string.Empty);
             }
 
-            lines.Add("Informations :");
-            lines.AddRange(Infos.Take(20).Select(info => "- " + info));
+            lines.Add(language == UiLanguage.English ? "Information:" : "Informations :");
+            lines.AddRange(Infos.Take(20).Select(info =>
+                "- " + LocalizationService.TranslateValidationMessage(language, info)));
             if (Infos.Count > 20)
             {
-                lines.Add($"- {Infos.Count - 20} information(s) supplémentaire(s) visibles dans l'onglet Santé du fichier.");
+                lines.Add(language == UiLanguage.English
+                    ? $"- {Infos.Count - 20} additional information item(s) are visible in the Validation center."
+                    : $"- {Infos.Count - 20} information(s) supplémentaire(s) visibles dans l'onglet Santé du fichier.");
             }
         }
 

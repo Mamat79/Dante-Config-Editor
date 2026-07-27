@@ -23,22 +23,22 @@
             <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
                 <Border Classes="panel">
                     <StackPanel Spacing="8">
-                        <TextBlock Text="TX" FontWeight="SemiBold" />
-                        <CheckBox x:Name="UseTxLabelsCheckBox"
-                                  IsChecked="True"
-                                  Click="LabelModeChanged" />
-                        <TextBlock x:Name="TxPrefixLabel" Classes="muted" />
-                        <TextBox x:Name="TxPrefixTextBox" Text="TX" />
-                    </StackPanel>
-                </Border>
-                <Border Grid.Column="1" Classes="panel">
-                    <StackPanel Spacing="8">
                         <TextBlock Text="RX" FontWeight="SemiBold" />
                         <CheckBox x:Name="UseRxLabelsCheckBox"
                                   IsChecked="True"
                                   Click="LabelModeChanged" />
                         <TextBlock x:Name="RxPrefixLabel" Classes="muted" />
                         <TextBox x:Name="RxPrefixTextBox" Text="RX" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="1" Classes="panel">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="TX" FontWeight="SemiBold" />
+                        <CheckBox x:Name="UseTxLabelsCheckBox"
+                                  IsChecked="True"
+                                  Click="LabelModeChanged" />
+                        <TextBlock x:Name="TxPrefixLabel" Classes="muted" />
+                        <TextBox x:Name="TxPrefixTextBox" Text="TX" />
                     </StackPanel>
                 </Border>
             </Grid>

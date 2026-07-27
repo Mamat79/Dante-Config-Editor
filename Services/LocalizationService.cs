@@ -674,6 +674,361 @@ public static class LocalizationService
         return value;
     }
 
+    public static string TranslateHistoryDetail(UiLanguage language, string value)
+    {
+        string exact = TranslateLiteral(language, value);
+        if (language != UiLanguage.English || !string.Equals(exact, value, StringComparison.Ordinal))
+        {
+            return exact;
+        }
+
+        string translated = value;
+        translated = System.Text.RegularExpressions.Regex.Replace(
+            translated,
+            @"^(\d+) machine\(s\) ajoutée\(s\) depuis (.+)$",
+            "$1 device(s) added from $2");
+        translated = System.Text.RegularExpressions.Regex.Replace(
+            translated,
+            @"^(\d+) machine\(s\) passée\(s\) en dynamique$",
+            "$1 device(s) switched to automatic IP");
+        translated = System.Text.RegularExpressions.Regex.Replace(
+            translated,
+            @"^(\d+) machine\(s\) depuis (.+), (\d+) ignorée\(s\) sans interface IPv4$",
+            "$1 device(s) starting at $2, $3 skipped without an IPv4 interface");
+        translated = System.Text.RegularExpressions.Regex.Replace(
+            translated,
+            @"^(.+) appliqué à (\d+) machine\(s\)$",
+            "$1 applied to $2 device(s)");
+        translated = System.Text.RegularExpressions.Regex.Replace(
+            translated,
+            @"^(.+) supprimé, (\d+) patch\(s\) nettoyé\(s\)$",
+            "$1 deleted, $2 subscription(s) removed");
+        translated = System.Text.RegularExpressions.Regex.Replace(
+            translated,
+            @"^(.+): (\d+) entrée\(s\) RX et (\d+) départ\(s\) TX supprimé\(s\)$",
+            "$1: $2 Rx input(s) and $3 Tx route(s) removed");
+        translated = System.Text.RegularExpressions.Regex.Replace(
+            translated,
+            @"^(.+): (\d+) entrée\(s\) RX supprimée\(s\)$",
+            "$1: $2 Rx input(s) disconnected");
+        translated = System.Text.RegularExpressions.Regex.Replace(
+            translated,
+            @"^(.+): (\d+) départ\(s\) TX supprimé\(s\)$",
+            "$1: $2 Tx route(s) removed");
+        translated = System.Text.RegularExpressions.Regex.Replace(
+            translated,
+            @"^Réinitialisation des canaux de (.+)$",
+            "Channels reset for $1");
+        translated = System.Text.RegularExpressions.Regex.Replace(
+            translated,
+            @"^(.+) (TX|RX): canaux (\d+)-(\d+), (.+) depuis (\d+)$",
+            "$1 $2: channels $3-$4, $5 starting at $6");
+        translated = System.Text.RegularExpressions.Regex.Replace(
+            translated,
+            @"^(\d+) label\(s\) de canal appliqué\(s\)$",
+            "$1 channel label(s) applied");
+        translated = System.Text.RegularExpressions.Regex.Replace(
+            translated,
+            @"^Fichier sauvegardé sous (.+)$",
+            "File saved as $1");
+        translated = System.Text.RegularExpressions.Regex.Replace(
+            translated,
+            @"^Créé depuis le modèle (.+), format preset (.+)$",
+            "Created from template $1, preset format $2");
+
+        return translated
+            .Replace("Tous redondants", "All devices redundant", StringComparison.Ordinal)
+            .Replace("Tous en daisychain", "All devices in daisy-chain mode", StringComparison.Ordinal)
+            .Replace("Tous ->", "All ->", StringComparison.Ordinal)
+            .Replace("Réinitialisation des canaux de tous les devices", "Channels reset for all devices", StringComparison.Ordinal)
+            .Replace("Channels reset for tous les devices", "Channels reset for all devices", StringComparison.Ordinal)
+            .Replace(" est le seul Preferred Master", " is the only Preferred Master", StringComparison.Ordinal)
+            .Replace(" déjà en automatique ou sans adresse IPv4 modifiable", " already uses automatic IP or has no editable IPv4 address", StringComparison.Ordinal)
+            .Replace(" -> dynamique", " -> automatic IP", StringComparison.Ordinal)
+            .Replace(" -> redondant", " -> redundant", StringComparison.Ordinal)
+            .Replace("identité matérielle neutralisée", "hardware identity neutralized", StringComparison.Ordinal)
+            .Replace("abonnement(s) recopié(s)", "subscription(s) copied", StringComparison.Ordinal)
+            .Replace("machine(s)", "device(s)", StringComparison.Ordinal)
+            .Replace("RX patché(s)", "Rx patched", StringComparison.Ordinal)
+            .Replace("RX libre(s)", "Rx disconnected", StringComparison.Ordinal);
+    }
+
+    public static string TranslateValidationMessage(UiLanguage language, string value)
+    {
+        string exact = TranslateLiteral(language, value);
+        if (language != UiLanguage.English || !string.Equals(exact, value, StringComparison.Ordinal))
+        {
+            return exact;
+        }
+
+        string? fixedTranslation = value switch
+        {
+            "Compatibilité XML : aucune modification interdite détectée." =>
+                "XML compatibility: no prohibited change detected.",
+            "Le document XML ne contient pas de racine." =>
+                "The XML document has no root element.",
+            "Le document XML ne contient plus de racine." =>
+                "The XML document no longer has a root element.",
+            "La racine XML doit rester <preset> pour un preset Dante Controller." =>
+                "The XML root must remain <preset> for a Dante Controller preset.",
+            "Le namespace XML du preset a été modifié." =>
+                "The preset XML namespace was modified.",
+            "La déclaration XML d'origine n'est plus présente." =>
+                "The original XML declaration is no longer present.",
+            "Aucun device Dante n'a été détecté." or
+            "Aucun device Dante n'est présent dans le XML." =>
+                "No Dante device was found in the XML.",
+            "Un device a un nom vide." =>
+                "A device has an empty name.",
+            "Aucune machine preferred master n'est déclarée." =>
+                "No device is declared as Preferred Master.",
+            "Sauvegarde refusée : la racine <preset> est absente." =>
+                "Save blocked: the <preset> root element is missing.",
+            "Sauvegarde refusée : le namespace XML de la racine a été modifié." =>
+                "Save blocked: the root XML namespace was modified.",
+            "Conflit - abonnement incomplet" =>
+                "Conflict - incomplete subscription",
+            _ => null
+        };
+        if (fixedTranslation is not null)
+        {
+            return fixedTranslation;
+        }
+
+        string translated = ReplaceValidationPattern(
+            value,
+            @"^ATTENTION : le fichier mélange (\d+) machine\(s\) en redondant et (\d+) machine\(s\) en daisychain\. Vérifiez que c'est volontaire pour ce réseau\.$",
+            "WARNING: the file mixes $1 redundant device(s) and $2 daisy-chain device(s). Check that this is intentional for this network.");
+        if (!string.Equals(translated, value, StringComparison.Ordinal))
+        {
+            return translated;
+        }
+
+        translated = ReplaceValidationPattern(
+            value,
+            @"^IP fixe détectée sur (\d+) machine\(s\) : (.+)\.$",
+            "Static IP detected on $1 device(s): $2.");
+        if (!string.Equals(translated, value, StringComparison.Ordinal))
+        {
+            return translated;
+        }
+
+        translated = ReplaceValidationPattern(
+            value,
+            @"^ATTENTION : plusieurs fréquences d'échantillonnage sont présentes dans le preset : (.+)\.$",
+            "WARNING: multiple sample rates are present in the preset: $1.");
+        if (!string.Equals(translated, value, StringComparison.Ordinal))
+        {
+            return translated;
+        }
+
+        translated = ReplaceValidationPattern(
+            value,
+            @"^ATTENTION : plusieurs bits par échantillon sont présentes dans le preset : (.+)\.$",
+            "WARNING: multiple bit depths are present in the preset: $1.");
+        if (!string.Equals(translated, value, StringComparison.Ordinal))
+        {
+            return translated;
+        }
+
+        translated = ReplaceValidationPattern(
+            value,
+            @"^Plusieurs samplerates sont présents dans le preset : (.+)\.$",
+            "Multiple sample rates are present in the preset: $1.");
+        if (!string.Equals(translated, value, StringComparison.Ordinal))
+        {
+            return translated;
+        }
+
+        translated = ReplaceValidationPattern(
+            value,
+            @"^Plusieurs encodages sont présents dans le preset : (.+)\.$",
+            "Multiple bit depths are present in the preset: $1.");
+        if (!string.Equals(translated, value, StringComparison.Ordinal))
+        {
+            return translated;
+        }
+
+        translated = ReplaceValidationPattern(
+            value,
+            @"^Plusieurs latences sont présentes dans le preset : (.+)\.$",
+            "Multiple latencies are present in the preset: $1.");
+        if (!string.Equals(translated, value, StringComparison.Ordinal))
+        {
+            return translated;
+        }
+
+        translated = ReplaceValidationPattern(
+            value,
+            @"^(.+) ne contient aucun canal (TX|RX)\.$",
+            "$1 has no $2 channel.");
+        if (!string.Equals(translated, value, StringComparison.Ordinal))
+        {
+            return translated;
+        }
+
+        translated = ReplaceValidationPattern(
+            value,
+            @"^(.+) utilise une source locale '\.'\.$",
+            "$1 uses the local source '.'.");
+        if (!string.Equals(translated, value, StringComparison.Ordinal))
+        {
+            return translated;
+        }
+
+        translated = ReplaceValidationPattern(
+            value,
+            @"^(.+) est libre\.$",
+            "$1 is unassigned.");
+        if (!string.Equals(translated, value, StringComparison.Ordinal))
+        {
+            return translated;
+        }
+
+        translated = ReplaceValidationPattern(
+            value,
+            @"^(.+) pointe vers un device TX absent du preset : (.+)\.$",
+            "$1 references a Tx device missing from the preset: $2.");
+        if (!string.Equals(translated, value, StringComparison.Ordinal))
+        {
+            return translated;
+        }
+
+        translated = ReplaceValidationPattern(
+            value,
+            @"^(.+) pointe vers un canal TX non retrouvé : (.+)\.$",
+            "$1 references a Tx channel that could not be found: $2.");
+        if (!string.Equals(translated, value, StringComparison.Ordinal))
+        {
+            return translated;
+        }
+
+        translated = ReplaceValidationPattern(
+            value,
+            @"^(\d+) machines sont déclarées preferred master\.$",
+            "$1 devices are declared as Preferred Master.");
+        if (!string.Equals(translated, value, StringComparison.Ordinal))
+        {
+            return translated;
+        }
+
+        translated = ReplaceValidationPattern(
+            value,
+            @"^(.+) contient un doublon de Dante Id (\d+) dans les canaux (TX|RX)\.$",
+            "$1 contains duplicate Dante ID $2 among $3 channels.");
+        if (!string.Equals(translated, value, StringComparison.Ordinal))
+        {
+            return translated;
+        }
+
+        // Les diagnostics ci-dessous sont moins fréquents, mais ils doivent
+        // rester exploitables dans une interface anglaise.
+        (string Pattern, string Replacement)[] technicalPatterns =
+        [
+            (@"^La version du preset doit rester (.+)\.$",
+                "The preset version must remain $1."),
+            (@"^Le nombre de devices a changé : (\d+) au chargement, (\d+) maintenant\.$",
+                "The device count changed: $1 when loaded, $2 now."),
+            (@"^Device d'origine absent du XML courant : (.+)\.$",
+                "Original device missing from the current XML: $1."),
+            (@"^La version de déclaration XML d'origine \((.+)\) n'est pas conservée\.$",
+                "The original XML declaration version ($1) was not preserved."),
+            (@"^L'encodage XML d'origine \((.+)\) n'est pas conservé\.$",
+                "The original XML encoding ($1) was not preserved."),
+            (@"^Le standalone XML d'origine \((.+)\) n'est pas conservé\.$",
+                "The original XML standalone value ($1) was not preserved."),
+            (@"^Balise technique supprimée : <(.+)>\.$",
+                "Technical element removed: <$1>."),
+            (@"^(.+) : Dante Id (.+) en doublon sur les canaux (TX|RX)\.$",
+                "$1: duplicate Dante ID $2 among $3 channels."),
+            (@"^(.+) : nombre de canaux (TX|RX) modifié \((\d+) attendu\(s\), (\d+) trouvé\(s\)\)\.$",
+                "$1: $2 channel count changed ($3 expected, $4 found)."),
+            (@"^(.+) : Dante Id supprimé ou modifié sur (TX|RX) position (\d+)\.$",
+                "$1: Dante ID removed or modified at $2 position $3."),
+            (@"^(.+) : mediaType supprimé ou modifié sur (TX|RX) (.+)\.$",
+                "$1: mediaType removed or modified on $2 $3."),
+            (@"^(.+) RX Dante Id (.+) : subscribed_channel renseigné sans subscribed_device\.$",
+                "$1 Rx Dante ID $2: subscribed_channel is set without subscribed_device."),
+            (@"^(.+) RX Dante Id (.+) : subscribed_device renseigné sans subscribed_channel\.$",
+                "$1 Rx Dante ID $2: subscribed_device is set without subscribed_channel."),
+            (@"^Le device '(.+)' contient des caractères non imprimables\.$",
+                "Device '$1' contains non-printable characters."),
+            (@"^(.+) contient un canal (TX|RX) sans nom lisible\.$",
+                "$1 contains a $2 channel without a readable name."),
+            (@"^(.+) / (.+) contient des caractères non imprimables\.$",
+                "$1 / $2 contains non-printable characters."),
+            (@"^Le nom de device '(.+)' est présent plusieurs fois\.$",
+                "Device name '$1' appears more than once."),
+            (@"^Identité technique dupliquée : device_id (.+), process_id (.+), utilisée par (.+)\. Supprimez le doublon ou recréez la copie comme rôle générique sans instance_id\.$",
+                "Duplicate technical identity: device_id $1, process_id $2, used by $3. Remove the duplicate or recreate the copy as a generic role without instance_id."),
+            (@"^Le device_id (.+) est partagé par plusieurs process_id \((.+)\)\. Vérifiez que cette structure correspond bien au matériel d'origine\.$",
+                "device_id $1 is shared by several process_id values ($2). Check that this structure matches the original hardware."),
+            (@"^(.+) : le device_id '(.+)' ne suit pas le format EUI-64 hexadécimal de 16 caractères observé\. La valeur est conservée, mais doit être vérifiée dans Dante Controller\.$",
+                "$1: device_id '$2' does not match the observed 16-character hexadecimal EUI-64 format. The value is preserved but must be checked in Dante Controller."),
+            (@"^Adresse IPv4 fixe dupliquée : (.+) est utilisée par (.+)\. Attribuez une adresse unique ou repassez les machines concernées en IP automatique\.$",
+                "Duplicate static IPv4 address: $1 is used by $2. Assign a unique address or switch the affected devices back to automatic IP."),
+            (@"^(.+) (TX|RX) position (\d+) : attribut danteId absent\. Restaurez l'identifiant du canal avant la sauvegarde\.$",
+                "$1 $2 position $3: missing danteId attribute. Restore the channel identifier before saving."),
+            (@"^(.+) (TX|RX) position (\d+) : danteId '(.+)' invalide\. Un entier strictement positif est attendu\.$",
+                "$1 $2 position $3: invalid danteId '$4'. A strictly positive integer is required."),
+            (@"^(.+) : danteId (.+) dupliqué parmi les canaux (TX|RX)\. Chaque canal d'une même direction doit avoir un identifiant unique\.$",
+                "$1: duplicate danteId $2 among $3 channels. Every channel in the same direction must have a unique identifier."),
+            (@"^(.+) (TX|RX) (.+) : attribut mediaType absent\. Restaurez la valeur du XML source avant la sauvegarde\.$",
+                "$1 $2 $3: missing mediaType attribute. Restore the value from the source XML before saving."),
+            (@"^(.+) : le txflow (.+) référence le canal TX '(.+)', qui n'existe pas\. Supprimez le slot invalide ou restaurez le canal TX concerné\.$",
+                "$1: txflow $2 references Tx channel '$3', which does not exist. Remove the invalid slot or restore the affected Tx channel."),
+            (@"^Sauvegarde refusée : racine XML modifiée \((.+) -> (.+)\)\.$",
+                "Save blocked: XML root changed ($1 -> $2)."),
+            (@"^Ajout de device non autorisé par défaut : (.+)\. Utilisez la duplication, la banque de machines ou l'import XML contrôlé\.$",
+                "Device addition is not allowed by default: $1. Use duplication, the device bank, or controlled XML import.")
+        ];
+
+        foreach ((string pattern, string replacement) in technicalPatterns)
+        {
+            translated = ReplaceValidationPattern(value, pattern, replacement);
+            if (!string.Equals(translated, value, StringComparison.Ordinal))
+            {
+                return translated;
+            }
+        }
+
+        translated = TranslateXmlGuardMessage(value);
+        if (!string.Equals(translated, value, StringComparison.Ordinal))
+        {
+            return translated;
+        }
+
+        return value;
+    }
+
+    private static string TranslateXmlGuardMessage(string value)
+    {
+        string translated = value
+            .Replace("Modification technique interdite : ", "Forbidden technical change: ", StringComparison.Ordinal)
+            .Replace("Chemin XML non autorisé par défaut : ", "XML path not allowed by default: ", StringComparison.Ordinal)
+            .Replace("Balise modifiée :", "Element changed:", StringComparison.Ordinal)
+            .Replace("Namespace modifié sur", "Namespace changed on", StringComparison.Ordinal)
+            .Replace("Valeur modifiée :", "Value changed:", StringComparison.Ordinal)
+            .Replace("Balise supprimée :", "Element removed:", StringComparison.Ordinal)
+            .Replace("Balise ajoutée :", "Element added:", StringComparison.Ordinal)
+            .Replace("Attribut supprimé :", "Attribute removed:", StringComparison.Ordinal)
+            .Replace("Attribut ajouté :", "Attribute added:", StringComparison.Ordinal)
+            .Replace("Attribut @", "Attribute @", StringComparison.Ordinal)
+            .Replace(" modifié :", " changed:", StringComparison.Ordinal)
+            .Replace("(vide)", "(empty)", StringComparison.Ordinal);
+
+        return translated;
+    }
+
+    private static string ReplaceValidationPattern(string value, string pattern, string replacement)
+    {
+        return System.Text.RegularExpressions.Regex.Replace(
+            value,
+            pattern,
+            replacement,
+            System.Text.RegularExpressions.RegexOptions.CultureInvariant);
+    }
+
     private static Dictionary<string, string> BuildLiteralMap()
     {
         Dictionary<string, string> map = new(StringComparer.Ordinal);
@@ -687,8 +1042,8 @@ public static class LocalizationService
         }
 
         Add(map, "Ouvrir XML", "Open XML");
-        Add(map, "Nouveau projet (expérimental)", "New project (experimental)");
-        Add(map, "Crée un preset 3.0.0 hors ligne. Un test d'import Dante Controller reste obligatoire.", "Creates an offline 3.0.0 preset. A Dante Controller import test is still required.");
+        Add(map, "Nouveau projet", "New project");
+        Add(map, "Crée un nouveau projet hors ligne à partir d'une structure prise en charge.", "Creates a new offline project from a supported structure.");
         Add(map, "Banque de machines", "Device bank");
         Add(map, "Consulte, importe, exporte et administre les modèles de machines réutilisables.", "Browses, imports, exports, and manages reusable device templates.");
         Add(map, "Ajouter XML", "Add XML");
@@ -707,6 +1062,7 @@ public static class LocalizationService
         Add(map, "Machine ou canal", "Device or channel");
         Add(map, "Mode hors ligne : l'application modifie uniquement les fichiers XML chargés. Elle ne se connecte pas au réseau Dante.", "Offline mode: the application only modifies loaded XML files. It does not connect to the Dante network.");
         Add(map, "Configuration", "Configuration");
+        Add(map, "Machines", "Devices");
         Add(map, "POINTS À VÉRIFIER", "ITEMS TO CHECK");
         Add(map, "Voir les machines", "Show devices");
         Add(map, "Filtre machines", "Device filter");
@@ -825,6 +1181,11 @@ public static class LocalizationService
         Add(map, "Preferred", "Preferred");
         Add(map, "Patch", "Patch");
         Add(map, "Patch visuel / grille", "Visual patch / matrix");
+        Add(map, "Easy patch / Matrice", "Easy patch / Matrix");
+        Add(map, "Consultez chaque RX et sa source actuelle, ou ouvrez l’atelier pour patcher dans la matrice.", "Review each Rx channel and its current source, or open the workspace to patch in the matrix.");
+        Add(map, "Ouvre Easy patch et la matrice. Chaque action y est appliquée immédiatement.", "Opens Easy patch and the matrix. Every action is applied immediately.");
+        Add(map, "Affecte immédiatement la source TX choisie au RX sélectionné.", "Immediately assigns the selected Tx source to the selected Rx channel.");
+        Add(map, "Déconnecte immédiatement le RX sélectionné.", "Immediately disconnects the selected Rx channel.");
         Add(map, "Ouvre l'onglet Easy patch.", "Opens the Easy patch tab.");
         Add(map, "Chargez un XML pour utiliser Easy patch.", "Load an XML file to use Easy patch.");
         Add(map, "Matrice", "Matrix");
@@ -882,6 +1243,11 @@ public static class LocalizationService
         Add(map, "Actif", "Active");
         Add(map, "Modifié", "Modified");
         Add(map, "État", "Status");
+        Add(map, "Libre", "Free");
+        Add(map, "Patch actif", "Active subscription");
+        Add(map, "Patch local", "Local subscription");
+        Add(map, "Aucune source", "No source");
+        Add(map, "Normal", "Normal");
         Add(map, "Afficher seulement les conflits", "Show conflicts only");
         Add(map, "Renommer le RX sélectionné", "Rename selected Rx");
         Add(map, "Renommer le TX source", "Rename source Tx");
@@ -936,6 +1302,13 @@ public static class LocalizationService
         Add(map, "Crée un fichier vectoriel en couleur sans modifier le XML Dante.", "Creates a colored vector file without modifying the Dante XML.");
         Add(map, "Crée un PDF vectoriel en couleur sans modifier le XML Dante.", "Creates a colored vector PDF without modifying the Dante XML.");
         Add(map, "Santé du fichier", "File health");
+        Add(map, "Centre de validation", "Validation center");
+        Add(map, "Points à vérifier", "Items to check");
+        Add(map, "Rapports", "Reports");
+        Add(map, "Vérifie la structure et les références du XML chargé.", "Checks the loaded XML structure and references.");
+        Add(map, "Prépare un rapport de compatibilité à relire avant l’import dans Dante Controller.", "Builds a compatibility report to review before importing into Dante Controller.");
+        Add(map, "Résume les machines, formats, adresses et points de vigilance.", "Summarizes devices, formats, addresses, and items requiring attention.");
+        Add(map, "Compare le projet avec un autre fichier XML sans modifier aucun des deux.", "Compares the project with another XML file without modifying either file.");
         Add(map, "Filtre santé", "Health filter");
         Add(map, "Gravité", "Severity");
         Add(map, "Catégorie", "Category");
@@ -961,6 +1334,9 @@ public static class LocalizationService
         Add(map, "IP automatique", "Automatic IP");
         Add(map, "IP fixe", "Static IP");
         Add(map, "Machine supprimée", "Device deleted");
+        Add(map, "Machine dupliquée", "Device duplicated");
+        Add(map, "Machine ajoutée depuis la banque", "Device added from the bank");
+        Add(map, "Nouveau projet expérimental", "New experimental project");
         Add(map, "Patch machine reset", "Device Rx/Tx patch reset");
         Add(map, "Patch RX machine reset", "Device Rx patch reset");
         Add(map, "Patch TX machine reset", "Device Tx patch reset");
@@ -980,6 +1356,10 @@ public static class LocalizationService
         Add(map, "Quick start", "Quick start");
         Add(map, "Notice complète", "Full guide");
         Add(map, "Journal", "Log");
+        Add(map, "Historique", "History");
+        Add(map, "Historique des actions", "Action history");
+        Add(map, "Les dernières modifications de cette session sont affichées ci-dessous.", "The latest changes from this session are shown below.");
+        Add(map, "Outils avancés", "Advanced tools");
         Add(map, "GÉNÉRATEUR D'EXPÉRIENCE HORRIBLE (MAIS PÉDAGOGIQUE)", "HORRIBLE EXPERIENCE GENERATOR (BUT EDUCATIONAL)");
         Add(map, "Composez le pire réseau de formation possible, sans toucher au vrai fichier. Décochez simplement ce que vous souhaitez épargner.", "Build the worst training network imaginable without touching the real file. Simply clear anything you want to spare.");
         Add(map, "Que faut-il saboter ?", "What should be sabotaged?");

@@ -42,24 +42,6 @@
                            Foreground="{DynamicResource DialogMutedBrush}"
                            TextWrapping="Wrap" />
 
-                <GroupBox x:Name="TxGroupBox" Header="Canaux TX">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <CheckBox x:Name="UseTxLabelsCheckBox"
-                                  Content="Utiliser les labels du modèle"
-                                  IsChecked="True"
-                                  Checked="LabelModeChanged"
-                                  Unchecked="LabelModeChanged" />
-                        <StackPanel Grid.Column="1" Margin="16,0,0,0">
-                            <Label x:Name="TxPrefixLabel" Content="Préfixe numéroté" />
-                            <TextBox x:Name="TxPrefixTextBox" Text="TX" />
-                        </StackPanel>
-                    </Grid>
-                </GroupBox>
-
                 <GroupBox x:Name="RxGroupBox" Header="Canaux RX">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -74,6 +56,24 @@
                         <StackPanel Grid.Column="1" Margin="16,0,0,0">
                             <Label x:Name="RxPrefixLabel" Content="Préfixe numéroté" />
                             <TextBox x:Name="RxPrefixTextBox" Text="RX" />
+                        </StackPanel>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox x:Name="TxGroupBox" Header="Canaux TX">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox x:Name="UseTxLabelsCheckBox"
+                                  Content="Utiliser les labels du modèle"
+                                  IsChecked="True"
+                                  Checked="LabelModeChanged"
+                                  Unchecked="LabelModeChanged" />
+                        <StackPanel Grid.Column="1" Margin="16,0,0,0">
+                            <Label x:Name="TxPrefixLabel" Content="Préfixe numéroté" />
+                            <TextBox x:Name="TxPrefixTextBox" Text="TX" />
                         </StackPanel>
                     </Grid>
                 </GroupBox>

@@ -6,78 +6,110 @@ namespace DanteConfigEditor.Models;
 
 public sealed partial class DanteProject
 {
-    public string BuildSaveSummary()
+    public string BuildSaveSummary(UiLanguage language = UiLanguage.French)
     {
+        bool english = language == UiLanguage.English;
         StringBuilder builder = new();
         DanteValidationResult validation = Validate();
 
-        builder.AppendLine("RÉSUMÉ AVANT SAUVEGARDE");
+        builder.AppendLine(english ? "PRE-SAVE SUMMARY" : "RÉSUMÉ AVANT SAUVEGARDE");
         builder.AppendLine("=======================");
-        builder.AppendLine($"Fichier original : {OriginalFilePath}");
-        builder.AppendLine($"Dernier fichier sauvegardé : {LastSavedPath ?? "aucun"}");
+        builder.AppendLine(english
+            ? $"Original file: {OriginalFilePath}"
+            : $"Fichier original : {OriginalFilePath}");
+        builder.AppendLine(english
+            ? $"Last saved file: {LastSavedPath ?? "none"}"
+            : $"Dernier fichier sauvegardé : {LastSavedPath ?? "aucun"}");
         builder.AppendLine();
-        builder.AppendLine("Compteurs");
+        builder.AppendLine(english ? "Counts" : "Compteurs");
         builder.AppendLine("--------");
         builder.AppendLine($"Devices : {Devices.Count}");
-        builder.AppendLine($"Canaux TX : {Devices.Sum(device => device.TxCount)}");
-        builder.AppendLine($"Canaux RX : {Devices.Sum(device => device.RxCount)}");
-        builder.AppendLine($"Patchs actifs : {PatchMatrix.ActivePatchCount}");
-        builder.AppendLine($"Patchs modifiés : {_modifiedRxElements.Count}");
+        builder.AppendLine(english
+            ? $"TX channels: {Devices.Sum(device => device.TxCount)}"
+            : $"Canaux TX : {Devices.Sum(device => device.TxCount)}");
+        builder.AppendLine(english
+            ? $"RX channels: {Devices.Sum(device => device.RxCount)}"
+            : $"Canaux RX : {Devices.Sum(device => device.RxCount)}");
+        builder.AppendLine(english
+            ? $"Active subscriptions: {PatchMatrix.ActivePatchCount}"
+            : $"Patchs actifs : {PatchMatrix.ActivePatchCount}");
+        builder.AppendLine(english
+            ? $"Modified subscriptions: {_modifiedRxElements.Count}"
+            : $"Patchs modifiés : {_modifiedRxElements.Count}");
         builder.AppendLine();
-        AppendImportantWarnings(builder, BuildImportantWarnings());
+        AppendImportantWarnings(builder, BuildImportantWarningDetails(), language);
         builder.AppendLine();
         builder.AppendLine("Validation");
         builder.AppendLine("----------");
-        builder.AppendLine(validation.ToDisplayText());
+        builder.AppendLine(validation.ToDisplayText(language));
         builder.AppendLine();
-        builder.AppendLine(DanteXmlChangeGuardService.BuildGuardReport(ValidateXmlChangeGuard()));
+        builder.AppendLine(DanteXmlChangeGuardService.BuildGuardReport(ValidateXmlChangeGuard(), language));
         builder.AppendLine();
-        AppendChangeTable(builder);
+        AppendChangeTable(builder, language);
 
         return builder.ToString();
     }
 
-    public string BuildReportText()
+    public string BuildReportText(UiLanguage language = UiLanguage.French)
     {
+        bool english = language == UiLanguage.English;
         StringBuilder builder = new();
         DanteValidationResult validation = Validate();
 
-        builder.AppendLine("DANTE CONFIG EDITOR - RAPPORT");
+        builder.AppendLine(english ? "DANTE CONFIG EDITOR - REPORT" : "DANTE CONFIG EDITOR - RAPPORT");
         builder.AppendLine("=============================");
-        builder.AppendLine($"Date : {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
-        builder.AppendLine($"Fichier : {OriginalFilePath}");
-        builder.AppendLine($"Statut : {(IsModified ? "Modifié non sauvegardé" : "Non modifié")}");
+        builder.AppendLine($"Date: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+        builder.AppendLine(english ? $"File: {OriginalFilePath}" : $"Fichier : {OriginalFilePath}");
+        builder.AppendLine(english
+            ? $"Status: {(IsModified ? "Modified - not saved" : "Unmodified")}"
+            : $"Statut : {(IsModified ? "Modifié non sauvegardé" : "Non modifié")}");
         builder.AppendLine();
-        builder.AppendLine("Synthèse");
+        builder.AppendLine(english ? "Summary" : "Synthèse");
         builder.AppendLine("--------");
         builder.AppendLine($"Devices : {Devices.Count}");
-        builder.AppendLine($"Canaux TX : {Devices.Sum(device => device.TxCount)}");
-        builder.AppendLine($"Canaux RX : {Devices.Sum(device => device.RxCount)}");
-        builder.AppendLine($"Patchs actifs : {PatchMatrix.ActivePatchCount}");
-        builder.AppendLine($"Conflits : {PatchMatrix.ConflictCount}");
+        builder.AppendLine(english
+            ? $"TX channels: {Devices.Sum(device => device.TxCount)}"
+            : $"Canaux TX : {Devices.Sum(device => device.TxCount)}");
+        builder.AppendLine(english
+            ? $"RX channels: {Devices.Sum(device => device.RxCount)}"
+            : $"Canaux RX : {Devices.Sum(device => device.RxCount)}");
+        builder.AppendLine(english
+            ? $"Active subscriptions: {PatchMatrix.ActivePatchCount}"
+            : $"Patchs actifs : {PatchMatrix.ActivePatchCount}");
+        builder.AppendLine(english
+            ? $"Conflicts: {PatchMatrix.ConflictCount}"
+            : $"Conflits : {PatchMatrix.ConflictCount}");
         builder.AppendLine();
-        AppendImportantWarnings(builder, BuildImportantWarnings());
+        AppendImportantWarnings(builder, BuildImportantWarningDetails(), language);
         builder.AppendLine();
 
         builder.AppendLine("Validation");
         builder.AppendLine("----------");
-        builder.AppendLine(validation.ToDisplayText());
+        builder.AppendLine(validation.ToDisplayText(language));
         builder.AppendLine();
-        builder.AppendLine(BuildCompatibilityReport());
+        builder.AppendLine(BuildCompatibilityReport(language));
         builder.AppendLine();
 
         builder.AppendLine("Devices");
         builder.AppendLine("-------");
-        AppendTableHeader(builder, "Device", "Réseau", "Latence", "TX/RX");
+        AppendTableHeader(
+            builder,
+            "Device",
+            english ? "Network" : "Réseau",
+            english ? "Latency" : "Latence",
+            "TX/RX");
         foreach (DanteDevice device in Devices)
         {
-            AppendTableRow(builder, device.Name, device.NetworkMode, DanteLatencyFormatter.FormatLatencyWithXmlValue(device.Latency), $"{device.TxCount}/{device.RxCount}");
+            string network = english
+                ? device.IsRedundant ? "Redundant" : "Daisy-chain"
+                : device.NetworkMode;
+            AppendTableRow(builder, device.Name, network, DanteLatencyFormatter.FormatLatencyWithXmlValue(device.Latency), $"{device.TxCount}/{device.RxCount}");
         }
 
         builder.AppendLine();
-        builder.AppendLine("Patchs actifs et conflits");
+        builder.AppendLine(english ? "Active subscriptions and conflicts" : "Patchs actifs et conflits");
         builder.AppendLine("-------------------------");
-        AppendTableHeader(builder, "RX", "TX", "Canal TX", "État");
+        AppendTableHeader(builder, "RX", "TX", english ? "TX channel" : "Canal TX", english ? "Status" : "État");
         foreach (DanteSubscription subscription in PatchMatrix.Subscriptions.Where(subscription => subscription.IsActive || subscription.IsConflict))
         {
             AppendTableRow(
@@ -85,17 +117,21 @@ public sealed partial class DanteProject
                 $"{subscription.RxDevice} / {subscription.RxChannelName}",
                 string.IsNullOrWhiteSpace(subscription.TxDevice) ? "-" : subscription.TxDevice,
                 string.IsNullOrWhiteSpace(subscription.TxChannelName) ? "-" : subscription.TxChannelName,
-                subscription.Status);
+                LocalizationService.TranslateLiteral(language, subscription.Status));
         }
 
         builder.AppendLine();
-        AppendChangeTable(builder);
+        AppendChangeTable(builder, language);
 
         return builder.ToString();
     }
 
-    public string BuildPatchbookText(string scope, string? scopeDisplay = null)
+    public string BuildPatchbookText(
+        string scope,
+        string? scopeDisplay = null,
+        UiLanguage language = UiLanguage.French)
     {
+        bool english = language == UiLanguage.English;
         DanteValidationResult validation = Validate();
         IEnumerable<DanteSubscription> subscriptions = PatchMatrix.Subscriptions;
         subscriptions = scope switch
@@ -115,20 +151,34 @@ public sealed partial class DanteProject
         StringBuilder builder = new();
         builder.AppendLine("DANTE CONFIG EDITOR - PATCHBOOK");
         builder.AppendLine("===============================");
-        builder.AppendLine($"Date : {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
-        builder.AppendLine($"Nom du fichier source : {Path.GetFileName(OriginalFilePath)}");
-        builder.AppendLine($"Chemin du fichier source : {OriginalFilePath}");
+        builder.AppendLine($"Date: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+        builder.AppendLine(english
+            ? $"Source file name: {Path.GetFileName(OriginalFilePath)}"
+            : $"Nom du fichier source : {Path.GetFileName(OriginalFilePath)}");
+        builder.AppendLine(english
+            ? $"Source file path: {OriginalFilePath}"
+            : $"Chemin du fichier source : {OriginalFilePath}");
         builder.AppendLine($"Preset : {PresetName}");
-        builder.AppendLine($"Version preset : {Blank(PresetVersion)}");
+        builder.AppendLine(english
+            ? $"Preset version: {LocalizedBlank(PresetVersion, language)}"
+            : $"Version preset : {LocalizedBlank(PresetVersion, language)}");
         builder.AppendLine($"Scope : {scopeDisplay ?? scope}");
         builder.AppendLine($"Devices : {Devices.Count}");
         builder.AppendLine($"TX total : {Devices.Sum(device => device.TxCount)}");
         builder.AppendLine($"RX total : {Devices.Sum(device => device.RxCount)}");
-        builder.AppendLine($"Patchs actifs : {PatchMatrix.ActivePatchCount}");
-        builder.AppendLine($"RX libres : {PatchMatrix.FreeRxCount}");
-        builder.AppendLine($"Patchs locaux : {PatchMatrix.LocalPatchCount}");
+        builder.AppendLine(english
+            ? $"Active subscriptions: {PatchMatrix.ActivePatchCount}"
+            : $"Patchs actifs : {PatchMatrix.ActivePatchCount}");
+        builder.AppendLine(english
+            ? $"Free RX channels: {PatchMatrix.FreeRxCount}"
+            : $"RX libres : {PatchMatrix.FreeRxCount}");
+        builder.AppendLine(english
+            ? $"Local subscriptions: {PatchMatrix.LocalPatchCount}"
+            : $"Patchs locaux : {PatchMatrix.LocalPatchCount}");
         builder.AppendLine($"Warnings : {validation.Warnings.Count}");
-        builder.AppendLine($"Erreurs bloquantes : {validation.Errors.Count}");
+        builder.AppendLine(english
+            ? $"Blocking errors: {validation.Errors.Count}"
+            : $"Erreurs bloquantes : {validation.Errors.Count}");
         builder.AppendLine();
 
         foreach (IGrouping<string, DanteSubscription> group in rows.GroupBy(subscription => subscription.RxDevice))
@@ -140,9 +190,13 @@ public sealed partial class DanteProject
             {
                 string source = subscription.IsActive
                     ? subscription.SourceFull
-                    : "(libre)";
+                    : english ? "(free)" : "(libre)";
 
-                builder.AppendLine($"RX {subscription.RxDanteId.ToString().PadLeft(3, '0')} | {TrimForPatchbook(subscription.RxChannelName),-28} <- {TrimForPatchbook(source),-48} | {subscription.TypeLabel}");
+                builder.AppendLine(
+                    $"RX {subscription.RxDanteId.ToString().PadLeft(3, '0')} | "
+                    + $"{TrimForPatchbook(subscription.RxChannelName),-28} <- "
+                    + $"{TrimForPatchbook(source),-48} | "
+                    + LocalizationService.TranslateLiteral(language, subscription.TypeLabel));
             }
 
             builder.AppendLine();
@@ -150,13 +204,17 @@ public sealed partial class DanteProject
 
         if (rows.Length == 0)
         {
-            builder.AppendLine("Aucune ligne à exporter avec ce filtre.");
+            builder.AppendLine(english
+                ? "No row matches this export filter."
+                : "Aucune ligne à exporter avec ce filtre.");
         }
 
         return builder.ToString();
     }
 
-    public string BuildPatchbookCsv(string scope)
+    public string BuildPatchbookCsv(
+        string scope,
+        UiLanguage language = UiLanguage.French)
     {
         IEnumerable<DanteSubscription> subscriptions = PatchMatrix.Subscriptions;
         subscriptions = scope switch
@@ -179,61 +237,85 @@ public sealed partial class DanteProject
                 Csv(subscription.RxChannelName),
                 Csv(txDevice),
                 Csv(subscription.TxChannelName),
-                Csv(subscription.TypeLabel),
-                Csv(subscription.Status)));
+                Csv(LocalizationService.TranslateLiteral(language, subscription.TypeLabel)),
+                Csv(LocalizationService.TranslateLiteral(language, subscription.Status))));
         }
 
         return builder.ToString();
     }
 
-    public string BuildCompatibilityReport()
+    public string BuildCompatibilityReport(UiLanguage language = UiLanguage.French)
     {
+        bool english = language == UiLanguage.English;
         DanteValidationResult validation = Validate();
         DanteValidationResult compatibility = DanteXmlCompatibilityService.ValidateCompatibility(Document, _originalCompatibilityProfile);
         DanteValidationResult guard = ValidateXmlChangeGuard();
 
         StringBuilder builder = new();
-        builder.AppendLine("Compatibilité XML");
+        builder.AppendLine(english ? "XML compatibility" : "Compatibilité XML");
         builder.AppendLine("-----------------");
-        builder.AppendLine(Document.Root?.Name.LocalName == "preset" ? "OK Racine <preset>" : "ERROR Racine <preset> absente ou modifiée");
-        builder.AppendLine(!string.IsNullOrWhiteSpace(PresetVersion) ? "OK Version du preset conservée" : "WARNING Version du preset absente");
-        builder.AppendLine(compatibility.Errors.Any(error => error.Contains("nombre de devices", StringComparison.OrdinalIgnoreCase)) ? "ERROR Devices modifiés" : "OK Devices conservés");
-        builder.AppendLine(compatibility.Errors.Any(error => error.Contains("canaux TX", StringComparison.OrdinalIgnoreCase)) ? "ERROR TX modifiés" : "OK TX conservés");
-        builder.AppendLine(compatibility.Errors.Any(error => error.Contains("canaux RX", StringComparison.OrdinalIgnoreCase)) ? "ERROR RX modifiés" : "OK RX conservés");
+        builder.AppendLine(Document.Root?.Name.LocalName == "preset"
+            ? english ? "OK <preset> root present" : "OK Racine <preset>"
+            : english ? "ERROR <preset> root missing or modified" : "ERROR Racine <preset> absente ou modifiée");
+        builder.AppendLine(!string.IsNullOrWhiteSpace(PresetVersion)
+            ? english ? "OK Preset version preserved" : "OK Version du preset conservée"
+            : english ? "WARNING Preset version missing" : "WARNING Version du preset absente");
+        builder.AppendLine(compatibility.Errors.Any(error => error.Contains("nombre de devices", StringComparison.OrdinalIgnoreCase))
+            ? english ? "ERROR Devices modified" : "ERROR Devices modifiés"
+            : english ? "OK Devices preserved" : "OK Devices conservés");
+        builder.AppendLine(compatibility.Errors.Any(error => error.Contains("canaux TX", StringComparison.OrdinalIgnoreCase))
+            ? english ? "ERROR TX channels modified" : "ERROR TX modifiés"
+            : english ? "OK TX channels preserved" : "OK TX conservés");
+        builder.AppendLine(compatibility.Errors.Any(error => error.Contains("canaux RX", StringComparison.OrdinalIgnoreCase))
+            ? english ? "ERROR RX channels modified" : "ERROR RX modifiés"
+            : english ? "OK RX channels preserved" : "OK RX conservés");
         builder.AppendLine(HasCompatibilityError(compatibility, "dante", "TX")
-            ? "ERROR Dante Id TX manquant ou modifié"
-            : "OK Tous les Dante Id TX sont présents");
+            ? english ? "ERROR Missing or modified TX Dante ID" : "ERROR Dante Id TX manquant ou modifié"
+            : english ? "OK All TX Dante IDs are present" : "OK Tous les Dante Id TX sont présents");
         builder.AppendLine(HasCompatibilityError(compatibility, "dante", "RX")
-            ? "ERROR Dante Id RX manquant ou modifié"
-            : "OK Tous les Dante Id RX sont présents");
+            ? english ? "ERROR Missing or modified RX Dante ID" : "ERROR Dante Id RX manquant ou modifié"
+            : english ? "OK All RX Dante IDs are present" : "OK Tous les Dante Id RX sont présents");
         builder.AppendLine(compatibility.Errors.Any(error => error.Contains("mediaType", StringComparison.OrdinalIgnoreCase) && error.Contains("TX", StringComparison.OrdinalIgnoreCase))
-            ? "ERROR mediaType TX manquant ou modifié"
-            : "OK Tous les mediaType TX sont présents");
+            ? english ? "ERROR Missing or modified TX mediaType" : "ERROR mediaType TX manquant ou modifié"
+            : english ? "OK All TX mediaType values are present" : "OK Tous les mediaType TX sont présents");
         builder.AppendLine(compatibility.Errors.Any(error => error.Contains("mediaType", StringComparison.OrdinalIgnoreCase) && error.Contains("RX", StringComparison.OrdinalIgnoreCase))
-            ? "ERROR mediaType RX manquant ou modifié"
-            : "OK Tous les mediaType RX sont présents");
-        builder.AppendLine(compatibility.Errors.Any(error => error.Contains("Balise technique", StringComparison.OrdinalIgnoreCase)) ? "ERROR Balises techniques principales modifiées" : "OK Balises techniques principales conservées");
-        builder.AppendLine(guard.HasErrors ? "ERROR Changement interdit détecté" : "OK Aucun changement interdit détecté");
-        builder.AppendLine($"WARNING Devices TX référencés mais absents du preset : {PatchMatrix.ExternalMissingDeviceCount}");
-        builder.AppendLine($"WARNING Canaux TX référencés mais absents : {PatchMatrix.MissingTxChannelCount}");
-        builder.AppendLine($"Warnings non bloquants : {validation.Warnings.Count}");
-        builder.AppendLine($"Erreurs bloquantes : {validation.Errors.Count}");
+            ? english ? "ERROR Missing or modified RX mediaType" : "ERROR mediaType RX manquant ou modifié"
+            : english ? "OK All RX mediaType values are present" : "OK Tous les mediaType RX sont présents");
+        builder.AppendLine(compatibility.Errors.Any(error => error.Contains("Balise technique", StringComparison.OrdinalIgnoreCase))
+            ? english ? "ERROR Main technical elements modified" : "ERROR Balises techniques principales modifiées"
+            : english ? "OK Main technical elements preserved" : "OK Balises techniques principales conservées");
+        builder.AppendLine(guard.HasErrors
+            ? english ? "ERROR Forbidden change detected" : "ERROR Changement interdit détecté"
+            : english ? "OK No forbidden change detected" : "OK Aucun changement interdit détecté");
+        builder.AppendLine(english
+            ? $"WARNING Referenced TX devices missing from the preset: {PatchMatrix.ExternalMissingDeviceCount}"
+            : $"WARNING Devices TX référencés mais absents du preset : {PatchMatrix.ExternalMissingDeviceCount}");
+        builder.AppendLine(english
+            ? $"WARNING Referenced TX channels missing: {PatchMatrix.MissingTxChannelCount}"
+            : $"WARNING Canaux TX référencés mais absents : {PatchMatrix.MissingTxChannelCount}");
+        builder.AppendLine(english
+            ? $"Non-blocking warnings: {validation.Warnings.Count}"
+            : $"Warnings non bloquants : {validation.Warnings.Count}");
+        builder.AppendLine(english
+            ? $"Blocking errors: {validation.Errors.Count}"
+            : $"Erreurs bloquantes : {validation.Errors.Count}");
         builder.AppendLine();
-        builder.AppendLine(DanteXmlChangeGuardService.BuildGuardReport(guard));
+        builder.AppendLine(DanteXmlChangeGuardService.BuildGuardReport(guard, language));
         return builder.ToString();
     }
 
-    public string BuildTopologyText()
+    public string BuildTopologyText(UiLanguage language = UiLanguage.French)
     {
+        bool english = language == UiLanguage.English;
         DanteSubscription[] activeSubscriptions = PatchMatrix.Subscriptions
             .Where(subscription => subscription.IsActive)
             .ToArray();
 
         StringBuilder builder = new();
-        builder.AppendLine("TOPOLOGIE SIMPLE");
+        builder.AppendLine(english ? "SIMPLE TOPOLOGY" : "TOPOLOGIE SIMPLE");
         builder.AppendLine("================");
         builder.AppendLine();
-        builder.AppendLine("Sources les plus utilisées");
+        builder.AppendLine(english ? "Most used sources" : "Sources les plus utilisées");
         builder.AppendLine("--------------------------");
         foreach (IGrouping<string, DanteSubscription> group in activeSubscriptions.GroupBy(subscription => subscription.IsLocalSubscription ? "LOCAL" : subscription.DisplayTxDeviceName).OrderByDescending(group => group.Count()).Take(20))
         {
@@ -241,82 +323,98 @@ public sealed partial class DanteProject
         }
 
         builder.AppendLine();
-        builder.AppendLine("Receivers les plus patchés");
+        builder.AppendLine(english ? "Most patched receivers" : "Receivers les plus patchés");
         builder.AppendLine("--------------------------");
         foreach (IGrouping<string, DanteSubscription> group in activeSubscriptions.GroupBy(subscription => subscription.RxDevice).OrderByDescending(group => group.Count()).Take(20))
         {
-            builder.AppendLine($"{group.Key,-30} -> {group.Count()} RX actifs");
+            builder.AppendLine(english
+                ? $"{group.Key,-30} -> {group.Count()} active RX"
+                : $"{group.Key,-30} -> {group.Count()} RX actifs");
         }
 
         builder.AppendLine();
-        builder.AppendLine("Relations TX -> RX");
+        builder.AppendLine(english ? "TX -> RX relationships" : "Relations TX -> RX");
         builder.AppendLine("------------------");
         foreach (IGrouping<string, DanteSubscription> sourceGroup in activeSubscriptions.GroupBy(subscription => subscription.IsLocalSubscription ? "LOCAL" : subscription.DisplayTxDeviceName).OrderBy(group => group.Key, StringComparer.OrdinalIgnoreCase).Take(80))
         {
             builder.AppendLine(Blank(sourceGroup.Key));
             foreach (IGrouping<string, DanteSubscription> rxGroup in sourceGroup.GroupBy(subscription => subscription.RxDevice).OrderByDescending(group => group.Count()).Take(20))
             {
-                builder.AppendLine($"  -> {rxGroup.Key} : {rxGroup.Count()} patchs");
+                builder.AppendLine(english
+                    ? $"  -> {rxGroup.Key}: {rxGroup.Count()} subscriptions"
+                    : $"  -> {rxGroup.Key} : {rxGroup.Count()} patchs");
             }
         }
 
         return builder.ToString();
     }
 
-    public string ListRedundantDevices()
+    public string ListRedundantDevices(UiLanguage language = UiLanguage.French)
     {
-        return BuildDeviceList(Devices.Where(device => device.IsRedundant), "Aucune machine redondante trouvée.");
+        return BuildDeviceList(
+            Devices.Where(device => device.IsRedundant),
+            language == UiLanguage.English ? "No redundant device found." : "Aucune machine redondante trouvée.");
     }
 
-    public string ListDaisychainDevices()
+    public string ListDaisychainDevices(UiLanguage language = UiLanguage.French)
     {
-        return BuildDeviceList(Devices.Where(device => !device.IsRedundant), "Aucune machine en daisychain trouvée.");
+        return BuildDeviceList(
+            Devices.Where(device => !device.IsRedundant),
+            language == UiLanguage.English ? "No device in daisy-chain mode found." : "Aucune machine en daisychain trouvée.");
     }
 
-    public string ListLatencies()
+    public string ListLatencies(UiLanguage language = UiLanguage.French)
     {
         List<string> lines = Devices
             .Where(device => !string.IsNullOrWhiteSpace(device.Latency))
             .Select(device => $"{device.Name}: {DanteLatencyFormatter.FormatLatencyWithXmlValue(device.Latency)}")
             .ToList();
 
-        return lines.Count > 0 ? string.Join(Environment.NewLine, lines) : "Aucune latence définie.";
+        return lines.Count > 0
+            ? string.Join(Environment.NewLine, lines)
+            : language == UiLanguage.English ? "No latency defined." : "Aucune latence définie.";
     }
 
-    public string ListSamplerates()
+    public string ListSamplerates(UiLanguage language = UiLanguage.French)
     {
         List<string> lines = Devices
             .Where(device => !string.IsNullOrWhiteSpace(device.Samplerate))
             .Select(device => $"{device.Name}: {FormatSamplerateForDisplay(device.Samplerate)}")
             .ToList();
 
-        return lines.Count > 0 ? string.Join(Environment.NewLine, lines) : "Aucune sample rate définie.";
+        return lines.Count > 0
+            ? string.Join(Environment.NewLine, lines)
+            : language == UiLanguage.English ? "No sample rate defined." : "Aucune sample rate définie.";
     }
 
-    public string ListEncodings()
+    public string ListEncodings(UiLanguage language = UiLanguage.French)
     {
         List<string> lines = Devices
             .Where(device => !string.IsNullOrWhiteSpace(device.Encoding))
             .Select(device => $"{device.Name}: {FormatEncodingForDisplay(device.Encoding)}")
             .ToList();
 
-        return lines.Count > 0 ? string.Join(Environment.NewLine, lines) : "Aucun encodage défini.";
+        return lines.Count > 0
+            ? string.Join(Environment.NewLine, lines)
+            : language == UiLanguage.English ? "No bit depth defined." : "Aucun encodage défini.";
     }
 
-    public string ListStaticIpDevices()
+    public string ListStaticIpDevices(UiLanguage language = UiLanguage.French)
     {
         DanteDevice[] staticIpDevices = Devices.Where(device => device.UsesStaticIp).ToArray();
         if (staticIpDevices.Length == 0)
         {
-            return "Aucune IP fixe détectée.";
+            return language == UiLanguage.English ? "No static IP detected." : "Aucune IP fixe détectée.";
         }
 
         return string.Join(Environment.NewLine, staticIpDevices.Select(FormatStaticIpDevice));
     }
 
-    public string ListPreferredMasters()
+    public string ListPreferredMasters(UiLanguage language = UiLanguage.French)
     {
-        return BuildDeviceList(Devices.Where(device => device.PreferredMaster), "Aucune machine preferred master trouvée.");
+        return BuildDeviceList(
+            Devices.Where(device => device.PreferredMaster),
+            language == UiLanguage.English ? "No Preferred Master device found." : "Aucune machine preferred master trouvée.");
     }
 
     private static bool HasCompatibilityError(DanteValidationResult compatibility, string firstNeedle, string secondNeedle)
@@ -326,37 +424,58 @@ public sealed partial class DanteProject
             && error.Contains(secondNeedle, StringComparison.OrdinalIgnoreCase));
     }
 
-    private void AppendChangeTable(StringBuilder builder)
+    private void AppendChangeTable(
+        StringBuilder builder,
+        UiLanguage language)
     {
-        builder.AppendLine("Modifications");
+        bool english = language == UiLanguage.English;
+        builder.AppendLine(english ? "Changes" : "Modifications");
         builder.AppendLine("-------------");
 
         if (_changes.Count == 0)
         {
-            builder.AppendLine("- Aucune modification depuis le chargement.");
+            builder.AppendLine(english
+                ? "- No change since the file was loaded."
+                : "- Aucune modification depuis le chargement.");
         }
         else
         {
-            AppendTableHeader(builder, "Heure", "Action", "Détail", "");
+            AppendTableHeader(
+                builder,
+                english ? "Time" : "Heure",
+                "Action",
+                english ? "Details" : "Détail",
+                "");
             foreach (ChangeRecord change in _changes)
             {
-                AppendTableRow(builder, change.Timestamp.ToString("HH:mm:ss"), change.Action, change.Details, "");
+                AppendTableRow(
+                    builder,
+                    change.Timestamp.ToString("HH:mm:ss"),
+                    LocalizationService.TranslateLiteral(language, change.Action),
+                    LocalizationService.TranslateHistoryDetail(language, change.Details),
+                    "");
             }
         }
     }
 
-    private static void AppendImportantWarnings(StringBuilder builder, IReadOnlyList<string> warnings)
+    private static void AppendImportantWarnings(
+        StringBuilder builder,
+        IReadOnlyList<DanteImportantWarning> warnings,
+        UiLanguage language)
     {
         if (warnings.Count == 0)
         {
             return;
         }
 
-        builder.AppendLine("!!! POINTS À VÉRIFIER IMPORTANTS !!!");
+        bool english = language == UiLanguage.English;
+        builder.AppendLine(english
+            ? "!!! IMPORTANT ITEMS TO CHECK !!!"
+            : "!!! POINTS À VÉRIFIER IMPORTANTS !!!");
         builder.AppendLine("------------------------------------");
-        foreach (string warning in warnings)
+        foreach (DanteImportantWarning warning in warnings)
         {
-            builder.AppendLine("- " + warning);
+            builder.AppendLine("- " + warning.LocalizedMessage(english));
         }
     }
 
@@ -392,6 +511,13 @@ public sealed partial class DanteProject
     private static string Blank(string value)
     {
         return string.IsNullOrWhiteSpace(value) ? "(vide)" : value;
+    }
+
+    private static string LocalizedBlank(string value, UiLanguage language)
+    {
+        return string.IsNullOrWhiteSpace(value)
+            ? language == UiLanguage.English ? "(empty)" : "(vide)"
+            : value;
     }
 
     private static string FormatStaticIpDevice(DanteDevice device)

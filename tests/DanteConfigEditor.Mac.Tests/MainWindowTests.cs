@@ -24,11 +24,15 @@ public sealed class MainWindowTests
         window.Show();
         try
         {
+            ApplyLanguage(window, UiLanguage.English);
             Assert.Equal("2026.1.0-beta.1", version);
             Assert.Equal("Dante Config Editor 2026.1 Beta - macOS", window.Title);
             Assert.Equal("Add XML", LocalizationService.TranslateLiteral(UiLanguage.English, "Ajouter XML"));
             Assert.Equal("Device or channel", LocalizationService.TranslateLiteral(UiLanguage.English, "Machine ou canal"));
             Assert.Equal("All", LocalizationService.TranslateLiteral(UiLanguage.English, "Toutes"));
+            Assert.Equal(
+                "All",
+                (window.FindControl<ComboBox>("DeviceFilterCombo")!.SelectedItem as ComboBoxItem)?.Content);
         }
         finally
         {
@@ -45,6 +49,27 @@ public sealed class MainWindowTests
         {
             Assert.True(window.FindControl<TabItem>("ConfigurationTab")!.IsSelected);
             Assert.True(window.FindControl<Grid>("ConfigurationEditorsGrid")!.IsEffectivelyVisible);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void DeviceActionsRemainInAVisibleToolbarBelowTheEditors()
+    {
+        MainWindow window = new();
+        window.Show();
+        try
+        {
+            Button duplicate = window.FindControl<Button>("DuplicateDeviceButton")!;
+            Border toolbar = duplicate.GetLogicalAncestors().OfType<Border>().First();
+
+            Assert.Equal(1, Grid.GetRow(toolbar));
+            Assert.Equal(2, Grid.GetRow(window.FindControl<DataGrid>("DeviceGrid")!));
+            Assert.True(duplicate.IsEffectivelyVisible);
+            Assert.True(window.FindControl<Button>("SaveDeviceToBankButton")!.IsEffectivelyVisible);
         }
         finally
         {
@@ -118,6 +143,12 @@ public sealed class MainWindowTests
             Assert.False(dialog.FindControl<Button>("ResetPendingButton")!.IsVisible);
             Assert.False(dialog.FindControl<Button>("ApplyButton")!.IsVisible);
             Assert.Equal("Appliquer", dialog.FindControl<Button>("PreviewOneToOneButton")!.Content);
+            Assert.Contains("Cliquez", dialog.FindControl<TextBlock>("InfoText")!.Text);
+
+            dialog.FindControl<TabItem>("AssignmentTab")!.IsSelected = true;
+            Dispatcher.UIThread.RunJobs();
+            Assert.Contains("Sélectionnez", dialog.FindControl<TextBlock>("InfoText")!.Text);
+            dialog.FindControl<TabItem>("MatrixTab")!.IsSelected = true;
 
             Grid matrix = dialog.FindControl<Grid>("MatrixPanel")!;
             Button activeCell = matrix.Children.OfType<Button>()
@@ -146,26 +177,50 @@ public sealed class MainWindowTests
         {
             ApplyLanguage(window, UiLanguage.English);
 
+            Assert.Equal("Devices", window.FindControl<TabItem>("ConfigurationTab")!.Header);
             Assert.Equal("Reports and patchbook", window.FindControl<TabItem>("ReportsExportTab")!.Header);
             Assert.Equal("Synoptic", window.FindControl<TabItem>("SynopticTab")!.Header);
-            Assert.Equal("File health", window.FindControl<TabItem>("HealthTab")!.Header);
+            Assert.Equal("Validation center", window.FindControl<TabItem>("HealthTab")!.Header);
+            Assert.Equal("Items to check", window.FindControl<TabItem>("ValidationIssuesTab")!.Header);
+            Assert.Equal("Reports", window.FindControl<TabItem>("ValidationReportsTab")!.Header);
+            Assert.Equal("History", window.FindControl<TabItem>("SafetyTab")!.Header);
+            Assert.Equal("Advanced tools", window.FindControl<TabItem>("AtomicTab")!.Header);
+            Assert.Equal("Rx to Tx list", window.FindControl<TextBlock>("PatchListHeading")!.Text);
+            Assert.Equal("Easy patch / Matrix", window.FindControl<Button>("VisualPatchButton")!.Content);
             Assert.Equal("Recent files", window.FindControl<ComboBox>("RecentCombo")!.PlaceholderText);
             Assert.Equal("Start channel", window.FindControl<ComboBox>("StartChannelCombo")!.PlaceholderText);
             Assert.Equal("Tx source to apply", window.FindControl<ComboBox>("SourceDeviceCombo")!.PlaceholderText);
             Assert.Equal("Add XML", window.FindControl<Button>("MergeButton")!.Content);
-            Assert.Equal("New project (experimental)", window.FindControl<Button>("NewProjectButton")!.Content);
+            Assert.Equal("New project", window.FindControl<Button>("NewProjectButton")!.Content);
             Assert.Equal("Device bank", window.FindControl<Button>("OpenMachineBankButton")!.Content);
             Assert.Equal("Duplicate", window.FindControl<Button>("DuplicateDeviceButton")!.Content);
             Assert.Equal("Save to device bank", window.FindControl<Button>("SaveDeviceToBankButton")!.Content);
             Assert.Equal("Open logs", window.FindControl<Button>("OpenDiagnosticLogsButton")!.Content);
+            Assert.Equal(
+                ["Français", "English"],
+                window.FindControl<ComboBox>("LanguageCombo")!.Items
+                    .OfType<ComboBoxItem>()
+                    .Select(item => item.Content?.ToString() ?? string.Empty)
+                    .ToArray());
 
             ApplyLanguage(window, UiLanguage.French);
 
+            Assert.Equal("Machines", window.FindControl<TabItem>("ConfigurationTab")!.Header);
             Assert.Equal("Rapports et patchbook", window.FindControl<TabItem>("ReportsExportTab")!.Header);
             Assert.Equal("Synoptique", window.FindControl<TabItem>("SynopticTab")!.Header);
+            Assert.Equal("Centre de validation", window.FindControl<TabItem>("HealthTab")!.Header);
+            Assert.Equal("Historique", window.FindControl<TabItem>("SafetyTab")!.Header);
+            Assert.Equal("Outils avancés", window.FindControl<TabItem>("AtomicTab")!.Header);
+            Assert.Equal("Easy patch / Matrice", window.FindControl<Button>("VisualPatchButton")!.Content);
             Assert.Equal("Fichiers récents", window.FindControl<ComboBox>("RecentCombo")!.PlaceholderText);
-            Assert.Equal("Nouveau projet (expérimental)", window.FindControl<Button>("NewProjectButton")!.Content);
+            Assert.Equal("Nouveau projet", window.FindControl<Button>("NewProjectButton")!.Content);
             Assert.Equal("Banque de machines", window.FindControl<Button>("OpenMachineBankButton")!.Content);
+            Assert.Equal(
+                ["Français", "English"],
+                window.FindControl<ComboBox>("LanguageCombo")!.Items
+                    .OfType<ComboBoxItem>()
+                    .Select(item => item.Content?.ToString() ?? string.Empty)
+                    .ToArray());
         }
         finally
         {
@@ -210,6 +265,7 @@ public sealed class MainWindowTests
         try
         {
             Dispatcher.UIThread.RunJobs();
+            Assert.Equal("Easy patch / Matrix", patch.Title);
             Assert.Equal("Transmitting device (Tx)", patch.FindControl<TextBlock>("TxDeviceLabel")!.Text);
             Assert.Equal("Receiving device (Rx)", patch.FindControl<TextBlock>("RxDeviceLabel")!.Text);
             Assert.Equal("Selection and one-to-one patch", patch.FindControl<TabItem>("AssignmentTab")!.Header);
@@ -225,6 +281,32 @@ public sealed class MainWindowTests
             synoptic.Close();
             bank.Close();
             patch.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void SynopticRemainsInsideImportExportAndPatchHasOneVisibleEntryPoint()
+    {
+        MainWindow window = new();
+        window.Show();
+        try
+        {
+            TabControl mainTabs = window.FindControl<TabControl>("MainTabs")!;
+            TabItem exports = window.FindControl<TabItem>("ExportsTab")!;
+            TabItem synoptic = window.FindControl<TabItem>("SynopticTab")!;
+            Button patchWorkspace = window.FindControl<Button>("VisualPatchButton")!;
+
+            Assert.Contains(synoptic.GetLogicalAncestors(), ancestor => ReferenceEquals(ancestor, exports));
+            Assert.DoesNotContain(mainTabs.Items.OfType<TabItem>(), item => ReferenceEquals(item, synoptic));
+            Assert.Equal(
+                1,
+                window.GetLogicalDescendants()
+                    .OfType<Button>()
+                    .Count(button => ReferenceEquals(button, patchWorkspace)));
+        }
+        finally
+        {
+            window.Close();
         }
     }
 
@@ -262,6 +344,7 @@ public sealed class MainWindowTests
         try
         {
             await window.OpenStartupFileAsync(temporaryXml);
+            ApplyLanguage(window, UiLanguage.English);
 
             Border sidebar = window.FindControl<Border>("ProjectSidebar")!;
             Border warning = window.FindControl<Border>("WarningBorder")!;
@@ -272,6 +355,29 @@ public sealed class MainWindowTests
             Assert.False(string.IsNullOrWhiteSpace(warningText.Text));
             Assert.Contains("3", summary.Text);
             Assert.Contains(warning.GetLogicalAncestors(), ancestor => ReferenceEquals(ancestor, sidebar));
+            Assert.Contains(
+                window.FindControl<DataGrid>("DeviceGrid")!.ItemsSource!.Cast<DeviceRow>(),
+                row => row.Ip.StartsWith("Static (", StringComparison.Ordinal));
+            Assert.Contains(
+                window.FindControl<DataGrid>("PatchGrid")!.ItemsSource!.Cast<PatchRow>(),
+                row => row.Status == "Active subscription");
+            Assert.Contains(
+                window.FindControl<DataGrid>("PatchGrid")!.ItemsSource!.Cast<PatchRow>(),
+                row => row.Source == "No source");
+            Assert.DoesNotContain(
+                window.FindControl<DataGrid>("PatchGrid")!.ItemsSource!.Cast<PatchRow>(),
+                row => row.Source == "Aucune source");
+            HealthRow[] healthRows = window.FindControl<DataGrid>("HealthGrid")!
+                .ItemsSource!
+                .Cast<HealthRow>()
+                .ToArray();
+            Assert.Contains(healthRows, row => row.Message == "DEVICE-B has no TX channel.");
+            Assert.Contains(healthRows, row => row.Message.Contains("uses the local source", StringComparison.Ordinal));
+            Assert.DoesNotContain(
+                healthRows,
+                row => row.Message.Contains("présent", StringComparison.OrdinalIgnoreCase)
+                    || row.Message.Contains("contient aucun", StringComparison.OrdinalIgnoreCase)
+                    || row.Message.Contains("est libre", StringComparison.OrdinalIgnoreCase));
         }
         finally
         {
@@ -648,12 +754,18 @@ public sealed class MainWindowTests
 
     private static void ApplyLanguage(MainWindow window, UiLanguage language)
     {
-        typeof(MainWindow)
-            .GetField("_language", BindingFlags.Instance | BindingFlags.NonPublic)!
-            .SetValue(window, language);
-        typeof(MainWindow)
-            .GetMethod("ApplyLanguageToVisualTree", BindingFlags.Instance | BindingFlags.NonPublic)!
-            .Invoke(window, null);
+        ComboBox combo = window.FindControl<ComboBox>("LanguageCombo")!;
+        int expectedIndex = language == UiLanguage.English ? 1 : 0;
+        if (combo.SelectedIndex != expectedIndex)
+        {
+            combo.SelectedIndex = expectedIndex;
+        }
+        else
+        {
+            typeof(MainWindow)
+                .GetMethod("LanguageCombo_SelectionChanged", BindingFlags.Instance | BindingFlags.NonPublic)!
+                .Invoke(window, [combo, null]);
+        }
         Dispatcher.UIThread.RunJobs();
     }
 }

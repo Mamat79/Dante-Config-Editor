@@ -305,11 +305,15 @@ public sealed class PatchWorkspaceUiContractTests
         Assert.Contains("\"ACTION HISTORY\"", codeBehind, StringComparison.Ordinal);
         Assert.Contains("\"No action has been recorded in this session.\"", codeBehind, StringComparison.Ordinal);
         Assert.Contains("BuildLocalizedSaveSummary", codeBehind, StringComparison.Ordinal);
-        Assert.Contains("\"SAVE SUMMARY\"", codeBehind, StringComparison.Ordinal);
-        Assert.Contains("\"IMPORTANT ITEMS TO CHECK\"", codeBehind, StringComparison.Ordinal);
-        Assert.Contains("\"XML SAFETY GUARD\"", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("_project.BuildSaveSummary(_language)", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("\"FINAL REPORT BEFORE DANTE IMPORT\"", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("\"Important items:\"", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("_project.BuildCompatibilityReport(_language)", codeBehind, StringComparison.Ordinal);
         Assert.Contains("LocalizeLiteral(change.Action)", codeBehind, StringComparison.Ordinal);
-        Assert.Contains("LocalizeLiteral(change.Details)", codeBehind, StringComparison.Ordinal);
+        Assert.Contains(
+            "LocalizationService.TranslateHistoryDetail(_language, change.Details)",
+            codeBehind,
+            StringComparison.Ordinal);
         string localization = File.ReadAllText(RepositoryFile("Services", "LocalizationService.cs"));
         Assert.Contains(
             "Add(map, \"Récupération automatique\", \"Automatic recovery\")",

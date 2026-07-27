@@ -36,7 +36,7 @@
                     <Button x:Name="NewProjectButton"
                             Margin="0,0,8,8"
                             Click="NewProjectButton_Click"
-                            ToolTip.Tip="Crée un preset 3.0.0 hors ligne. Un test d'import Dante Controller reste obligatoire.">Nouveau projet (expérimental)</Button>
+                            ToolTip.Tip="Crée un nouveau projet hors ligne à partir d'une structure prise en charge.">Nouveau projet</Button>
                     <Button x:Name="OpenButton" Classes="primary" Margin="0,0,8,8" Click="OpenButton_Click" ToolTip.Tip="Charge un export XML Dante Controller.">Ouvrir XML</Button>
                     <Button x:Name="MergeButton" Margin="0,0,8,8" Click="MergeButton_Click" ToolTip.Tip="Ajoute les machines d'un autre XML au projet ouvert.">Ajouter XML</Button>
                     <Button x:Name="OpenMachineBankButton"
@@ -136,14 +136,14 @@
             </Border>
 
             <TabControl x:Name="MainTabs" Grid.Column="1" Margin="14">
-                <TabItem x:Name="ConfigurationTab" Header="Configuration">
-                    <Grid RowDefinitions="Auto,*" RowSpacing="12" Margin="0,12,0,0">
+                <TabItem x:Name="ConfigurationTab" Header="Machines">
+                    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="12" Margin="0,12,0,0">
                         <Grid x:Name="ConfigurationEditorsGrid"
                               Grid.Row="0"
                               ColumnDefinitions="1.05*,1.05*,0.9*"
                               ColumnSpacing="12"
-                              MinHeight="350"
-                              MaxHeight="385">
+                              MinHeight="320"
+                              MaxHeight="350">
                             <Border Grid.Column="0" Classes="panel">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <StackPanel Spacing="8">
@@ -187,16 +187,6 @@
                                             <TextBox x:Name="GatewayTextBox" Grid.Column="1" Watermark="Passerelle" />
                                         </Grid>
 
-                                        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                                            <Button x:Name="ApplyDeviceButton" Classes="primary" Margin="0,0,8,8" Click="ApplyDeviceButton_Click">Appliquer les paramètres</Button>
-                                            <Button x:Name="DeviceDetailsButton" Margin="0,0,8,8" Click="DeviceDetailsButton_Click">Détail machine</Button>
-                                            <Button x:Name="ResetRxTxButton" Margin="0,0,8,8" Click="ResetRxTxButton_Click">Reset patch RX/TX</Button>
-                                            <Button x:Name="ResetRxButton" Margin="0,0,8,8" Click="ResetRxButton_Click">Reset RX</Button>
-                                            <Button x:Name="ResetTxButton" Margin="0,0,8,8" Click="ResetTxButton_Click">Reset TX</Button>
-                                            <Button x:Name="DeleteDeviceButton" Classes="danger" Margin="0,0,8,8" Click="DeleteDeviceButton_Click">Supprimer</Button>
-                                            <Button x:Name="DuplicateDeviceButton" Margin="0,0,8,8" Click="DuplicateDeviceButton_Click">Dupliquer</Button>
-                                            <Button x:Name="SaveDeviceToBankButton" Margin="0,0,8,8" Click="SaveDeviceToBankButton_Click">Enregistrer dans la banque</Button>
-                                        </WrapPanel>
                                     </StackPanel>
                                 </ScrollViewer>
                             </Border>
@@ -289,8 +279,40 @@
                             </Border>
                         </Grid>
 
+                        <Border Grid.Row="1" Classes="panel">
+                            <WrapPanel Orientation="Horizontal"
+                                       HorizontalAlignment="Left">
+                                <Button x:Name="ApplyDeviceButton"
+                                        Classes="primary"
+                                        Margin="0,0,8,8"
+                                        Click="ApplyDeviceButton_Click">Appliquer les paramètres</Button>
+                                <Button x:Name="DeviceDetailsButton"
+                                        Margin="0,0,8,8"
+                                        Click="DeviceDetailsButton_Click">Détail machine</Button>
+                                <Button x:Name="ResetRxButton"
+                                        Margin="0,0,8,8"
+                                        Click="ResetRxButton_Click">Reset RX</Button>
+                                <Button x:Name="ResetTxButton"
+                                        Margin="0,0,8,8"
+                                        Click="ResetTxButton_Click">Reset TX</Button>
+                                <Button x:Name="ResetRxTxButton"
+                                        Margin="0,0,8,8"
+                                        Click="ResetRxTxButton_Click">Reset patch RX/TX</Button>
+                                <Button x:Name="DeleteDeviceButton"
+                                        Classes="danger"
+                                        Margin="0,0,8,8"
+                                        Click="DeleteDeviceButton_Click">Supprimer</Button>
+                                <Button x:Name="DuplicateDeviceButton"
+                                        Margin="0,0,8,8"
+                                        Click="DuplicateDeviceButton_Click">Dupliquer</Button>
+                                <Button x:Name="SaveDeviceToBankButton"
+                                        Margin="0,0,8,8"
+                                        Click="SaveDeviceToBankButton_Click">Enregistrer dans la banque</Button>
+                            </WrapPanel>
+                        </Border>
+
                         <DataGrid x:Name="DeviceGrid"
-                                  Grid.Row="1"
+                                  Grid.Row="2"
                                   AutoGenerateColumns="False"
                                   IsReadOnly="True"
                                   SelectionMode="Extended"
@@ -303,7 +325,7 @@
                                 <DataGridTextColumn Header="Latence" Binding="{Binding Latency}" Width="*" />
                                 <DataGridTextColumn Header="Sample rate" Binding="{Binding SampleRate}" Width="*" />
                                 <DataGridTextColumn Header="Bits" Binding="{Binding Bits}" Width="0.7*" />
-                                <DataGridTextColumn Header="IP" Binding="{Binding Ip}" Width="1.2*" />
+                                <DataGridTextColumn Header="IP" Binding="{Binding Ip}" Width="1.5*" />
                                 <DataGridCheckBoxColumn Header="Preferred" Binding="{Binding PreferredMaster}" Width="0.8*" />
                                 <DataGridTextColumn Header="TX" Binding="{Binding Tx}" Width="0.6*" />
                                 <DataGridTextColumn Header="RX" Binding="{Binding Rx}" Width="0.6*" />
@@ -315,32 +337,75 @@
                 <TabItem x:Name="PatchTab" Header="Patch">
                     <Grid RowDefinitions="Auto,*" RowSpacing="12" Margin="0,12,0,0">
                         <Border Classes="panel">
-                            <Grid ColumnDefinitions="200,160,*,*,Auto,Auto,Auto" ColumnSpacing="8">
-                                <TextBox x:Name="PatchSearchTextBox" Watermark="Recherche device ou canal" TextChanged="PatchSearchTextBox_TextChanged" />
-                                <ComboBox x:Name="PatchStatusCombo" Grid.Column="1" SelectionChanged="PatchStatusCombo_SelectionChanged">
-                                    <ComboBoxItem Tag="all">Tous les RX</ComboBoxItem>
-                                    <ComboBoxItem Tag="active">Patchs actifs</ComboBoxItem>
-                                    <ComboBoxItem Tag="free">RX libres</ComboBoxItem>
-                                    <ComboBoxItem Tag="warnings">Warnings / conflits</ComboBoxItem>
-                                </ComboBox>
-                                <ComboBox x:Name="SourceDeviceCombo" Grid.Column="2" PlaceholderText="Source TX à appliquer" SelectionChanged="SourceDeviceCombo_SelectionChanged" />
-                                <ComboBox x:Name="SourceChannelCombo" Grid.Column="3" PlaceholderText="Canal TX à appliquer" />
-                                <Button x:Name="ApplyPatchButton" Grid.Column="4" Classes="primary" Click="ApplyPatchButton_Click">Appliquer</Button>
-                                <Button x:Name="RemovePatchButton" Grid.Column="5" Click="RemovePatchButton_Click">Supprimer</Button>
-                                <Button x:Name="VisualPatchButton" Grid.Column="6" Click="VisualPatchButton_Click">Patch visuel / grille</Button>
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="10">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                    <StackPanel Spacing="3">
+                                        <TextBlock x:Name="PatchListHeading"
+                                                   Text="Liste RX vers TX"
+                                                   FontSize="17"
+                                                   FontWeight="SemiBold" />
+                                        <TextBlock x:Name="PatchListDescription"
+                                                   Classes="muted"
+                                                   Text="Consultez chaque RX et sa source actuelle, ou ouvrez l’atelier pour patcher dans la matrice."
+                                                   TextWrapping="Wrap" />
+                                    </StackPanel>
+                                    <Button x:Name="VisualPatchButton"
+                                            Grid.Column="1"
+                                            Classes="primary"
+                                            VerticalAlignment="Center"
+                                            Click="VisualPatchButton_Click"
+                                            ToolTip.Tip="Ouvre Easy patch et la matrice. Chaque action y est appliquée immédiatement.">
+                                        Easy patch / Matrice
+                                    </Button>
+                                </Grid>
+                                <Grid Grid.Row="1"
+                                      ColumnDefinitions="1.2*,0.9*,1.35*,1.35*,Auto,Auto"
+                                      ColumnSpacing="8">
+                                    <TextBox x:Name="PatchSearchTextBox"
+                                             Watermark="Recherche device ou canal"
+                                             TextChanged="PatchSearchTextBox_TextChanged" />
+                                    <ComboBox x:Name="PatchStatusCombo"
+                                              Grid.Column="1"
+                                              SelectionChanged="PatchStatusCombo_SelectionChanged">
+                                        <ComboBoxItem Tag="all">Tous les RX</ComboBoxItem>
+                                        <ComboBoxItem Tag="active">Patchs actifs</ComboBoxItem>
+                                        <ComboBoxItem Tag="free">RX libres</ComboBoxItem>
+                                        <ComboBoxItem Tag="warnings">Warnings / conflits</ComboBoxItem>
+                                    </ComboBox>
+                                    <ComboBox x:Name="SourceDeviceCombo"
+                                              Grid.Column="2"
+                                              PlaceholderText="Source TX à appliquer"
+                                              SelectionChanged="SourceDeviceCombo_SelectionChanged" />
+                                    <ComboBox x:Name="SourceChannelCombo"
+                                              Grid.Column="3"
+                                              PlaceholderText="Canal TX à appliquer" />
+                                    <Button x:Name="ApplyPatchButton"
+                                            Grid.Column="4"
+                                            Classes="primary"
+                                            Click="ApplyPatchButton_Click"
+                                            ToolTip.Tip="Affecte immédiatement la source TX choisie au RX sélectionné.">
+                                        Appliquer
+                                    </Button>
+                                    <Button x:Name="RemovePatchButton"
+                                            Grid.Column="5"
+                                            Click="RemovePatchButton_Click"
+                                            ToolTip.Tip="Déconnecte immédiatement le RX sélectionné.">
+                                        Supprimer
+                                    </Button>
+                                </Grid>
                             </Grid>
                         </Border>
 
                         <DataGrid x:Name="PatchGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="RX device" Binding="{Binding RxDevice}" Width="1.2*" />
-                                <DataGridTextColumn Header="RX Dante Id" Binding="{Binding RxDanteId}" Width="0.7*" />
+                                <DataGridTextColumn Header="RX Dante Id" Binding="{Binding RxDanteId}" Width="0.85*" />
                                 <DataGridTextColumn Header="RX canal" Binding="{Binding RxChannel}" Width="1.2*" />
                                 <DataGridTextColumn Header="TX device" Binding="{Binding TxDevice}" Width="1.2*" />
                                 <DataGridTextColumn Header="TX canal" Binding="{Binding TxChannel}" Width="1.2*" />
                                 <DataGridTextColumn Header="Source complète" Binding="{Binding Source}" Width="1.5*" />
                                 <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="*" />
-                                <DataGridTextColumn Header="État" Binding="{Binding Status}" Width="*" />
+                                <DataGridTextColumn Header="État" Binding="{Binding Status}" Width="1.35*" />
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
@@ -566,62 +631,116 @@
                     </TabControl>
                 </TabItem>
 
-                <TabItem x:Name="HealthTab" Header="Santé du fichier">
+                <TabItem x:Name="HealthTab" Header="Centre de validation">
+                    <TabControl x:Name="ValidationTabs" Margin="0,8,0,0">
+                        <TabItem x:Name="ValidationIssuesTab" Header="Points à vérifier">
+                            <Grid RowDefinitions="Auto,*" RowSpacing="12" Margin="0,12,0,0">
+                                <Border Classes="panel">
+                                    <TextBlock x:Name="HealthSummaryText"
+                                               Text="Aucun fichier chargé."
+                                               TextWrapping="Wrap" />
+                                </Border>
+                                <DataGrid x:Name="HealthGrid"
+                                          Grid.Row="1"
+                                          AutoGenerateColumns="False"
+                                          IsReadOnly="True">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Gravité" Binding="{Binding Severity}" Width="0.8*" />
+                                        <DataGridTextColumn Header="Catégorie" Binding="{Binding Category}" Width="*" />
+                                        <DataGridTextColumn Header="Machine" Binding="{Binding Device}" Width="1.1*" />
+                                        <DataGridTextColumn Header="Canal" Binding="{Binding Channel}" Width="1.1*" />
+                                        <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="3*" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </TabItem>
+                        <TabItem x:Name="ValidationReportsTab" Header="Rapports">
+                            <Grid RowDefinitions="Auto,*" RowSpacing="12" Margin="0,12,0,0">
+                                <Border Classes="panel">
+                                    <WrapPanel Orientation="Horizontal">
+                                        <Button Margin="0,0,8,8"
+                                                Classes="primary"
+                                                Click="ValidateButton_Click"
+                                                ToolTip.Tip="Vérifie la structure et les références du XML chargé.">
+                                            Vérifier le fichier
+                                        </Button>
+                                        <Button Margin="0,0,8,8"
+                                                Click="CompatibilityButton_Click"
+                                                ToolTip.Tip="Prépare un rapport de compatibilité à relire avant l’import dans Dante Controller.">
+                                            Rapport compatibilité Dante Controller
+                                        </Button>
+                                        <Button Margin="0,0,8,8"
+                                                Click="FinalReportButton_Click"
+                                                ToolTip.Tip="Résume les machines, formats, adresses et points de vigilance.">
+                                            Rapport final avant Dante
+                                        </Button>
+                                        <Button Margin="0,0,8,8"
+                                                Click="CompareButton_Click"
+                                                ToolTip.Tip="Compare le projet avec un autre fichier XML sans modifier aucun des deux.">
+                                            Comparer XML
+                                        </Button>
+                                    </WrapPanel>
+                                </Border>
+                                <TextBox x:Name="ReportTextBox"
+                                         Grid.Row="1"
+                                         AcceptsReturn="True"
+                                         IsReadOnly="True"
+                                         TextWrapping="NoWrap"
+                                         FontFamily="Menlo,Consolas,monospace"
+                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                         ScrollViewer.HorizontalScrollBarVisibility="Auto" />
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                </TabItem>
+
+                <TabItem x:Name="SafetyTab" Header="Historique">
                     <Grid RowDefinitions="Auto,*" RowSpacing="12" Margin="0,12,0,0">
                         <Border Classes="panel">
-                            <TextBlock x:Name="HealthSummaryText" Text="Aucun fichier chargé." TextWrapping="Wrap" />
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                                <StackPanel Spacing="3">
+                                    <TextBlock Text="Historique des actions"
+                                               FontSize="17"
+                                               FontWeight="SemiBold" />
+                                    <TextBlock Text="Les dernières modifications de cette session sont affichées ci-dessous."
+                                               Classes="muted"
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                                <WrapPanel Grid.Column="1"
+                                           Orientation="Horizontal"
+                                           VerticalAlignment="Center">
+                                    <Button Margin="0,0,8,0"
+                                            Click="QuickStartButton_Click"
+                                            ToolTip.Tip="Ouvre la notice rapide PDF.">
+                                        Quick start
+                                    </Button>
+                                    <Button Margin="0,0,8,0"
+                                            Click="FullGuideButton_Click"
+                                            ToolTip.Tip="Ouvre la notice complète PDF.">
+                                        Notice complète
+                                    </Button>
+                                    <Button x:Name="SupportDceButton"
+                                            Margin="0,0,8,0"
+                                            Click="SupportDceButton_Click"
+                                            ToolTip.Tip="Présente les moyens facultatifs de soutenir ce projet gratuit.">
+                                        Soutenir DCE
+                                    </Button>
+                                    <Button x:Name="OpenDiagnosticLogsButton"
+                                            Click="OpenDiagnosticLogsButton_Click"
+                                            ToolTip.Tip="Ouvre le dossier des journaux techniques utiles au diagnostic.">
+                                        Ouvrir les journaux
+                                    </Button>
+                                </WrapPanel>
+                            </Grid>
                         </Border>
-                        <DataGrid x:Name="HealthGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Gravité" Binding="{Binding Severity}" Width="0.8*" />
-                                <DataGridTextColumn Header="Catégorie" Binding="{Binding Category}" Width="*" />
-                                <DataGridTextColumn Header="Machine" Binding="{Binding Device}" Width="1.1*" />
-                                <DataGridTextColumn Header="Canal" Binding="{Binding Channel}" Width="1.1*" />
-                                <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="3*" />
-                            </DataGrid.Columns>
-                        </DataGrid>
+
+                        <Border Grid.Row="1" Classes="panel">
+                            <ListBox x:Name="LogListBox" />
+                        </Border>
                     </Grid>
                 </TabItem>
 
-                <TabItem x:Name="SafetyTab" Header="Sécurité et journal">
-                    <Grid RowDefinitions="Auto,*" RowSpacing="12" Margin="0,12,0,0">
-                        <Border Classes="panel">
-                            <WrapPanel Orientation="Horizontal">
-                                <Button Margin="0,0,8,8" Classes="primary" Click="ValidateButton_Click">Vérifier le fichier</Button>
-                                <Button Margin="0,0,8,8" Click="CompatibilityButton_Click">Rapport compatibilité Dante Controller</Button>
-                                <Button Margin="0,0,8,8" Click="FinalReportButton_Click">Rapport final avant Dante</Button>
-                                <Button Margin="0,0,8,8" Click="CompareButton_Click">Comparer XML</Button>
-                                <Button Margin="0,0,8,8" Click="QuickStartButton_Click">Quick start</Button>
-                                <Button Margin="0,0,8,8" Click="FullGuideButton_Click">Notice complète</Button>
-                                <Button x:Name="SupportDceButton"
-                                        Margin="0,0,8,8"
-                                        Click="SupportDceButton_Click"
-                                        ToolTip.Tip="Présente les moyens facultatifs de soutenir ce projet gratuit.">Soutenir DCE</Button>
-                                <Button x:Name="OpenDiagnosticLogsButton"
-                                        Margin="0,0,8,8"
-                                        Click="OpenDiagnosticLogsButton_Click">Ouvrir les journaux</Button>
-                            </WrapPanel>
-                        </Border>
-
-                        <Grid Grid.Row="1" ColumnDefinitions="2*,*" ColumnSpacing="12">
-                            <TextBox x:Name="ReportTextBox"
-                                     AcceptsReturn="True"
-                                     IsReadOnly="True"
-                                     TextWrapping="NoWrap"
-                                     FontFamily="Menlo,Consolas,monospace"
-                                     ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                     ScrollViewer.HorizontalScrollBarVisibility="Auto" />
-                            <Border Grid.Column="1" Classes="panel">
-                                <Grid RowDefinitions="Auto,*">
-                                    <TextBlock Classes="section" Text="Journal" />
-                                    <ListBox x:Name="LogListBox" Grid.Row="1" />
-                                </Grid>
-                            </Border>
-                        </Grid>
-                    </Grid>
-                </TabItem>
-
-                <TabItem x:Name="AtomicTab" Header="Atomic Bomb">
+                <TabItem x:Name="AtomicTab" Header="Outils avancés">
                     <Grid Margin="0,12,0,0">
                         <Border Classes="atomicPanel"
                                 MinWidth="920"

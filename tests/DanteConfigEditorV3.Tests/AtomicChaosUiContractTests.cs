@@ -31,7 +31,7 @@ public sealed class AtomicChaosUiContractTests
 
         Assert.Contains("x:Name=\"AtomicChaosButton\"", macXaml, StringComparison.Ordinal);
         Assert.DoesNotContain("AtomicChaosSidebarButton", macXaml, StringComparison.Ordinal);
-        Assert.Contains("x:Name=\"AtomicTab\" Header=\"Atomic Bomb\"", macXaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"AtomicTab\" Header=\"Outils avancés\"", macXaml, StringComparison.Ordinal);
         Assert.Contains("Classes=\"atomic\"", macXaml, StringComparison.Ordinal);
         Assert.Contains("Content=\"ATOMIC BOMB\"", macXaml, StringComparison.Ordinal);
         Assert.DoesNotContain("#FACC15", macStyles, StringComparison.OrdinalIgnoreCase);

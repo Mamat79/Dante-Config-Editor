@@ -47,6 +47,7 @@ public sealed partial class PatchWorkspaceDialog : Window
         tabs.Items.Remove(matrix);
         tabs.Items.Insert(0, matrix);
         tabs.SelectedItem = matrix;
+        Opened += (_, _) => UpdatePatchModeHelp();
     }
 
     public PatchWorkspaceDialog(
@@ -140,6 +141,7 @@ public sealed partial class PatchWorkspaceDialog : Window
         _initializing = false;
         RefreshSourceChannels();
         RefreshTargetRows();
+        UpdatePatchModeHelp();
         SetInfo(L(
             "Machines TX et RX inversées. Le lot en attente est conservé.",
             "Tx and Rx devices swapped. The pending batch was preserved."));
@@ -847,6 +849,27 @@ public sealed partial class PatchWorkspaceDialog : Window
             new Vector(0, body.Offset.Y);
     }
 
+    private void PatchModeTabs_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (!_initializing)
+        {
+            UpdatePatchModeHelp();
+        }
+    }
+
+    private void UpdatePatchModeHelp()
+    {
+        bool matrixSelected = FindControl<TabItem>("MatrixTab")!.IsSelected;
+        SetInfo(
+            matrixSelected
+                ? L(
+                    "Cliquez sur une case pour affecter ou déconnecter immédiatement un patch.",
+                    "Click a cell to immediately assign or disconnect a subscription.")
+                : L(
+                    "Sélectionnez un ou plusieurs TX, puis choisissez le premier RX.",
+                    "Select one or more Tx channels, then choose the first Rx channel."));
+    }
+
     private void MatrixViewport_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
         if (!e.KeyModifiers.HasFlag(KeyModifiers.Control))
@@ -1159,7 +1182,7 @@ public sealed partial class PatchWorkspaceDialog : Window
 
     private void ApplyLanguage()
     {
-        Title = L("Patch visuel", "Visual patch");
+        Title = L("Easy patch / Matrice", "Easy patch / Matrix");
         FindControl<TextBlock>("TitleText")!.Text = Title;
         FindControl<TextBlock>("IntroText")!.Text = _immediateApply is not null
             ? L(

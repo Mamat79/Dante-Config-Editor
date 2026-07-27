@@ -48,11 +48,11 @@
 
                 <GroupBox x:Name="LabelsGroupBox" Header="Labels de canaux">
                     <StackPanel>
-                        <CheckBox x:Name="PreserveTxLabelsCheckBox"
-                                  Content="Conserver les labels TX"
-                                  IsChecked="True" />
                         <CheckBox x:Name="PreserveRxLabelsCheckBox"
                                   Content="Conserver les labels RX"
+                                  IsChecked="True" />
+                        <CheckBox x:Name="PreserveTxLabelsCheckBox"
+                                  Content="Conserver les labels TX"
                                   IsChecked="True" />
                     </StackPanel>
                 </GroupBox>

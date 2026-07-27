@@ -77,6 +77,52 @@ internal sealed partial class MachineCloneDialog : Window
             "Hardware identity is never copied. The new device will be a generic offline role.");
         FindControl<Button>("DuplicateButton")!.Content = L("Dupliquer", "Duplicate");
         FindControl<Button>("CancelButton")!.Content = L("Annuler", "Cancel");
+
+        ToolTip.SetTip(
+            FindControl<TextBox>("NameTextBox")!,
+            L(
+                "Nom unique de la nouvelle machine dans ce projet.",
+                "Unique name of the new device in this project."));
+        ToolTip.SetTip(
+            FindControl<CheckBox>("PreserveRxLabelsCheckBox")!,
+            L(
+                "Recopie les noms des canaux RX de la machine source.",
+                "Copies the Rx channel names from the source device."));
+        ToolTip.SetTip(
+            FindControl<CheckBox>("PreserveTxLabelsCheckBox")!,
+            L(
+                "Recopie les noms des canaux TX de la machine source.",
+                "Copies the Tx channel names from the source device."));
+        ToolTip.SetTip(
+            FindControl<CheckBox>("PreserveSettingsCheckBox")!,
+            L(
+                "Recopie les paramètres audio généraux, sans recopier l'identité matérielle.",
+                "Copies general audio settings without copying hardware identity."));
+        ToolTip.SetTip(
+            FindControl<CheckBox>("PreservePreferredMasterCheckBox")!,
+            L(
+                "À utiliser avec prudence : plusieurs Preferred Masters peuvent créer une alerte.",
+                "Use with care: multiple Preferred Masters may trigger a warning."));
+        ToolTip.SetTip(
+            FindControl<CheckBox>("PreserveNetworkCheckBox")!,
+            L(
+                "Option avancée : recopie la structure réseau. Les identifiants et adresses à risque restent contrôlés.",
+                "Advanced option: copies the network structure. Risky identities and addresses remain validated."));
+        ToolTip.SetTip(
+            FindControl<CheckBox>("PreserveSubscriptionsCheckBox")!,
+            L(
+                "Recopie uniquement les subscriptions RX qui restent cohérentes dans le projet.",
+                "Copies only Rx subscriptions that remain consistent in the project."));
+        ToolTip.SetTip(
+            FindControl<CheckBox>("PreserveFlowsCheckBox")!,
+            L(
+                "Recopie les flows multicast TX lorsque leurs références restent valides.",
+                "Copies Tx multicast flows when their references remain valid."));
+        ToolTip.SetTip(
+            FindControl<Button>("DuplicateButton")!,
+            L(
+                "Crée une nouvelle machine indépendante et génère de nouveaux identifiants.",
+                "Creates an independent device and generates new identifiers."));
     }
 
     private async void DuplicateButton_Click(object? sender, RoutedEventArgs e)

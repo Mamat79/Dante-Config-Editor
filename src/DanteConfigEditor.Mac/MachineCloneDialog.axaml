@@ -24,8 +24,8 @@
                 <Border Classes="panel">
                     <StackPanel Spacing="8">
                         <TextBlock x:Name="LabelsHeading" FontWeight="SemiBold" />
-                        <CheckBox x:Name="PreserveTxLabelsCheckBox" IsChecked="True" />
                         <CheckBox x:Name="PreserveRxLabelsCheckBox" IsChecked="True" />
+                        <CheckBox x:Name="PreserveTxLabelsCheckBox" IsChecked="True" />
                     </StackPanel>
                 </Border>
 

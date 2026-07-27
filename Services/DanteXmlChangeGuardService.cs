@@ -136,28 +136,37 @@ public static class DanteXmlChangeGuardService
         return result;
     }
 
-    public static string BuildGuardReport(DanteValidationResult guardResult)
+    public static string BuildGuardReport(
+        DanteValidationResult guardResult,
+        UiLanguage language = UiLanguage.French)
     {
+        bool english = language == UiLanguage.English;
         List<string> lines = [];
-        lines.Add("Garde-fou changements XML");
+        lines.Add(english ? "XML change guard" : "Garde-fou changements XML");
         lines.Add("------------------------");
         lines.Add(guardResult.HasErrors
-            ? "ERROR Sauvegarde refusée : une modification interdite du XML Dante a été détectée."
-            : "OK Compatibilité XML : aucune modification interdite détectée.");
+            ? english
+                ? "ERROR Save blocked: a forbidden Dante XML change was detected."
+                : "ERROR Sauvegarde refusée : une modification interdite du XML Dante a été détectée."
+            : english
+                ? "OK XML compatibility: no prohibited change detected."
+                : "OK Compatibilité XML : aucune modification interdite détectée.");
 
         foreach (string warning in guardResult.Warnings.Take(80))
         {
-            lines.Add("WARNING " + warning);
+            lines.Add("WARNING " + LocalizationService.TranslateValidationMessage(language, warning));
         }
 
         foreach (string error in guardResult.Errors.Take(80))
         {
-            lines.Add("ERROR " + error);
+            lines.Add("ERROR " + LocalizationService.TranslateValidationMessage(language, error));
         }
 
         if (guardResult.Warnings.Count > 80 || guardResult.Errors.Count > 80)
         {
-            lines.Add("WARNING Rapport tronqué : ouvrez la page Santé du fichier pour les détails.");
+            lines.Add(english
+                ? "WARNING Report truncated: open the Validation center for details."
+                : "WARNING Rapport tronqué : ouvrez la page Santé du fichier pour les détails.");
         }
 
         return string.Join(Environment.NewLine, lines);

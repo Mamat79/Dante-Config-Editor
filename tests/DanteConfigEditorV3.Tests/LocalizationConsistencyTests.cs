@@ -10,7 +10,7 @@ public sealed class LocalizationConsistencyTests
 {
     private static readonly HashSet<string> LanguageNeutralLiterals = new(StringComparer.Ordinal)
     {
-        "#", "-", "+", "−", "↑", "↓", "↕", "↗", "0", "1", "10", "100 %", "0.0.0.0", "192.168.1", "255.255.255.0",
+        "#", "-", "+", "<", "−", "↑", "↓", "↕", "↗", "0", "1", "10", "100 %", "0.0.0.0", "192.168.1", "255.255.255.0",
         "0 device - 0 TX - 0 RX", "-------[]--", "ATOMIC", "Atomic Bomb", "BOMB", "By Mamat", "et ses agents", "Dante Config Editor 2026.1 Beta",
         "Daisychain", "Dante Config Editor 2026.1 Beta - macOS", "Dante Id",
         "Device", "Easy patch", "Patchbook", "Preferred master", "Preferred Master", "RX", "TX",
@@ -104,6 +104,105 @@ public sealed class LocalizationConsistencyTests
         Assert.DoesNotContain("Aucune différence", english, StringComparison.Ordinal);
         Assert.Contains("COMPARAISON XML", french, StringComparison.Ordinal);
         Assert.Contains("Aucune différence détectée", french, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void TextReportsUseTheSelectedLanguage()
+    {
+        DanteProject project = DanteProject.Load(RepositoryFile(
+            "tests",
+            "DanteConfigEditorV3.Tests",
+            "Fixtures",
+            "representative-preset.xml"));
+
+        string[] englishReports =
+        [
+            project.BuildSaveSummary(UiLanguage.English),
+            project.BuildReportText(UiLanguage.English),
+            project.BuildCompatibilityReport(UiLanguage.English),
+            project.BuildPatchbookText("all", language: UiLanguage.English),
+            project.BuildTopologyText(UiLanguage.English)
+        ];
+
+        Assert.Contains("PRE-SAVE SUMMARY", englishReports[0], StringComparison.Ordinal);
+        Assert.Contains("DANTE CONFIG EDITOR - REPORT", englishReports[1], StringComparison.Ordinal);
+        Assert.Contains("XML compatibility", englishReports[2], StringComparison.Ordinal);
+        Assert.Contains("Active subscriptions", englishReports[3], StringComparison.Ordinal);
+        Assert.Contains("SIMPLE TOPOLOGY", englishReports[4], StringComparison.Ordinal);
+        Assert.All(englishReports, report =>
+        {
+            Assert.DoesNotContain("RÉSUMÉ", report, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain("Fichier original", report, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain("Aucune modification", report, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain("canaux TX", report, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain("Sauvegarde refusée", report, StringComparison.OrdinalIgnoreCase);
+        });
+    }
+
+    [Theory]
+    [InlineData("3 machine(s) ajoutée(s) depuis second.xml", "3 device(s) added from second.xml")]
+    [InlineData("2 machine(s) passée(s) en dynamique", "2 device(s) switched to automatic IP")]
+    [InlineData("DEVICE-B supprimé, 4 patch(s) nettoyé(s)", "DEVICE-B deleted, 4 subscription(s) removed")]
+    [InlineData("Réinitialisation des canaux de tous les devices", "Channels reset for all devices")]
+    [InlineData("Fichier sauvegardé sous C:\\Temp\\preset.xml", "File saved as C:\\Temp\\preset.xml")]
+    public void HistoryDetailsAreReadableInEnglish(string french, string expected)
+    {
+        Assert.Equal(expected, LocalizationService.TranslateHistoryDetail(UiLanguage.English, french));
+        Assert.Equal(french, LocalizationService.TranslateHistoryDetail(UiLanguage.French, french));
+    }
+
+    [Theory]
+    [InlineData(
+        "DEVICE-B ne contient aucun canal TX.",
+        "DEVICE-B has no TX channel.")]
+    [InlineData(
+        "DEVICE-A / LOCAL MON utilise une source locale '.'.",
+        "DEVICE-A / LOCAL MON uses the local source '.'.")]
+    [InlineData(
+        "Plusieurs samplerates sont présents dans le preset : 48000, 96000.",
+        "Multiple sample rates are present in the preset: 48000, 96000.")]
+    [InlineData(
+        "IP fixe détectée sur 1 machine(s) : DEVICE-B (192.168.50.20).",
+        "Static IP detected on 1 device(s): DEVICE-B (192.168.50.20).")]
+    [InlineData(
+        "ROOM-A : nombre de canaux TX modifié (8 attendu(s), 7 trouvé(s)).",
+        "ROOM-A: TX channel count changed (8 expected, 7 found).")]
+    [InlineData(
+        "ROOM-A RX Dante Id 4 : subscribed_channel renseigné sans subscribed_device.",
+        "ROOM-A Rx Dante ID 4: subscribed_channel is set without subscribed_device.")]
+    [InlineData(
+        "Adresse IPv4 fixe dupliquée : 192.168.1.10 est utilisée par ROOM-A, ROOM-B. Attribuez une adresse unique ou repassez les machines concernées en IP automatique.",
+        "Duplicate static IPv4 address: 192.168.1.10 is used by ROOM-A, ROOM-B. Assign a unique address or switch the affected devices back to automatic IP.")]
+    [InlineData(
+        "Modification technique interdite : /preset/device/instance_id : Valeur modifiée : A -> B.",
+        "Forbidden technical change: /preset/device/instance_id : Value changed: A -> B.")]
+    [InlineData(
+        "Chemin XML non autorisé par défaut : /preset/device/inconnu : Balise ajoutée : <inconnu>.",
+        "XML path not allowed by default: /preset/device/inconnu : Element added: <inconnu>.")]
+    public void ValidationMessagesAreReadableInEnglish(string french, string expected)
+    {
+        Assert.Equal(expected, LocalizationService.TranslateValidationMessage(UiLanguage.English, french));
+        Assert.Equal(french, LocalizationService.TranslateValidationMessage(UiLanguage.French, french));
+    }
+
+    [Fact]
+    public void ValidationSummaryUsesTheRequestedLanguage()
+    {
+        DanteValidationResult result = new();
+        result.AddError(
+            DanteIssueCategory.XmlCompatibility,
+            "Sauvegarde refusée : la racine <preset> est absente.");
+        result.AddWarning(
+            DanteIssueCategory.Device,
+            "ROOM-A ne contient aucun canal TX.");
+
+        string english = result.ToDisplayText(UiLanguage.English);
+
+        Assert.Contains("Blocking errors:", english, StringComparison.Ordinal);
+        Assert.Contains("Save blocked: the <preset> root element is missing.", english, StringComparison.Ordinal);
+        Assert.Contains("Items to check:", english, StringComparison.Ordinal);
+        Assert.Contains("ROOM-A has no TX channel.", english, StringComparison.Ordinal);
+        Assert.DoesNotContain("Sauvegarde", english, StringComparison.Ordinal);
     }
 
     [Fact]

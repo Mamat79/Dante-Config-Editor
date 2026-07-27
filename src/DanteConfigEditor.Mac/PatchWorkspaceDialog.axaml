@@ -1,7 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="DanteConfigEditor.Mac.PatchWorkspaceDialog"
-        Title="Patch visuel"
+        Title="Easy patch / Matrice"
         Width="1200"
         Height="800"
         MinWidth="960"
@@ -33,7 +33,7 @@
     <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="18" RowSpacing="12">
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
             <StackPanel Spacing="4">
-                <TextBlock x:Name="TitleText" Text="Patch visuel" FontSize="21" FontWeight="Bold" />
+                <TextBlock x:Name="TitleText" Text="Easy patch / Matrice" FontSize="21" FontWeight="Bold" />
                 <TextBlock x:Name="IntroText"
                            Classes="muted"
                            Text="Chaque action modifie immédiatement le patch." />
@@ -68,7 +68,9 @@
             </StackPanel>
         </Grid>
 
-        <TabControl x:Name="PatchModeTabs" Grid.Row="2">
+        <TabControl x:Name="PatchModeTabs"
+                    Grid.Row="2"
+                    SelectionChanged="PatchModeTabs_SelectionChanged">
             <TabItem x:Name="AssignmentTab" Header="Glisser-déposer et série">
                 <Grid ColumnDefinitions="*,270,*" RowDefinitions="Auto,*" ColumnSpacing="14" Margin="12">
                     <TextBlock x:Name="RxListHeading"

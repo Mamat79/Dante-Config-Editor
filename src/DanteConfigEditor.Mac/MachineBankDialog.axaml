@@ -54,12 +54,12 @@
                       SelectionMode="Single"
                       SelectionChanged="TemplatesGrid_SelectionChanged">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding TemplateName}" Width="2*" />
-                    <DataGridTextColumn Binding="{Binding Manufacturer}" Width="*" />
-                    <DataGridTextColumn Binding="{Binding Model}" Width="*" />
-                    <DataGridTextColumn Binding="{Binding Category}" Width="*" />
-                    <DataGridTextColumn Header="TX" Binding="{Binding TxCount}" Width="64" />
-                    <DataGridTextColumn Header="RX" Binding="{Binding RxCount}" Width="64" />
+                    <DataGridTextColumn Binding="{Binding TemplateName}" Width="1.6*" />
+                    <DataGridTextColumn Binding="{Binding Manufacturer}" Width="1.1*" />
+                    <DataGridTextColumn Binding="{Binding Model}" Width="1.35*" />
+                    <DataGridTextColumn Binding="{Binding Category}" Width="1.35*" />
+                    <DataGridTextColumn Header="TX" Binding="{Binding TxCount}" Width="60" />
+                    <DataGridTextColumn Header="RX" Binding="{Binding RxCount}" Width="60" />
                 </DataGrid.Columns>
             </DataGrid>
 

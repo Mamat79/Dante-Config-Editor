@@ -628,7 +628,7 @@ public partial class MainWindow : Window
         DanteValidationResult validation = _project!.Validate();
         if (validation.HasErrors)
         {
-            ShowError(T("Dialog.SaveImpossibleTitle"), validation.ToDisplayText());
+            ShowError(T("Dialog.SaveImpossibleTitle"), validation.ToDisplayText(_language));
             return;
         }
 
@@ -1485,37 +1485,37 @@ public partial class MainWindow : Window
 
     private void ListRedundantButton_Click(object sender, RoutedEventArgs e)
     {
-        ShowProjectList("Machines redondantes", project => project.ListRedundantDevices());
+        ShowProjectList("Machines redondantes", project => project.ListRedundantDevices(_language));
     }
 
     private void ListDaisychainButton_Click(object sender, RoutedEventArgs e)
     {
-        ShowProjectList("Machines en daisychain", project => project.ListDaisychainDevices());
+        ShowProjectList("Machines en daisychain", project => project.ListDaisychainDevices(_language));
     }
 
     private void ListLatenciesButton_Click(object sender, RoutedEventArgs e)
     {
-        ShowProjectList("Latences", project => project.ListLatencies());
+        ShowProjectList("Latences", project => project.ListLatencies(_language));
     }
 
     private void ListSampleRatesButton_Click(object sender, RoutedEventArgs e)
     {
-        ShowProjectList("Sample rates", project => project.ListSamplerates());
+        ShowProjectList("Sample rates", project => project.ListSamplerates(_language));
     }
 
     private void ListEncodingsButton_Click(object sender, RoutedEventArgs e)
     {
-        ShowProjectList("Bits par échantillon", project => project.ListEncodings());
+        ShowProjectList("Bits par échantillon", project => project.ListEncodings(_language));
     }
 
     private void ListStaticIpsButton_Click(object sender, RoutedEventArgs e)
     {
-        ShowProjectList("IP fixes", project => project.ListStaticIpDevices());
+        ShowProjectList("IP fixes", project => project.ListStaticIpDevices(_language));
     }
 
     private void ListPreferredMastersButton_Click(object sender, RoutedEventArgs e)
     {
-        ShowProjectList("Preferred masters", project => project.ListPreferredMasters());
+        ShowProjectList("Preferred masters", project => project.ListPreferredMasters(_language));
     }
 
     private void SenderDeviceList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -3321,7 +3321,7 @@ public partial class MainWindow : Window
             result.StaticIpCount,
             result.DynamicIpCount);
         AddLog(summary);
-        SaveSummaryTextBox.Text = summary + Environment.NewLine + Environment.NewLine + _project!.BuildCompatibilityReport();
+        SaveSummaryTextBox.Text = summary + Environment.NewLine + Environment.NewLine + _project!.BuildCompatibilityReport(_language);
         MessageBox.Show(this, summary, T("Dialog.AtomicChaosTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
@@ -3354,7 +3354,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        SaveSummaryTextBox.Text = _project!.BuildCompatibilityReport();
+        SaveSummaryTextBox.Text = _project!.BuildCompatibilityReport(_language);
         MainTabs.SelectedItem = SafetyTab;
         SetStatus(LocalizeLiteral("Rapport compatibilité Dante Controller affiché."));
     }
@@ -3368,30 +3368,43 @@ public partial class MainWindow : Window
 
         DanteValidationResult validation = _project!.Validate();
         string[] importantWarnings = _project.BuildImportantWarnings().ToArray();
+        bool english = _language == UiLanguage.English;
         StringBuilder builder = new();
-        builder.AppendLine("RAPPORT FINAL AVANT IMPORT DANTE");
+        builder.AppendLine(english
+            ? "FINAL REPORT BEFORE DANTE IMPORT"
+            : "RAPPORT FINAL AVANT IMPORT DANTE");
         builder.AppendLine("================================");
         builder.AppendLine();
-        builder.AppendLine(validation.HasErrors ? "STATUT : ERREURS A CORRIGER" : importantWarnings.Length > 0 || validation.Warnings.Count > 0 ? "STATUT : POINTS A VERIFIER" : "STATUT : OK");
-        builder.AppendLine($"Fichier : {_project.OriginalFilePath}");
-        builder.AppendLine($"Machines : {_project.Devices.Count}");
-        builder.AppendLine($"Patchs actifs : {_project.PatchMatrix.ActivePatchCount}");
+        builder.AppendLine(validation.HasErrors
+            ? (english ? "STATUS: ERRORS TO FIX" : "STATUT : ERREURS A CORRIGER")
+            : importantWarnings.Length > 0 || validation.Warnings.Count > 0
+                ? (english ? "STATUS: ITEMS TO CHECK" : "STATUT : POINTS A VERIFIER")
+                : (english ? "STATUS: OK" : "STATUT : OK"));
+        builder.AppendLine(english
+            ? $"File: {_project.OriginalFilePath}"
+            : $"Fichier : {_project.OriginalFilePath}");
+        builder.AppendLine(english
+            ? $"Devices: {_project.Devices.Count}"
+            : $"Machines : {_project.Devices.Count}");
+        builder.AppendLine(english
+            ? $"Active subscriptions: {_project.PatchMatrix.ActivePatchCount}"
+            : $"Patchs actifs : {_project.PatchMatrix.ActivePatchCount}");
         builder.AppendLine();
 
         if (importantWarnings.Length > 0)
         {
-            builder.AppendLine("Points importants :");
+            builder.AppendLine(english ? "Important items:" : "Points importants :");
             foreach (string warning in importantWarnings)
             {
-                builder.AppendLine("- " + warning);
+                builder.AppendLine("- " + LocalizationService.TranslateValidationMessage(_language, warning));
             }
 
             builder.AppendLine();
         }
 
-        builder.AppendLine(validation.ToDisplayText());
+        builder.AppendLine(validation.ToDisplayText(_language));
         builder.AppendLine();
-        builder.AppendLine(_project.BuildCompatibilityReport());
+        builder.AppendLine(_project.BuildCompatibilityReport(_language));
         SaveSummaryTextBox.Text = builder.ToString();
         MainTabs.SelectedItem = SafetyTab;
         SetStatus(LocalizeLiteral("Rapport final avant Dante affiché."));
@@ -3404,88 +3417,9 @@ public partial class MainWindow : Window
 
     private string BuildLocalizedSaveSummary()
     {
-        if (_project is null)
-        {
-            return T("Status.NoFileLoaded");
-        }
-
-        if (_language != UiLanguage.English)
-        {
-            return _project.BuildSaveSummary();
-        }
-
-        DanteValidationResult validation = _project.Validate();
-        DanteValidationResult guard = _project.ValidateXmlChangeGuard();
-        IReadOnlyList<DanteImportantWarning> importantWarnings =
-            _project.BuildImportantWarningDetails();
-        DeviceChangeRow[] changes = _project.BuildDeviceChangeRows().ToArray();
-        string[] changedDevices = changes
-            .Select(change => change.DeviceName)
-            .Where(name => !string.IsNullOrWhiteSpace(name))
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .OrderBy(name => name, StringComparer.OrdinalIgnoreCase)
-            .ToArray();
-
-        StringBuilder builder = new();
-        builder.AppendLine("SAVE SUMMARY");
-        builder.AppendLine("============");
-        builder.AppendLine($"Original file: {_project.OriginalFilePath}");
-        builder.AppendLine($"Last saved file: {_project.LastSavedPath ?? "none"}");
-        builder.AppendLine();
-        builder.AppendLine("COUNTS");
-        builder.AppendLine("------");
-        builder.AppendLine($"Devices: {_project.Devices.Count}");
-        builder.AppendLine($"Tx channels: {_project.Devices.Sum(device => device.TxCount)}");
-        builder.AppendLine($"Rx channels: {_project.Devices.Sum(device => device.RxCount)}");
-        builder.AppendLine($"Active subscriptions: {_project.PatchMatrix.ActivePatchCount}");
-        builder.AppendLine();
-
-        if (importantWarnings.Count > 0)
-        {
-            builder.AppendLine("IMPORTANT ITEMS TO CHECK");
-            builder.AppendLine("------------------------");
-            foreach (DanteImportantWarning warning in importantWarnings)
-            {
-                builder.AppendLine("- " + warning.LocalizedMessage(english: true));
-            }
-
-            builder.AppendLine();
-        }
-
-        builder.AppendLine("VALIDATION");
-        builder.AppendLine("----------");
-        builder.AppendLine($"Blocking errors: {validation.Errors.Count}");
-        builder.AppendLine($"Warnings: {validation.Warnings.Count}");
-        builder.AppendLine($"Information items: {validation.Infos.Count}");
-        builder.AppendLine(validation.HasErrors
-            ? "Open the Validation center for the affected XML paths and suggested corrections."
-            : "No blocking validation error was detected.");
-        builder.AppendLine();
-        builder.AppendLine("XML SAFETY GUARD");
-        builder.AppendLine("----------------");
-        builder.AppendLine(guard.HasErrors
-            ? $"{guard.Errors.Count} forbidden XML change(s) detected. Saving is blocked."
-            : "No forbidden XML change detected.");
-        builder.AppendLine();
-        builder.AppendLine("CHANGES");
-        builder.AppendLine("-------");
-        if (changes.Length == 0)
-        {
-            builder.AppendLine("- No device or channel change since loading.");
-        }
-        else
-        {
-            builder.AppendLine(
-                $"- {changes.Length} field change(s) across {changedDevices.Length} device(s).");
-            builder.AppendLine(
-                "- Devices: "
-                + string.Join(", ", changedDevices.Take(12))
-                + (changedDevices.Length > 12
-                    ? $", +{changedDevices.Length - 12} more"
-                    : string.Empty));
-        }
-
-        return builder.ToString();
+        return _project is null
+            ? T("Status.NoFileLoaded")
+            : _project.BuildSaveSummary(_language);
     }
 
     private void ActionHistoryButton_Click(object sender, RoutedEventArgs e)
@@ -3650,7 +3584,7 @@ public partial class MainWindow : Window
 
         try
         {
-            ReportExportService.ExportText(dialog.FileName, _project!.BuildReportText());
+            ReportExportService.ExportText(dialog.FileName, _project!.BuildReportText(_language));
             AddLog(Tf("Log.TxtExported", dialog.FileName));
             SetStatus(T("Status.TxtExported"));
         }
@@ -3682,7 +3616,7 @@ public partial class MainWindow : Window
 
         try
         {
-            ReportExportService.ExportPdf(dialog.FileName, "Dante Config Editor", _project!.BuildReportText());
+            ReportExportService.ExportPdf(dialog.FileName, "Dante Config Editor", _project!.BuildReportText(_language));
             AddLog(Tf("Log.PdfExported", dialog.FileName));
             SetStatus(T("Status.PdfExported"));
         }
@@ -3716,7 +3650,7 @@ public partial class MainWindow : Window
         {
             string scope = SelectedOptionKey(PatchbookScopeComboBox, _patchbookScopeKeys[0]);
             string scopeDisplay = SelectedOptionDisplay(PatchbookScopeComboBox, T(_patchbookScopeKeys[0]));
-            ReportExportService.ExportText(dialog.FileName, _project!.BuildPatchbookText(scope, scopeDisplay));
+            ReportExportService.ExportText(dialog.FileName, _project!.BuildPatchbookText(scope, scopeDisplay, _language));
             AddLog(Tf("Log.PatchbookTxtExported", dialog.FileName));
             SetStatus(T("Status.PatchbookTxtExported"));
         }
@@ -3749,7 +3683,7 @@ public partial class MainWindow : Window
         try
         {
             string scope = SelectedOptionKey(PatchbookScopeComboBox, _patchbookScopeKeys[0]);
-            ReportExportService.ExportText(dialog.FileName, _project!.BuildPatchbookCsv(scope), includeSignature: false);
+            ReportExportService.ExportText(dialog.FileName, _project!.BuildPatchbookCsv(scope, _language), includeSignature: false);
             AddLog(Tf("Log.PatchbookCsvExported", dialog.FileName));
             SetStatus(T("Status.PatchbookCsvExported"));
         }
@@ -3766,7 +3700,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        SaveSummaryTextBox.Text = _project!.BuildTopologyText();
+        SaveSummaryTextBox.Text = _project!.BuildTopologyText(_language);
         MainTabs.SelectedItem = SafetyTab;
         SetStatus(T("Status.TopologyDisplayed"));
     }
@@ -4763,7 +4697,7 @@ public partial class MainWindow : Window
             .Select(change =>
                 $"{change.Timestamp:HH:mm:ss} - "
                 + $"{LocalizeLiteral(change.Action)} - "
-                + LocalizeLiteral(change.Details))
+                + LocalizationService.TranslateHistoryDetail(_language, change.Details))
             .ToArray();
         RecoveryAvailabilityTextBlock.Text = _language == UiLanguage.English
             ? "Automatic recovery is active for this project."

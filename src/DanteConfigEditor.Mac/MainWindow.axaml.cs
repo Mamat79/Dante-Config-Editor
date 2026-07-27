@@ -1182,7 +1182,7 @@ public partial class MainWindow : Window
     private void ValidateButton_Click(object? sender, RoutedEventArgs e)
     {
         if (_project is null) return;
-        FindControl<TextBox>("ReportTextBox")!.Text = _project.Validate().ToDisplayText();
+        FindControl<TextBox>("ReportTextBox")!.Text = _project.Validate().ToDisplayText(_language);
     }
 
     private async void AtomicChaosButton_Click(object? sender, RoutedEventArgs e)
@@ -1228,7 +1228,7 @@ public partial class MainWindow : Window
             result.DisconnectedRxCount,
             result.StaticIpCount,
             result.DynamicIpCount);
-        FindControl<TextBox>("ReportTextBox")!.Text = summary + Environment.NewLine + Environment.NewLine + _project.BuildCompatibilityReport();
+        FindControl<TextBox>("ReportTextBox")!.Text = summary + Environment.NewLine + Environment.NewLine + _project.BuildCompatibilityReport(_language);
         await ShowInfoAsync(LocalizationService.Text(_language, "Dialog.AtomicChaosTitle"), summary);
     }
 
@@ -1255,19 +1255,19 @@ public partial class MainWindow : Window
     private void CompatibilityButton_Click(object? sender, RoutedEventArgs e)
     {
         if (_project is null) return;
-        FindControl<TextBox>("ReportTextBox")!.Text = _project.BuildCompatibilityReport();
+        FindControl<TextBox>("ReportTextBox")!.Text = _project.BuildCompatibilityReport(_language);
     }
 
     private void FinalReportButton_Click(object? sender, RoutedEventArgs e)
     {
         if (_project is null) return;
-        FindControl<TextBox>("ReportTextBox")!.Text = _project.BuildReportText();
+        FindControl<TextBox>("ReportTextBox")!.Text = _project.BuildReportText(_language);
     }
 
     private void TopologyButton_Click(object? sender, RoutedEventArgs e)
     {
         if (_project is null) return;
-        FindControl<TextBox>("ReportTextBox")!.Text = _project.BuildTopologyText();
+        FindControl<TextBox>("ReportTextBox")!.Text = _project.BuildTopologyText(_language);
     }
 
     private async void CompareButton_Click(object? sender, RoutedEventArgs e)
@@ -1290,7 +1290,7 @@ public partial class MainWindow : Window
     private async void ExportTxtButton_Click(object? sender, RoutedEventArgs e)
     {
         if (_project is null) return;
-        await ExportTextAsync("rapport-dante.txt", _project.BuildReportText());
+        await ExportTextAsync("rapport-dante.txt", _project.BuildReportText(_language));
     }
 
     private async void ExportPdfButton_Click(object? sender, RoutedEventArgs e)
@@ -1301,7 +1301,7 @@ public partial class MainWindow : Window
         if (path is null) return;
         try
         {
-            ReportExportService.ExportPdf(path, "Dante Config Editor 2026.1 Beta", _project.BuildReportText());
+            ReportExportService.ExportPdf(path, "Dante Config Editor 2026.1 Beta", _project.BuildReportText(_language));
             SetStatus(LocalizationService.Text(_language, "Status.PdfExported"));
         }
         catch (Exception exception)
@@ -1313,7 +1313,7 @@ public partial class MainWindow : Window
     private async void PatchbookTxtButton_Click(object? sender, RoutedEventArgs e)
     {
         if (_project is null) return;
-        await ExportTextAsync("patchbook-dante.txt", _project.BuildPatchbookText("all"));
+        await ExportTextAsync("patchbook-dante.txt", _project.BuildPatchbookText("all", language: _language));
     }
 
     private async void PatchbookCsvButton_Click(object? sender, RoutedEventArgs e)
@@ -1324,7 +1324,7 @@ public partial class MainWindow : Window
         if (path is null) return;
         try
         {
-            ReportExportService.ExportText(path, _project.BuildPatchbookCsv("all"));
+            ReportExportService.ExportText(path, _project.BuildPatchbookCsv("all", _language));
             SetStatus(LocalizationService.Text(_language, "Status.PatchbookCsvExported"));
         }
         catch (Exception exception)
@@ -1477,6 +1477,10 @@ public partial class MainWindow : Window
         ConfigureChoiceLists();
         ApplyLanguageToVisualTree();
         RefreshAll(SelectedDeviceRow()?.Name);
+        if (_project is not null)
+        {
+            FindControl<TextBox>("ReportTextBox")!.Text = _project.BuildSaveSummary(_language);
+        }
     }
 
     private void ThemeButton_Click(object? sender, RoutedEventArgs e)
@@ -1592,7 +1596,11 @@ public partial class MainWindow : Window
             device.LatencyDisplay,
             device.SampleRateDisplay,
             device.EncodingDisplay,
-            device.IpModeDisplay,
+            device.UsesStaticIp
+                ? string.IsNullOrWhiteSpace(device.StaticIpAddress)
+                    ? L("Fixe", "Static")
+                    : $"{L("Fixe", "Static")} ({device.StaticIpAddress})"
+                : L("Auto", "Auto"),
             device.PreferredMaster,
             device.TxCount,
             device.RxCount)).ToArray();
@@ -1686,7 +1694,7 @@ public partial class MainWindow : Window
             subscription.RxChannelName,
             subscription.DisplayTxDeviceName,
             subscription.TxChannelName,
-            subscription.SourceFull,
+            LocalizationService.TranslateLiteral(_language, subscription.SourceFull),
             LocalizationService.TranslateLiteral(_language, subscription.TypeLabel),
             LocalizationService.TranslateLiteral(_language, subscription.Status))).ToArray();
     }
@@ -1707,7 +1715,7 @@ public partial class MainWindow : Window
             LocalizationService.TranslateLiteral(_language, issue.CategoryLabel),
             issue.DeviceName ?? "-",
             issue.ChannelName ?? (issue.DanteId.HasValue ? issue.DanteId.Value.ToString() : "-"),
-            issue.Message)).ToArray();
+            LocalizationService.TranslateValidationMessage(_language, issue.Message))).ToArray();
 
         FindControl<TextBlock>("HealthSummaryText")!.Text = L(
             $"{validation.Errors.Count} erreur(s), {validation.Warnings.Count} avertissement(s), {validation.Infos.Count} information(s).",
@@ -1740,7 +1748,9 @@ public partial class MainWindow : Window
         FindControl<ListBox>("LogListBox")!.ItemsSource = _project?.Changes
             .Reverse()
             .Take(100)
-            .Select(change => $"{change.Timestamp:HH:mm:ss}  {change.Action}\n{change.Details}")
+            .Select(change =>
+                $"{change.Timestamp:HH:mm:ss}  {LocalizationService.TranslateLiteral(_language, change.Action)}\n"
+                + LocalizationService.TranslateHistoryDetail(_language, change.Details))
             .ToArray() ?? [];
     }
 
@@ -1779,7 +1789,7 @@ public partial class MainWindow : Window
         TextBox report = FindControl<TextBox>("ReportTextBox")!;
         if (string.IsNullOrWhiteSpace(report.Text))
         {
-            report.Text = _project.BuildSaveSummary();
+            report.Text = _project.BuildSaveSummary(_language);
         }
     }
 
@@ -2093,11 +2103,74 @@ public partial class MainWindow : Window
         }
 
         FindControl<Button>("MergeButton")!.Content = L("Ajouter XML", "Add XML");
+        ComboBox languageCombo = FindControl<ComboBox>("LanguageCombo")!;
+        foreach (ComboBoxItem item in languageCombo.Items.OfType<ComboBoxItem>())
+        {
+            item.Content = string.Equals(item.Tag?.ToString(), "fr", StringComparison.OrdinalIgnoreCase)
+                ? "Français"
+                : "English";
+        }
         FindControl<TextBox>("SearchTextBox")!.Watermark = L("Machine ou canal", "Device or channel");
+        ToolTip.SetTip(
+            FindControl<Button>("ApplyDeviceButton")!,
+            L(
+                "Applique le nom et les paramètres affichés à la machine sélectionnée.",
+                "Applies the displayed name and settings to the selected device."));
+        ToolTip.SetTip(
+            FindControl<Button>("DeviceDetailsButton")!,
+            L(
+                "Ouvre toutes les propriétés et tous les canaux de la machine.",
+                "Opens all properties and channels of the device."));
+        ToolTip.SetTip(
+            FindControl<Button>("ResetRxButton")!,
+            L(
+                "Déconnecte toutes les entrées RX de la machine sélectionnée.",
+                "Disconnects every Rx input of the selected device."));
+        ToolTip.SetTip(
+            FindControl<Button>("ResetTxButton")!,
+            L(
+                "Supprime les patchs utilisant les TX de la machine sélectionnée.",
+                "Removes subscriptions using Tx channels from the selected device."));
+        ToolTip.SetTip(
+            FindControl<Button>("ResetRxTxButton")!,
+            L(
+                "Déconnecte les RX et tous les patchs alimentés par les TX de cette machine.",
+                "Disconnects the Rx channels and every subscription fed by this device's Tx channels."));
+        ToolTip.SetTip(
+            FindControl<Button>("DeleteDeviceButton")!,
+            L(
+                "Supprime la machine et nettoie les patchs qui lui font référence.",
+                "Removes the device and cleans subscriptions that reference it."));
+        ToolTip.SetTip(
+            FindControl<Button>("DuplicateDeviceButton")!,
+            L(
+                "Crée un rôle hors ligne indépendant avec de nouveaux identifiants.",
+                "Creates an independent offline role with new identifiers."));
+        ToolTip.SetTip(
+            FindControl<Button>("SaveDeviceToBankButton")!,
+            L(
+                "Crée un modèle réutilisable sans identité matérielle ni patch du projet.",
+                "Creates a reusable template without project hardware identity or subscriptions."));
         ApplyDeviceFilterLanguage();
+        RefreshLiteralComboSelection("DeviceFilterCombo");
+        RefreshLiteralComboSelection("PatchStatusCombo");
 
         Title = L("Dante Config Editor 2026.1 Beta - macOS", "Dante Config Editor 2026.1 Beta - macOS");
         FindControl<Button>("ThemeButton")!.Content = _darkTheme ? L("Thème clair", "Light theme") : L("Thème sombre", "Dark theme");
+    }
+
+    private void RefreshLiteralComboSelection(string controlName)
+    {
+        ComboBox comboBox = FindControl<ComboBox>(controlName)!;
+        int selectedIndex = comboBox.SelectedIndex;
+        if (selectedIndex < 0)
+        {
+            return;
+        }
+
+        // Avalonia conserve parfois le texte mis en cache de l'élément sélectionné.
+        comboBox.SelectedIndex = -1;
+        comboBox.SelectedIndex = selectedIndex;
     }
 
     private void ApplyDeviceFilterLanguage()
