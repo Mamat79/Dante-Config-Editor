@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "63f3fb31-a161-58b2-96a0-648798dfa6a9",
+  "templateName": "RMio64-D",
+  "manufacturer": "Yamaha Corporation",
+  "model": "RMio64-D",
+  "description": "Rôle hors ligne assaini pour RMio64-D, 64 TX / 64 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Interface audio",
+  "tags": [
+    "Yamaha",
+    "MADI",
+    "64x64"
+  ],
+  "txCount": 64,
+  "rxCount": 64,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "10028F62E296D3B395695BB3311416CE104F8F67DB2E10730EB0B2149C6ED973",
+  "imageFileName": "image.jpg",
+  "imageSha256": "1D44DE017CC332A225657FDE4D023727741E5FAB3DE9635888EB97A7612C2F08",
+  "catalogKey": "yamaha-rmio64-d",
+  "descriptionEn": "Sanitized offline role for RMio64-D, 64 Tx / 64 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://usa.yamaha.com/products/proaudio/interfaces/r_series_madi/index.html",
+  "imageSourceUrl": "https://usa.yamaha.com/files/lineup_interface_r_madi_87adee3da992befb45dd391d778a78f6.jpg",
+  "imageAttribution": "Official product image - Yamaha Corporation",
+  "sourceSignature": {
+    "manufacturer": "Yamaha Corporation",
+    "model": "RMio64-D",
+    "txCount": 64,
+    "rxCount": 64
+  }
+}

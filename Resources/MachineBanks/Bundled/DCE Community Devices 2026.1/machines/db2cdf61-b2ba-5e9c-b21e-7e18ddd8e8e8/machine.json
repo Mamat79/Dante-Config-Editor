@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "db2cdf61-b2ba-5e9c-b21e-7e18ddd8e8e8",
+  "templateName": "Beatrice R16",
+  "manufacturer": "Glensound",
+  "model": "Beatrice R16",
+  "description": "Rôle hors ligne assaini pour Beatrice R16, 32 TX / 32 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Intercom",
+  "tags": [
+    "intercom",
+    "Beatrice",
+    "32x32"
+  ],
+  "txCount": 32,
+  "rxCount": 32,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "CD57820EE717BA05465E4A5CC2FFC2EADEBBAE55A507FB0BB8B652D631497856",
+  "imageFileName": "image.jpg",
+  "imageSha256": "AE0A5A1D16CDD50B02533BDCD9C5C5C7FFA9FB0AF65211F1478A84B8A5300077",
+  "catalogKey": "glensound-beatrice-r16",
+  "descriptionEn": "Sanitized offline role for Beatrice R16, 32 Tx / 32 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.glensound.co.uk/product-details/beatrice-r16",
+  "imageSourceUrl": "https://www.glensound.co.uk/assets/images/library/5d9b4b677827d-Beatrice%20R16%20Front%20and%20Rear%20BAN.jpg",
+  "imageAttribution": "Official product image - Glensound",
+  "sourceSignature": {
+    "manufacturer": "Glensound",
+    "model": "Beatrice R16",
+    "txCount": 32,
+    "rxCount": 32
+  }
+}

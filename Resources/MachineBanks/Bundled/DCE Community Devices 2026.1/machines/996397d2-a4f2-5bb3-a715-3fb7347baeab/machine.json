@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "996397d2-a4f2-5bb3-a715-3fb7347baeab",
+  "templateName": "RSio64-D",
+  "manufacturer": "Yamaha Corporation",
+  "model": "RSio64-D",
+  "description": "Rôle hors ligne assaini pour RSio64-D, 64 TX / 64 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Interface audio",
+  "tags": [
+    "Yamaha",
+    "Mini-YGDAI",
+    "64x64"
+  ],
+  "txCount": 64,
+  "rxCount": 64,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "B0044363AB9850B39736839B05CCB4D55AD2468C667BC64AD27D560462DCA477",
+  "imageFileName": "image.jpg",
+  "imageSha256": "42414BED7722A4B1EA262EEBE8FCE64910896376C310EBC9BE3D9CEC6B0763DA",
+  "catalogKey": "yamaha-rsio64-d",
+  "descriptionEn": "Sanitized offline role for RSio64-D, 64 Tx / 64 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://jp.yamaha.com/products/proaudio/interfaces/rsio64-d/index.html",
+  "imageSourceUrl": "https://jp.yamaha.com/files/lineup_interfaces_rsio_7244f5becda51aa413b2be0ac84b4458.jpg",
+  "imageAttribution": "Official product image - Yamaha Corporation",
+  "sourceSignature": {
+    "manufacturer": "Yamaha Corporation",
+    "model": "RSio64-D",
+    "txCount": 64,
+    "rxCount": 64
+  }
+}

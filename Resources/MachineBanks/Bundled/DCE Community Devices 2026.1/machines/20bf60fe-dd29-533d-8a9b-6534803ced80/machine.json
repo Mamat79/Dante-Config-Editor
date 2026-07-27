@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "20bf60fe-dd29-533d-8a9b-6534803ced80",
+  "templateName": "Dante AVIO Bluetooth",
+  "manufacturer": "Audinate",
+  "model": "Dante AVIO Bluetooth",
+  "description": "Rôle hors ligne assaini pour Dante AVIO Bluetooth, 2 TX / 1 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Adaptateur",
+  "tags": [
+    "AVIO",
+    "Bluetooth",
+    "2x1"
+  ],
+  "txCount": 2,
+  "rxCount": 1,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "8B0F84BBE587F9223829D33C38EE3C6A325C928DC908C280F716A0FB930765C0",
+  "imageFileName": "image.png",
+  "imageSha256": "259C2135D63F4160EA585A11F7AC3035CC23DAC2A12ED223DA0AF85A253359BA",
+  "catalogKey": "audinate-avio-bluetooth",
+  "descriptionEn": "Sanitized offline role for Dante AVIO Bluetooth, 2 Tx / 1 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.getdante.com/products/adapters/dante-avio-marketing-resources/",
+  "imageSourceUrl": "https://www.getdante.com/wp-content/uploads/2025/03/Bluetooth.zip",
+  "imageAttribution": "Official product image - Audinate",
+  "sourceSignature": {
+    "manufacturer": "Audinate",
+    "model": "Audinate Dante AVIO Bluetooth",
+    "txCount": 2,
+    "rxCount": 1
+  }
+}

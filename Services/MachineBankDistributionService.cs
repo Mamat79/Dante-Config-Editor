@@ -5,5 +5,7 @@ public static class MachineBankDistributionService
     public const string GitHubBanksUrl =
         "https://github.com/Mamat79/DanteConfigEditorV3/tree/main/machine-banks";
 
-    public const string BundledBankFolderName = "DCE Generic Roles 3.6";
+    public const string BundledBankFolderName = "DCE Generic Roles 2026.1";
+
+    public const string CommunityBankFolderName = "DCE Community Devices 2026.1";
 }

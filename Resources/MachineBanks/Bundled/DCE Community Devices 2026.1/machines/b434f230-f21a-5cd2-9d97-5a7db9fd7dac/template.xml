@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<device>
+  <captureInfo>
+    <device_name></device_name>
+    <interface_ipv4_addresses></interface_ipv4_addresses>
+    <device_samplerate></device_samplerate>
+    <device_encoding></device_encoding>
+    <device_unicast_latency></device_unicast_latency>
+    <rtp></rtp>
+    <clock></clock>
+    <clock_priority></clock_priority>
+    <txchannel_names></txchannel_names>
+    <txflows></txflows>
+    <rxchannel_names></rxchannel_names>
+    <rxchannel_subscriptions></rxchannel_subscriptions>
+    <rxflows></rxflows>
+  </captureInfo>
+  <manufacturer_id>59616D6168610000</manufacturer_id>
+  <manufacturer_name>Yamaha Corporation</manufacturer_name>
+  <model_id>384D333900000000</model_id>
+  <model_name>Rio1608-D</model_name>
+  <model_version>5.70.0</model_version>
+  <device_type>426B6C796E320000</device_type>
+  <device_type_string>Brooklyn II</device_type_string>
+  <friendly_name>MACHINE-TEMPLATE</friendly_name>
+  <redundancy value="false" />
+  <preferred_master value="false" />
+  <external_word_clock value="false" />
+  <samplerate>48000</samplerate>
+  <encoding>24</encoding>
+  <unicast_latency>1000</unicast_latency>
+  <txchannel danteId="1" mediaType="audio">
+    <label>TX 01</label>
+  </txchannel>
+  <txchannel danteId="2" mediaType="audio">
+    <label>TX 02</label>
+  </txchannel>
+  <txchannel danteId="3" mediaType="audio">
+    <label>TX 03</label>
+  </txchannel>
+  <txchannel danteId="4" mediaType="audio">
+    <label>TX 04</label>
+  </txchannel>
+  <txchannel danteId="5" mediaType="audio">
+    <label>TX 05</label>
+  </txchannel>
+  <txchannel danteId="6" mediaType="audio">
+    <label>TX 06</label>
+  </txchannel>
+  <txchannel danteId="7" mediaType="audio">
+    <label>TX 07</label>
+  </txchannel>
+  <txchannel danteId="8" mediaType="audio">
+    <label>TX 08</label>
+  </txchannel>
+  <txchannel danteId="9" mediaType="audio">
+    <label>TX 09</label>
+  </txchannel>
+  <txchannel danteId="10" mediaType="audio">
+    <label>TX 10</label>
+  </txchannel>
+  <txchannel danteId="11" mediaType="audio">
+    <label>TX 11</label>
+  </txchannel>
+  <txchannel danteId="12" mediaType="audio">
+    <label>TX 12</label>
+  </txchannel>
+  <txchannel danteId="13" mediaType="audio">
+    <label>TX 13</label>
+  </txchannel>
+  <txchannel danteId="14" mediaType="audio">
+    <label>TX 14</label>
+  </txchannel>
+  <txchannel danteId="15" mediaType="audio">
+    <label>TX 15</label>
+  </txchannel>
+  <txchannel danteId="16" mediaType="audio">
+    <label>TX 16</label>
+  </txchannel>
+  <rxchannel danteId="1" mediaType="audio">
+    <name>RX 01</name>
+  </rxchannel>
+  <rxchannel danteId="2" mediaType="audio">
+    <name>RX 02</name>
+  </rxchannel>
+  <rxchannel danteId="3" mediaType="audio">
+    <name>RX 03</name>
+  </rxchannel>
+  <rxchannel danteId="4" mediaType="audio">
+    <name>RX 04</name>
+  </rxchannel>
+  <rxchannel danteId="5" mediaType="audio">
+    <name>RX 05</name>
+  </rxchannel>
+  <rxchannel danteId="6" mediaType="audio">
+    <name>RX 06</name>
+  </rxchannel>
+  <rxchannel danteId="7" mediaType="audio">
+    <name>RX 07</name>
+  </rxchannel>
+  <rxchannel danteId="8" mediaType="audio">
+    <name>RX 08</name>
+  </rxchannel>
+</device>

@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "e31a0a86-95c3-50f0-a47b-e2d933b2a24c",
+  "templateName": "D 80:4L",
+  "manufacturer": "Lab Gruppen",
+  "model": "D 80:4L",
+  "description": "Rôle hors ligne assaini pour D 80:4L, 8 TX / 8 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Amplificateur",
+  "tags": [
+    "amplifier",
+    "D Series",
+    "8x8"
+  ],
+  "txCount": 8,
+  "rxCount": 8,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "562CD8CE9133A31A9B069D3559F24F676016BF519CF896C64FD18029A8CC1FA9",
+  "imageFileName": "image.png",
+  "imageSha256": "9B4ACF3C28F61649C8430010050C22738EE0438CDECB624B0DC08C1C8B90363A",
+  "catalogKey": "lab-gruppen-d80-4l",
+  "descriptionEn": "Sanitized offline role for D 80:4L, 8 Tx / 8 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.labgruppen.com/en/products/0107-AAN",
+  "imageSourceUrl": "https://cdn-media.empowertribe.com/a034efd19884457583007396b1578a79/Image_LG_0107-AAN_D_80-4L_Front_B.png",
+  "imageAttribution": "Official product image - Lab Gruppen",
+  "sourceSignature": {
+    "manufacturer": "Lab.gruppen",
+    "model": "D 80:4L",
+    "txCount": 8,
+    "rxCount": 8
+  }
+}

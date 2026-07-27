@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "19b03410-5d91-5bb1-8ff2-b0ad01ce02cb",
+  "templateName": "Bella 4",
+  "manufacturer": "Glensound",
+  "model": "Bella4",
+  "description": "Rôle hors ligne assaini pour Bella 4, 0 TX / 4 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Interface audio",
+  "tags": [
+    "Bella",
+    "output",
+    "0x4"
+  ],
+  "txCount": 0,
+  "rxCount": 4,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "DD0D264AC8D9E492C724B0AF12F707707B6093D8F0444A9745231B3562BD6FCA",
+  "imageFileName": "image.jpg",
+  "imageSha256": "CF3FE9E94FD4F565B4DB8728E1B843678C23B686DB3BA6FE07FF069DFBE24C03",
+  "catalogKey": "glensound-bella4",
+  "descriptionEn": "Sanitized offline role for Bella 4, 0 Tx / 4 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.glensound.co.uk/product-details/bella-4",
+  "imageSourceUrl": "https://www.glensound.co.uk/assets/images/library/5d9f324bd0c10-Bella%204%20Front%20and%20Rear%20BAN.jpg",
+  "imageAttribution": "Official product image - Glensound",
+  "sourceSignature": {
+    "manufacturer": "Glensound",
+    "model": "Bella4",
+    "txCount": 0,
+    "rxCount": 4
+  }
+}

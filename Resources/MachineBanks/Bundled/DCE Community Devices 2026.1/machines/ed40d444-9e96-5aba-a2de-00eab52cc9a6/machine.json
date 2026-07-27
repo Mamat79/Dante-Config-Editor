@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "ed40d444-9e96-5aba-a2de-00eab52cc9a6",
+  "templateName": "Dante AVIO Analog Output 0x2",
+  "manufacturer": "Audinate",
+  "model": "AVIO-DAO2",
+  "description": "Rôle hors ligne assaini pour Dante AVIO Analog Output 0x2, 0 TX / 2 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Adaptateur",
+  "tags": [
+    "AVIO",
+    "analog output",
+    "0x2"
+  ],
+  "txCount": 0,
+  "rxCount": 2,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "F0FB5D74490048A916D7CD4BCA3D3216FBFED0ED82BD8834F2B195B5BB9D09FD",
+  "imageFileName": "image.png",
+  "imageSha256": "52055BD7388D78E3D7125DD860DE55EF3FA37CE64522EE8C4AC9EC745EE09722",
+  "catalogKey": "audinate-avio-analog-output",
+  "descriptionEn": "Sanitized offline role for Dante AVIO Analog Output 0x2, 0 Tx / 2 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.getdante.com/products/adapters/dante-avio-marketing-resources/",
+  "imageSourceUrl": "https://www.getdante.com/wp-content/uploads/2025/03/AnalogOutput.zip",
+  "imageAttribution": "Official product image - Audinate",
+  "sourceSignature": {
+    "manufacturer": "Audinate",
+    "model": "AVIO-DAO2",
+    "txCount": 0,
+    "rxCount": 2
+  }
+}

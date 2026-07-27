@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "ad8a1e80-8592-53c1-a7ae-f792fd8c3299",
+  "templateName": "Dante Virtual Soundcard 64x64",
+  "manufacturer": "Audinate",
+  "model": "Dante Virtual Soundcard",
+  "description": "Rôle hors ligne assaini pour Dante Virtual Soundcard 64x64, 64 TX / 64 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Interface logicielle",
+  "tags": [
+    "DVS",
+    "software",
+    "64x64"
+  ],
+  "txCount": 64,
+  "rxCount": 64,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "077D06CCEA11E9BB1D8C8821216A3BF753E1AE6F30E7AD790FB5258B6F36FC41",
+  "imageFileName": "image.jpg",
+  "imageSha256": "31B126172ED704081BC68AE969E12BB078262F882F1E8D2DB949E1C5A17347AB",
+  "catalogKey": "audinate-dante-virtual-soundcard-64",
+  "descriptionEn": "Sanitized offline role for Dante Virtual Soundcard 64x64, 64 Tx / 64 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.getdante.com/products/software-essentials/dante-virtual-soundcard/",
+  "imageSourceUrl": "https://www.getdante.com/wp-content/uploads/2025/01/DVSPro-Logicv2-1000x625.jpg",
+  "imageAttribution": "Official product image - Audinate",
+  "sourceSignature": {
+    "manufacturer": "Audinate Pty Ltd",
+    "model": "Dante Virtual Soundcard",
+    "txCount": 64,
+    "rxCount": 64
+  }
+}

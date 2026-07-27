@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "55b2bc9e-01af-4b0f-b845-87851fefbcff",
+  "templateName": "DI4.1000",
+  "manufacturer": "Fohhn",
+  "model": "DI-AMP DAN",
+  "description": "Rôle hors ligne assaini pour DI4.1000, 0 TX / 4 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Amplificateur",
+  "tags": [
+    "amplifier",
+    "DI4.1000",
+    "0x4"
+  ],
+  "txCount": 0,
+  "rxCount": 4,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "1DBD948F2AC0AA4952DFDF0F371AC0325C1751BA0D751CBF0C68C0EB66CAAFA4",
+  "imageFileName": "image.png",
+  "imageSha256": "2DE93E81EFE6994F7C97BEC9CA7EC7A8FB2ED97B7C27B4A762A34E80874152E8",
+  "catalogKey": "fohhn-di4-1000",
+  "descriptionEn": "Sanitized offline role for DI4.1000, 0 Tx / 4 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.getdante.com/product/fohhn-di-4-1000/",
+  "imageSourceUrl": null,
+  "imageAttribution": "Publication approved by contributor - Fohhn",
+  "sourceSignature": {
+    "manufacturer": "Fohhn",
+    "model": "DI4Amp",
+    "txCount": 0,
+    "rxCount": 4
+  }
+}

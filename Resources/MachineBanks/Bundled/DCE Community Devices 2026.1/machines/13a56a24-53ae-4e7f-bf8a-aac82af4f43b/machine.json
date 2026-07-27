@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "13a56a24-53ae-4e7f-bf8a-aac82af4f43b",
+  "templateName": "Beatrice D8",
+  "manufacturer": "Glensound",
+  "model": "Beatrice D8",
+  "description": "Rôle hors ligne assaini pour Beatrice D8, 32 TX / 32 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Intercom",
+  "tags": [
+    "intercom",
+    "Beatrice",
+    "32x32"
+  ],
+  "txCount": 32,
+  "rxCount": 32,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "E81CA1FA490E5A9AAE417B2002823096EA83F9AE5653E074D1669199551ECC9A",
+  "imageFileName": "image.jpg",
+  "imageSha256": "4D4F790F4FEDBF780461C064DD5EFB19F5A87E7661B9B1BDEE7DD236D697A616",
+  "catalogKey": "glensound-beatrice-d8",
+  "descriptionEn": "Sanitized offline role for Beatrice D8, 32 Tx / 32 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.glensound.co.uk/product-details/beatrice-d8",
+  "imageSourceUrl": null,
+  "imageAttribution": "Publication approved by contributor - Glensound",
+  "sourceSignature": {
+    "manufacturer": "Glensound",
+    "model": "Beatrice D8",
+    "txCount": 32,
+    "rxCount": 32
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "formatVersion": 2,
+  "templateId": "ac89177e-2679-4405-b9f8-eed79f86d187",
+  "templateName": "Dante 64x64",
+  "manufacturer": "Allen & Heath",
+  "model": "Dante 64x64",
+  "description": "Rôle hors ligne assaini pour Dante 64x64, 64 TX / 64 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Carte réseau audio",
+  "tags": [
+    "dLive",
+    "Avantis",
+    "Dante",
+    "64x64"
+  ],
+  "txCount": 64,
+  "rxCount": 64,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "92188E68359E924F5F3D43A11B442F22495EA7FEF68D06ADF1431672BF6C92FD",
+  "imageFileName": "image.jpg",
+  "imageSha256": "3CC394D329BB65067255B9FEEF6D912D117150EF6EE9A9E2F399E0CAE9A87B0C",
+  "catalogKey": "allen-heath-dante-64x64",
+  "descriptionEn": "Sanitized offline role for Dante 64x64, 64 Tx / 64 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.allen-heath.com/hardware/audio-networking/dante-64x64/",
+  "imageSourceUrl": null,
+  "imageAttribution": "Publication approved by contributor - Allen & Heath",
+  "sourceSignature": {
+    "manufacturer": "Allen-Heath",
+    "model": "Dante64",
+    "txCount": 64,
+    "rxCount": 64
+  }
+}

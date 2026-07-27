@@ -2,11 +2,12 @@ $ErrorActionPreference = "Stop"
 
 $root = [System.IO.Path]::GetFullPath((Split-Path $PSScriptRoot -Parent))
 $bundledRoot = Join-Path $root "Resources\MachineBanks\Bundled"
-$genericBankRoot = Join-Path $bundledRoot "DCE Generic Roles 3.6"
-$communityBankRoot = Join-Path $bundledRoot "DCE Community Devices 3.6"
+$genericBankRoot = Join-Path $bundledRoot "DCE Generic Roles 2026.1"
+$communityBankRoot = Join-Path $bundledRoot "DCE Community Devices 2026.1"
 $githubRoot = Join-Path $root "machine-banks"
-$genericArchivePath = Join-Path $githubRoot "DCE_Generic_Roles_3_6.dce-bank.zip"
-$communityArchivePath = Join-Path $githubRoot "DCE_Community_Devices_3_6.dce-bank.zip"
+$genericArchivePath = Join-Path $githubRoot "DCE_Generic_Roles_2026_1.dce-bank.zip"
+$communityArchivePath = Join-Path $githubRoot "DCE_Community_Devices_2026_1.dce-bank.zip"
+$communitySourceCatalogPath = Join-Path $githubRoot "community-device-sources.json"
 $catalogPath = Join-Path $githubRoot "catalog.json"
 $utf8 = [System.Text.UTF8Encoding]::new($false)
 $fixedDate = [DateTimeOffset]::Parse(
@@ -188,7 +189,9 @@ function New-DeterministicZip {
 function Assert-CommunityBank {
     param(
         [Parameter(Mandatory = $true)]
-        [string]$BankDirectory
+        [string]$BankDirectory,
+        [Parameter(Mandatory = $true)]
+        [string]$SourceCatalogPath
     )
 
     $manifestPath = Join-Path $BankDirectory "bank.json"
@@ -199,75 +202,34 @@ function Assert-CommunityBank {
     if (-not (Test-Path -LiteralPath $machinesPath -PathType Container)) {
         throw "Dossier de modèles communautaires absent : $machinesPath"
     }
+    if (-not (Test-Path -LiteralPath $SourceCatalogPath -PathType Leaf)) {
+        throw "Catalogue source communautaire absent : $SourceCatalogPath"
+    }
 
     $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
-    if ($manifest.formatVersion -ne 1) {
+    if ($manifest.formatVersion -ne 2) {
         throw "Version de banque communautaire non prise en charge : $($manifest.formatVersion)"
     }
 
-    $expectedTemplates = @{
-        "QL1" = @{
-            manufacturer = "Yamaha Corporation"
-            model = "QL1"
-            tx = 32
-            rx = 32
-            image = "image.jpg"
+    $sourceCatalog = Get-Content -LiteralPath $SourceCatalogPath -Raw |
+        ConvertFrom-Json
+    if ([int]$sourceCatalog.formatVersion -ne 1) {
+        throw "Version de catalogue source communautaire non prise en charge."
+    }
+    $expectedTemplates = @{}
+    foreach ($profile in @($sourceCatalog.profiles)) {
+        $key = [string]$profile.key
+        if ([string]::IsNullOrWhiteSpace($key) -or
+            $expectedTemplates.ContainsKey($key)) {
+            throw "Clé de catalogue communautaire absente ou dupliquée : '$key'."
         }
-        "DI4.1000" = @{
-            manufacturer = "Fohhn"
-            model = "DI-AMP DAN"
-            tx = 0
-            rx = 4
-            image = "image.png"
-        }
-        "LM 44 - 4 4RX" = @{
-            manufacturer = "Lake"
-            model = "LM 44"
-            tx = 0
-            rx = 4
-            image = "image.jpg"
-        }
-        "Rio1608-D2" = @{
-            manufacturer = "Yamaha Corporation"
-            model = "Rio1608-D2"
-            tx = 16
-            rx = 8
-            image = "image.jpg"
-        }
-        "Digiface Dante" = @{
-            manufacturer = "RME GmbH"
-            model = "Digiface Dante"
-            tx = 64
-            rx = 64
-            image = "image.jpg"
-        }
-        "Divine" = @{
-            manufacturer = "Glensound"
-            model = "Divine"
-            tx = 4
-            rx = 4
-            image = "image.jpg"
-        }
-        "Beatrice D8" = @{
-            manufacturer = "Glensound"
-            model = "Beatrice D8"
-            tx = 32
-            rx = 32
-            image = "image.jpg"
-        }
-        "AOIP22" = @{
-            manufacturer = "Glensound"
-            model = "AOIP22"
-            tx = 2
-            rx = 2
-            image = "image.jpg"
-        }
-        "SDante 64x64" = @{
-            manufacturer = "Allen & Heath"
-            model = "SDante"
-            tx = 64
-            rx = 64
-            image = "image.jpg"
+        $matcher = @($profile.sourceMatchers)[0]
+        $expectedTemplates[$key] = [ordered]@{
+            name = [string]$profile.templateName
+            manufacturer = [string]$profile.manufacturer
+            model = [string]$profile.model
+            tx = [int]$matcher.txCount
+            rx = [int]$matcher.rxCount
         }
     }
     $forbiddenXmlElements = @(
@@ -281,7 +243,8 @@ function Assert-CommunityBank {
         "subscribed_channel",
         "ip_address",
         "gateway",
-        "dns"
+        "dns",
+        "mac_address"
     )
 
     $templateDirectories = @(Get-ChildItem -LiteralPath $machinesPath -Directory)
@@ -310,14 +273,15 @@ function Assert-CommunityBank {
         }
 
         $metadata = Get-Content -LiteralPath $metadataPath -Raw | ConvertFrom-Json
-        $expected = $expectedTemplates[$metadata.templateName]
+        $catalogKey = [string]$metadata.catalogKey
+        $expected = $expectedTemplates[$catalogKey]
         if ($null -eq $expected) {
-            throw "Modèle communautaire inattendu : $($metadata.templateName)"
+            throw "Modèle communautaire inattendu : $($metadata.templateName)."
         }
-        if ($seenNames -contains $metadata.templateName) {
+        if ($seenNames -contains [string]$metadata.templateName) {
             throw "Modèle communautaire dupliqué : $($metadata.templateName)"
         }
-        $seenNames += $metadata.templateName
+        $seenNames += [string]$metadata.templateName
 
         $templateId = [Guid]::Parse([string]$metadata.templateId).ToString("D")
         $hasMatchingIdentity =
@@ -327,11 +291,12 @@ function Assert-CommunityBank {
             throw "Identifiant incohérent pour le modèle $($metadata.templateName)."
         }
         $hasExpectedMetadata =
+            ([int]$metadata.formatVersion -eq 2) -and
+            ($metadata.templateName -eq $expected.name) -and
             ($metadata.manufacturer -eq $expected.manufacturer) -and
             ($metadata.model -eq $expected.model) -and
             ($metadata.txCount -eq $expected.tx) -and
-            ($metadata.rxCount -eq $expected.rx) -and
-            ($metadata.imageFileName -eq $expected.image)
+            ($metadata.rxCount -eq $expected.rx)
         if (-not $hasExpectedMetadata) {
             throw "Métadonnées inattendues pour le modèle $($metadata.templateName)."
         }
@@ -349,6 +314,14 @@ function Assert-CommunityBank {
         if (-not (Test-Path -LiteralPath $imagePath -PathType Leaf)) {
             throw "Image absente pour le modèle $($metadata.templateName)."
         }
+        $actualImageHash = (
+            Get-FileHash -LiteralPath $imagePath -Algorithm SHA256
+        ).Hash
+        if (-not $actualImageHash.Equals(
+            [string]$metadata.imageSha256,
+            [System.StringComparison]::OrdinalIgnoreCase)) {
+            throw "Empreinte d'image invalide pour le modèle $($metadata.templateName)."
+        }
 
         [xml]$templateXml = Get-Content -LiteralPath $templatePath -Raw
         $forbiddenNodes = @($templateXml.SelectNodes("//*") | Where-Object {
@@ -357,6 +330,28 @@ function Assert-CommunityBank {
         if ($forbiddenNodes.Count -gt 0) {
             $names = ($forbiddenNodes | ForEach-Object LocalName | Sort-Object -Unique) -join ", "
             throw "Données de projet interdites dans $($metadata.templateName) : $names"
+        }
+        $forbiddenAttributes = @($templateXml.SelectNodes("//@*") | Where-Object {
+            $forbiddenXmlElements -contains $_.LocalName
+        })
+        if ($forbiddenAttributes.Count -gt 0) {
+            throw "Attribut de projet interdit dans $($metadata.templateName)."
+        }
+        $friendlyName = @($templateXml.SelectNodes(
+            "/*[local-name()='device']/*[local-name()='friendly_name']"))
+        if ($friendlyName.Count -ne 1 -or
+            $friendlyName[0].InnerText -ne "MACHINE-TEMPLATE") {
+            throw "Nom générique absent du modèle $($metadata.templateName)."
+        }
+        $txLabels = @($templateXml.SelectNodes(
+            "/*[local-name()='device']/*[local-name()='txchannel']/*[local-name()='label']"))
+        $rxLabels = @($templateXml.SelectNodes(
+            "/*[local-name()='device']/*[local-name()='rxchannel']/*[local-name()='name']"))
+        if ($txLabels.Count -ne [int]$expected.tx -or
+            $rxLabels.Count -ne [int]$expected.rx -or
+            @($txLabels | Where-Object { $_.InnerText -notmatch '^TX \d+$' }).Count -gt 0 -or
+            @($rxLabels | Where-Object { $_.InnerText -notmatch '^RX \d+$' }).Count -gt 0) {
+            throw "Canaux ou labels non génériques dans $($metadata.templateName)."
         }
     }
 }
@@ -406,7 +401,7 @@ foreach ($template in $templates) {
         rxCount = $template.rx
         sourcePresetVersion = "3.0.0"
         sourceXmlNamespace = ""
-        createdByDceVersion = "3.6"
+        createdByDceVersion = "2026.1"
         createdUtc = $fixedDate
         modifiedUtc = $fixedDate
         templateSha256 = $xmlHash
@@ -424,7 +419,9 @@ $manifest = [ordered]@{
 }
 Write-JsonFile -Path (Join-Path $genericBankRoot "bank.json") -Value $manifest
 
-Assert-CommunityBank -BankDirectory $communityBankRoot
+Assert-CommunityBank `
+    -BankDirectory $communityBankRoot `
+    -SourceCatalogPath $communitySourceCatalogPath
 New-DeterministicZip -SourceDirectory $genericBankRoot -DestinationArchive $genericArchivePath
 New-DeterministicZip -SourceDirectory $communityBankRoot -DestinationArchive $communityArchivePath
 $genericArchiveHash = (
@@ -438,24 +435,24 @@ $catalog = [ordered]@{
     updatedUtc = $catalogDate
     banks = @(
         [ordered]@{
-            id = "dce-generic-roles-3.6"
-            name = "DCE Generic Roles 3.6"
+            id = "dce-generic-roles-2026.1"
+            name = "DCE Generic Roles 2026.1"
             file = [System.IO.Path]::GetFileName($genericArchivePath)
             sha256 = $genericArchiveHash
-            minimumDceVersion = "3.6"
+            minimumDceVersion = "2026.1"
             language = "fr-en"
             descriptionFr = "Deux rôles génériques 8x8 et 32x32 sans identité matérielle, réseau ni abonnement."
             descriptionEn = "Two generic 8x8 and 32x32 roles without hardware identity, network settings or subscriptions."
         },
         [ordered]@{
-            id = "dce-community-devices-3.6"
-            name = "DCE Community Devices 3.6"
+            id = "dce-community-devices-2026.1"
+            name = "DCE Community Devices 2026.1"
             file = [System.IO.Path]::GetFileName($communityArchivePath)
             sha256 = $communityArchiveHash
-            minimumDceVersion = "3.6"
+            minimumDceVersion = "2026.1"
             language = "fr-en"
-            descriptionFr = "Neuf modèles illustrés : Yamaha QL1 et Rio1608-D2, Fohhn DI4.1000, Lake LM 44, RME Digiface Dante, Glensound Divine, Beatrice D8 et AOIP22, et Allen & Heath SDante 64x64, sans identité matérielle, réseau ni abonnement."
-            descriptionEn = "Nine illustrated templates: Yamaha QL1 and Rio1608-D2, Fohhn DI4.1000, Lake LM 44, RME Digiface Dante, Glensound Divine, Beatrice D8 and AOIP22, and Allen & Heath SDante 64x64, without hardware identity, network settings or subscriptions."
+            descriptionFr = "Quarante et un modèles illustrés et assainis, sans identité matérielle, réseau, flow ni abonnement."
+            descriptionEn = "Forty-one illustrated sanitized templates without hardware identity, network settings, flows, or subscriptions."
         }
     )
 }

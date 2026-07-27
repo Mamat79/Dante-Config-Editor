@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "4d396afd-3ec8-5583-9608-0800056af3fa",
+  "templateName": "Virgil 1",
+  "manufacturer": "Glensound",
+  "model": "Virgil 1",
+  "description": "Rôle hors ligne assaini pour Virgil 1, 0 TX / 2 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Interface audio",
+  "tags": [
+    "Virgil",
+    "output",
+    "0x2"
+  ],
+  "txCount": 0,
+  "rxCount": 2,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "5267681ACF78A431C1EC7569C309EDFEECF037AEAE59BD3CEB1ED71E426F4A8F",
+  "imageFileName": "image.jpg",
+  "imageSha256": "7750D56A92F05472310797AE837B96364A9538A1C7E3DD218E25B8936F27572F",
+  "catalogKey": "glensound-virgil-1",
+  "descriptionEn": "Sanitized offline role for Virgil 1, 0 Tx / 2 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.glensound.co.uk/product-details/virgil/",
+  "imageSourceUrl": "https://www.glensound.co.uk/assets/images/library/58c850420325c-Virgil%20Angle%20Left%20BAN.jpg",
+  "imageAttribution": "Official product image - Glensound",
+  "sourceSignature": {
+    "manufacturer": "Glensound",
+    "model": "Virgil 1",
+    "txCount": 0,
+    "rxCount": 2
+  }
+}

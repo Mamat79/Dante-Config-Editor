@@ -1,0 +1,23 @@
+{
+  "formatVersion": 1,
+  "templateId": "b61c5608-fe92-40fa-a179-9c6e8f51dd44",
+  "templateName": "DCE Generic 32x32",
+  "manufacturer": "DCE",
+  "model": "Generic 32x32",
+  "description": "Rôle générique hors ligne pour essais, formation et préparation de presets. Il ne représente pas un matériel Dante réel.",
+  "category": "Générique / Formation",
+  "tags": [
+    "generic",
+    "offline",
+    "training"
+  ],
+  "txCount": 32,
+  "rxCount": 32,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-26T00:00:00+00:00",
+  "modifiedUtc": "2026-07-26T00:00:00+00:00",
+  "templateSha256": "3509AB0717F9D84885EFAD4EEE4DD4C894AC9A099850D2E8E2BA16B00C22705C",
+  "imageFileName": null
+}

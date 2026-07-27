@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "75a6ed68-7cc2-5c15-afa4-b0cff585ee5e",
+  "templateName": "PLM 20K44",
+  "manufacturer": "Lab Gruppen",
+  "model": "PLM 20K44",
+  "description": "Rôle hors ligne assaini pour PLM 20K44, 0 TX / 8 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Amplificateur",
+  "tags": [
+    "amplifier",
+    "PLM",
+    "0x8"
+  ],
+  "txCount": 0,
+  "rxCount": 8,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "6609DD3E136AEE2F80D74693BB2BF9E955848B5ED0C791C589353D2D8597000D",
+  "imageFileName": "image.png",
+  "imageSha256": "AE2759005081FB7BD59DC1D3765C7336E77B873E20F9C20C7B2E5175C4C61575",
+  "catalogKey": "lab-gruppen-plm20k44",
+  "descriptionEn": "Sanitized offline role for PLM 20K44, 0 Tx / 8 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.labgruppen.com/en/products/0107-AAH",
+  "imageSourceUrl": "https://cdn-media.empowertribe.com/2fecae1dfb3d4b2a863e670f1749645b/Image_LG_0107-AAH_PLM-20K44-SP_Catalog_B.png",
+  "imageAttribution": "Official product image - Lab Gruppen",
+  "sourceSignature": {
+    "manufacturer": "Lab.gruppen",
+    "model": "PLM 20K44",
+    "txCount": 0,
+    "rxCount": 8
+  }
+}

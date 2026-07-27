@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "8eccc2e6-6a0d-4a13-85ee-06f85c51c54f",
+  "templateName": "Rio1608-D2",
+  "manufacturer": "Yamaha Corporation",
+  "model": "Rio1608-D2",
+  "description": "Rôle hors ligne assaini pour Rio1608-D2, 16 TX / 8 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Stagebox",
+  "tags": [
+    "Yamaha",
+    "Rio",
+    "16x8"
+  ],
+  "txCount": 16,
+  "rxCount": 8,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "20D7F8500F3CCB6BF034B150B9740643E6DC63E9209587023FC9B42746617225",
+  "imageFileName": "image.jpg",
+  "imageSha256": "A0F5090769EA7D5E58D8CF48924DE9ED59EEADF56B0A872BCDC1D0659F49E50F",
+  "catalogKey": "yamaha-rio1608-d2",
+  "descriptionEn": "Sanitized offline role for Rio1608-D2, 16 Tx / 8 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://usa.yamaha.com/products/proaudio/interfaces/r_series_adda/index.html",
+  "imageSourceUrl": null,
+  "imageAttribution": "Publication approved by contributor - Yamaha Corporation",
+  "sourceSignature": {
+    "manufacturer": "Yamaha Corporation",
+    "model": "Rio1608-D2",
+    "txCount": 16,
+    "rxCount": 8
+  }
+}

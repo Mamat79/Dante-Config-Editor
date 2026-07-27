@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "271f6828-a3cc-5252-9a0f-bbf0cb171c3e",
+  "templateName": "PRT666D",
+  "manufacturer": "RAMI Audio",
+  "model": "PRT666D",
+  "description": "Rôle hors ligne assaini pour PRT666D, 4 TX / 8 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Interface audio",
+  "tags": [
+    "broadcast",
+    "interface",
+    "4x8"
+  ],
+  "txCount": 4,
+  "rxCount": 8,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "23239528578C4599C1BEA17A60A05BE79A6CB9104BC5E93648D3640896C94D68",
+  "imageFileName": "image.png",
+  "imageSha256": "BDB5F1D58C7DACFF6F560EC7D38515B77C234C43450DBB390866E33BDCE3B1D6",
+  "catalogKey": "rami-prt666d",
+  "descriptionEn": "Sanitized offline role for PRT666D, 4 Tx / 8 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.ramiaudio.com/produit_uk.php?id_prod=260",
+  "imageSourceUrl": "https://www.ramiaudio.com/fichiers/photo/PRT666D_photo_thumb.png",
+  "imageAttribution": "Official product image - RAMI Audio",
+  "sourceSignature": {
+    "manufacturer": "RAmi Audio",
+    "model": "PRT666D",
+    "txCount": 4,
+    "rxCount": 8
+  }
+}

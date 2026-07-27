@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "13eba569-d1bd-4167-86ec-1dc03976d931",
+  "templateName": "AOIP22",
+  "manufacturer": "Glensound",
+  "model": "AOIP22",
+  "description": "Rôle hors ligne assaini pour AOIP22, 2 TX / 2 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Interface audio",
+  "tags": [
+    "interface",
+    "analog",
+    "2x2"
+  ],
+  "txCount": 2,
+  "rxCount": 2,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "51CD40338115A55828C109B71699A2C0E13912C053F3BD9B7C75FCC29CAEBD55",
+  "imageFileName": "image.jpg",
+  "imageSha256": "A26830732255FC286B63B3EDAAC6EA2F60841638CE2419FA8D2E69C6AF18B932",
+  "catalogKey": "glensound-aoip22",
+  "descriptionEn": "Sanitized offline role for AOIP22, 2 Tx / 2 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.glensound.co.uk/product-details/aoip22-mkii/",
+  "imageSourceUrl": null,
+  "imageAttribution": "Publication approved by contributor - Glensound",
+  "sourceSignature": {
+    "manufacturer": "Glensound",
+    "model": "AOIP22",
+    "txCount": 2,
+    "rxCount": 2
+  }
+}

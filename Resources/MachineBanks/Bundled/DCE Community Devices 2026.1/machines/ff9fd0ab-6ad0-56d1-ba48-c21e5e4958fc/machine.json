@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "ff9fd0ab-6ad0-56d1-ba48-c21e5e4958fc",
+  "templateName": "AD4Q",
+  "manufacturer": "Shure",
+  "model": "AD4Q",
+  "description": "Rôle hors ligne assaini pour AD4Q, 4 TX / 1 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Récepteur sans fil",
+  "tags": [
+    "Axient Digital",
+    "wireless",
+    "4x1"
+  ],
+  "txCount": 4,
+  "rxCount": 1,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "9958312C8142BC84A547EDB336464ADF8E8D73E7CAB71338E48241610FB46B9A",
+  "imageFileName": "image.jpg",
+  "imageSha256": "254448C9BEDC7A366A068F2A877913496393906CEE388566FE777D8369A4A7CE",
+  "catalogKey": "shure-ad4q",
+  "descriptionEn": "Sanitized offline role for AD4Q, 4 Tx / 1 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.shure.com/en-US/products/wireless-systems/axient_digital/ad4q",
+  "imageSourceUrl": "https://products.shureweb.eu/shure_product_db/product_main_images/files/6fd/720/d4-/setcard/9fac1eac2df87b1e7ecdac443a200928.jpeg",
+  "imageAttribution": "Official product image - Shure",
+  "sourceSignature": {
+    "manufacturer": "Shure Inc.",
+    "model": "AD4Q",
+    "txCount": 4,
+    "rxCount": 1
+  }
+}

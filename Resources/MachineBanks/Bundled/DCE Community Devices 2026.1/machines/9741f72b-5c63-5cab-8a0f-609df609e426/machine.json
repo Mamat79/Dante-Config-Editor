@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "9741f72b-5c63-5cab-8a0f-609df609e426",
+  "templateName": "DS10 Audio Network Bridge",
+  "manufacturer": "d&b audiotechnik",
+  "model": "DS10 Audio Network Bridge",
+  "description": "Rôle hors ligne assaini pour DS10 Audio Network Bridge, 4 TX / 16 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Pont réseau audio",
+  "tags": [
+    "DS10",
+    "bridge",
+    "4x16"
+  ],
+  "txCount": 4,
+  "rxCount": 16,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "E91F52F7C768DD55801FA58BD56C2430981E89D71CD51AB95386E3C3BB594F45",
+  "imageFileName": "image.png",
+  "imageSha256": "507763B5DA0405844A0E98C650D49A174AFE800BEB00C8C61556AC030C9D877B",
+  "catalogKey": "dbaudio-ds10",
+  "descriptionEn": "Sanitized offline role for DS10 Audio Network Bridge, 4 Tx / 16 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.dbaudio.com/global/en/products/processing-and-matrix/ds10/",
+  "imageSourceUrl": "https://www.dbaudio.com/assets/products/_processed_/3/8/csm_dbaudio-DS10-audio-network-bridge-front_f0648f6d88.png",
+  "imageAttribution": "Official product image - d&b audiotechnik",
+  "sourceSignature": {
+    "manufacturer": "d&b audiotechnik",
+    "model": "DS10 Audio Network Bridge",
+    "txCount": 4,
+    "rxCount": 16
+  }
+}

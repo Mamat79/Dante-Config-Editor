@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "0998b7ee-41c1-554b-81d8-c09c81c76f30",
+  "templateName": "Rio3224-D",
+  "manufacturer": "Yamaha Corporation",
+  "model": "Rio3224-D",
+  "description": "Rôle hors ligne assaini pour Rio3224-D, 32 TX / 24 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Stagebox",
+  "tags": [
+    "Yamaha",
+    "Rio",
+    "32x24"
+  ],
+  "txCount": 32,
+  "rxCount": 24,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "4825F42D3BB987CC1C8447B438CF4060088EB3118A27684771E8A1D0CDAA28AC",
+  "imageFileName": "image.jpg",
+  "imageSha256": "3FBF6050752CC9254D6073C16AD1DABB39140227B6FCD57BBAFE4623E1DD54EF",
+  "catalogKey": "yamaha-rio3224-d",
+  "descriptionEn": "Sanitized offline role for Rio3224-D, 32 Tx / 24 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://usa.yamaha.com/products/proaudio/interfaces/r_series_adda/index.html",
+  "imageSourceUrl": "https://usa.yamaha.com/files/lineup_interface_rio_c807afc9ac3624e2a70f3fa4aad5a175.jpg",
+  "imageAttribution": "Official product image - Yamaha Corporation",
+  "sourceSignature": {
+    "manufacturer": "Yamaha Corporation",
+    "model": "Rio3224-D",
+    "txCount": 32,
+    "rxCount": 24
+  }
+}

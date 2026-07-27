@@ -1,0 +1,683 @@
+{
+  "formatVersion": 1,
+  "bankId": "d63623f3-3727-435c-923f-458e3b2b9d9c",
+  "bankName": "DCE Community Devices 2026.1",
+  "generatedByDceVersion": "2026.1",
+  "updatedUtc": "2026-07-27T00:00:00Z",
+  "profiles": [
+    {
+      "key": "allen-heath-dante-64x64",
+      "templateId": "ac89177e-2679-4405-b9f8-eed79f86d187",
+      "templateName": "Dante 64x64",
+      "manufacturer": "Allen & Heath",
+      "model": "Dante 64x64",
+      "category": "Carte réseau audio",
+      "tags": ["dLive", "Avantis", "Dante", "64x64"],
+      "sourceMatchers": [
+        {"manufacturer": "Allen-Heath", "model": "Dante Option Card", "txCount": 64, "rxCount": 64},
+        {"manufacturer": "Allen-Heath", "model": "Dante64", "txCount": 64, "rxCount": 64},
+        {"manufacturer": "AllenHeath", "model": "Dante Option Card", "txCount": 64, "rxCount": 64}
+      ],
+      "image": {"mode": "preserve", "sourcePage": "https://www.allen-heath.com/hardware/audio-networking/dante-64x64/"}
+    },
+    {
+      "key": "audinate-avio-bluetooth",
+      "templateName": "Dante AVIO Bluetooth",
+      "manufacturer": "Audinate",
+      "model": "Dante AVIO Bluetooth",
+      "category": "Adaptateur",
+      "tags": ["AVIO", "Bluetooth", "2x1"],
+      "sourceMatchers": [
+        {"manufacturer": "Audinate", "model": "Audinate Dante AVIO Bluetooth", "txCount": 2, "rxCount": 1}
+      ],
+      "image": {
+        "mode": "zip",
+        "sourcePage": "https://www.getdante.com/products/adapters/dante-avio-marketing-resources/",
+        "downloadUrl": "https://www.getdante.com/wp-content/uploads/2025/03/Bluetooth.zip",
+        "entry": "Bluetooth/ADP-BT-AU-2X-01.png",
+        "extension": "png"
+      }
+    },
+    {
+      "key": "audinate-avio-analog-input",
+      "templateName": "Dante AVIO Analog Input 2x0",
+      "manufacturer": "Audinate",
+      "model": "AVIO-DAI2",
+      "category": "Adaptateur",
+      "tags": ["AVIO", "analog input", "2x0"],
+      "sourceMatchers": [
+        {"manufacturer": "Audinate", "model": "AVIO-DAI2", "txCount": 2, "rxCount": 0}
+      ],
+      "image": {
+        "mode": "zip",
+        "sourcePage": "https://www.getdante.com/products/adapters/dante-avio-marketing-resources/",
+        "downloadUrl": "https://www.getdante.com/wp-content/uploads/2025/03/AnalogInput.zip",
+        "entry": "AnalogInput/ADP-DAI-AU-0x2-01.png",
+        "extension": "png"
+      }
+    },
+    {
+      "key": "audinate-avio-analog-output",
+      "templateName": "Dante AVIO Analog Output 0x2",
+      "manufacturer": "Audinate",
+      "model": "AVIO-DAO2",
+      "category": "Adaptateur",
+      "tags": ["AVIO", "analog output", "0x2"],
+      "sourceMatchers": [
+        {"manufacturer": "Audinate", "model": "AVIO-DAO2", "txCount": 0, "rxCount": 2}
+      ],
+      "image": {
+        "mode": "zip",
+        "sourcePage": "https://www.getdante.com/products/adapters/dante-avio-marketing-resources/",
+        "downloadUrl": "https://www.getdante.com/wp-content/uploads/2025/03/AnalogOutput.zip",
+        "entry": "AnalogOutput/ADP-DAO-AU-0x2-01.png",
+        "extension": "png"
+      }
+    },
+    {
+      "key": "audinate-avio-usb",
+      "templateName": "Dante AVIO USB 2x2",
+      "manufacturer": "Audinate",
+      "model": "AVIO-USB",
+      "category": "Adaptateur",
+      "tags": ["AVIO", "USB", "2x2"],
+      "sourceMatchers": [
+        {"manufacturer": "Audinate", "model": "AVIO-USB", "txCount": 2, "rxCount": 2}
+      ],
+      "image": {
+        "mode": "zip",
+        "sourcePage": "https://www.getdante.com/products/adapters/dante-avio-marketing-resources/",
+        "downloadUrl": "https://www.getdante.com/wp-content/uploads/2025/03/USB.zip",
+        "entry": "USB/ADP-USB-AU-2X2-01.png",
+        "extension": "png"
+      }
+    },
+    {
+      "key": "audinate-dante-virtual-soundcard-64",
+      "templateName": "Dante Virtual Soundcard 64x64",
+      "manufacturer": "Audinate",
+      "model": "Dante Virtual Soundcard",
+      "category": "Interface logicielle",
+      "tags": ["DVS", "software", "64x64"],
+      "sourceMatchers": [
+        {"manufacturer": "Audinate Pty Ltd", "model": "Dante Virtual Soundcard", "txCount": 64, "rxCount": 64}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://www.getdante.com/products/software-essentials/dante-virtual-soundcard/",
+        "downloadUrl": "https://www.getdante.com/wp-content/uploads/2025/01/DVSPro-Logicv2-1000x625.jpg",
+        "extension": "jpg"
+      }
+    },
+    {
+      "key": "clear-com-arcadia",
+      "templateName": "Arcadia Central Station",
+      "manufacturer": "Clear-Com",
+      "model": "Clear-Com Arcadia",
+      "category": "Intercom",
+      "tags": ["intercom", "Arcadia", "64x64"],
+      "sourceMatchers": [
+        {"manufacturer": "Clear-Com", "model": "Clear-Com Arcadia", "txCount": 64, "rxCount": 64}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://www.clearcom.com/Products/Products-By-Name/Station-IC/arcadia-central-station",
+        "downloadUrl": "https://www.clearcom.com/Portals/0/EasyDNNnews/34498/Arcadia_Beauty_Front_Straight_612x496.jpg",
+        "extension": "jpg"
+      }
+    },
+    {
+      "key": "dbaudio-ds10",
+      "templateName": "DS10 Audio Network Bridge",
+      "manufacturer": "d&b audiotechnik",
+      "model": "DS10 Audio Network Bridge",
+      "category": "Pont réseau audio",
+      "tags": ["DS10", "bridge", "4x16"],
+      "sourceMatchers": [
+        {"manufacturer": "d&b audiotechnik", "model": "DS10 Audio Network Bridge", "txCount": 4, "rxCount": 16}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://www.dbaudio.com/global/en/products/processing-and-matrix/ds10/",
+        "downloadUrl": "https://www.dbaudio.com/assets/products/_processed_/3/8/csm_dbaudio-DS10-audio-network-bridge-front_f0648f6d88.png",
+        "extension": "png"
+      }
+    },
+    {
+      "key": "fohhn-di4-1000",
+      "templateId": "55b2bc9e-01af-4b0f-b845-87851fefbcff",
+      "templateName": "DI4.1000",
+      "manufacturer": "Fohhn",
+      "model": "DI-AMP DAN",
+      "category": "Amplificateur",
+      "tags": ["amplifier", "DI4.1000", "0x4"],
+      "sourceMatchers": [
+        {"manufacturer": "Fohhn", "model": "DI-AMP DAN", "txCount": 0, "rxCount": 4},
+        {"manufacturer": "Fohhn", "model": "DI4Amp", "txCount": 0, "rxCount": 4}
+      ],
+      "image": {
+        "mode": "preserve",
+        "sourcePage": "https://www.getdante.com/product/fohhn-di-4-1000/"
+      }
+    },
+    {
+      "key": "glensound-aoip22",
+      "templateId": "13eba569-d1bd-4167-86ec-1dc03976d931",
+      "templateName": "AOIP22",
+      "manufacturer": "Glensound",
+      "model": "AOIP22",
+      "category": "Interface audio",
+      "tags": ["interface", "analog", "2x2"],
+      "sourceMatchers": [
+        {"manufacturer": "Glensound", "model": "AOIP22", "txCount": 2, "rxCount": 2}
+      ],
+      "image": {"mode": "preserve", "sourcePage": "https://www.glensound.co.uk/product-details/aoip22-mkii/"}
+    },
+    {
+      "key": "glensound-beatrice-d8",
+      "templateId": "13a56a24-53ae-4e7f-bf8a-aac82af4f43b",
+      "templateName": "Beatrice D8",
+      "manufacturer": "Glensound",
+      "model": "Beatrice D8",
+      "category": "Intercom",
+      "tags": ["intercom", "Beatrice", "32x32"],
+      "sourceMatchers": [
+        {"manufacturer": "Glensound", "model": "Beatrice D8", "txCount": 32, "rxCount": 32}
+      ],
+      "image": {"mode": "preserve", "sourcePage": "https://www.glensound.co.uk/product-details/beatrice-d8"}
+    },
+    {
+      "key": "glensound-beatrice-d8-plus",
+      "templateName": "Beatrice D8+",
+      "manufacturer": "Glensound",
+      "model": "Beatrice D8+",
+      "category": "Intercom",
+      "tags": ["intercom", "Beatrice", "32x32"],
+      "sourceMatchers": [
+        {"manufacturer": "Glensound", "model": "Beatrice D8P", "txCount": 32, "rxCount": 32}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://www.glensound.co.uk/product-details/beatrice-d8-606/",
+        "downloadUrl": "https://www.glensound.co.uk/assets/images/library/652d52011e823-Beatrice%20D8%20Plus%20MS%20Front%20BAN.jpg",
+        "extension": "jpg"
+      }
+    },
+    {
+      "key": "glensound-beatrice-r16",
+      "templateName": "Beatrice R16",
+      "manufacturer": "Glensound",
+      "model": "Beatrice R16",
+      "category": "Intercom",
+      "tags": ["intercom", "Beatrice", "32x32"],
+      "sourceMatchers": [
+        {"manufacturer": "Glensound", "model": "Beatrice R16", "txCount": 32, "rxCount": 32}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://www.glensound.co.uk/product-details/beatrice-r16",
+        "downloadUrl": "https://www.glensound.co.uk/assets/images/library/5d9b4b677827d-Beatrice%20R16%20Front%20and%20Rear%20BAN.jpg",
+        "extension": "jpg"
+      }
+    },
+    {
+      "key": "glensound-bella4",
+      "templateName": "Bella 4",
+      "manufacturer": "Glensound",
+      "model": "Bella4",
+      "category": "Interface audio",
+      "tags": ["Bella", "output", "0x4"],
+      "sourceMatchers": [
+        {"manufacturer": "Glensound", "model": "Bella4", "txCount": 0, "rxCount": 4}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://www.glensound.co.uk/product-details/bella-4",
+        "downloadUrl": "https://www.glensound.co.uk/assets/images/library/5d9f324bd0c10-Bella%204%20Front%20and%20Rear%20BAN.jpg",
+        "extension": "jpg"
+      }
+    },
+    {
+      "key": "glensound-divine",
+      "templateId": "0a19e296-386f-4945-973b-e780af478ae5",
+      "templateName": "Divine",
+      "manufacturer": "Glensound",
+      "model": "Divine",
+      "category": "Moniteur",
+      "tags": ["monitor", "personal monitoring", "4x4"],
+      "sourceMatchers": [
+        {"manufacturer": "Glensound", "model": "Divine", "txCount": 4, "rxCount": 4}
+      ],
+      "image": {"mode": "preserve", "sourcePage": "https://www.glensound.co.uk/product-details/divine-617"}
+    },
+    {
+      "key": "glensound-virgil-1",
+      "templateName": "Virgil 1",
+      "manufacturer": "Glensound",
+      "model": "Virgil 1",
+      "category": "Interface audio",
+      "tags": ["Virgil", "output", "0x2"],
+      "sourceMatchers": [
+        {"manufacturer": "Glensound", "model": "Virgil 1", "txCount": 0, "rxCount": 2}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://www.glensound.co.uk/product-details/virgil/",
+        "downloadUrl": "https://www.glensound.co.uk/assets/images/library/58c850420325c-Virgil%20Angle%20Left%20BAN.jpg",
+        "extension": "jpg"
+      }
+    },
+    {
+      "key": "lab-gruppen-d80-4l",
+      "templateName": "D 80:4L",
+      "manufacturer": "Lab Gruppen",
+      "model": "D 80:4L",
+      "category": "Amplificateur",
+      "tags": ["amplifier", "D Series", "8x8"],
+      "sourceMatchers": [
+        {"manufacturer": "Lab.gruppen", "model": "D 80:4L", "txCount": 8, "rxCount": 8}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://www.labgruppen.com/en/products/0107-AAN",
+        "downloadUrl": "https://cdn-media.empowertribe.com/a034efd19884457583007396b1578a79/Image_LG_0107-AAN_D_80-4L_Front_B.png",
+        "extension": "png"
+      }
+    },
+    {
+      "key": "lab-gruppen-plm20k44",
+      "templateName": "PLM 20K44",
+      "manufacturer": "Lab Gruppen",
+      "model": "PLM 20K44",
+      "category": "Amplificateur",
+      "tags": ["amplifier", "PLM", "0x8"],
+      "sourceMatchers": [
+        {"manufacturer": "Lab.gruppen", "model": "PLM 20K44", "txCount": 0, "rxCount": 8}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://www.labgruppen.com/en/products/0107-AAH",
+        "downloadUrl": "https://cdn-media.empowertribe.com/2fecae1dfb3d4b2a863e670f1749645b/Image_LG_0107-AAH_PLM-20K44-SP_Catalog_B.png",
+        "extension": "png"
+      }
+    },
+    {
+      "key": "lake-lm44",
+      "templateId": "b5084be2-21aa-4044-b3e1-f91bb83f091e",
+      "templateName": "LM 44",
+      "manufacturer": "Lake",
+      "model": "LM 44",
+      "category": "Processeur",
+      "tags": ["processor", "Lake", "8x4"],
+      "sourceMatchers": [
+        {"manufacturer": "Lake", "model": "LM 44", "txCount": 8, "rxCount": 4}
+      ],
+      "image": {
+        "mode": "preserve",
+        "sourcePage": "https://mediadl.musictribe.com/download/webservice/labgruppen/LM44_Data_Sheet.pdf"
+      }
+    },
+    {
+      "key": "powersoft-t-series",
+      "templateName": "T Series",
+      "manufacturer": "Powersoft",
+      "model": "T Series",
+      "category": "Amplificateur",
+      "tags": ["amplifier", "T Series", "0x4"],
+      "sourceMatchers": [
+        {"manufacturer": "Powersoft", "model": "T Series", "txCount": 0, "rxCount": 4}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://www.powersoft.com/en/products/touring-amps/t-series/",
+        "downloadUrl": "https://www.powersoft.com/wp-content/uploads/2019/11/T304_cardSp.png",
+        "extension": "png"
+      }
+    },
+    {
+      "key": "rami-prt666d",
+      "templateName": "PRT666D",
+      "manufacturer": "RAMI Audio",
+      "model": "PRT666D",
+      "category": "Interface audio",
+      "tags": ["broadcast", "interface", "4x8"],
+      "sourceMatchers": [
+        {"manufacturer": "RAmi Audio", "model": "PRT666D", "txCount": 4, "rxCount": 8}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://www.ramiaudio.com/produit_uk.php?id_prod=260",
+        "downloadUrl": "https://www.ramiaudio.com/fichiers/photo/PRT666D_photo_thumb.png",
+        "extension": "png"
+      }
+    },
+    {
+      "key": "rdl-ru-lb4",
+      "templateName": "RU-LB4",
+      "manufacturer": "RDL",
+      "model": "RU-LB4",
+      "category": "Interface audio",
+      "tags": ["interface", "line", "4x4"],
+      "sourceMatchers": [
+        {"manufacturer": "RDL", "model": "RU-LB4", "txCount": 4, "rxCount": 4}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://rdlnet.com/product/ru-lb4/",
+        "downloadUrl": "https://rdlnet.com/wp-content/uploads/2024/01/ru-lb4.jpg",
+        "extension": "jpg"
+      }
+    },
+    {
+      "key": "rme-digiface-dante",
+      "templateId": "0bd30c10-f9ad-4ed1-b670-91a594ba3c1f",
+      "templateName": "Digiface Dante",
+      "manufacturer": "RME GmbH",
+      "model": "Digiface Dante",
+      "category": "Interface audio",
+      "tags": ["interface", "Dante", "64x64"],
+      "sourceMatchers": [
+        {"manufacturer": "RME GmbH", "model": "Digiface Dante", "txCount": 64, "rxCount": 64}
+      ],
+      "image": {"mode": "preserve", "sourcePage": "https://rme-audio.de/digiface-dante.html"}
+    },
+    {
+      "key": "sennheiser-em6000",
+      "templateName": "EM 6000 Dante",
+      "manufacturer": "Sennheiser",
+      "model": "EM6000-Dante",
+      "category": "Récepteur sans fil",
+      "tags": ["wireless", "receiver", "4x0"],
+      "sourceMatchers": [
+        {"manufacturer": "Sennheiser", "model": "EM6000-Dante", "txCount": 4, "rxCount": 0}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://docs.cloud.sennheiser.com/en-us/digital-6000/digital-6000/info-em6000.html",
+        "downloadUrl": "https://docs.cloud.sennheiser.com/en-us/digital-6000/oxy_ex-1/img/digital-6000/EM_6000_Receiver_Isofront_RGB_red.png",
+        "extension": "png"
+      }
+    },
+    {
+      "key": "sennheiser-spectera-base-station",
+      "templateName": "Spectera Base Station",
+      "manufacturer": "Sennheiser",
+      "model": "Spectera BaseStation",
+      "category": "Système sans fil",
+      "tags": ["wireless", "Spectera", "32x32"],
+      "sourceMatchers": [
+        {"manufacturer": "Sennheiser electronic SE & Co KG", "model": "Spectera BaseStation", "txCount": 32, "rxCount": 32}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://www.sennheiser.com/en-no/catalog/products/wireless-systems/spectera-base-station/spectera-base-station-509162",
+        "downloadUrl": "https://assets.sennheiser.com/assets/SPECTERA_Base_Station_Product_Shot_Cutout_Front.png/Zz1mNWUwZmFlZWU3Y2UxMWYwYTM1NGVhNTViNWQyZmI4Ng==?width=1920",
+        "extension": "png"
+      }
+    },
+    {
+      "key": "shure-ad4q",
+      "templateName": "AD4Q",
+      "manufacturer": "Shure",
+      "model": "AD4Q",
+      "category": "Récepteur sans fil",
+      "tags": ["Axient Digital", "wireless", "4x1"],
+      "sourceMatchers": [
+        {"manufacturer": "Shure Inc.", "model": "AD4Q", "txCount": 4, "rxCount": 1}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://www.shure.com/en-US/products/wireless-systems/axient_digital/ad4q",
+        "downloadUrl": "https://products.shureweb.eu/shure_product_db/product_main_images/files/6fd/720/d4-/setcard/9fac1eac2df87b1e7ecdac443a200928.jpeg",
+        "extension": "jpg"
+      }
+    },
+    {
+      "key": "shure-ulxd4q",
+      "templateName": "ULXD4Q",
+      "manufacturer": "Shure",
+      "model": "ULXD4Q",
+      "category": "Récepteur sans fil",
+      "tags": ["ULX-D", "wireless", "4x0"],
+      "sourceMatchers": [
+        {"manufacturer": "Shure Inc.", "model": "ULXD4Q", "txCount": 4, "rxCount": 0}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://www.shure.com/en-US/products/wireless-systems/ulx-d_digital_wireless/ulxd4q",
+        "downloadUrl": "https://products.shureweb.eu/shure_product_db/product_main_images/files/8ed/a9e/17-/setcard/e5ed31006c35010746bf58406c28c521.jpeg",
+        "extension": "jpg"
+      }
+    },
+    {
+      "key": "tascam-if-da2",
+      "templateName": "IF-DA2",
+      "manufacturer": "TASCAM",
+      "model": "IF-DA2",
+      "category": "Interface audio",
+      "tags": ["interface", "2x2", "Dante"],
+      "sourceMatchers": [
+        {"manufacturer": "TEAC Corporation", "model": "IF-DA2", "txCount": 2, "rxCount": 2}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://www.tascam.eu/en/if-da2",
+        "downloadUrl": "https://www.tascam.eu/img/if-da2/if-da2.jpg",
+        "extension": "jpg"
+      }
+    },
+    {
+      "key": "tascam-sonicview",
+      "templateName": "Sonicview",
+      "manufacturer": "TASCAM",
+      "model": "Sonicview",
+      "category": "Console",
+      "tags": ["console", "64x64", "Dante"],
+      "sourceMatchers": [
+        {"manufacturer": "TEAC Corporation", "model": "Sonicview", "txCount": 64, "rxCount": 64}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://tascam.com/us/product/sonicview_xp/",
+        "downloadUrl": "https://tascam.com/wp-content/uploads/images/products/thumbnail_img/sonicview_main.jpg",
+        "extension": "jpg"
+      }
+    },
+    {
+      "key": "yamaha-cl1",
+      "templateName": "CL1",
+      "manufacturer": "Yamaha Corporation",
+      "model": "CL1",
+      "category": "Console",
+      "tags": ["Yamaha", "CL", "64x64"],
+      "sourceMatchers": [
+        {"manufacturer": "Yamaha Corporation", "model": "CL1", "txCount": 64, "rxCount": 64}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://usa.yamaha.com/products/proaudio/mixers/cl_series/index.html",
+        "downloadUrl": "https://usa.yamaha.com/files/lineup_mixers_cl_ffacd0e766179a5d3e4febe539a1a591.jpg",
+        "extension": "jpg"
+      }
+    },
+    {
+      "key": "yamaha-cl3",
+      "templateName": "CL3",
+      "manufacturer": "Yamaha Corporation",
+      "model": "CL3",
+      "category": "Console",
+      "tags": ["Yamaha", "CL", "64x64"],
+      "sourceMatchers": [
+        {"manufacturer": "Yamaha Corporation", "model": "CL3", "txCount": 64, "rxCount": 64}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://usa.yamaha.com/products/proaudio/mixers/cl_series/index.html",
+        "downloadUrl": "https://usa.yamaha.com/files/lineup_mixers_cl_ffacd0e766179a5d3e4febe539a1a591.jpg",
+        "extension": "jpg"
+      }
+    },
+    {
+      "key": "yamaha-dante-my16-aud2",
+      "templateName": "DANTE-MY16-AUD2",
+      "manufacturer": "Yamaha Corporation",
+      "model": "DANTE-MY16-AUD2",
+      "category": "Carte réseau audio",
+      "tags": ["Yamaha", "MY16", "16x16"],
+      "sourceMatchers": [
+        {"manufacturer": "Audinate Pty. Ltd.", "model": "MY16-2", "txCount": 16, "rxCount": 16}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://usa.yamaha.com/products/proaudio/interfaces/dante-my16-aud2/index.html",
+        "downloadUrl": "https://usa.yamaha.com/files/listpage_thumb_dante_my16_aud2_d4e2510ad74853ee060c658ccc71f4a7.jpg",
+        "extension": "jpg"
+      }
+    },
+    {
+      "key": "yamaha-dm3",
+      "templateName": "DM3",
+      "manufacturer": "Yamaha Corporation",
+      "model": "DM3",
+      "category": "Console",
+      "tags": ["Yamaha", "DM3", "16x16"],
+      "sourceMatchers": [
+        {"manufacturer": "Yamaha Corporation", "model": "DM3", "txCount": 16, "rxCount": 16}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://usa.yamaha.com/products/proaudio/mixers/dm3/index.html",
+        "downloadUrl": "https://usa.yamaha.com/files/DM3-front_29bc6b6fc410b3240c8a10c0e847e66e.jpg",
+        "extension": "jpg"
+      }
+    },
+    {
+      "key": "yamaha-hy144-d",
+      "templateName": "HY144-D",
+      "manufacturer": "Yamaha Corporation",
+      "model": "HY144-D",
+      "category": "Carte réseau audio",
+      "tags": ["Yamaha", "HY", "144x144"],
+      "sourceMatchers": [
+        {"manufacturer": "Yamaha Corporation", "model": "HY144-D", "txCount": 144, "rxCount": 144}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://europe.yamaha.com/en/business/audio/products/interfaces/",
+        "downloadUrl": "https://europe.yamaha.com/en/files/HY144-D_tcm113-1726802.jpg?impolicy=resize&imwid=768&imhei=768",
+        "extension": "jpg"
+      }
+    },
+    {
+      "key": "yamaha-ql1",
+      "templateId": "3d074d68-f078-47d8-8ce2-260c4835da2d",
+      "templateName": "QL1",
+      "manufacturer": "Yamaha Corporation",
+      "model": "QL1",
+      "category": "Console",
+      "tags": ["Yamaha", "QL", "32x32"],
+      "sourceMatchers": [
+        {"manufacturer": "Yamaha Corporation", "model": "QL1", "txCount": 32, "rxCount": 32}
+      ],
+      "image": {"mode": "preserve", "sourcePage": "https://usa.yamaha.com/products/proaudio/mixers/ql_series/index.html"}
+    },
+    {
+      "key": "yamaha-ql5",
+      "templateName": "QL5",
+      "manufacturer": "Yamaha Corporation",
+      "model": "QL5",
+      "category": "Console",
+      "tags": ["Yamaha", "QL", "64x64"],
+      "sourceMatchers": [
+        {"manufacturer": "Yamaha Corporation", "model": "QL5", "txCount": 64, "rxCount": 64}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://usa.yamaha.com/products/proaudio/mixers/ql_series/index.html",
+        "downloadUrl": "https://usa.yamaha.com/files/lineup_mixers_ql_c86b7d33c356a9fd036bbc1cd65abd4f.jpg",
+        "extension": "jpg"
+      }
+    },
+    {
+      "key": "yamaha-rio1608-d",
+      "templateName": "Rio1608-D",
+      "manufacturer": "Yamaha Corporation",
+      "model": "Rio1608-D",
+      "category": "Stagebox",
+      "tags": ["Yamaha", "Rio", "16x8"],
+      "sourceMatchers": [
+        {"manufacturer": "Yamaha Corporation", "model": "Rio1608-D", "txCount": 16, "rxCount": 8}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://usa.yamaha.com/products/proaudio/interfaces/r_series_adda/index.html",
+        "downloadUrl": "https://usa.yamaha.com/files/lineup_interface_rio_c807afc9ac3624e2a70f3fa4aad5a175.jpg",
+        "extension": "jpg"
+      }
+    },
+    {
+      "key": "yamaha-rio1608-d2",
+      "templateId": "8eccc2e6-6a0d-4a13-85ee-06f85c51c54f",
+      "templateName": "Rio1608-D2",
+      "manufacturer": "Yamaha Corporation",
+      "model": "Rio1608-D2",
+      "category": "Stagebox",
+      "tags": ["Yamaha", "Rio", "16x8"],
+      "sourceMatchers": [
+        {"manufacturer": "Yamaha Corporation", "model": "Rio1608-D2", "txCount": 16, "rxCount": 8}
+      ],
+      "image": {"mode": "preserve", "sourcePage": "https://usa.yamaha.com/products/proaudio/interfaces/r_series_adda/index.html"}
+    },
+    {
+      "key": "yamaha-rio3224-d",
+      "templateName": "Rio3224-D",
+      "manufacturer": "Yamaha Corporation",
+      "model": "Rio3224-D",
+      "category": "Stagebox",
+      "tags": ["Yamaha", "Rio", "32x24"],
+      "sourceMatchers": [
+        {"manufacturer": "Yamaha Corporation", "model": "Rio3224-D", "txCount": 32, "rxCount": 24}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://usa.yamaha.com/products/proaudio/interfaces/r_series_adda/index.html",
+        "downloadUrl": "https://usa.yamaha.com/files/lineup_interface_rio_c807afc9ac3624e2a70f3fa4aad5a175.jpg",
+        "extension": "jpg"
+      }
+    },
+    {
+      "key": "yamaha-rmio64-d",
+      "templateName": "RMio64-D",
+      "manufacturer": "Yamaha Corporation",
+      "model": "RMio64-D",
+      "category": "Interface audio",
+      "tags": ["Yamaha", "MADI", "64x64"],
+      "sourceMatchers": [
+        {"manufacturer": "Yamaha Corporation", "model": "RMio64-D", "txCount": 64, "rxCount": 64}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://usa.yamaha.com/products/proaudio/interfaces/r_series_madi/index.html",
+        "downloadUrl": "https://usa.yamaha.com/files/lineup_interface_r_madi_87adee3da992befb45dd391d778a78f6.jpg",
+        "extension": "jpg"
+      }
+    },
+    {
+      "key": "yamaha-rsio64-d",
+      "templateName": "RSio64-D",
+      "manufacturer": "Yamaha Corporation",
+      "model": "RSio64-D",
+      "category": "Interface audio",
+      "tags": ["Yamaha", "Mini-YGDAI", "64x64"],
+      "sourceMatchers": [
+        {"manufacturer": "Yamaha Corporation", "model": "RSio64-D", "txCount": 64, "rxCount": 64}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://jp.yamaha.com/products/proaudio/interfaces/rsio64-d/index.html",
+        "downloadUrl": "https://jp.yamaha.com/files/lineup_interfaces_rsio_7244f5becda51aa413b2be0ac84b4458.jpg",
+        "extension": "jpg"
+      }
+    }
+  ]
+}

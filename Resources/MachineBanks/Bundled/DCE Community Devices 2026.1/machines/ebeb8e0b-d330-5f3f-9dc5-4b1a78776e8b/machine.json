@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "ebeb8e0b-d330-5f3f-9dc5-4b1a78776e8b",
+  "templateName": "Dante AVIO USB 2x2",
+  "manufacturer": "Audinate",
+  "model": "AVIO-USB",
+  "description": "Rôle hors ligne assaini pour Dante AVIO USB 2x2, 2 TX / 2 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Adaptateur",
+  "tags": [
+    "AVIO",
+    "USB",
+    "2x2"
+  ],
+  "txCount": 2,
+  "rxCount": 2,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "B0E4A550F7F02071928D2BAFAB91EF27805905FBB407543BDA2ABFB738A83C22",
+  "imageFileName": "image.png",
+  "imageSha256": "31D760522EA48AFCB0775BBD1044FF26153D8215DAE182B19FDA940A1452CDF1",
+  "catalogKey": "audinate-avio-usb",
+  "descriptionEn": "Sanitized offline role for Dante AVIO USB 2x2, 2 Tx / 2 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.getdante.com/products/adapters/dante-avio-marketing-resources/",
+  "imageSourceUrl": "https://www.getdante.com/wp-content/uploads/2025/03/USB.zip",
+  "imageAttribution": "Official product image - Audinate",
+  "sourceSignature": {
+    "manufacturer": "Audinate",
+    "model": "AVIO-USB",
+    "txCount": 2,
+    "rxCount": 2
+  }
+}

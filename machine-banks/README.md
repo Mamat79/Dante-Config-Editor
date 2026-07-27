@@ -2,14 +2,14 @@
 
 ## Français
 
-Ce dossier publie des banques compatibles avec Dante Config Editor V3.6.
+Ce dossier publie des banques compatibles avec Dante Config Editor 2026.1.
 Une banque complète utilise l'extension `*.dce-bank.zip`. DCE vérifie son
 manifeste, ses empreintes SHA-256, ses modèles et leur structure avant de
 l'installer dans un dossier neuf ou vide.
 
 ### Banque fournie
 
-- **DCE Generic Roles 3.6** : rôles hors ligne génériques 8x8 et 32x32 pour la
+- **DCE Generic Roles 2026.1** : rôles hors ligne génériques 8x8 et 32x32 pour la
   préparation, les essais et la formation.
 
 Ces modèles ne représentent aucun appareil Dante réel. Ils ne contiennent ni
@@ -18,18 +18,19 @@ ce dépôt ne constitue pas une validation d'import par Dante Controller.
 
 ### Banque communautaire
 
-- **DCE Community Devices 3.6** : Yamaha QL1 (32 TX / 32 RX), Yamaha
-  Rio1608-D2 (16 TX / 8 RX), Fohhn DI4.1000 (0 TX / 4 RX), Lake LM 44
-  (0 TX / 4 RX), RME Digiface Dante (64 TX / 64 RX), Glensound Divine
-  (4 TX / 4 RX), Beatrice D8 (32 TX / 32 RX) et AOIP22 (2 TX / 2 RX), ainsi
-  qu'Allen & Heath SDante 64x64 (64 TX / 64 RX). Les labels sont génériques et
-  les neuf modèles incluent une image.
+- **DCE Community Devices 2026.1** : 41 modèles illustrés provenant de
+  configurations représentatives. La banque couvre notamment Allen & Heath,
+  Audinate, Clear-Com, d&b, Fohhn, Glensound, Lab Gruppen, Lake, Powersoft,
+  RAMI, RDL, RME, Sennheiser, Shure, TASCAM et Yamaha. Les capacités vont de
+  0 à 144 canaux TX ou RX et tous les labels sont génériques.
 
 Les identités matérielles, paramètres réseau et abonnements du projet source
-ont été retirés. Les images ont été fournies et autorisées à la publication par
-le contributeur ; les marques et visuels restent la propriété de leurs
-détenteurs respectifs. Ces modèles n'ont pas encore fait l'objet d'une
-validation matérielle ou d'un import confirmé dans Dante Controller.
+ont été retirés, de même que les flows et références de patch. Les images
+proviennent de pages produit officielles ou de visuels dont la publication a
+été autorisée ; leur source est conservée dans les métadonnées. Les marques et
+visuels restent la propriété de leurs détenteurs respectifs. Ces modèles
+génériques doivent être vérifiés dans Dante Controller avant usage sur un
+projet réel.
 
 ### Télécharger et installer
 
@@ -42,8 +43,8 @@ validation matérielle ou d'un import confirmé dans Dante Controller.
 
 | Banque | Contenu | Téléchargement | SHA-256 |
 |---|---|---|---|
-| DCE Generic Roles 3.6 | Rôles génériques 8x8 et 32x32 | [Télécharger](DCE_Generic_Roles_3_6.dce-bank.zip) | `bd24239205a83cb9aec60938bf10d5eeab798385775e945cf5ec0051ee32d8df` |
-| DCE Community Devices 3.6 | Neuf modèles illustrés | [Télécharger](DCE_Community_Devices_3_6.dce-bank.zip) | `9e11b024c9c201f32e3ccfdad64f648e51a77e75176be91aae5f699bc5f55158` |
+| DCE Generic Roles 2026.1 | Rôles génériques 8x8 et 32x32 | [Télécharger](DCE_Generic_Roles_2026_1.dce-bank.zip) | `0b07af7c63276e3648a03626120b0ba9bbc4b469e67484f0fd8b8cb75d3ea27b` |
+| DCE Community Devices 2026.1 | 41 modèles illustrés et assainis | [Télécharger](DCE_Community_Devices_2026_1.dce-bank.zip) | `67fe30378086240b0939ece5d7c7b74e93dfe94d59d53b3561b03e1433a0fb2a` |
 
 ### Partager une banque
 
@@ -65,14 +66,14 @@ jamais automatiquement une banque personnelle.
 
 ## English
 
-This folder publishes banks compatible with Dante Config Editor V3.6. A full
+This folder publishes banks compatible with Dante Config Editor 2026.1. A full
 bank uses the `*.dce-bank.zip` extension. DCE verifies its manifest, SHA-256
 hashes, templates and structure before installing it into a new or empty
 folder.
 
 ### Included bank
 
-- **DCE Generic Roles 3.6**: generic offline 8x8 and 32x32 roles for
+- **DCE Generic Roles 2026.1**: generic offline 8x8 and 32x32 roles for
   preparation, testing and training.
 
 These templates do not represent real Dante hardware. They contain no
@@ -81,18 +82,18 @@ repository is not proof of a successful Dante Controller import.
 
 ### Community bank
 
-- **DCE Community Devices 3.6**: Yamaha QL1 (32 Tx / 32 Rx), Yamaha
-  Rio1608-D2 (16 Tx / 8 Rx), Fohhn DI4.1000 (0 Tx / 4 Rx), Lake LM 44
-  (0 Tx / 4 Rx), RME Digiface Dante (64 Tx / 64 Rx), Glensound Divine
-  (4 Tx / 4 Rx), Beatrice D8 (32 Tx / 32 Rx), and AOIP22 (2 Tx / 2 Rx), and
-  Allen & Heath SDante 64x64 (64 Tx / 64 Rx). Labels are generic and all nine
-  templates include an image.
+- **DCE Community Devices 2026.1**: 41 illustrated templates identified from
+  representative configurations. The bank covers Allen & Heath, Audinate,
+  Clear-Com, d&b, Fohhn, Glensound, Lab Gruppen, Lake, Powersoft, RAMI, RDL,
+  RME, Sennheiser, Shure, TASCAM, and Yamaha, among others. Capacities range
+  from 0 to 144 Tx or Rx channels and all channel labels are generic.
 
 Hardware identities, network settings and source-project subscriptions were
-removed. The images were supplied and approved for publication by the
-contributor; trademarks and visual assets remain the property of their
-respective owners. These templates have not yet been validated against
-physical hardware or through a confirmed Dante Controller import.
+removed, together with flows and patch references. Images come from official
+product pages or visual assets approved for publication, and their sources are
+recorded in metadata. Trademarks and visual assets remain the property of
+their respective owners. Verify these generic templates in Dante Controller
+before using them in a real project.
 
 ### Download and install
 
@@ -104,8 +105,8 @@ physical hardware or through a confirmed Dante Controller import.
 
 | Bank | Contents | Download | SHA-256 |
 |---|---|---|---|
-| DCE Generic Roles 3.6 | Generic 8x8 and 32x32 roles | [Download](DCE_Generic_Roles_3_6.dce-bank.zip) | `bd24239205a83cb9aec60938bf10d5eeab798385775e945cf5ec0051ee32d8df` |
-| DCE Community Devices 3.6 | Nine illustrated templates | [Download](DCE_Community_Devices_3_6.dce-bank.zip) | `9e11b024c9c201f32e3ccfdad64f648e51a77e75176be91aae5f699bc5f55158` |
+| DCE Generic Roles 2026.1 | Generic 8x8 and 32x32 roles | [Download](DCE_Generic_Roles_2026_1.dce-bank.zip) | `0b07af7c63276e3648a03626120b0ba9bbc4b469e67484f0fd8b8cb75d3ea27b` |
+| DCE Community Devices 2026.1 | 41 illustrated sanitized templates | [Download](DCE_Community_Devices_2026_1.dce-bank.zip) | `67fe30378086240b0939ece5d7c7b74e93dfe94d59d53b3561b03e1433a0fb2a` |
 
 ### Share a bank
 

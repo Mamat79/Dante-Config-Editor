@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<device>
+  <captureInfo>
+    <device_name></device_name>
+    <interface_ipv4_addresses></interface_ipv4_addresses>
+    <device_samplerate></device_samplerate>
+    <device_encoding></device_encoding>
+    <device_unicast_latency></device_unicast_latency>
+    <rtp></rtp>
+    <clock></clock>
+    <clock_priority></clock_priority>
+    <txchannel_names></txchannel_names>
+    <txflows></txflows>
+    <rxchannel_names></rxchannel_names>
+    <rxchannel_subscriptions></rxchannel_subscriptions>
+    <rxflows></rxflows>
+  </captureInfo>
+  <manufacturer_id>476C656E736F756E</manufacturer_id>
+  <manufacturer_name>Glensound</manufacturer_name>
+  <model_id>0000000000000029</model_id>
+  <model_name>AOIP22</model_name>
+  <model_version>1.0.0</model_version>
+  <device_type>556C74696D6F3458</device_type>
+  <device_type_string>UltimoX4</device_type_string>
+  <friendly_name>MACHINE-TEMPLATE</friendly_name>
+  <redundancy value="false" />
+  <preferred_master value="false" />
+  <external_word_clock value="false" />
+  <samplerate>48000</samplerate>
+  <encoding>24</encoding>
+  <unicast_latency>1000</unicast_latency>
+  <txchannel danteId="1" mediaType="audio">
+    <label>TX 01</label>
+  </txchannel>
+  <txchannel danteId="2" mediaType="audio">
+    <label>TX 02</label>
+  </txchannel>
+  <rxchannel danteId="1" mediaType="audio">
+    <name>RX 01</name>
+  </rxchannel>
+  <rxchannel danteId="2" mediaType="audio">
+    <name>RX 02</name>
+  </rxchannel>
+</device>

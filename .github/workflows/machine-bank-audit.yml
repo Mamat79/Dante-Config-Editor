@@ -7,6 +7,7 @@ on:
       - "Resources/MachineBanks/Bundled/**"
       - "machine-banks/**"
       - "tools/Build-BundledMachineBanks.ps1"
+      - "tools/Import-SanitizedMachineBankCandidates.ps1"
       - "tests/DanteConfigEditorV3.Tests/MachineBankV36Tests.cs"
   schedule:
     - cron: "17 5 * * 1"
@@ -44,8 +45,8 @@ jobs:
           git diff --exit-code -- `
             Resources/MachineBanks/Bundled `
             machine-banks/catalog.json `
-            machine-banks/DCE_Generic_Roles_3_6.dce-bank.zip `
-            machine-banks/DCE_Community_Devices_3_6.dce-bank.zip
+            machine-banks/DCE_Generic_Roles_2026_1.dce-bank.zip `
+            machine-banks/DCE_Community_Devices_2026_1.dce-bank.zip
 
       - name: Restore bank tests
         run: dotnet restore ./tests/DanteConfigEditorV3.Tests/DanteConfigEditorV3.Tests.csproj

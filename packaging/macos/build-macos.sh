@@ -80,9 +80,9 @@ codesign --verify --deep --strict "$APP"
 
 cp -R "$APP" "$DMG_STAGE/"
 mkdir -p "$DMG_STAGE/Machine Banks"
-cp "$ROOT/machine-banks/DCE_Generic_Roles_3_6.dce-bank.zip" \
+cp "$ROOT/machine-banks/DCE_Generic_Roles_2026_1.dce-bank.zip" \
   "$DMG_STAGE/Machine Banks/"
-cp "$ROOT/machine-banks/DCE_Community_Devices_3_6.dce-bank.zip" \
+cp "$ROOT/machine-banks/DCE_Community_Devices_2026_1.dce-bank.zip" \
   "$DMG_STAGE/Machine Banks/"
 cp "$ROOT/machine-banks/README.md" \
   "$DMG_STAGE/Machine Banks/README.md"

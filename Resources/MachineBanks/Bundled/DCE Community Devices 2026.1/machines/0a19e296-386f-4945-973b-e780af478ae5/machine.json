@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "0a19e296-386f-4945-973b-e780af478ae5",
+  "templateName": "Divine",
+  "manufacturer": "Glensound",
+  "model": "Divine",
+  "description": "Rôle hors ligne assaini pour Divine, 4 TX / 4 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Moniteur",
+  "tags": [
+    "monitor",
+    "personal monitoring",
+    "4x4"
+  ],
+  "txCount": 4,
+  "rxCount": 4,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "86F6DE74B78ACB6F6339524929F047F6DCD3F0F3D08F17EB463719D7C5C5B72F",
+  "imageFileName": "image.jpg",
+  "imageSha256": "CA3E2CB25A37E8D568A780E2CCABB1FA617E5C3CEB0E55210C1F6AF6790DFF4A",
+  "catalogKey": "glensound-divine",
+  "descriptionEn": "Sanitized offline role for Divine, 4 Tx / 4 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.glensound.co.uk/product-details/divine-617",
+  "imageSourceUrl": null,
+  "imageAttribution": "Publication approved by contributor - Glensound",
+  "sourceSignature": {
+    "manufacturer": "Glensound",
+    "model": "Divine",
+    "txCount": 4,
+    "rxCount": 4
+  }
+}

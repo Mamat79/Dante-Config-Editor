@@ -1,0 +1,23 @@
+{
+  "formatVersion": 1,
+  "templateId": "4f58fe46-7259-4af7-b355-20277376a408",
+  "templateName": "DCE Generic 8x8",
+  "manufacturer": "DCE",
+  "model": "Generic 8x8",
+  "description": "Rôle générique hors ligne pour essais, formation et préparation de presets. Il ne représente pas un matériel Dante réel.",
+  "category": "Générique / Formation",
+  "tags": [
+    "generic",
+    "offline",
+    "training"
+  ],
+  "txCount": 8,
+  "rxCount": 8,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-26T00:00:00+00:00",
+  "modifiedUtc": "2026-07-26T00:00:00+00:00",
+  "templateSha256": "9C5CFD8AD94AE9E3E017D79145EF36D93D093CC65426DA12F65B32E32FD0EE2A",
+  "imageFileName": null
+}

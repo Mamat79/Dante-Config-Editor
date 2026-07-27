@@ -440,7 +440,7 @@ public sealed class MachineBankV36Tests
 
         string archivePath = RepositoryFile(
             "machine-banks",
-            "DCE_Generic_Roles_3_6.dce-bank.zip");
+            "DCE_Generic_Roles_2026_1.dce-bank.zip");
         using JsonDocument catalog = JsonDocument.Parse(
             File.ReadAllText(RepositoryFile("machine-banks", "catalog.json")));
         string expectedHash = catalog.RootElement
@@ -461,7 +461,7 @@ public sealed class MachineBankV36Tests
             .GetProperty("banks")
             .EnumerateArray()
             .Single(item => item.GetProperty("id").GetString()
-                == "dce-community-devices-3.6");
+                == "dce-community-devices-2026.1");
         string communityArchivePath = RepositoryFile(
             "machine-banks",
             communityEntry.GetProperty("file").GetString()!);
@@ -490,58 +490,29 @@ public sealed class MachineBankV36Tests
             "Resources",
             "MachineBanks",
             "Bundled",
-            "DCE Community Devices 3.6");
+            MachineBankDistributionService.CommunityBankFolderName);
         MachineBankRepository installedCommunityRepository = new(installedCommunityPath);
         MachineTemplateMetadata[] installedCommunityTemplates = installedCommunityRepository
             .List()
             .OrderBy(item => item.TemplateName, StringComparer.Ordinal)
             .ToArray();
 
+        Assert.Equal(41, communityTemplates.Length);
+        Assert.Equal(41, installedCommunityTemplates.Length);
         Assert.Equal(
-            [
-                "AOIP22",
-                "Beatrice D8",
-                "DI4.1000",
-                "Digiface Dante",
-                "Divine",
-                "LM 44 - 4 4RX",
-                "QL1",
-                "Rio1608-D2",
-                "SDante 64x64"
-            ],
+            communityTemplates.Length,
             communityTemplates
-            .Select(item => item.TemplateName)
-            .ToArray());
-        Assert.Equal(
-            [
-                (2, 2),
-                (32, 32),
-                (0, 4),
-                (64, 64),
-                (4, 4),
-                (0, 4),
-                (32, 32),
-                (16, 8),
-                (64, 64)
-            ],
-            communityTemplates
-            .Select(item => (item.TxCount, item.RxCount))
-            .ToArray());
-        Assert.Equal(
-            [
-                "Glensound",
-                "Glensound",
-                "Fohhn",
-                "RME GmbH",
-                "Glensound",
-                "Lake",
-                "Yamaha Corporation",
-                "Yamaha Corporation",
-                "Allen & Heath"
-            ],
-            communityTemplates
-            .Select(item => item.Manufacturer)
-            .ToArray());
+                .Select(item => $"{item.Manufacturer}\0{item.Model}")
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Count());
+        Assert.Contains(communityTemplates, item =>
+            item.TemplateName == "Dante AVIO Bluetooth"
+            && item.TxCount == 2
+            && item.RxCount == 1);
+        Assert.Contains(communityTemplates, item =>
+            item.TemplateName == "HY144-D"
+            && item.TxCount == 144
+            && item.RxCount == 144);
         Assert.Equal(
             communityTemplates.Select(item => item.TemplateId),
             installedCommunityTemplates.Select(item => item.TemplateId));
@@ -550,7 +521,9 @@ public sealed class MachineBankV36Tests
             installedCommunityTemplates.Select(item => item.TemplateSha256));
         Assert.All(communityTemplates, metadata =>
         {
+            Assert.Equal(2, metadata.FormatVersion);
             Assert.False(string.IsNullOrWhiteSpace(metadata.ImageFileName));
+            Assert.False(string.IsNullOrWhiteSpace(metadata.ImageSha256));
             Assert.True(File.Exists(Path.Combine(
                 communityPath,
                 "machines",

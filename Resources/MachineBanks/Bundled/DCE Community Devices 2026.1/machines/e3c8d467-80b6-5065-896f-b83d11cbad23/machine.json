@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "e3c8d467-80b6-5065-896f-b83d11cbad23",
+  "templateName": "EM 6000 Dante",
+  "manufacturer": "Sennheiser",
+  "model": "EM6000-Dante",
+  "description": "Rôle hors ligne assaini pour EM 6000 Dante, 4 TX / 0 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Récepteur sans fil",
+  "tags": [
+    "wireless",
+    "receiver",
+    "4x0"
+  ],
+  "txCount": 4,
+  "rxCount": 0,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "9FB34CDF2EAF623432EA97A735E5ED3F9C752B5A313B4CC572F3B6B803DF8534",
+  "imageFileName": "image.png",
+  "imageSha256": "D8F3978B7189FC7844EDA858A976ED0F8D54F5BC8DC6B31AC8FAE29ABA6E5193",
+  "catalogKey": "sennheiser-em6000",
+  "descriptionEn": "Sanitized offline role for EM 6000 Dante, 4 Tx / 0 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://docs.cloud.sennheiser.com/en-us/digital-6000/digital-6000/info-em6000.html",
+  "imageSourceUrl": "https://docs.cloud.sennheiser.com/en-us/digital-6000/oxy_ex-1/img/digital-6000/EM_6000_Receiver_Isofront_RGB_red.png",
+  "imageAttribution": "Official product image - Sennheiser",
+  "sourceSignature": {
+    "manufacturer": "Sennheiser",
+    "model": "EM6000-Dante",
+    "txCount": 4,
+    "rxCount": 0
+  }
+}

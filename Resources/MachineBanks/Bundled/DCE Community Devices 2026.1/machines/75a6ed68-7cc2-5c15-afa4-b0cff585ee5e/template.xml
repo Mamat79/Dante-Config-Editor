@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<device>
+  <captureInfo>
+    <device_name></device_name>
+    <interface_ipv4_addresses></interface_ipv4_addresses>
+    <device_samplerate></device_samplerate>
+    <device_encoding></device_encoding>
+    <device_unicast_latency></device_unicast_latency>
+    <rtp></rtp>
+    <clock></clock>
+    <clock_priority></clock_priority>
+    <txchannel_names></txchannel_names>
+    <txflows></txflows>
+    <rxchannel_names></rxchannel_names>
+    <rxchannel_subscriptions></rxchannel_subscriptions>
+    <rxflows></rxflows>
+  </captureInfo>
+  <manufacturer_id>4C6162477275706E</manufacturer_id>
+  <manufacturer_name>Lab.gruppen</manufacturer_name>
+  <model_id>0000000000000000</model_id>
+  <model_name>PLM 20K44</model_name>
+  <model_version>1.1.15</model_version>
+  <device_type>426B6C796E320000</device_type>
+  <device_type_string>Brooklyn II</device_type_string>
+  <friendly_name>MACHINE-TEMPLATE</friendly_name>
+  <redundancy value="false" />
+  <preferred_master value="false" />
+  <external_word_clock value="false" />
+  <samplerate>48000</samplerate>
+  <encoding>24</encoding>
+  <unicast_latency>1000</unicast_latency>
+  <rxchannel danteId="1" mediaType="audio">
+    <name>RX 01</name>
+  </rxchannel>
+  <rxchannel danteId="2" mediaType="audio">
+    <name>RX 02</name>
+  </rxchannel>
+  <rxchannel danteId="3" mediaType="audio">
+    <name>RX 03</name>
+  </rxchannel>
+  <rxchannel danteId="4" mediaType="audio">
+    <name>RX 04</name>
+  </rxchannel>
+  <rxchannel danteId="5" mediaType="audio">
+    <name>RX 05</name>
+  </rxchannel>
+  <rxchannel danteId="6" mediaType="audio">
+    <name>RX 06</name>
+  </rxchannel>
+  <rxchannel danteId="7" mediaType="audio">
+    <name>RX 07</name>
+  </rxchannel>
+  <rxchannel danteId="8" mediaType="audio">
+    <name>RX 08</name>
+  </rxchannel>
+</device>

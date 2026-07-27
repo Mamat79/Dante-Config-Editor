@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "e05d0a37-0269-59e6-b4b9-09624415761d",
+  "templateName": "QL5",
+  "manufacturer": "Yamaha Corporation",
+  "model": "QL5",
+  "description": "Rôle hors ligne assaini pour QL5, 64 TX / 64 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Console",
+  "tags": [
+    "Yamaha",
+    "QL",
+    "64x64"
+  ],
+  "txCount": 64,
+  "rxCount": 64,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "EF4560FB9A7126D7BD155EC8F4140CFD9589EA38D81085B3475C2B239803337A",
+  "imageFileName": "image.jpg",
+  "imageSha256": "648A8A2BFE58670E426A180E70F9804AA5427752BC3BB691E008C34B3D2B72EC",
+  "catalogKey": "yamaha-ql5",
+  "descriptionEn": "Sanitized offline role for QL5, 64 Tx / 64 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://usa.yamaha.com/products/proaudio/mixers/ql_series/index.html",
+  "imageSourceUrl": "https://usa.yamaha.com/files/lineup_mixers_ql_c86b7d33c356a9fd036bbc1cd65abd4f.jpg",
+  "imageAttribution": "Official product image - Yamaha Corporation",
+  "sourceSignature": {
+    "manufacturer": "Yamaha Corporation",
+    "model": "QL5",
+    "txCount": 64,
+    "rxCount": 64
+  }
+}

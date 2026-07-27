@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "45cf7ff6-46ad-5fa3-9eb8-77b878102ef1",
+  "templateName": "Arcadia Central Station",
+  "manufacturer": "Clear-Com",
+  "model": "Clear-Com Arcadia",
+  "description": "Rôle hors ligne assaini pour Arcadia Central Station, 64 TX / 64 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Intercom",
+  "tags": [
+    "intercom",
+    "Arcadia",
+    "64x64"
+  ],
+  "txCount": 64,
+  "rxCount": 64,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "C2FFA918485B6D1A739856C2B127F6FC2E6E15E55BED6AB2A1830AA630E00E0F",
+  "imageFileName": "image.jpg",
+  "imageSha256": "26A62E59F034C982F128E917620A8DB719EBC63D516E94879EF3EE77D4B37D39",
+  "catalogKey": "clear-com-arcadia",
+  "descriptionEn": "Sanitized offline role for Arcadia Central Station, 64 Tx / 64 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.clearcom.com/Products/Products-By-Name/Station-IC/arcadia-central-station",
+  "imageSourceUrl": "https://www.clearcom.com/Portals/0/EasyDNNnews/34498/Arcadia_Beauty_Front_Straight_612x496.jpg",
+  "imageAttribution": "Official product image - Clear-Com",
+  "sourceSignature": {
+    "manufacturer": "Clear-Com",
+    "model": "Clear-Com Arcadia",
+    "txCount": 64,
+    "rxCount": 64
+  }
+}

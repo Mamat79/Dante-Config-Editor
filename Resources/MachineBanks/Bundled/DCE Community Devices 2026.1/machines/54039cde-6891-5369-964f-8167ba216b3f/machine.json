@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "54039cde-6891-5369-964f-8167ba216b3f",
+  "templateName": "HY144-D",
+  "manufacturer": "Yamaha Corporation",
+  "model": "HY144-D",
+  "description": "Rôle hors ligne assaini pour HY144-D, 144 TX / 144 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Carte réseau audio",
+  "tags": [
+    "Yamaha",
+    "HY",
+    "144x144"
+  ],
+  "txCount": 144,
+  "rxCount": 144,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "80FE9C3FD9A3B4EEED3EC280350FC98021E0CEDF0AB97C66E7A889910590C6E3",
+  "imageFileName": "image.jpg",
+  "imageSha256": "D563C11833720E2E759052C2700F9585E9B46FA8FB710134DBD1F09BA0EF9FAE",
+  "catalogKey": "yamaha-hy144-d",
+  "descriptionEn": "Sanitized offline role for HY144-D, 144 Tx / 144 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://europe.yamaha.com/en/business/audio/products/interfaces/",
+  "imageSourceUrl": "https://europe.yamaha.com/en/files/HY144-D_tcm113-1726802.jpg?impolicy=resize&imwid=768&imhei=768",
+  "imageAttribution": "Official product image - Yamaha Corporation",
+  "sourceSignature": {
+    "manufacturer": "Yamaha Corporation",
+    "model": "HY144-D",
+    "txCount": 144,
+    "rxCount": 144
+  }
+}

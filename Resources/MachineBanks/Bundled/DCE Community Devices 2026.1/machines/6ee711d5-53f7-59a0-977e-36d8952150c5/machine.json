@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "6ee711d5-53f7-59a0-977e-36d8952150c5",
+  "templateName": "Sonicview",
+  "manufacturer": "TASCAM",
+  "model": "Sonicview",
+  "description": "Rôle hors ligne assaini pour Sonicview, 64 TX / 64 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Console",
+  "tags": [
+    "console",
+    "64x64",
+    "Dante"
+  ],
+  "txCount": 64,
+  "rxCount": 64,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "2D5632407C353B966C055C038FCD3C416D186B076BFA73BAA10D24E3875C2E38",
+  "imageFileName": "image.jpg",
+  "imageSha256": "2579DEF70E4B50082E1EAB11C8A9D142C78F3C6C2AD6091E5079AEF70FC2CA7D",
+  "catalogKey": "tascam-sonicview",
+  "descriptionEn": "Sanitized offline role for Sonicview, 64 Tx / 64 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://tascam.com/us/product/sonicview_xp/",
+  "imageSourceUrl": "https://tascam.com/wp-content/uploads/images/products/thumbnail_img/sonicview_main.jpg",
+  "imageAttribution": "Official product image - TASCAM",
+  "sourceSignature": {
+    "manufacturer": "TEAC Corporation",
+    "model": "Sonicview",
+    "txCount": 64,
+    "rxCount": 64
+  }
+}

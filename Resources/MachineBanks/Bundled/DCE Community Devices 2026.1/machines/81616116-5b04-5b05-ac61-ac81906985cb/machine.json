@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "81616116-5b04-5b05-ac61-ac81906985cb",
+  "templateName": "Spectera Base Station",
+  "manufacturer": "Sennheiser",
+  "model": "Spectera BaseStation",
+  "description": "Rôle hors ligne assaini pour Spectera Base Station, 32 TX / 32 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Système sans fil",
+  "tags": [
+    "wireless",
+    "Spectera",
+    "32x32"
+  ],
+  "txCount": 32,
+  "rxCount": 32,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "D85591E4471F3437892D0BD6846EB11E297DF2AD7C14516049C0B0F6DFEA263A",
+  "imageFileName": "image.png",
+  "imageSha256": "B1EE5BBC55A84667A2EF52F276D3B3D5F7112CB22BB9CF645A689B9A5EA865FF",
+  "catalogKey": "sennheiser-spectera-base-station",
+  "descriptionEn": "Sanitized offline role for Spectera Base Station, 32 Tx / 32 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.sennheiser.com/en-no/catalog/products/wireless-systems/spectera-base-station/spectera-base-station-509162",
+  "imageSourceUrl": "https://assets.sennheiser.com/assets/SPECTERA_Base_Station_Product_Shot_Cutout_Front.png/Zz1mNWUwZmFlZWU3Y2UxMWYwYTM1NGVhNTViNWQyZmI4Ng==?width=1920",
+  "imageAttribution": "Official product image - Sennheiser",
+  "sourceSignature": {
+    "manufacturer": "Sennheiser electronic SE & Co KG",
+    "model": "Spectera BaseStation",
+    "txCount": 32,
+    "rxCount": 32
+  }
+}

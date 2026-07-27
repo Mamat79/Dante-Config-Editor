@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "f3957ab1-e57a-5ce0-b012-5bd20028c0cb",
+  "templateName": "IF-DA2",
+  "manufacturer": "TASCAM",
+  "model": "IF-DA2",
+  "description": "Rôle hors ligne assaini pour IF-DA2, 2 TX / 2 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Interface audio",
+  "tags": [
+    "interface",
+    "2x2",
+    "Dante"
+  ],
+  "txCount": 2,
+  "rxCount": 2,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "3925627EC03808578AFFD3376C8CEE3F6CA41013C1995D5900C78A6EFA79EC87",
+  "imageFileName": "image.jpg",
+  "imageSha256": "C1BD12954B7A77725027031904D36D9B94AD6131AB278422B4847A1D68C4D95B",
+  "catalogKey": "tascam-if-da2",
+  "descriptionEn": "Sanitized offline role for IF-DA2, 2 Tx / 2 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.tascam.eu/en/if-da2",
+  "imageSourceUrl": "https://www.tascam.eu/img/if-da2/if-da2.jpg",
+  "imageAttribution": "Official product image - TASCAM",
+  "sourceSignature": {
+    "manufacturer": "TEAC Corporation",
+    "model": "IF-DA2",
+    "txCount": 2,
+    "rxCount": 2
+  }
+}

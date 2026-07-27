@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "3d074d68-f078-47d8-8ce2-260c4835da2d",
+  "templateName": "QL1",
+  "manufacturer": "Yamaha Corporation",
+  "model": "QL1",
+  "description": "Rôle hors ligne assaini pour QL1, 32 TX / 32 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Console",
+  "tags": [
+    "Yamaha",
+    "QL",
+    "32x32"
+  ],
+  "txCount": 32,
+  "rxCount": 32,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "0C4C47718D9203EAF129C6F3CB651A94869157A69040E4755E90C5AB385C73B8",
+  "imageFileName": "image.jpg",
+  "imageSha256": "2CCA06B1ABDD80F5EA5E5BB1DEBDE592A0462E79E4938301B1AA6F2873FD9A2E",
+  "catalogKey": "yamaha-ql1",
+  "descriptionEn": "Sanitized offline role for QL1, 32 Tx / 32 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://usa.yamaha.com/products/proaudio/mixers/ql_series/index.html",
+  "imageSourceUrl": null,
+  "imageAttribution": "Publication approved by contributor - Yamaha Corporation",
+  "sourceSignature": {
+    "manufacturer": "Yamaha Corporation",
+    "model": "QL1",
+    "txCount": 32,
+    "rxCount": 32
+  }
+}

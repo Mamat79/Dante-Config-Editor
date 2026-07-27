@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "b08fb9f7-edaf-5f20-aa57-2a7940854a98",
+  "templateName": "ULXD4Q",
+  "manufacturer": "Shure",
+  "model": "ULXD4Q",
+  "description": "Rôle hors ligne assaini pour ULXD4Q, 4 TX / 0 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Récepteur sans fil",
+  "tags": [
+    "ULX-D",
+    "wireless",
+    "4x0"
+  ],
+  "txCount": 4,
+  "rxCount": 0,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "01E8C9A13C59E9290D629C2B19A1F1D1F25AB5051F9FD0C47B54830310E40359",
+  "imageFileName": "image.jpg",
+  "imageSha256": "82FEBF408332A01F03B5FA766C73FB677D528601409A65D0115CF7BE28FBE2A5",
+  "catalogKey": "shure-ulxd4q",
+  "descriptionEn": "Sanitized offline role for ULXD4Q, 4 Tx / 0 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.shure.com/en-US/products/wireless-systems/ulx-d_digital_wireless/ulxd4q",
+  "imageSourceUrl": "https://products.shureweb.eu/shure_product_db/product_main_images/files/8ed/a9e/17-/setcard/e5ed31006c35010746bf58406c28c521.jpeg",
+  "imageAttribution": "Official product image - Shure",
+  "sourceSignature": {
+    "manufacturer": "Shure Inc.",
+    "model": "ULXD4Q",
+    "txCount": 4,
+    "rxCount": 0
+  }
+}

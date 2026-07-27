@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "ad3b4ffc-8734-5d43-801c-0e6f7021b1ac",
+  "templateName": "DANTE-MY16-AUD2",
+  "manufacturer": "Yamaha Corporation",
+  "model": "DANTE-MY16-AUD2",
+  "description": "Rôle hors ligne assaini pour DANTE-MY16-AUD2, 16 TX / 16 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Carte réseau audio",
+  "tags": [
+    "Yamaha",
+    "MY16",
+    "16x16"
+  ],
+  "txCount": 16,
+  "rxCount": 16,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "0A52C46F4DE78E80ED23224589A648269FF38DC2B8C14930E48C4DD9F5B0CDE9",
+  "imageFileName": "image.jpg",
+  "imageSha256": "90A45702BAE70CC90DB5DC2F27024268174C388B2DB5210FBBFB81C03B892594",
+  "catalogKey": "yamaha-dante-my16-aud2",
+  "descriptionEn": "Sanitized offline role for DANTE-MY16-AUD2, 16 Tx / 16 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://usa.yamaha.com/products/proaudio/interfaces/dante-my16-aud2/index.html",
+  "imageSourceUrl": "https://usa.yamaha.com/files/listpage_thumb_dante_my16_aud2_d4e2510ad74853ee060c658ccc71f4a7.jpg",
+  "imageAttribution": "Official product image - Yamaha Corporation",
+  "sourceSignature": {
+    "manufacturer": "Audinate Pty. Ltd.",
+    "model": "MY16-2",
+    "txCount": 16,
+    "rxCount": 16
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "55b8e1e6-4117-586c-937a-693b1a2012e4",
+  "templateName": "RU-LB4",
+  "manufacturer": "RDL",
+  "model": "RU-LB4",
+  "description": "Rôle hors ligne assaini pour RU-LB4, 4 TX / 4 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Interface audio",
+  "tags": [
+    "interface",
+    "line",
+    "4x4"
+  ],
+  "txCount": 4,
+  "rxCount": 4,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "0162ADC661FB1C9C8202083CDB2325050C0658B156F1533457400310BF0474DC",
+  "imageFileName": "image.jpg",
+  "imageSha256": "E7C3F20B89642F6692ADFBD7668231D94B1F7A816775DEACCA651E20D1266FC6",
+  "catalogKey": "rdl-ru-lb4",
+  "descriptionEn": "Sanitized offline role for RU-LB4, 4 Tx / 4 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://rdlnet.com/product/ru-lb4/",
+  "imageSourceUrl": "https://rdlnet.com/wp-content/uploads/2024/01/ru-lb4.jpg",
+  "imageAttribution": "Official product image - RDL",
+  "sourceSignature": {
+    "manufacturer": "RDL",
+    "model": "RU-LB4",
+    "txCount": 4,
+    "rxCount": 4
+  }
+}

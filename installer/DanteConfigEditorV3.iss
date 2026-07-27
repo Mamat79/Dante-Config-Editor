@@ -59,8 +59,8 @@ Source: "{#SourceRoot}\docs\Notice_DanteConfigEditorV3_FR.pdf"; DestDir: "{app}"
 Source: "{#SourceRoot}\docs\Notice_DanteConfigEditorV3_EN.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourceRoot}\docs\SUPPORT_DCE.md"; DestDir: "{app}\docs"; Flags: ignoreversion
 Source: "{#SourceRoot}\Resources\Support\paypal-support-qr.png"; DestDir: "{app}\Resources\Support"; Flags: ignoreversion
-Source: "{#SourceRoot}\Resources\MachineBanks\Bundled\DCE Generic Roles 3.6\*"; DestDir: "{code:GetBundledBankDestination}"; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist; Check: ShouldInstallBundledBank
-Source: "{#SourceRoot}\Resources\MachineBanks\Bundled\DCE Community Devices 3.6\*"; DestDir: "{code:GetCommunityBankDestination}"; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist; Check: ShouldInstallCommunityBank
+Source: "{#SourceRoot}\Resources\MachineBanks\Bundled\DCE Generic Roles 2026.1\*"; DestDir: "{code:GetBundledBankDestination}"; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist; Check: ShouldInstallBundledBank
+Source: "{#SourceRoot}\Resources\MachineBanks\Bundled\DCE Community Devices 2026.1\*"; DestDir: "{code:GetCommunityBankDestination}"; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist; Check: ShouldInstallCommunityBank
 
 [InstallDelete]
 Type: files; Name: "{app}\QuickStart_DanteConfigEditorV3.pdf"
@@ -263,8 +263,8 @@ begin
       False,
       False);
     BankOptionsPage.Add('Use the selected active-bank folder in DCE');
-    BankOptionsPage.Add('Install DCE Generic Roles 3.6');
-    BankOptionsPage.Add('Install DCE Community Devices 3.6');
+    BankOptionsPage.Add('Install DCE Generic Roles 2026.1');
+    BankOptionsPage.Add('Install DCE Community Devices 2026.1');
   end
   else
   begin
@@ -285,17 +285,17 @@ begin
       False,
       False);
     BankOptionsPage.Add('Utiliser le dossier de banque active choisi dans DCE');
-    BankOptionsPage.Add('Installer DCE Generic Roles 3.6');
-    BankOptionsPage.Add('Installer DCE Community Devices 3.6');
+    BankOptionsPage.Add('Installer DCE Generic Roles 2026.1');
+    BankOptionsPage.Add('Installer DCE Community Devices 2026.1');
   end;
 
   BankDirectoriesPage.Values[0] := ConfiguredMachineBankPath();
   BankDirectoriesPage.Values[1] := DefaultBundledBanksPath();
   BankOptionsPage.Values[0] := True;
   BankOptionsPage.Values[1] := not DirExists(
-    AddBackslash(BankDirectoriesPage.Values[1]) + 'DCE Generic Roles 3.6');
+    AddBackslash(BankDirectoriesPage.Values[1]) + 'DCE Generic Roles 2026.1');
   BankOptionsPage.Values[2] := not DirExists(
-    AddBackslash(BankDirectoriesPage.Values[1]) + 'DCE Community Devices 3.6');
+    AddBackslash(BankDirectoriesPage.Values[1]) + 'DCE Community Devices 2026.1');
 
   GithubLabel := TNewStaticText.Create(WizardForm);
   GithubLabel.Parent := WizardForm;
@@ -433,13 +433,13 @@ begin
   begin
     BundledBankDestination := FindAvailableBankDestination(
       BundledBanksPath,
-      'DCE Generic Roles 3.6');
+      'DCE Generic Roles 2026.1');
   end;
   if InstallCommunityBankFiles then
   begin
     CommunityBankDestination := FindAvailableBankDestination(
       BundledBanksPath,
-      'DCE Community Devices 3.6');
+      'DCE Community Devices 2026.1');
   end;
 end;
 

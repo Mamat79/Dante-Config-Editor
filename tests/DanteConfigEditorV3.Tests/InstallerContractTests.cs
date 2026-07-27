@@ -70,8 +70,8 @@ public sealed class InstallerContractTests
         Assert.Contains("UTF8Decode", installerScript, StringComparison.Ordinal);
         Assert.Contains("UTF8Encode", installerScript, StringComparison.Ordinal);
         Assert.Contains("CopyFile(SettingsPath, SettingsPath + '.bak', False)", installerScript, StringComparison.Ordinal);
-        Assert.Contains("DCE Generic Roles 3.6", installerScript, StringComparison.Ordinal);
-        Assert.Contains("DCE Community Devices 3.6", installerScript, StringComparison.Ordinal);
+        Assert.Contains("DCE Generic Roles 2026.1", installerScript, StringComparison.Ordinal);
+        Assert.Contains("DCE Community Devices 2026.1", installerScript, StringComparison.Ordinal);
         Assert.Contains("onlyifdoesntexist", installerScript, StringComparison.Ordinal);
         Assert.Contains("ShouldInstallBundledBank", installerScript, StringComparison.Ordinal);
         Assert.Contains("ShouldInstallCommunityBank", installerScript, StringComparison.Ordinal);
@@ -83,13 +83,14 @@ public sealed class InstallerContractTests
 
         string bankBuilder = File.ReadAllText(RepositoryFile("tools", "Build-BundledMachineBanks.ps1"));
         Assert.Contains("Assert-CommunityBank", bankBuilder, StringComparison.Ordinal);
-        Assert.Contains("DCE_Community_Devices_3_6.dce-bank.zip", bankBuilder, StringComparison.Ordinal);
-        Assert.Contains("dce-community-devices-3.6", bankBuilder, StringComparison.Ordinal);
+        Assert.Contains("DCE_Community_Devices_2026_1.dce-bank.zip", bankBuilder, StringComparison.Ordinal);
+        Assert.Contains("dce-community-devices-2026.1", bankBuilder, StringComparison.Ordinal);
+        Assert.Contains("community-device-sources.json", bankBuilder, StringComparison.Ordinal);
 
         string macPackaging = File.ReadAllText(RepositoryFile("packaging", "macos", "build-macos.sh"));
         Assert.Contains("Machine Banks", macPackaging, StringComparison.Ordinal);
-        Assert.Contains("DCE_Generic_Roles_3_6.dce-bank.zip", macPackaging, StringComparison.Ordinal);
-        Assert.Contains("DCE_Community_Devices_3_6.dce-bank.zip", macPackaging, StringComparison.Ordinal);
+        Assert.Contains("DCE_Generic_Roles_2026_1.dce-bank.zip", macPackaging, StringComparison.Ordinal);
+        Assert.Contains("DCE_Community_Devices_2026_1.dce-bank.zip", macPackaging, StringComparison.Ordinal);
     }
 
     [Fact]

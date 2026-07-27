@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<device>
+  <captureInfo>
+    <device_name></device_name>
+    <interface_ipv4_addresses></interface_ipv4_addresses>
+    <device_samplerate></device_samplerate>
+    <device_encoding></device_encoding>
+    <device_unicast_latency></device_unicast_latency>
+    <rtp></rtp>
+    <clock></clock>
+    <clock_priority></clock_priority>
+    <txchannel_names></txchannel_names>
+    <txflows></txflows>
+    <rxchannel_names></rxchannel_names>
+    <rxchannel_subscriptions></rxchannel_subscriptions>
+    <rxflows></rxflows>
+  </captureInfo>
+  <manufacturer_id>53656E6E68736572</manufacturer_id>
+  <manufacturer_name>Sennheiser</manufacturer_name>
+  <model_id>0000000000000003</model_id>
+  <model_name>EM6000-Dante</model_name>
+  <device_type>426B6C796E320000</device_type>
+  <device_type_string>Brooklyn II</device_type_string>
+  <friendly_name>MACHINE-TEMPLATE</friendly_name>
+  <redundancy value="false" />
+  <preferred_master value="false" />
+  <external_word_clock value="false" />
+  <samplerate>48000</samplerate>
+  <encoding>24</encoding>
+  <unicast_latency>1000</unicast_latency>
+  <txchannel danteId="1" mediaType="audio">
+    <label>TX 01</label>
+  </txchannel>
+  <txchannel danteId="2" mediaType="audio">
+    <label>TX 02</label>
+  </txchannel>
+  <txchannel danteId="3" mediaType="audio">
+    <label>TX 03</label>
+  </txchannel>
+  <txchannel danteId="4" mediaType="audio">
+    <label>TX 04</label>
+  </txchannel>
+</device>

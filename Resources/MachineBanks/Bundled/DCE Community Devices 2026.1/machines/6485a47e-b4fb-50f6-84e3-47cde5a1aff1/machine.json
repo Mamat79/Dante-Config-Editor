@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "6485a47e-b4fb-50f6-84e3-47cde5a1aff1",
+  "templateName": "CL1",
+  "manufacturer": "Yamaha Corporation",
+  "model": "CL1",
+  "description": "Rôle hors ligne assaini pour CL1, 64 TX / 64 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Console",
+  "tags": [
+    "Yamaha",
+    "CL",
+    "64x64"
+  ],
+  "txCount": 64,
+  "rxCount": 64,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "25368C2708F98A8E5288C8DFFD669D81C9D1095EFA810AC130ABA6CF492D9989",
+  "imageFileName": "image.jpg",
+  "imageSha256": "97018CEF1243AA3CBD116D4299DAC9D342E9CC368A15967E54D5698CDF49D520",
+  "catalogKey": "yamaha-cl1",
+  "descriptionEn": "Sanitized offline role for CL1, 64 Tx / 64 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://usa.yamaha.com/products/proaudio/mixers/cl_series/index.html",
+  "imageSourceUrl": "https://usa.yamaha.com/files/lineup_mixers_cl_ffacd0e766179a5d3e4febe539a1a591.jpg",
+  "imageAttribution": "Official product image - Yamaha Corporation",
+  "sourceSignature": {
+    "manufacturer": "Yamaha Corporation",
+    "model": "CL1",
+    "txCount": 64,
+    "rxCount": 64
+  }
+}

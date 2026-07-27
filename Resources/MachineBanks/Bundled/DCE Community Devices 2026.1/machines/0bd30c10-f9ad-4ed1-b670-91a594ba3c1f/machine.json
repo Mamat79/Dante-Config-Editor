@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "0bd30c10-f9ad-4ed1-b670-91a594ba3c1f",
+  "templateName": "Digiface Dante",
+  "manufacturer": "RME GmbH",
+  "model": "Digiface Dante",
+  "description": "Rôle hors ligne assaini pour Digiface Dante, 64 TX / 64 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Interface audio",
+  "tags": [
+    "interface",
+    "Dante",
+    "64x64"
+  ],
+  "txCount": 64,
+  "rxCount": 64,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "A7246309F09A9971DFE3BEB50D446BB888C420D08BB579DA10FAEEB27E17A14F",
+  "imageFileName": "image.jpg",
+  "imageSha256": "4B4378156311A8328C6FCD9E648EDA47154A744C241B796F48F40D18CEE6E089",
+  "catalogKey": "rme-digiface-dante",
+  "descriptionEn": "Sanitized offline role for Digiface Dante, 64 Tx / 64 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://rme-audio.de/digiface-dante.html",
+  "imageSourceUrl": null,
+  "imageAttribution": "Publication approved by contributor - RME GmbH",
+  "sourceSignature": {
+    "manufacturer": "RME GmbH",
+    "model": "Digiface Dante",
+    "txCount": 64,
+    "rxCount": 64
+  }
+}

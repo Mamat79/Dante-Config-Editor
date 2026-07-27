@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<device>
+  <captureInfo>
+    <device_name />
+    <device_samplerate />
+    <device_encoding />
+    <device_unicast_latency />
+    <txchannel_names />
+    <txflows />
+    <rxchannel_names />
+    <rxchannel_subscriptions />
+    <rxflows />
+  </captureInfo>
+  <friendly_name>MACHINE-TEMPLATE</friendly_name>
+  <samplerate>48000</samplerate>
+  <encoding>24</encoding>
+  <unicast_latency>1000</unicast_latency>
+  <preferred_master value="false" />
+  <txchannel danteId="1" mediaType="audio">
+    <label>TX 01</label>
+  </txchannel>
+  <txchannel danteId="2" mediaType="audio">
+    <label>TX 02</label>
+  </txchannel>
+  <txchannel danteId="3" mediaType="audio">
+    <label>TX 03</label>
+  </txchannel>
+  <txchannel danteId="4" mediaType="audio">
+    <label>TX 04</label>
+  </txchannel>
+  <txchannel danteId="5" mediaType="audio">
+    <label>TX 05</label>
+  </txchannel>
+  <txchannel danteId="6" mediaType="audio">
+    <label>TX 06</label>
+  </txchannel>
+  <txchannel danteId="7" mediaType="audio">
+    <label>TX 07</label>
+  </txchannel>
+  <txchannel danteId="8" mediaType="audio">
+    <label>TX 08</label>
+  </txchannel>
+  <rxchannel danteId="1" mediaType="audio">
+    <name>RX 01</name>
+  </rxchannel>
+  <rxchannel danteId="2" mediaType="audio">
+    <name>RX 02</name>
+  </rxchannel>
+  <rxchannel danteId="3" mediaType="audio">
+    <name>RX 03</name>
+  </rxchannel>
+  <rxchannel danteId="4" mediaType="audio">
+    <name>RX 04</name>
+  </rxchannel>
+  <rxchannel danteId="5" mediaType="audio">
+    <name>RX 05</name>
+  </rxchannel>
+  <rxchannel danteId="6" mediaType="audio">
+    <name>RX 06</name>
+  </rxchannel>
+  <rxchannel danteId="7" mediaType="audio">
+    <name>RX 07</name>
+  </rxchannel>
+  <rxchannel danteId="8" mediaType="audio">
+    <name>RX 08</name>
+  </rxchannel>
+</device>

@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "c302d1a1-b8d6-568a-9d1d-3b3f37ca9d3c",
+  "templateName": "T Series",
+  "manufacturer": "Powersoft",
+  "model": "T Series",
+  "description": "Rôle hors ligne assaini pour T Series, 0 TX / 4 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Amplificateur",
+  "tags": [
+    "amplifier",
+    "T Series",
+    "0x4"
+  ],
+  "txCount": 0,
+  "rxCount": 4,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "E2D03D94F8DFB16A68EB7BF8925021E2BDBFFA44510095A19A6F619975FEA657",
+  "imageFileName": "image.png",
+  "imageSha256": "CCE6CF808CDD40EBEE8D8FC800867FB66C4B8B3F3DC9B66EC8277C2B9AB0B8A1",
+  "catalogKey": "powersoft-t-series",
+  "descriptionEn": "Sanitized offline role for T Series, 0 Tx / 4 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.powersoft.com/en/products/touring-amps/t-series/",
+  "imageSourceUrl": "https://www.powersoft.com/wp-content/uploads/2019/11/T304_cardSp.png",
+  "imageAttribution": "Official product image - Powersoft",
+  "sourceSignature": {
+    "manufacturer": "Powersoft",
+    "model": "T Series",
+    "txCount": 0,
+    "rxCount": 4
+  }
+}

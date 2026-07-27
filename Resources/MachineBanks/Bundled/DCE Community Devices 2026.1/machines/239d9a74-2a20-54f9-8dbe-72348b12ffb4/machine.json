@@ -1,0 +1,35 @@
+{
+  "formatVersion": 2,
+  "templateId": "239d9a74-2a20-54f9-8dbe-72348b12ffb4",
+  "templateName": "DM3",
+  "manufacturer": "Yamaha Corporation",
+  "model": "DM3",
+  "description": "Rôle hors ligne assaini pour DM3, 16 TX / 16 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Console",
+  "tags": [
+    "Yamaha",
+    "DM3",
+    "16x16"
+  ],
+  "txCount": 16,
+  "rxCount": 16,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "92A93C124CE1FA23BA0D048DA2E52785328C72F03887ECE989F2E25C60CF0C44",
+  "imageFileName": "image.jpg",
+  "imageSha256": "6EAB7103B49DC0D9D2831FD8443981DCB37CEEF92050E270A4B839813881E922",
+  "catalogKey": "yamaha-dm3",
+  "descriptionEn": "Sanitized offline role for DM3, 16 Tx / 16 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://usa.yamaha.com/products/proaudio/mixers/dm3/index.html",
+  "imageSourceUrl": "https://usa.yamaha.com/files/DM3-front_29bc6b6fc410b3240c8a10c0e847e66e.jpg",
+  "imageAttribution": "Official product image - Yamaha Corporation",
+  "sourceSignature": {
+    "manufacturer": "Yamaha Corporation",
+    "model": "DM3",
+    "txCount": 16,
+    "rxCount": 16
+  }
+}

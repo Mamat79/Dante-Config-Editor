@@ -1,0 +1,895 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<device>
+  <captureInfo>
+    <device_name></device_name>
+    <interface_ipv4_addresses></interface_ipv4_addresses>
+    <device_samplerate></device_samplerate>
+    <device_encoding></device_encoding>
+    <device_unicast_latency></device_unicast_latency>
+    <rtp></rtp>
+    <clock></clock>
+    <clock_priority></clock_priority>
+    <txchannel_names></txchannel_names>
+    <txflows></txflows>
+    <rxchannel_names></rxchannel_names>
+    <rxchannel_subscriptions></rxchannel_subscriptions>
+    <rxflows></rxflows>
+  </captureInfo>
+  <manufacturer_id>59616D6168610000</manufacturer_id>
+  <manufacturer_name>Yamaha Corporation</manufacturer_name>
+  <model_id>48593134342D4400</model_id>
+  <model_name>HY144-D</model_name>
+  <model_version>1.0.0</model_version>
+  <device_type>44616E74652D4859</device_type>
+  <friendly_name>MACHINE-TEMPLATE</friendly_name>
+  <redundancy value="false" />
+  <preferred_master value="false" />
+  <external_word_clock value="false" />
+  <samplerate>48000</samplerate>
+  <encoding>24</encoding>
+  <unicast_latency>1000</unicast_latency>
+  <txchannel danteId="1">
+    <label>TX 001</label>
+  </txchannel>
+  <txchannel danteId="2">
+    <label>TX 002</label>
+  </txchannel>
+  <txchannel danteId="3">
+    <label>TX 003</label>
+  </txchannel>
+  <txchannel danteId="4">
+    <label>TX 004</label>
+  </txchannel>
+  <txchannel danteId="5">
+    <label>TX 005</label>
+  </txchannel>
+  <txchannel danteId="6">
+    <label>TX 006</label>
+  </txchannel>
+  <txchannel danteId="7">
+    <label>TX 007</label>
+  </txchannel>
+  <txchannel danteId="8">
+    <label>TX 008</label>
+  </txchannel>
+  <txchannel danteId="9">
+    <label>TX 009</label>
+  </txchannel>
+  <txchannel danteId="10">
+    <label>TX 010</label>
+  </txchannel>
+  <txchannel danteId="11">
+    <label>TX 011</label>
+  </txchannel>
+  <txchannel danteId="12">
+    <label>TX 012</label>
+  </txchannel>
+  <txchannel danteId="13">
+    <label>TX 013</label>
+  </txchannel>
+  <txchannel danteId="14">
+    <label>TX 014</label>
+  </txchannel>
+  <txchannel danteId="15">
+    <label>TX 015</label>
+  </txchannel>
+  <txchannel danteId="16">
+    <label>TX 016</label>
+  </txchannel>
+  <txchannel danteId="17">
+    <label>TX 017</label>
+  </txchannel>
+  <txchannel danteId="18">
+    <label>TX 018</label>
+  </txchannel>
+  <txchannel danteId="19">
+    <label>TX 019</label>
+  </txchannel>
+  <txchannel danteId="20">
+    <label>TX 020</label>
+  </txchannel>
+  <txchannel danteId="21">
+    <label>TX 021</label>
+  </txchannel>
+  <txchannel danteId="22">
+    <label>TX 022</label>
+  </txchannel>
+  <txchannel danteId="23">
+    <label>TX 023</label>
+  </txchannel>
+  <txchannel danteId="24">
+    <label>TX 024</label>
+  </txchannel>
+  <txchannel danteId="25">
+    <label>TX 025</label>
+  </txchannel>
+  <txchannel danteId="26">
+    <label>TX 026</label>
+  </txchannel>
+  <txchannel danteId="27">
+    <label>TX 027</label>
+  </txchannel>
+  <txchannel danteId="28">
+    <label>TX 028</label>
+  </txchannel>
+  <txchannel danteId="29">
+    <label>TX 029</label>
+  </txchannel>
+  <txchannel danteId="30">
+    <label>TX 030</label>
+  </txchannel>
+  <txchannel danteId="31">
+    <label>TX 031</label>
+  </txchannel>
+  <txchannel danteId="32">
+    <label>TX 032</label>
+  </txchannel>
+  <txchannel danteId="33">
+    <label>TX 033</label>
+  </txchannel>
+  <txchannel danteId="34">
+    <label>TX 034</label>
+  </txchannel>
+  <txchannel danteId="35">
+    <label>TX 035</label>
+  </txchannel>
+  <txchannel danteId="36">
+    <label>TX 036</label>
+  </txchannel>
+  <txchannel danteId="37">
+    <label>TX 037</label>
+  </txchannel>
+  <txchannel danteId="38">
+    <label>TX 038</label>
+  </txchannel>
+  <txchannel danteId="39">
+    <label>TX 039</label>
+  </txchannel>
+  <txchannel danteId="40">
+    <label>TX 040</label>
+  </txchannel>
+  <txchannel danteId="41">
+    <label>TX 041</label>
+  </txchannel>
+  <txchannel danteId="42">
+    <label>TX 042</label>
+  </txchannel>
+  <txchannel danteId="43">
+    <label>TX 043</label>
+  </txchannel>
+  <txchannel danteId="44">
+    <label>TX 044</label>
+  </txchannel>
+  <txchannel danteId="45">
+    <label>TX 045</label>
+  </txchannel>
+  <txchannel danteId="46">
+    <label>TX 046</label>
+  </txchannel>
+  <txchannel danteId="47">
+    <label>TX 047</label>
+  </txchannel>
+  <txchannel danteId="48">
+    <label>TX 048</label>
+  </txchannel>
+  <txchannel danteId="49">
+    <label>TX 049</label>
+  </txchannel>
+  <txchannel danteId="50">
+    <label>TX 050</label>
+  </txchannel>
+  <txchannel danteId="51">
+    <label>TX 051</label>
+  </txchannel>
+  <txchannel danteId="52">
+    <label>TX 052</label>
+  </txchannel>
+  <txchannel danteId="53">
+    <label>TX 053</label>
+  </txchannel>
+  <txchannel danteId="54">
+    <label>TX 054</label>
+  </txchannel>
+  <txchannel danteId="55">
+    <label>TX 055</label>
+  </txchannel>
+  <txchannel danteId="56">
+    <label>TX 056</label>
+  </txchannel>
+  <txchannel danteId="57">
+    <label>TX 057</label>
+  </txchannel>
+  <txchannel danteId="58">
+    <label>TX 058</label>
+  </txchannel>
+  <txchannel danteId="59">
+    <label>TX 059</label>
+  </txchannel>
+  <txchannel danteId="60">
+    <label>TX 060</label>
+  </txchannel>
+  <txchannel danteId="61">
+    <label>TX 061</label>
+  </txchannel>
+  <txchannel danteId="62">
+    <label>TX 062</label>
+  </txchannel>
+  <txchannel danteId="63">
+    <label>TX 063</label>
+  </txchannel>
+  <txchannel danteId="64">
+    <label>TX 064</label>
+  </txchannel>
+  <txchannel danteId="65">
+    <label>TX 065</label>
+  </txchannel>
+  <txchannel danteId="66">
+    <label>TX 066</label>
+  </txchannel>
+  <txchannel danteId="67">
+    <label>TX 067</label>
+  </txchannel>
+  <txchannel danteId="68">
+    <label>TX 068</label>
+  </txchannel>
+  <txchannel danteId="69">
+    <label>TX 069</label>
+  </txchannel>
+  <txchannel danteId="70">
+    <label>TX 070</label>
+  </txchannel>
+  <txchannel danteId="71">
+    <label>TX 071</label>
+  </txchannel>
+  <txchannel danteId="72">
+    <label>TX 072</label>
+  </txchannel>
+  <txchannel danteId="73">
+    <label>TX 073</label>
+  </txchannel>
+  <txchannel danteId="74">
+    <label>TX 074</label>
+  </txchannel>
+  <txchannel danteId="75">
+    <label>TX 075</label>
+  </txchannel>
+  <txchannel danteId="76">
+    <label>TX 076</label>
+  </txchannel>
+  <txchannel danteId="77">
+    <label>TX 077</label>
+  </txchannel>
+  <txchannel danteId="78">
+    <label>TX 078</label>
+  </txchannel>
+  <txchannel danteId="79">
+    <label>TX 079</label>
+  </txchannel>
+  <txchannel danteId="80">
+    <label>TX 080</label>
+  </txchannel>
+  <txchannel danteId="81">
+    <label>TX 081</label>
+  </txchannel>
+  <txchannel danteId="82">
+    <label>TX 082</label>
+  </txchannel>
+  <txchannel danteId="83">
+    <label>TX 083</label>
+  </txchannel>
+  <txchannel danteId="84">
+    <label>TX 084</label>
+  </txchannel>
+  <txchannel danteId="85">
+    <label>TX 085</label>
+  </txchannel>
+  <txchannel danteId="86">
+    <label>TX 086</label>
+  </txchannel>
+  <txchannel danteId="87">
+    <label>TX 087</label>
+  </txchannel>
+  <txchannel danteId="88">
+    <label>TX 088</label>
+  </txchannel>
+  <txchannel danteId="89">
+    <label>TX 089</label>
+  </txchannel>
+  <txchannel danteId="90">
+    <label>TX 090</label>
+  </txchannel>
+  <txchannel danteId="91">
+    <label>TX 091</label>
+  </txchannel>
+  <txchannel danteId="92">
+    <label>TX 092</label>
+  </txchannel>
+  <txchannel danteId="93">
+    <label>TX 093</label>
+  </txchannel>
+  <txchannel danteId="94">
+    <label>TX 094</label>
+  </txchannel>
+  <txchannel danteId="95">
+    <label>TX 095</label>
+  </txchannel>
+  <txchannel danteId="96">
+    <label>TX 096</label>
+  </txchannel>
+  <txchannel danteId="97">
+    <label>TX 097</label>
+  </txchannel>
+  <txchannel danteId="98">
+    <label>TX 098</label>
+  </txchannel>
+  <txchannel danteId="99">
+    <label>TX 099</label>
+  </txchannel>
+  <txchannel danteId="100">
+    <label>TX 100</label>
+  </txchannel>
+  <txchannel danteId="101">
+    <label>TX 101</label>
+  </txchannel>
+  <txchannel danteId="102">
+    <label>TX 102</label>
+  </txchannel>
+  <txchannel danteId="103">
+    <label>TX 103</label>
+  </txchannel>
+  <txchannel danteId="104">
+    <label>TX 104</label>
+  </txchannel>
+  <txchannel danteId="105">
+    <label>TX 105</label>
+  </txchannel>
+  <txchannel danteId="106">
+    <label>TX 106</label>
+  </txchannel>
+  <txchannel danteId="107">
+    <label>TX 107</label>
+  </txchannel>
+  <txchannel danteId="108">
+    <label>TX 108</label>
+  </txchannel>
+  <txchannel danteId="109">
+    <label>TX 109</label>
+  </txchannel>
+  <txchannel danteId="110">
+    <label>TX 110</label>
+  </txchannel>
+  <txchannel danteId="111">
+    <label>TX 111</label>
+  </txchannel>
+  <txchannel danteId="112">
+    <label>TX 112</label>
+  </txchannel>
+  <txchannel danteId="113">
+    <label>TX 113</label>
+  </txchannel>
+  <txchannel danteId="114">
+    <label>TX 114</label>
+  </txchannel>
+  <txchannel danteId="115">
+    <label>TX 115</label>
+  </txchannel>
+  <txchannel danteId="116">
+    <label>TX 116</label>
+  </txchannel>
+  <txchannel danteId="117">
+    <label>TX 117</label>
+  </txchannel>
+  <txchannel danteId="118">
+    <label>TX 118</label>
+  </txchannel>
+  <txchannel danteId="119">
+    <label>TX 119</label>
+  </txchannel>
+  <txchannel danteId="120">
+    <label>TX 120</label>
+  </txchannel>
+  <txchannel danteId="121">
+    <label>TX 121</label>
+  </txchannel>
+  <txchannel danteId="122">
+    <label>TX 122</label>
+  </txchannel>
+  <txchannel danteId="123">
+    <label>TX 123</label>
+  </txchannel>
+  <txchannel danteId="124">
+    <label>TX 124</label>
+  </txchannel>
+  <txchannel danteId="125">
+    <label>TX 125</label>
+  </txchannel>
+  <txchannel danteId="126">
+    <label>TX 126</label>
+  </txchannel>
+  <txchannel danteId="127">
+    <label>TX 127</label>
+  </txchannel>
+  <txchannel danteId="128">
+    <label>TX 128</label>
+  </txchannel>
+  <txchannel danteId="129">
+    <label>TX 129</label>
+  </txchannel>
+  <txchannel danteId="130">
+    <label>TX 130</label>
+  </txchannel>
+  <txchannel danteId="131">
+    <label>TX 131</label>
+  </txchannel>
+  <txchannel danteId="132">
+    <label>TX 132</label>
+  </txchannel>
+  <txchannel danteId="133">
+    <label>TX 133</label>
+  </txchannel>
+  <txchannel danteId="134">
+    <label>TX 134</label>
+  </txchannel>
+  <txchannel danteId="135">
+    <label>TX 135</label>
+  </txchannel>
+  <txchannel danteId="136">
+    <label>TX 136</label>
+  </txchannel>
+  <txchannel danteId="137">
+    <label>TX 137</label>
+  </txchannel>
+  <txchannel danteId="138">
+    <label>TX 138</label>
+  </txchannel>
+  <txchannel danteId="139">
+    <label>TX 139</label>
+  </txchannel>
+  <txchannel danteId="140">
+    <label>TX 140</label>
+  </txchannel>
+  <txchannel danteId="141">
+    <label>TX 141</label>
+  </txchannel>
+  <txchannel danteId="142">
+    <label>TX 142</label>
+  </txchannel>
+  <txchannel danteId="143">
+    <label>TX 143</label>
+  </txchannel>
+  <txchannel danteId="144">
+    <label>TX 144</label>
+  </txchannel>
+  <rxchannel danteId="1">
+    <name>RX 001</name>
+  </rxchannel>
+  <rxchannel danteId="2">
+    <name>RX 002</name>
+  </rxchannel>
+  <rxchannel danteId="3">
+    <name>RX 003</name>
+  </rxchannel>
+  <rxchannel danteId="4">
+    <name>RX 004</name>
+  </rxchannel>
+  <rxchannel danteId="5">
+    <name>RX 005</name>
+  </rxchannel>
+  <rxchannel danteId="6">
+    <name>RX 006</name>
+  </rxchannel>
+  <rxchannel danteId="7">
+    <name>RX 007</name>
+  </rxchannel>
+  <rxchannel danteId="8">
+    <name>RX 008</name>
+  </rxchannel>
+  <rxchannel danteId="9">
+    <name>RX 009</name>
+  </rxchannel>
+  <rxchannel danteId="10">
+    <name>RX 010</name>
+  </rxchannel>
+  <rxchannel danteId="11">
+    <name>RX 011</name>
+  </rxchannel>
+  <rxchannel danteId="12">
+    <name>RX 012</name>
+  </rxchannel>
+  <rxchannel danteId="13">
+    <name>RX 013</name>
+  </rxchannel>
+  <rxchannel danteId="14">
+    <name>RX 014</name>
+  </rxchannel>
+  <rxchannel danteId="15">
+    <name>RX 015</name>
+  </rxchannel>
+  <rxchannel danteId="16">
+    <name>RX 016</name>
+  </rxchannel>
+  <rxchannel danteId="17">
+    <name>RX 017</name>
+  </rxchannel>
+  <rxchannel danteId="18">
+    <name>RX 018</name>
+  </rxchannel>
+  <rxchannel danteId="19">
+    <name>RX 019</name>
+  </rxchannel>
+  <rxchannel danteId="20">
+    <name>RX 020</name>
+  </rxchannel>
+  <rxchannel danteId="21">
+    <name>RX 021</name>
+  </rxchannel>
+  <rxchannel danteId="22">
+    <name>RX 022</name>
+  </rxchannel>
+  <rxchannel danteId="23">
+    <name>RX 023</name>
+  </rxchannel>
+  <rxchannel danteId="24">
+    <name>RX 024</name>
+  </rxchannel>
+  <rxchannel danteId="25">
+    <name>RX 025</name>
+  </rxchannel>
+  <rxchannel danteId="26">
+    <name>RX 026</name>
+  </rxchannel>
+  <rxchannel danteId="27">
+    <name>RX 027</name>
+  </rxchannel>
+  <rxchannel danteId="28">
+    <name>RX 028</name>
+  </rxchannel>
+  <rxchannel danteId="29">
+    <name>RX 029</name>
+  </rxchannel>
+  <rxchannel danteId="30">
+    <name>RX 030</name>
+  </rxchannel>
+  <rxchannel danteId="31">
+    <name>RX 031</name>
+  </rxchannel>
+  <rxchannel danteId="32">
+    <name>RX 032</name>
+  </rxchannel>
+  <rxchannel danteId="33">
+    <name>RX 033</name>
+  </rxchannel>
+  <rxchannel danteId="34">
+    <name>RX 034</name>
+  </rxchannel>
+  <rxchannel danteId="35">
+    <name>RX 035</name>
+  </rxchannel>
+  <rxchannel danteId="36">
+    <name>RX 036</name>
+  </rxchannel>
+  <rxchannel danteId="37">
+    <name>RX 037</name>
+  </rxchannel>
+  <rxchannel danteId="38">
+    <name>RX 038</name>
+  </rxchannel>
+  <rxchannel danteId="39">
+    <name>RX 039</name>
+  </rxchannel>
+  <rxchannel danteId="40">
+    <name>RX 040</name>
+  </rxchannel>
+  <rxchannel danteId="41">
+    <name>RX 041</name>
+  </rxchannel>
+  <rxchannel danteId="42">
+    <name>RX 042</name>
+  </rxchannel>
+  <rxchannel danteId="43">
+    <name>RX 043</name>
+  </rxchannel>
+  <rxchannel danteId="44">
+    <name>RX 044</name>
+  </rxchannel>
+  <rxchannel danteId="45">
+    <name>RX 045</name>
+  </rxchannel>
+  <rxchannel danteId="46">
+    <name>RX 046</name>
+  </rxchannel>
+  <rxchannel danteId="47">
+    <name>RX 047</name>
+  </rxchannel>
+  <rxchannel danteId="48">
+    <name>RX 048</name>
+  </rxchannel>
+  <rxchannel danteId="49">
+    <name>RX 049</name>
+  </rxchannel>
+  <rxchannel danteId="50">
+    <name>RX 050</name>
+  </rxchannel>
+  <rxchannel danteId="51">
+    <name>RX 051</name>
+  </rxchannel>
+  <rxchannel danteId="52">
+    <name>RX 052</name>
+  </rxchannel>
+  <rxchannel danteId="53">
+    <name>RX 053</name>
+  </rxchannel>
+  <rxchannel danteId="54">
+    <name>RX 054</name>
+  </rxchannel>
+  <rxchannel danteId="55">
+    <name>RX 055</name>
+  </rxchannel>
+  <rxchannel danteId="56">
+    <name>RX 056</name>
+  </rxchannel>
+  <rxchannel danteId="57">
+    <name>RX 057</name>
+  </rxchannel>
+  <rxchannel danteId="58">
+    <name>RX 058</name>
+  </rxchannel>
+  <rxchannel danteId="59">
+    <name>RX 059</name>
+  </rxchannel>
+  <rxchannel danteId="60">
+    <name>RX 060</name>
+  </rxchannel>
+  <rxchannel danteId="61">
+    <name>RX 061</name>
+  </rxchannel>
+  <rxchannel danteId="62">
+    <name>RX 062</name>
+  </rxchannel>
+  <rxchannel danteId="63">
+    <name>RX 063</name>
+  </rxchannel>
+  <rxchannel danteId="64">
+    <name>RX 064</name>
+  </rxchannel>
+  <rxchannel danteId="65">
+    <name>RX 065</name>
+  </rxchannel>
+  <rxchannel danteId="66">
+    <name>RX 066</name>
+  </rxchannel>
+  <rxchannel danteId="67">
+    <name>RX 067</name>
+  </rxchannel>
+  <rxchannel danteId="68">
+    <name>RX 068</name>
+  </rxchannel>
+  <rxchannel danteId="69">
+    <name>RX 069</name>
+  </rxchannel>
+  <rxchannel danteId="70">
+    <name>RX 070</name>
+  </rxchannel>
+  <rxchannel danteId="71">
+    <name>RX 071</name>
+  </rxchannel>
+  <rxchannel danteId="72">
+    <name>RX 072</name>
+  </rxchannel>
+  <rxchannel danteId="73">
+    <name>RX 073</name>
+  </rxchannel>
+  <rxchannel danteId="74">
+    <name>RX 074</name>
+  </rxchannel>
+  <rxchannel danteId="75">
+    <name>RX 075</name>
+  </rxchannel>
+  <rxchannel danteId="76">
+    <name>RX 076</name>
+  </rxchannel>
+  <rxchannel danteId="77">
+    <name>RX 077</name>
+  </rxchannel>
+  <rxchannel danteId="78">
+    <name>RX 078</name>
+  </rxchannel>
+  <rxchannel danteId="79">
+    <name>RX 079</name>
+  </rxchannel>
+  <rxchannel danteId="80">
+    <name>RX 080</name>
+  </rxchannel>
+  <rxchannel danteId="81">
+    <name>RX 081</name>
+  </rxchannel>
+  <rxchannel danteId="82">
+    <name>RX 082</name>
+  </rxchannel>
+  <rxchannel danteId="83">
+    <name>RX 083</name>
+  </rxchannel>
+  <rxchannel danteId="84">
+    <name>RX 084</name>
+  </rxchannel>
+  <rxchannel danteId="85">
+    <name>RX 085</name>
+  </rxchannel>
+  <rxchannel danteId="86">
+    <name>RX 086</name>
+  </rxchannel>
+  <rxchannel danteId="87">
+    <name>RX 087</name>
+  </rxchannel>
+  <rxchannel danteId="88">
+    <name>RX 088</name>
+  </rxchannel>
+  <rxchannel danteId="89">
+    <name>RX 089</name>
+  </rxchannel>
+  <rxchannel danteId="90">
+    <name>RX 090</name>
+  </rxchannel>
+  <rxchannel danteId="91">
+    <name>RX 091</name>
+  </rxchannel>
+  <rxchannel danteId="92">
+    <name>RX 092</name>
+  </rxchannel>
+  <rxchannel danteId="93">
+    <name>RX 093</name>
+  </rxchannel>
+  <rxchannel danteId="94">
+    <name>RX 094</name>
+  </rxchannel>
+  <rxchannel danteId="95">
+    <name>RX 095</name>
+  </rxchannel>
+  <rxchannel danteId="96">
+    <name>RX 096</name>
+  </rxchannel>
+  <rxchannel danteId="97">
+    <name>RX 097</name>
+  </rxchannel>
+  <rxchannel danteId="98">
+    <name>RX 098</name>
+  </rxchannel>
+  <rxchannel danteId="99">
+    <name>RX 099</name>
+  </rxchannel>
+  <rxchannel danteId="100">
+    <name>RX 100</name>
+  </rxchannel>
+  <rxchannel danteId="101">
+    <name>RX 101</name>
+  </rxchannel>
+  <rxchannel danteId="102">
+    <name>RX 102</name>
+  </rxchannel>
+  <rxchannel danteId="103">
+    <name>RX 103</name>
+  </rxchannel>
+  <rxchannel danteId="104">
+    <name>RX 104</name>
+  </rxchannel>
+  <rxchannel danteId="105">
+    <name>RX 105</name>
+  </rxchannel>
+  <rxchannel danteId="106">
+    <name>RX 106</name>
+  </rxchannel>
+  <rxchannel danteId="107">
+    <name>RX 107</name>
+  </rxchannel>
+  <rxchannel danteId="108">
+    <name>RX 108</name>
+  </rxchannel>
+  <rxchannel danteId="109">
+    <name>RX 109</name>
+  </rxchannel>
+  <rxchannel danteId="110">
+    <name>RX 110</name>
+  </rxchannel>
+  <rxchannel danteId="111">
+    <name>RX 111</name>
+  </rxchannel>
+  <rxchannel danteId="112">
+    <name>RX 112</name>
+  </rxchannel>
+  <rxchannel danteId="113">
+    <name>RX 113</name>
+  </rxchannel>
+  <rxchannel danteId="114">
+    <name>RX 114</name>
+  </rxchannel>
+  <rxchannel danteId="115">
+    <name>RX 115</name>
+  </rxchannel>
+  <rxchannel danteId="116">
+    <name>RX 116</name>
+  </rxchannel>
+  <rxchannel danteId="117">
+    <name>RX 117</name>
+  </rxchannel>
+  <rxchannel danteId="118">
+    <name>RX 118</name>
+  </rxchannel>
+  <rxchannel danteId="119">
+    <name>RX 119</name>
+  </rxchannel>
+  <rxchannel danteId="120">
+    <name>RX 120</name>
+  </rxchannel>
+  <rxchannel danteId="121">
+    <name>RX 121</name>
+  </rxchannel>
+  <rxchannel danteId="122">
+    <name>RX 122</name>
+  </rxchannel>
+  <rxchannel danteId="123">
+    <name>RX 123</name>
+  </rxchannel>
+  <rxchannel danteId="124">
+    <name>RX 124</name>
+  </rxchannel>
+  <rxchannel danteId="125">
+    <name>RX 125</name>
+  </rxchannel>
+  <rxchannel danteId="126">
+    <name>RX 126</name>
+  </rxchannel>
+  <rxchannel danteId="127">
+    <name>RX 127</name>
+  </rxchannel>
+  <rxchannel danteId="128">
+    <name>RX 128</name>
+  </rxchannel>
+  <rxchannel danteId="129">
+    <name>RX 129</name>
+  </rxchannel>
+  <rxchannel danteId="130">
+    <name>RX 130</name>
+  </rxchannel>
+  <rxchannel danteId="131">
+    <name>RX 131</name>
+  </rxchannel>
+  <rxchannel danteId="132">
+    <name>RX 132</name>
+  </rxchannel>
+  <rxchannel danteId="133">
+    <name>RX 133</name>
+  </rxchannel>
+  <rxchannel danteId="134">
+    <name>RX 134</name>
+  </rxchannel>
+  <rxchannel danteId="135">
+    <name>RX 135</name>
+  </rxchannel>
+  <rxchannel danteId="136">
+    <name>RX 136</name>
+  </rxchannel>
+  <rxchannel danteId="137">
+    <name>RX 137</name>
+  </rxchannel>
+  <rxchannel danteId="138">
+    <name>RX 138</name>
+  </rxchannel>
+  <rxchannel danteId="139">
+    <name>RX 139</name>
+  </rxchannel>
+  <rxchannel danteId="140">
+    <name>RX 140</name>
+  </rxchannel>
+  <rxchannel danteId="141">
+    <name>RX 141</name>
+  </rxchannel>
+  <rxchannel danteId="142">
+    <name>RX 142</name>
+  </rxchannel>
+  <rxchannel danteId="143">
+    <name>RX 143</name>
+  </rxchannel>
+  <rxchannel danteId="144">
+    <name>RX 144</name>
+  </rxchannel>
+</device>
