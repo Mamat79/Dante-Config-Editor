@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<preset version="3.0.0">
+  <name>Fixture subscriptions anonymisee</name>
+  <device>
+    <name>LOCAL-IO</name>
+    <friendly_name>LOCAL-IO</friendly_name>
+    <instance_id><device_id>TEST-SUBSCRIPTION-0001</device_id><process_id>0</process_id></instance_id>
+    <txchannel danteId="1" mediaType="audio"><label>LOCAL TX</label></txchannel>
+    <rxchannel danteId="1" mediaType="audio">
+      <name>LOCAL RX</name>
+      <subscribed_channel>LOCAL TX</subscribed_channel>
+      <subscribed_device>.</subscribed_device>
+    </rxchannel>
+  </device>
+  <device>
+    <name>RX-EXTERNAL</name>
+    <friendly_name>RX-EXTERNAL</friendly_name>
+    <instance_id><device_id>TEST-SUBSCRIPTION-0002</device_id><process_id>0</process_id></instance_id>
+    <rxchannel danteId="1" mediaType="audio">
+      <name>EXTERNAL INPUT</name>
+      <subscribed_channel>REMOTE TX</subscribed_channel>
+      <subscribed_device>DEVICE-OUTSIDE-PRESET</subscribed_device>
+    </rxchannel>
+  </device>
+  <device>
+    <name>RX-MISSING-CHANNEL</name>
+    <friendly_name>RX-MISSING-CHANNEL</friendly_name>
+    <instance_id><device_id>TEST-SUBSCRIPTION-0003</device_id><process_id>0</process_id></instance_id>
+    <rxchannel danteId="1" mediaType="audio">
+      <name>MISSING INPUT</name>
+      <subscribed_channel>UNKNOWN TX</subscribed_channel>
+      <subscribed_device>LOCAL-IO</subscribed_device>
+    </rxchannel>
+  </device>
+</preset>

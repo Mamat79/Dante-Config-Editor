@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<preset version="3.0.0">
+  <name>Fixture modes mixtes anonymisee</name>
+  <device>
+    <name>MIXED-A</name>
+    <friendly_name>MIXED-A</friendly_name>
+    <instance_id><device_id>TEST-MIXED-0001</device_id><process_id>0</process_id></instance_id>
+    <preferred_master value="true" />
+    <redundancy value="false" />
+    <samplerate>48000</samplerate>
+    <encoding>24</encoding>
+    <unicast_latency>1000</unicast_latency>
+    <interface network="0"><ipv4_address mode="dynamic" /></interface>
+    <txchannel danteId="1" mediaType="audio"><label>MIX A</label></txchannel>
+    <rxchannel danteId="1" mediaType="audio"><name>MIX A RETURN</name></rxchannel>
+  </device>
+  <device>
+    <name>MIXED-B</name>
+    <friendly_name>MIXED-B</friendly_name>
+    <instance_id><device_id>TEST-MIXED-0002</device_id><process_id>0</process_id></instance_id>
+    <preferred_master value="false" />
+    <redundancy value="true" />
+    <samplerate>96000</samplerate>
+    <encoding>32</encoding>
+    <unicast_latency>2000</unicast_latency>
+    <interface network="0">
+      <ipv4_address mode="static">
+        <address>192.0.2.20</address>
+        <netmask>255.255.255.0</netmask>
+        <gateway>192.0.2.1</gateway>
+      </ipv4_address>
+    </interface>
+    <interface network="1">
+      <ipv4_address mode="static">
+        <address>198.51.100.20</address>
+        <netmask>255.255.255.0</netmask>
+      </ipv4_address>
+    </interface>
+    <txchannel danteId="1" mediaType="audio"><label>MIX B</label></txchannel>
+    <rxchannel danteId="1" mediaType="audio">
+      <name>MIX B INPUT</name>
+      <subscribed_channel>MIX A</subscribed_channel>
+      <subscribed_device>MIXED-A</subscribed_device>
+    </rxchannel>
+  </device>
+</preset>

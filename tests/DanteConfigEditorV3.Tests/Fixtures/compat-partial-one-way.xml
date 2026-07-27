@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<preset version="3.0.0">
+  <name>Fixture partielle anonymisee</name>
+  <device>
+    <name>TX-ONLY</name>
+    <friendly_name>TX-ONLY</friendly_name>
+    <instance_id><device_id>TEST-PARTIAL-0001</device_id><process_id>0</process_id></instance_id>
+    <txchannel danteId="1" mediaType="audio"><label>PROGRAM 01</label></txchannel>
+  </device>
+  <device>
+    <name>RX-ONLY</name>
+    <friendly_name>RX-ONLY</friendly_name>
+    <instance_id><device_id>TEST-PARTIAL-0002</device_id><process_id>0</process_id></instance_id>
+    <rxchannel danteId="1" mediaType="audio"><name>INPUT 01</name></rxchannel>
+  </device>
+</preset>

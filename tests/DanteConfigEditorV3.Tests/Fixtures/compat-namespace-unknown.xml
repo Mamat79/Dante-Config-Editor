@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<preset xmlns="urn:dce:test:preset" xmlns:vendor="urn:dce:test:vendor" version="3.0.0">
+  <description>Fixture synthétique avec namespace, Unicode et extension inconnue.</description>
+  <name>Preset Été 日本語</name>
+  <device vendor:format="future">
+    <captureInfo />
+    <friendly_name>NAMESPACE-IO</friendly_name>
+    <name>NAMESPACE-IO</name>
+    <instance_id><process_id>0</process_id><device_id>TEST-NAMESPACE-0001</device_id></instance_id>
+    <interface network="1"><ipv4_address mode="static"><address>10.20.30.40</address></ipv4_address></interface>
+    <interface network="0"><ipv4_address mode="dynamic" /></interface>
+    <txchannel mediaType="audio" danteId="1"><label>Programme été</label></txchannel>
+    <rxchannel mediaType="audio" danteId="1">
+      <name>Entrée scène 日本語</name>
+      <subscribed_device>.</subscribed_device>
+      <subscribed_channel>Programme été</subscribed_channel>
+    </rxchannel>
+    <vendor:opaque vendor:mode="future"><vendor:value>preserve-me</vendor:value></vendor:opaque>
+    <unicast_latency>1000</unicast_latency>
+    <encoding>24</encoding>
+    <samplerate>48000</samplerate>
+    <redundancy value="false" />
+    <preferred_master value="true" />
+  </device>
+</preset>
