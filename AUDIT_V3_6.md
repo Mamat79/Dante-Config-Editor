@@ -20,9 +20,11 @@ Trois niveaux de preuve doivent rester distincts :
 3. **Validé dans Dante Controller** : import manuel réalisé dans le logiciel
    Audinate avec observation du résultat.
 
-Le niveau 3 n'a pas été exécuté dans cet environnement. La V3.6 ne doit donc pas
-affirmer qu'une nouvelle machine générique ou un nouveau projet est garanti
-importable. La checklist manuelle reste obligatoire avant une diffusion stable.
+Le niveau 3 n'avait pas été exécuté dans l'environnement d'audit. Mise à jour du
+27 juillet 2026 : le mainteneur confirme un import et un essai réussis dans
+Dante Controller avec des XML modifiés par la V3.6. La version de Dante
+Controller et les scénarios anonymisés restent à consigner ; les nouveaux types
+de preset doivent donc toujours suivre la checklist manuelle.
 
 ## Baseline V3.5
 

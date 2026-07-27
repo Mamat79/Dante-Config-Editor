@@ -10,6 +10,18 @@ Cette matrice sépare strictement trois niveaux de preuve :
 
 Une réussite automatisée ne vaut jamais preuve d'import Dante Controller. Les colonnes `Résultat d'import`, `Version Dante Controller`, `Date` et `Testeur` doivent être complétées avec une preuve manuelle réelle.
 
+## Validation terrain déclarée pour la V3.6
+
+Le 27 juillet 2026, le mainteneur a confirmé avoir importé et utilisé avec
+succès dans Dante Controller des XML modifiés par Dante Config Editor V3.6.
+Cette confirmation remplace l'ancienne mention générale « aucun test réel ».
+
+La version exacte de Dante Controller, les opérations couvertes et les
+caractéristiques anonymisées du preset n'ayant pas encore été consignées, les
+lignes détaillées ci-dessous conservent leur statut individuel jusqu'à ce que
+ces informations soient relevées. Aucune donnée de production ne doit être
+ajoutée au dépôt pour compléter cette preuve.
+
 ## Matrice actuelle
 
 | Cas / fichier | Version Dante Controller | Structure XML | Fabricant | Modèle | Devices | TX / RX | Namespace | Interfaces réseau | Structure des subscriptions | Complet / partiel | Ouverture | Sauvegarde sans modification | Modifications testées | Résultat d'import | Anomalies | Date / testeur |

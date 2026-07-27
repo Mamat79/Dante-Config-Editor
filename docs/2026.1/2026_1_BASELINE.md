@@ -147,8 +147,9 @@ certaines opérations et pour l'annulation.
 
 ## Risques et limites connus
 
-- Aucun XML produit par cette baseline n'a été importé pendant ce relevé dans
-  Dante Controller.
+- La V3.6 de départ a été importée et testée avec succès dans Dante Controller
+  par le mainteneur. Cette baseline automatisée n'a pas reproduit elle-même ce
+  test et les futures sorties 2026.1 devront être validées à nouveau.
 - La création d'un projet complet et l'ajout d'un rôle générique restent
   expérimentaux tant qu'un import réel n'a pas été consigné.
 - Les extensions constructeur inconnues sont conservées, mais leur signification

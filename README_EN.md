@@ -31,7 +31,7 @@ V3.6 is developed and tested on the `v3.6` branch from V3.5. Official V3.4.2 rem
 - technical logs available from the application;
 - 272 Core/Windows tests and 20 headless Mac tests.
 
-Duplication and the bank do not create real Dante hardware. They create generic preset roles without `instance_id` or `device_id`. No V3.6 output has yet been imported into Dante Controller, so field compatibility is not claimed as guaranteed.
+Duplication and the bank do not create real Dante hardware. They create generic preset roles without `instance_id` or `device_id`. **The maintainer has successfully tested V3.6 XML output in Dante Controller after editing it with DCE.** This validates the tested workflow; users should still keep the original file and verify each new preset structure or hardware family before production use.
 
 ## Origin and agent-assisted development
 
