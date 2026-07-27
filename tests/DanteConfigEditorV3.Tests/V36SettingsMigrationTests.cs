@@ -15,9 +15,12 @@ public sealed class V36SettingsMigrationTests
         Write(source, "language.txt", "en");
         Write(source, "configuration-editors.txt", "expanded");
         Write(source, "machine-bank-location.txt", @"D:\Shared\DCE Bank");
-        Write(source, @"Recovery\recovery.xml", "<preset />");
-        Write(source, @"Recovery\recovery.json", "{}");
-        Write(source, @"Synoptics\layout.synoptic.json", "{\"schemaVersion\":2}");
+        Write(source, Path.Combine("Recovery", "recovery.xml"), "<preset />");
+        Write(source, Path.Combine("Recovery", "recovery.json"), "{}");
+        Write(
+            source,
+            Path.Combine("Synoptics", "layout.synoptic.json"),
+            "{\"schemaVersion\":2}");
         Write(source, "ignored-private-file.txt", "must not migrate");
         Write(destination, "language.txt", "fr");
         Dictionary<string, string> sourceHashes = HashTree(source);
