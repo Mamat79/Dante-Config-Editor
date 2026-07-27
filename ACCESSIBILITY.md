@@ -1,5 +1,24 @@
 # Accessibilité et affichage
 
+## État du shell Windows 2026.1
+
+- Le shell expose une navigation latérale, un espace de travail et un
+  inspecteur contextuel repliables.
+- Les réglages Machines restent affichés au premier lancement.
+- Sous `1400` pixels logiques, seul l'inspecteur secondaire est replié
+  automatiquement ; sous `1160`, la navigation peut aussi être repliée.
+- Les commandes principales ont été contrôlées visuellement à environ
+  `1266 x 813`, en thèmes sombre et clair, en français et en anglais.
+- Les vues Projet, Vue d'ensemble et Machines ont été vérifiées avec une
+  fixture XML anonymisée.
+- Les listes nouvelles utilisent des couleurs explicites pour éviter un fond
+  blanc avec texte clair en thème sombre.
+- `338/338` tests Windows et `20/20` tests macOS sans écran passent.
+
+Ce contrôle ne remplace pas un essai matériel aux échelles Windows 125 %,
+150 % et 200 %, en contraste élevé ou avec un lecteur d'écran. Aucun Mac
+physique n'a été utilisé pour ce lot.
+
 ## État spécifique V3.6
 
 - Les 16 tests Avalonia/macOS sans écran passent, y compris les commandes de

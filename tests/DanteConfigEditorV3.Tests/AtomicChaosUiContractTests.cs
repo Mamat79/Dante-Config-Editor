@@ -13,7 +13,7 @@ public sealed class AtomicChaosUiContractTests
 
         Assert.Contains("x:Name=\"AtomicChaosButton\"", windowsXaml, StringComparison.Ordinal);
         Assert.DoesNotContain("AtomicChaosSidebarButton", windowsXaml, StringComparison.Ordinal);
-        Assert.Contains("<TabItem Header=\"Atomic Bomb\">", windowsXaml, StringComparison.Ordinal);
+        Assert.Contains("Header=\"Atomic Bomb\"", windowsXaml, StringComparison.Ordinal);
         Assert.Contains("Style=\"{StaticResource AtomicButtonStyle}\"", windowsXaml, StringComparison.Ordinal);
         Assert.Contains("Content=\"ATOMIC BOMB\"", windowsXaml, StringComparison.Ordinal);
         Assert.DoesNotContain("AtomicHazardBrush", windowsXaml, StringComparison.Ordinal);

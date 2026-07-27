@@ -170,6 +170,10 @@ Réalisé :
 - banque format 2, lecture du format V3.6, migration par copie, empreintes
   d'images et conservation des champs JSON inconnus ;
 - commandes transactionnelles de duplication et d'ajout depuis la banque ;
+- service de navigation indépendant de WPF et testé ;
+- shell Windows en quatre zones, accueil, vue d'ensemble et inspecteur
+  contextuel ;
+- repli adaptatif des panneaux secondaires sans masquer les réglages Machines ;
 - tests d'architecture et de profils.
 
 À poursuivre :
@@ -180,3 +184,6 @@ Réalisé :
 - moteur Patch unique ;
 - Centre de validation et navigation par cible ;
 - réduction progressive du Core historique.
+
+L'organisation visuelle et les contrôles réellement effectués sont détaillés
+dans `WINDOWS_WORKSPACE_SHELL.md`.

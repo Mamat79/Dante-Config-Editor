@@ -11,6 +11,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using DanteConfigEditor.Application.Navigation;
 using DanteConfigEditor.Infrastructure.Migration;
 using DanteConfigEditor.Models;
 using DanteConfigEditor.Services;
@@ -34,8 +35,12 @@ public partial class MainWindow : Window
     private readonly HashSet<string> _warningDeviceNames = new(StringComparer.OrdinalIgnoreCase);
     private readonly DispatcherTimer _recoveryTimer;
     private readonly SupportReminderSettingsService _supportReminderSettings = new();
+    private readonly WorkspaceNavigationService _workspaceNavigation = new();
     private CancellationTokenSource? _recoveryWriteCancellation;
     private string? _selectedWarningKey;
+    private DateTime? _lastSuccessfulSaveAt;
+    private bool _navigationExpanded = true;
+    private bool _inspectorExpanded = true;
     private readonly LatencyChoice[] _latencies =
     [
         new("250", "0,25 ms"),
@@ -231,6 +236,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        _workspaceNavigation.Changed += WorkspaceNavigation_Changed;
         _recoveryTimer = new DispatcherTimer(DispatcherPriority.Background)
         {
             Interval = TimeSpan.FromMilliseconds(750)
@@ -268,6 +274,8 @@ public partial class MainWindow : Window
         ApplyLanguageToInterface();
         RefreshRecentFiles();
         RefreshAll();
+        HomeNavigationButton.IsChecked = true;
+        ApplyWorkspaceSection(WorkspaceSection.Home);
         UpdateResponsiveConfigurationLayout(ActualWidth, ActualHeight);
         InitializeSupportReminder();
     }
@@ -571,6 +579,13 @@ public partial class MainWindow : Window
         SetStatus(T("Status.EditEnabled"));
     }
 
+    private void SaveButton_Click(object sender, RoutedEventArgs e)
+    {
+        // Un XML Dante ouvert reste protégé : le premier enregistrement passe
+        // par Enregistrer sous afin de ne jamais écraser silencieusement la source.
+        SaveAsButton_Click(sender, e);
+    }
+
     private void SaveAsButton_Click(object sender, RoutedEventArgs e)
     {
         if (!EnsureProjectLoaded())
@@ -651,6 +666,7 @@ public partial class MainWindow : Window
             RecentFilesService.Add(_project.OriginalFilePath);
             AddLog(Tf("Log.OriginalBackupCreated", backupPath));
             AddLog(Tf("Log.FileSaved", dialog.FileName));
+            _lastSuccessfulSaveAt = DateTime.Now;
             RefreshAll();
             SetStatus(T("Status.FileSaved"));
         }
@@ -737,6 +753,7 @@ public partial class MainWindow : Window
         SelectLatency(LatencyComboBox, device.Latency);
         PreferredMasterCheckBox.IsChecked = device.PreferredMaster;
         RefreshChannelSelector();
+        RefreshInspector();
     }
 
     private void ApplyDeviceSettingsButton_Click(object sender, RoutedEventArgs e)
@@ -869,6 +886,16 @@ public partial class MainWindow : Window
         {
             DeviceComboBox.SelectedItem = options.NewName;
         }
+    }
+
+    private void RedoButton_Click(object sender, RoutedEventArgs e)
+    {
+        // L'ancien modèle V3.6 ne possède pas de pile Rétablir. Le bouton est
+        // maintenu désactivé tant que cette fenêtre n'est pas reliée à la
+        // ProjectSession 2026.1, qui fournit déjà cette capacité.
+        SetStatus(_language == UiLanguage.English
+            ? "Redo will be enabled when this view uses the 2026.1 command session."
+            : "Rétablir sera activé lorsque cette vue utilisera la session de commandes 2026.1.");
     }
 
     private void DuplicateDeviceButton_Click(object sender, RoutedEventArgs e)
@@ -1535,10 +1562,98 @@ public partial class MainWindow : Window
         UpdateResponsiveConfigurationLayout(e.NewSize.Width, e.NewSize.Height);
     }
 
+    private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        ModifierKeys modifiers = Keyboard.Modifiers;
+        if (modifiers.HasFlag(ModifierKeys.Control) && e.Key == Key.S)
+        {
+            if (modifiers.HasFlag(ModifierKeys.Shift))
+            {
+                SaveAsButton_Click(SaveAsButton, new RoutedEventArgs());
+            }
+            else
+            {
+                SaveButton_Click(SaveButton, new RoutedEventArgs());
+            }
+
+            e.Handled = true;
+            return;
+        }
+
+        if (modifiers == ModifierKeys.Control && e.Key == Key.F)
+        {
+            if (!_navigationExpanded)
+            {
+                NavigationToggleButton_Click(NavigationToggleButton, new RoutedEventArgs());
+            }
+
+            TopGlobalSearchTextBox.Focus();
+            TopGlobalSearchTextBox.SelectAll();
+            e.Handled = true;
+            return;
+        }
+
+        bool textEditorHasFocus = Keyboard.FocusedElement is TextBoxBase;
+        if (!textEditorHasFocus
+            && modifiers == ModifierKeys.Control
+            && e.Key == Key.Z
+            && UndoLastButton.IsEnabled)
+        {
+            UndoLastButton_Click(UndoLastButton, new RoutedEventArgs());
+            e.Handled = true;
+        }
+    }
+
+    private void NavigationToggleButton_Click(object sender, RoutedEventArgs e)
+    {
+        SetNavigationExpanded(!_navigationExpanded);
+    }
+
+    private void SetNavigationExpanded(bool expanded)
+    {
+        _navigationExpanded = expanded;
+        NavigationColumn.Width = _navigationExpanded
+            ? new GridLength((double)FindResource("ShellNavigationExpandedWidth"))
+            : new GridLength(0);
+        NavigationSplitterColumn.Width = _navigationExpanded ? new GridLength(5) : new GridLength(0);
+        NavigationPanel.Visibility = _navigationExpanded ? Visibility.Visible : Visibility.Collapsed;
+        NavigationSplitter.Visibility = _navigationExpanded ? Visibility.Visible : Visibility.Collapsed;
+        NavigationToggleButton.Content = LocalizeLiteral(_navigationExpanded ? "Masquer navigation" : "Afficher navigation");
+    }
+
+    private void InspectorToggleButton_Click(object sender, RoutedEventArgs e)
+    {
+        SetInspectorExpanded(!_inspectorExpanded);
+    }
+
+    private void SetInspectorExpanded(bool expanded)
+    {
+        _inspectorExpanded = expanded;
+        InspectorColumn.Width = _inspectorExpanded
+            ? new GridLength((double)FindResource("ShellInspectorExpandedWidth"))
+            : new GridLength(0);
+        InspectorSplitterColumn.Width = _inspectorExpanded ? new GridLength(5) : new GridLength(0);
+        InspectorBorder.Visibility = _inspectorExpanded ? Visibility.Visible : Visibility.Collapsed;
+        InspectorSplitter.Visibility = _inspectorExpanded ? Visibility.Visible : Visibility.Collapsed;
+        InspectorToggleButton.Content = LocalizeLiteral(_inspectorExpanded ? "Masquer inspecteur" : "Afficher inspecteur");
+    }
+
     private void UpdateResponsiveConfigurationLayout(double width, double height)
     {
         // Le facteur DPI ne doit jamais cacher les réglages au premier lancement.
-        // L'utilisateur garde la main avec le bouton Réduire/Afficher.
+        // À forte mise à l'échelle Windows, WPF dispose de moins de pixels
+        // logiques. Replier les panneaux secondaires préserve les commandes
+        // centrales sans masquer les réglages du projet.
+        if (width < 1400 && _inspectorExpanded)
+        {
+            SetInspectorExpanded(false);
+        }
+
+        if (width < 1160 && _navigationExpanded)
+        {
+            SetNavigationExpanded(false);
+        }
+
         UpdateConfigurationEditorsToggleText();
     }
 
@@ -1687,7 +1802,22 @@ public partial class MainWindow : Window
 
     private void GlobalSearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
+        if (TopGlobalSearchTextBox.Text != GlobalSearchTextBox.Text)
+        {
+            TopGlobalSearchTextBox.Text = GlobalSearchTextBox.Text;
+            TopGlobalSearchTextBox.CaretIndex = TopGlobalSearchTextBox.Text.Length;
+        }
+
         RefreshGlobalSearchResults();
+    }
+
+    private void TopGlobalSearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (GlobalSearchTextBox.Text != TopGlobalSearchTextBox.Text)
+        {
+            GlobalSearchTextBox.Text = TopGlobalSearchTextBox.Text;
+            GlobalSearchTextBox.CaretIndex = GlobalSearchTextBox.Text.Length;
+        }
     }
 
     private void GlobalSearchListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1699,7 +1829,7 @@ public partial class MainWindow : Window
 
         if (!string.IsNullOrWhiteSpace(result.RxDevice) && result.RxIndex.HasValue)
         {
-            MainTabs.SelectedIndex = 1;
+            _workspaceNavigation.NavigateTo(WorkspaceSection.Patch);
             SenderDeviceList.SelectedItem = AllSendersItem;
             ReceiverDeviceList.SelectedItem = AllReceiversItem;
             RefreshPatchRows();
@@ -1717,7 +1847,7 @@ public partial class MainWindow : Window
 
         if (!string.IsNullOrWhiteSpace(result.DeviceName))
         {
-            MainTabs.SelectedIndex = 0;
+            _workspaceNavigation.NavigateTo(WorkspaceSection.Machines);
             DeviceComboBox.SelectedItem = result.DeviceName;
 
             if (result.ChannelKind.HasValue && result.ChannelIndex.HasValue)
@@ -1742,6 +1872,45 @@ public partial class MainWindow : Window
         }
 
         OpenDeviceDetailsWindow(row.Name);
+    }
+
+    private void DeviceGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_refreshingUi)
+        {
+            return;
+        }
+
+        if (DeviceGrid.SelectedItem is DeviceRow row
+            && !string.Equals(DeviceComboBox.SelectedItem as string, row.Name, StringComparison.OrdinalIgnoreCase))
+        {
+            DeviceComboBox.SelectedItem = row.Name;
+        }
+
+        RefreshInspector();
+    }
+
+    private void InspectorOpenDeviceButton_Click(object sender, RoutedEventArgs e)
+    {
+        DanteDevice? device = SelectedInspectorDevice();
+        if (device is not null)
+        {
+            OpenDeviceDetailsWindow(device.Name);
+        }
+    }
+
+    private void InspectorOpenPatchButton_Click(object sender, RoutedEventArgs e)
+    {
+        DanteDevice? device = SelectedInspectorDevice();
+        if (device is null)
+        {
+            return;
+        }
+
+        _workspaceNavigation.NavigateTo(WorkspaceSection.Patch);
+        SenderDeviceList.SelectedItem = AllSendersItem;
+        ReceiverDeviceList.SelectedItem = device.Name;
+        RefreshPatchRows();
     }
 
     private void DeviceLockCheckBox_Click(object sender, RoutedEventArgs e)
@@ -2031,13 +2200,174 @@ public partial class MainWindow : Window
 
     private void MainTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (MainTabs is not null
-            && EasyPatchTab is not null
-            && ReferenceEquals(e.OriginalSource, MainTabs)
-            && EasyPatchTab.IsSelected)
+        if (MainTabs is null || !ReferenceEquals(e.OriginalSource, MainTabs))
+        {
+            return;
+        }
+
+        if (EasyPatchTab is not null && EasyPatchTab.IsSelected)
         {
             RefreshEasyPatchWorkspace();
         }
+
+        WorkspaceSection section = MainTabs.SelectedItem switch
+        {
+            TabItem item when ReferenceEquals(item, HomeTab) => WorkspaceSection.Home,
+            TabItem item when ReferenceEquals(item, OverviewTab) => WorkspaceSection.Overview,
+            TabItem item when ReferenceEquals(item, ConfigurationTab) => WorkspaceSection.Machines,
+            TabItem item when ReferenceEquals(item, ClassicPatchTab) || ReferenceEquals(item, EasyPatchTab) => WorkspaceSection.Patch,
+            TabItem item when ReferenceEquals(item, DeviceLibraryShellTab) => WorkspaceSection.DeviceLibrary,
+            TabItem item when ReferenceEquals(item, ExportsTab) && ReferenceEquals(ExportsInnerTabs.SelectedItem, SynopticTab) => WorkspaceSection.Synoptic,
+            TabItem item when ReferenceEquals(item, ExportsTab) => WorkspaceSection.ImportExport,
+            TabItem item when ReferenceEquals(item, HealthTab) => WorkspaceSection.Validation,
+            TabItem item when ReferenceEquals(item, SafetyTab) => WorkspaceSection.History,
+            TabItem item when ReferenceEquals(item, AtomicBombTab) => WorkspaceSection.AdvancedTools,
+            _ => _workspaceNavigation.CurrentSection
+        };
+
+        _workspaceNavigation.NavigateTo(section);
+        RefreshInspector();
+    }
+
+    private void ExportsInnerTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!ReferenceEquals(e.OriginalSource, ExportsInnerTabs) || !ExportsTab.IsSelected)
+        {
+            return;
+        }
+
+        _workspaceNavigation.NavigateTo(
+            ReferenceEquals(ExportsInnerTabs.SelectedItem, SynopticTab)
+                ? WorkspaceSection.Synoptic
+                : WorkspaceSection.ImportExport);
+    }
+
+    private void NavigationButton_Checked(object sender, RoutedEventArgs e)
+    {
+        if (sender is RadioButton { Tag: string sectionName }
+            && Enum.TryParse(sectionName, ignoreCase: false, out WorkspaceSection section))
+        {
+            _workspaceNavigation.NavigateTo(section);
+            ApplyWorkspaceSection(section);
+        }
+    }
+
+    private void ValidationSummaryButton_Click(object sender, RoutedEventArgs e)
+    {
+        _workspaceNavigation.NavigateTo(WorkspaceSection.Validation);
+    }
+
+    private void OverviewMetricButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button { Tag: string target }
+            || !Enum.TryParse(target, ignoreCase: false, out WorkspaceSection section))
+        {
+            return;
+        }
+
+        _workspaceNavigation.NavigateTo(section);
+    }
+
+    private void HomeOpenRecentButton_Click(object sender, RoutedEventArgs e)
+    {
+        OpenHomeRecentSelection();
+    }
+
+    private void HomeRecentFilesListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        OpenHomeRecentSelection();
+    }
+
+    private void OpenHomeRecentSelection()
+    {
+        if (HomeRecentFilesListBox.SelectedItem is not string path
+            || string.IsNullOrWhiteSpace(path))
+        {
+            SetStatus(T("Dialog.NoRecentFileMessage"));
+            return;
+        }
+
+        if (!File.Exists(path))
+        {
+            ShowError(T("Dialog.FileMissingTitle"), T("Dialog.FileMissingMessage"));
+            RefreshRecentFiles();
+            return;
+        }
+
+        LoadProjectFromPath(path);
+        _workspaceNavigation.NavigateTo(WorkspaceSection.Overview);
+    }
+
+    private void WorkspaceNavigation_Changed(
+        object? sender,
+        WorkspaceNavigationChangedEventArgs e)
+    {
+        ApplyWorkspaceSection(e.Current);
+    }
+
+    private void ApplyWorkspaceSection(WorkspaceSection section)
+    {
+        if (MainTabs is null)
+        {
+            return;
+        }
+
+        switch (section)
+        {
+            case WorkspaceSection.Home:
+                MainTabs.SelectedItem = HomeTab;
+                break;
+            case WorkspaceSection.Overview:
+                MainTabs.SelectedItem = OverviewTab;
+                break;
+            case WorkspaceSection.Machines:
+                MainTabs.SelectedItem = ConfigurationTab;
+                break;
+            case WorkspaceSection.Patch:
+                MainTabs.SelectedItem = ClassicPatchTab;
+                break;
+            case WorkspaceSection.Synoptic:
+                MainTabs.SelectedItem = ExportsTab;
+                ExportsInnerTabs.SelectedItem = SynopticTab;
+                break;
+            case WorkspaceSection.DeviceLibrary:
+                MainTabs.SelectedItem = DeviceLibraryShellTab;
+                break;
+            case WorkspaceSection.ImportExport:
+                MainTabs.SelectedItem = ExportsTab;
+                if (ReferenceEquals(ExportsInnerTabs.SelectedItem, SynopticTab))
+                {
+                    ExportsInnerTabs.SelectedItem = ChannelLabelsTab;
+                }
+                break;
+            case WorkspaceSection.Validation:
+                MainTabs.SelectedItem = HealthTab;
+                break;
+            case WorkspaceSection.History:
+                MainTabs.SelectedItem = SafetyTab;
+                break;
+            case WorkspaceSection.AdvancedTools:
+                MainTabs.SelectedItem = AtomicBombTab;
+                break;
+        }
+
+        RadioButton navigationButton = section switch
+        {
+            WorkspaceSection.Home => HomeNavigationButton,
+            WorkspaceSection.Overview => OverviewNavigationButton,
+            WorkspaceSection.Machines => MachinesNavigationButton,
+            WorkspaceSection.Patch => PatchNavigationButton,
+            WorkspaceSection.Synoptic => SynopticNavigationButton,
+            WorkspaceSection.DeviceLibrary => DeviceLibraryNavigationButton,
+            WorkspaceSection.ImportExport => ImportExportNavigationButton,
+            WorkspaceSection.Validation => ValidationNavigationButton,
+            WorkspaceSection.History => HistoryNavigationButton,
+            WorkspaceSection.AdvancedTools => AdvancedToolsNavigationButton,
+            _ => HomeNavigationButton
+        };
+
+        navigationButton.IsChecked = true;
+        RefreshInspector();
     }
 
     private void RefreshEasyPatchWorkspace()
@@ -3274,6 +3604,8 @@ public partial class MainWindow : Window
                 _healthIssues.Clear();
                 RefreshSynopticWorkspace();
                 RefreshEasyPatchWorkspace();
+                RefreshShellOverview();
+                RefreshInspector();
                 UpdateCommandState();
                 return;
             }
@@ -3373,6 +3705,8 @@ public partial class MainWindow : Window
             RefreshGlobalSearchResults();
             RefreshHealthPage();
             RefreshSynopticWorkspace();
+            RefreshShellOverview();
+            RefreshInspector();
             UpdateCommandState();
         }
         finally
@@ -3830,11 +4164,209 @@ public partial class MainWindow : Window
         GlobalSearchHintTextBlock.Visibility = string.IsNullOrWhiteSpace(message) ? Visibility.Collapsed : Visibility.Visible;
     }
 
+    private void RefreshShellOverview()
+    {
+        if (_project is null)
+        {
+            DocumentKindTextBlock.Text = _language == UiLanguage.English ? "Dante XML" : "XML Dante";
+            ProfileTextBlock.Text = _language == UiLanguage.English ? "Profile: not detected" : "Profil : non détecté";
+            LastSavedTextBlock.Text = _language == UiLanguage.English ? "Not saved yet" : "Pas encore enregistré";
+            ValidationSummaryButton.Content = _language == UiLanguage.English ? "Validation" : "Validation";
+            OverviewStatusTextBlock.Text = _language == UiLanguage.English
+                ? "Load an XML file to inspect its configuration."
+                : "Chargez un XML pour analyser rapidement sa configuration.";
+            OverviewDevicesValueTextBlock.Text = "0";
+            OverviewPatchValueTextBlock.Text = "0";
+            OverviewValidationValueTextBlock.Text = "0 / 0";
+            OverviewUnpatchedValueTextBlock.Text = "0";
+            OverviewAudioTextBlock.Text = "TX : 0\nRX : 0\nSample rates : -\nBits : -\nLatences : -";
+            OverviewNetworkTextBlock.Text = _language == UiLanguage.English
+                ? "Network modes: -\nPreferred Master: 0\nStatic IP: 0\nAutomatic IP: 0"
+                : "Modes réseau : -\nPreferred Master : 0\nIP fixes : 0\nIP automatiques : 0";
+            OverviewChangesListBox.ItemsSource = Array.Empty<string>();
+            RecoveryAvailabilityTextBlock.Text = _language == UiLanguage.English
+                ? "Recovery is checked when a recent file is opened."
+                : "La récupération est vérifiée lors de l'ouverture d'un fichier récent.";
+            return;
+        }
+
+        IReadOnlyList<DanteDevice> devices = _project.Devices;
+        int txCount = devices.Sum(device => device.TxCount);
+        int rxCount = devices.Sum(device => device.RxCount);
+        int errorCount = _healthIssues.Count(issue => issue.Severity == DanteIssueSeverity.Error);
+        int warningCount = _healthIssues.Count(issue => issue.Severity == DanteIssueSeverity.Warning);
+        int unpatchedDeviceCount = devices.Count(device =>
+            !_project.PatchMatrix.Subscriptions.Any(subscription =>
+                subscription.IsActive
+                && (string.Equals(subscription.RxDevice, device.Name, StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(subscription.ResolvedTxDeviceName, device.Name, StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(subscription.DisplayTxDeviceName, device.Name, StringComparison.OrdinalIgnoreCase))));
+
+        string version = string.IsNullOrWhiteSpace(_project.PresetVersion) ? "inconnu" : _project.PresetVersion;
+        DocumentKindTextBlock.Text = _language == UiLanguage.English ? "Dante XML" : "XML Dante";
+        ProfileTextBlock.Text = _language == UiLanguage.English
+            ? $"XML profile: {version}"
+            : $"Profil XML : {version}";
+
+        DateTime? savedAt = _lastSuccessfulSaveAt;
+        string currentPath = _project.LastSavedPath ?? _project.OriginalFilePath;
+        if (!savedAt.HasValue && File.Exists(currentPath))
+        {
+            savedAt = File.GetLastWriteTime(currentPath);
+        }
+
+        LastSavedTextBlock.Text = savedAt.HasValue
+            ? (_language == UiLanguage.English
+                ? $"Last save: {savedAt.Value:g}"
+                : $"Dernière sauvegarde : {savedAt.Value:g}")
+            : (_language == UiLanguage.English ? "Not saved yet" : "Pas encore enregistré");
+        ValidationSummaryButton.Content = _language == UiLanguage.English
+            ? $"{errorCount} error(s) · {warningCount} warning(s)"
+            : $"{errorCount} erreur(s) · {warningCount} avertissement(s)";
+
+        OverviewStatusTextBlock.Text = _language == UiLanguage.English
+            ? $"{_project.PresetName} · XML profile {version}"
+            : $"{_project.PresetName} · profil XML {version}";
+        OverviewDevicesValueTextBlock.Text = devices.Count.ToString();
+        OverviewPatchValueTextBlock.Text = _project.PatchMatrix.ActivePatchCount.ToString();
+        OverviewValidationValueTextBlock.Text = $"{errorCount} / {warningCount}";
+        OverviewUnpatchedValueTextBlock.Text = unpatchedDeviceCount.ToString();
+
+        string sampleRates = JoinDistinct(devices.Select(device => device.SampleRateDisplay));
+        string encodings = JoinDistinct(devices.Select(device => device.EncodingDisplay));
+        string latencies = JoinDistinct(devices.Select(device => device.LatencyDisplay));
+        OverviewAudioTextBlock.Text = $"TX : {txCount}\nRX : {rxCount}\nSample rates : {sampleRates}\nBits : {encodings}\nLatences : {latencies}";
+
+        string networkModes = JoinDistinct(devices.Select(device => device.NetworkMode));
+        int preferredMasters = devices.Count(device => device.PreferredMaster);
+        int staticIp = devices.Count(device => device.UsesStaticIp);
+        OverviewNetworkTextBlock.Text = _language == UiLanguage.English
+            ? $"Network modes: {networkModes}\nPreferred Master: {preferredMasters}\nStatic IP: {staticIp}\nAutomatic IP: {devices.Count - staticIp}"
+            : $"Modes réseau : {networkModes}\nPreferred Master : {preferredMasters}\nIP fixes : {staticIp}\nIP automatiques : {devices.Count - staticIp}";
+
+        OverviewChangesListBox.ItemsSource = _project.Changes
+            .TakeLast(12)
+            .Reverse()
+            .Select(change => change.Display)
+            .ToArray();
+        RecoveryAvailabilityTextBlock.Text = _language == UiLanguage.English
+            ? "Automatic recovery is active for this project."
+            : "La récupération automatique est active pour ce projet.";
+    }
+
+    private static string JoinDistinct(IEnumerable<string> values)
+    {
+        string[] distinct = values
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        return distinct.Length == 0 ? "-" : string.Join(", ", distinct);
+    }
+
+    private void RefreshInspector()
+    {
+        if (_project is null)
+        {
+            InspectorTitleTextBlock.Text = _language == UiLanguage.English ? "Inspector" : "Inspecteur";
+            InspectorSubtitleTextBlock.Text = _language == UiLanguage.English ? "No project" : "Aucun projet";
+            InspectorEmptyTextBlock.Visibility = Visibility.Visible;
+            InspectorProjectPanel.Visibility = Visibility.Visible;
+            InspectorProjectSummaryTextBlock.Text = _language == UiLanguage.English
+                ? "No project loaded"
+                : "Aucun projet chargé";
+            InspectorDevicePanel.Visibility = Visibility.Collapsed;
+            InspectorWarningsTextBlock.Text = string.Empty;
+            return;
+        }
+
+        InspectorEmptyTextBlock.Visibility = Visibility.Collapsed;
+        InspectorProjectPanel.Visibility = Visibility.Visible;
+        InspectorProjectSummaryTextBlock.Text = _language == UiLanguage.English
+            ? $"{_project.Devices.Count} devices · {_project.PatchMatrix.ActivePatchCount} subscriptions"
+            : $"{_project.Devices.Count} machines · {_project.PatchMatrix.ActivePatchCount} subscriptions";
+
+        bool deviceContext = _workspaceNavigation.CurrentSection is WorkspaceSection.Machines
+            or WorkspaceSection.Patch;
+        DanteDevice? device = deviceContext ? SelectedInspectorDevice() : null;
+        if (device is null)
+        {
+            InspectorTitleTextBlock.Text = _workspaceNavigation.CurrentSection switch
+            {
+                WorkspaceSection.Home => _language == UiLanguage.English ? "Project" : "Projet",
+                WorkspaceSection.Overview => _language == UiLanguage.English ? "Overview" : "Vue d'ensemble",
+                WorkspaceSection.Synoptic => _language == UiLanguage.English ? "Synoptic" : "Synoptique",
+                WorkspaceSection.DeviceLibrary => _language == UiLanguage.English ? "Device library" : "Banque de machines",
+                WorkspaceSection.ImportExport => "Import / Export",
+                WorkspaceSection.Validation => _language == UiLanguage.English ? "Validation center" : "Centre de validation",
+                WorkspaceSection.History => _language == UiLanguage.English ? "History" : "Historique",
+                WorkspaceSection.AdvancedTools => _language == UiLanguage.English ? "Advanced tools" : "Outils avancés",
+                _ => _language == UiLanguage.English ? "Inspector" : "Inspecteur"
+            };
+            InspectorSubtitleTextBlock.Text = _project.PresetName;
+            InspectorDevicePanel.Visibility = Visibility.Collapsed;
+            InspectorWarningsTextBlock.Text = string.Empty;
+            return;
+        }
+
+        DeviceRow[] selectedRows = DeviceGrid.SelectedItems.OfType<DeviceRow>().ToArray();
+        int selectedCount = selectedRows.Length > 0 ? selectedRows.Length : 1;
+        InspectorTitleTextBlock.Text = device.Name;
+        InspectorSubtitleTextBlock.Text = selectedCount > 1
+            ? (_language == UiLanguage.English ? $"{selectedCount} selected devices" : $"{selectedCount} machines sélectionnées")
+            : (_language == UiLanguage.English ? "Selected device" : "Machine sélectionnée");
+        InspectorDevicePanel.Visibility = Visibility.Visible;
+        InspectorSelectionCountTextBlock.Text = selectedCount > 1
+            ? (_language == UiLanguage.English
+                ? "The first device is shown. Bulk editing will only expose common values."
+                : "La première machine est affichée. L'édition groupée ne proposera que les valeurs communes.")
+            : string.Empty;
+        InspectorDeviceNameTextBlock.Text = device.Name;
+        InspectorManufacturerTextBlock.Text = Blank(device.Manufacturer);
+        InspectorModelTextBlock.Text = Blank(device.Model);
+        InspectorChannelCountsTextBlock.Text = $"{device.TxCount} TX / {device.RxCount} RX";
+        InspectorIpTextBlock.Text = device.IpModeDisplay;
+        InspectorAudioTextBlock.Text = $"{device.SampleRateDisplay} / {device.EncodingDisplay}";
+        InspectorLatencyTextBlock.Text = device.LatencyDisplay;
+        InspectorNetworkModeTextBlock.Text = LocalizeLiteral(device.NetworkMode);
+        InspectorClockTextBlock.Text = device.PreferredMaster ? "Preferred Master" : "-";
+        InspectorTechnicalIdTextBlock.Text = string.IsNullOrWhiteSpace(device.TechnicalDeviceId)
+            ? (_language == UiLanguage.English
+                ? "Generic offline role: no hardware device_id is copied."
+                : "Rôle hors ligne générique : aucun device_id matériel n'est copié.")
+            : $"device_id: {device.TechnicalDeviceId}\nprocess_id: {Blank(device.ProcessId)}";
+
+        int deviceWarnings = _healthIssues.Count(issue =>
+            issue.Severity != DanteIssueSeverity.Info
+            && string.Equals(issue.DeviceName, device.Name, StringComparison.OrdinalIgnoreCase));
+        InspectorWarningsTextBlock.Text = deviceWarnings == 0
+            ? string.Empty
+            : (_language == UiLanguage.English
+                ? $"{deviceWarnings} validation item(s) concern this device."
+                : $"{deviceWarnings} point(s) de validation concernent cette machine.");
+    }
+
+    private DanteDevice? SelectedInspectorDevice()
+    {
+        if (_project is null)
+        {
+            return null;
+        }
+
+        string? deviceName = DeviceGrid.SelectedItems
+            .OfType<DeviceRow>()
+            .Select(row => row.Name)
+            .FirstOrDefault()
+            ?? DeviceComboBox.SelectedItem as string;
+        return _project.FindDevice(deviceName);
+    }
+
     private void RefreshRecentFiles()
     {
         IReadOnlyList<string> recentFiles = RecentFilesService.Load();
         RecentFilesComboBox.ItemsSource = recentFiles;
         RecentFilesComboBox.SelectedItem = recentFiles.FirstOrDefault();
+        HomeRecentFilesListBox.ItemsSource = recentFiles;
+        HomeRecentFilesListBox.SelectedItem = recentFiles.FirstOrDefault();
     }
 
     private void SetupLanguageComboBox()
@@ -4003,11 +4535,15 @@ public partial class MainWindow : Window
 
         ActivateEditButton.IsEnabled = hasProject && !_editModeEnabled;
         ActivateEditButton.Content = hasProject && _editModeEnabled ? T("Status.EditActiveButton") : T("Status.ActivateEditButton");
+        SaveButton.IsEnabled = hasProject;
         SaveAsButton.IsEnabled = hasProject;
         RevertButton.IsEnabled = hasProject;
+        HomeRevertButton.IsEnabled = hasProject;
+        HomeMergeXmlButton.IsEnabled = hasProject;
         ShowDeviceChangesButton.IsEnabled = hasProject;
         UndoLastButton.IsEnabled = hasProject && _project?.CanUndo == true;
-        UndoLastButton.Content = LocalizeLiteral("Annuler action");
+        UndoLastButton.Content = LocalizeLiteral("Annuler");
+        RedoButton.IsEnabled = false;
 
         foreach (Control control in EditableControls())
         {
