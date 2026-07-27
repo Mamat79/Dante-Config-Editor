@@ -9,6 +9,24 @@ namespace DanteConfigEditorV3.Tests;
 public sealed class ProjectSessionCommandTests
 {
     [Fact]
+    public void ExistingProjectInstanceCanBeAttachedWithoutExposingXmlProfilesToTheUi()
+    {
+        DanteProject project = DanteProject.Load(RepositoryFile(
+            "tests",
+            "DanteConfigEditorV3.Tests",
+            "Fixtures",
+            "representative-preset.xml"));
+        ProjectSession session = new();
+
+        session.OpenProject(project);
+
+        Assert.Same(project, session.Project);
+        Assert.True(session.HasProject);
+        Assert.NotNull(session.Profile);
+        Assert.True(session.Validation.ValidatedAt > DateTimeOffset.MinValue);
+    }
+
+    [Fact]
     public void RenameDeviceUsesStableIdentityAndSupportsUndoRedo()
     {
         ProjectSession session = OpenSession();

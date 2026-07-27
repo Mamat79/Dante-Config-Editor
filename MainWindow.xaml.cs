@@ -11,7 +11,9 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using DanteConfigEditor.Application;
 using DanteConfigEditor.Application.Navigation;
+using DanteConfigEditor.Application.Patch;
 using DanteConfigEditor.Infrastructure.Migration;
 using DanteConfigEditor.Models;
 using DanteConfigEditor.Services;
@@ -36,6 +38,7 @@ public partial class MainWindow : Window
     private readonly DispatcherTimer _recoveryTimer;
     private readonly SupportReminderSettingsService _supportReminderSettings = new();
     private readonly WorkspaceNavigationService _workspaceNavigation = new();
+    private readonly ProjectSession _projectSession = new();
     private CancellationTokenSource? _recoveryWriteCancellation;
     private string? _selectedWarningKey;
     private DateTime? _lastSuccessfulSaveAt;
@@ -113,6 +116,7 @@ public partial class MainWindow : Window
     private DanteProject? _project;
     private DanteProject? _easyPatchProject;
     private PatchWorkspaceView? _easyPatchWorkspace;
+    private UnifiedPatchSession? _unifiedPatchSession;
     private UiLanguage _language = UiLanguage.French;
     private bool _editModeEnabled;
 
@@ -667,6 +671,7 @@ public partial class MainWindow : Window
             AddLog(Tf("Log.OriginalBackupCreated", backupPath));
             AddLog(Tf("Log.FileSaved", dialog.FileName));
             _lastSuccessfulSaveAt = DateTime.Now;
+            _projectSession.MarkSaved();
             RefreshAll();
             SetStatus(T("Status.FileSaved"));
         }
@@ -722,7 +727,9 @@ public partial class MainWindow : Window
 
         try
         {
-            string label = _project!.UndoLastChange();
+            string label = _projectSession.CommandDispatcher.CanUndo
+                ? _projectSession.CommandDispatcher.Undo()
+                : _project!.UndoLastChange();
             AddLog(Tf("Log.ActionUndone", label));
             RefreshAll();
             ScheduleRecoverySnapshot();
@@ -890,12 +897,29 @@ public partial class MainWindow : Window
 
     private void RedoButton_Click(object sender, RoutedEventArgs e)
     {
-        // L'ancien modèle V3.6 ne possède pas de pile Rétablir. Le bouton est
-        // maintenu désactivé tant que cette fenêtre n'est pas reliée à la
-        // ProjectSession 2026.1, qui fournit déjà cette capacité.
-        SetStatus(_language == UiLanguage.English
-            ? "Redo will be enabled when this view uses the 2026.1 command session."
-            : "Rétablir sera activé lorsque cette vue utilisera la session de commandes 2026.1.");
+        if (!EnsureProjectLoaded() || !_projectSession.CommandDispatcher.CanRedo)
+        {
+            return;
+        }
+
+        try
+        {
+            string commandId = _projectSession.CommandDispatcher.Redo();
+            AddLog(_language == UiLanguage.English
+                ? $"Action redone: {commandId}"
+                : $"Action rétablie : {commandId}");
+            RefreshAll();
+            ScheduleRecoverySnapshot();
+            SetStatus(_language == UiLanguage.English
+                ? "Last 2026.1 action redone."
+                : "Dernière action 2026.1 rétablie.");
+        }
+        catch (Exception ex)
+        {
+            ShowError(
+                _language == UiLanguage.English ? "Redo failed" : "Rétablissement impossible",
+                ex);
+        }
     }
 
     private void DuplicateDeviceButton_Click(object sender, RoutedEventArgs e)
@@ -1594,6 +1618,15 @@ public partial class MainWindow : Window
         }
 
         bool textEditorHasFocus = Keyboard.FocusedElement is TextBoxBase;
+        bool redoShortcut = modifiers == ModifierKeys.Control && e.Key == Key.Y
+            || modifiers == (ModifierKeys.Control | ModifierKeys.Shift) && e.Key == Key.Z;
+        if (!textEditorHasFocus && redoShortcut && RedoButton.IsEnabled)
+        {
+            RedoButton_Click(RedoButton, new RoutedEventArgs());
+            e.Handled = true;
+            return;
+        }
+
         if (!textEditorHasFocus
             && modifiers == ModifierKeys.Control
             && e.Key == Key.Z
@@ -2149,14 +2182,23 @@ public partial class MainWindow : Window
             return;
         }
 
-        RunProjectAction(
+        if (SourceChannelComboBox.SelectedItem is not TxChannelChoice source)
+        {
+            ShowError(T("Dialog.MissingTxTitle"), T("Dialog.MissingTxMessage"));
+            return;
+        }
+
+        PatchEditRequest edit = new(
+            subscription.RxDevice,
+            subscription.RxDanteId,
+            source.DeviceName,
+            source.ChannelName)
+        {
+            TxDanteId = source.DanteId
+        };
+        RunUnifiedPatchAction(
             T("Action.PatchApplied"),
-            () =>
-            {
-                string txDevice = SourceDeviceComboBox.SelectedItem as string ?? string.Empty;
-                string txChannel = SelectedSourceChannelName();
-                _project!.ApplyPatch(subscription.RxDevice, subscription.RxIndex, txDevice, txChannel);
-            },
+            [edit],
             subscription.IsExternalMissingDevice
                 ? T("Dialog.ExternalPatchWarning")
                 : null);
@@ -2170,9 +2212,14 @@ public partial class MainWindow : Window
             return;
         }
 
-        RunProjectAction(
+        PatchTargetDescriptor target = new(
+            subscription.RxDevice,
+            subscription.RxDanteId,
+            subscription.RxPositionIndex,
+            subscription.RxChannelName);
+        RunUnifiedPatchAction(
             T("Action.PatchRemoved"),
-            () => _project!.RemovePatch(subscription.RxDevice, subscription.RxIndex),
+            [PatchEditRequest.Remove(target)],
             T("Dialog.RemovePatchWarning"));
     }
 
@@ -2405,6 +2452,7 @@ public partial class MainWindow : Window
             return;
         }
 
+        SynchronizeApplicationSession();
         bool sameProject = ReferenceEquals(_easyPatchProject, _project);
         bool startInAssignmentMode = sameProject
             && _easyPatchWorkspace?.IsAssignmentModeSelected == true;
@@ -2440,7 +2488,8 @@ public partial class MainWindow : Window
                 renameChannelAction: RenameEasyPatchChannel,
                 extendChannelSeriesAction: ExtendEasyPatchChannelSeries,
                 startInAssignmentMode: startInAssignmentMode,
-                warnOnExistingPatch: warnOnExistingPatch);
+                warnOnExistingPatch: warnOnExistingPatch,
+                sharedSession: _unifiedPatchSession);
             workspace.RestoreMatrixOneToOneState(matrixOneToOneState);
             workspace.DirectApplyRequested += EasyPatchWorkspace_DirectApplyRequested;
             workspace.InlineChannelNavigationRequested += EasyPatchWorkspace_InlineChannelNavigationRequested;
@@ -2472,31 +2521,65 @@ public partial class MainWindow : Window
             return;
         }
 
-        RunProjectAction(
+        RunUnifiedPatchAction(
             Tf("Action.VisualPatchesApplied", e.Edits.Count),
-            () => ApplyPatchEdits(e.Edits));
+            e.Edits);
     }
 
-    private void ApplyPatchEdits(IEnumerable<PatchEditRequest> edits)
+    private bool RunUnifiedPatchAction(
+        string successMessage,
+        IEnumerable<PatchEditRequest> edits,
+        string? confirmationMessage = null)
     {
-        _project!.ApplyBatch(batch =>
+        if (!EnsureProjectLoaded() || !EnsureEditMode())
         {
-            foreach (PatchEditRequest edit in edits)
+            return false;
+        }
+
+        if (!string.IsNullOrWhiteSpace(confirmationMessage))
+        {
+            MessageBoxResult confirmation = MessageBox.Show(
+                this,
+                confirmationMessage,
+                T("Dialog.ConfirmTitle"),
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+            if (confirmation != MessageBoxResult.Yes)
             {
-                if (edit.IsRemoval)
-                {
-                    batch.RemovePatch(edit.RxDeviceName, edit.RxDanteId);
-                }
-                else
-                {
-                    batch.ApplyPatch(
-                        edit.RxDeviceName,
-                        edit.RxDanteId,
-                        edit.TxDeviceName!,
-                        edit.TxChannelName ?? string.Empty);
-                }
+                return false;
             }
-        });
+        }
+
+        try
+        {
+            SynchronizeApplicationSession();
+            _unifiedPatchSession!.StageEdits(edits);
+            if (!_unifiedPatchSession.HasChanges)
+            {
+                SetStatus(_language == UiLanguage.English
+                    ? "The requested patch is already active."
+                    : "Le patch demandé est déjà en place.");
+                return true;
+            }
+
+            _unifiedPatchSession.Commit(_projectSession);
+            AddLog(successMessage);
+            RefreshAll();
+            ScheduleRecoverySnapshot();
+            SetStatus(successMessage);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            RefreshAll();
+            ScheduleRecoverySnapshot();
+            ShowError(
+                _language == UiLanguage.English
+                    ? "Unable to apply patch"
+                    : "Application du patch impossible",
+                ex);
+            return false;
+        }
     }
 
     private void ShowEasyPatchPlaceholder(string message)
@@ -3570,10 +3653,43 @@ public partial class MainWindow : Window
         RefreshEasyPatchWorkspace();
     }
 
+    private void SynchronizeApplicationSession()
+    {
+        if (_project is null)
+        {
+            if (_projectSession.HasProject)
+            {
+                _projectSession.Close();
+            }
+
+            _unifiedPatchSession = null;
+            return;
+        }
+
+        if (!_projectSession.HasProject
+            || !ReferenceEquals(_projectSession.Project, _project))
+        {
+            _projectSession.OpenProject(_project);
+            _unifiedPatchSession = new UnifiedPatchSession(_project);
+            return;
+        }
+
+        _unifiedPatchSession ??= new UnifiedPatchSession(_project);
+        if (!_unifiedPatchSession.IsCurrent(_project))
+        {
+            PatchRebaseResult rebase = _unifiedPatchSession.Rebase(_project);
+            foreach (string warning in rebase.Warnings)
+            {
+                AddLog(warning);
+            }
+        }
+    }
+
     private void RefreshAll()
     {
         // Point central de rafraîchissement : après une modification XML, on
         // reconstruit les listes et on conserve autant que possible la sélection.
+        SynchronizeApplicationSession();
         _refreshingUi = true;
         try
         {
@@ -4541,9 +4657,10 @@ public partial class MainWindow : Window
         HomeRevertButton.IsEnabled = hasProject;
         HomeMergeXmlButton.IsEnabled = hasProject;
         ShowDeviceChangesButton.IsEnabled = hasProject;
-        UndoLastButton.IsEnabled = hasProject && _project?.CanUndo == true;
+        UndoLastButton.IsEnabled = hasProject
+            && (_projectSession.CommandDispatcher.CanUndo || _project?.CanUndo == true);
         UndoLastButton.Content = LocalizeLiteral("Annuler");
-        RedoButton.IsEnabled = false;
+        RedoButton.IsEnabled = hasProject && _projectSession.CommandDispatcher.CanRedo;
 
         foreach (Control control in EditableControls())
         {
@@ -4636,6 +4753,11 @@ public partial class MainWindow : Window
         {
             _project!.PushUndoSnapshot(successMessage);
             action();
+            // Une mutation V3.6 ne possède pas encore de delta compatible
+            // avec le dispatcher 2026.1. Elle démarre donc une nouvelle
+            // branche d'historique afin qu'un ancien Rétablir ne puisse pas
+            // écraser cette modification plus récente.
+            _projectSession.CommandDispatcher.Clear();
             AddLog(successMessage);
             RefreshAll();
             ScheduleRecoverySnapshot();

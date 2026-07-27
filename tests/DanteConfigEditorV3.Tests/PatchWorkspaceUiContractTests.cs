@@ -154,7 +154,10 @@ public sealed class PatchWorkspaceUiContractTests
 
         string mainCode = File.ReadAllText(RepositoryFile("MainWindow.xaml.cs"));
         Assert.Contains("EasyPatchWorkspace_DirectApplyRequested", mainCode, StringComparison.Ordinal);
-        Assert.DoesNotContain("pendingEdits", mainCode[mainCode.IndexOf("private void RefreshEasyPatchWorkspace", StringComparison.Ordinal)..mainCode.IndexOf("private void ApplyPatchEdits", StringComparison.Ordinal)], StringComparison.Ordinal);
+        Assert.DoesNotContain(
+            "pendingEdits",
+            ExtractMethod(mainCode, "private void RefreshEasyPatchWorkspace"),
+            StringComparison.Ordinal);
     }
 
     [Fact]
@@ -396,6 +399,33 @@ public sealed class PatchWorkspaceUiContractTests
         }
 
         return count;
+    }
+
+    private static string ExtractMethod(string source, string signature)
+    {
+        int start = source.IndexOf(signature, StringComparison.Ordinal);
+        Assert.True(start >= 0, $"Méthode introuvable : {signature}");
+
+        int bodyStart = source.IndexOf('{', start);
+        Assert.True(bodyStart >= 0, $"Corps de méthode introuvable : {signature}");
+
+        int depth = 0;
+        for (int index = bodyStart; index < source.Length; index++)
+        {
+            depth += source[index] switch
+            {
+                '{' => 1,
+                '}' => -1,
+                _ => 0
+            };
+
+            if (depth == 0)
+            {
+                return source[start..(index + 1)];
+            }
+        }
+
+        throw new InvalidOperationException($"Fin de méthode introuvable : {signature}");
     }
 
     private static XElement NamedElement(XDocument document, XNamespace xamlNamespace, string name)

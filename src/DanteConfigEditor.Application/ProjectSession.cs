@@ -1,5 +1,6 @@
 using DanteConfigEditor.Application.Commands;
 using DanteConfigEditor.DanteXml;
+using DanteConfigEditor.DanteXml.Profiles;
 using DanteConfigEditor.Domain.History;
 using DanteConfigEditor.Domain.Projects;
 using DanteConfigEditor.Domain.Validation;
@@ -71,6 +72,13 @@ public sealed class ProjectSession
         ProjectValidationState.Empty;
 
     public IReadOnlyList<ProjectHistoryEntry> History => _history;
+
+    public void OpenProject(DanteProject project)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        DanteXmlProfileDescriptor profile = new DanteXmlProfileDetector().Detect(project);
+        OpenXml(new DanteXmlOpenResult(project, profile));
+    }
 
     public void OpenXml(DanteXmlOpenResult openedProject)
     {
