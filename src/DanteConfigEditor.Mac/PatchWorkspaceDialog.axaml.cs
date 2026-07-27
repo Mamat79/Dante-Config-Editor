@@ -1239,7 +1239,7 @@ public sealed partial class PatchWorkspaceDialog : Window
 
     private IBrush ResourceBrush(string key)
     {
-        return Application.Current?.Resources[key] as IBrush ?? Brushes.Gray;
+        return Avalonia.Application.Current?.Resources[key] as IBrush ?? Brushes.Gray;
     }
 
     private string BuildCellToolTip(

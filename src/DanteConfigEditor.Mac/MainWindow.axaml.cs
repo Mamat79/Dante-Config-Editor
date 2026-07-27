@@ -2124,12 +2124,12 @@ public partial class MainWindow : Window
 
     private void ApplyTheme()
     {
-        if (Application.Current is null)
+        if (Avalonia.Application.Current is null)
         {
             return;
         }
 
-        Application.Current.RequestedThemeVariant = _darkTheme ? ThemeVariant.Dark : ThemeVariant.Light;
+        Avalonia.Application.Current.RequestedThemeVariant = _darkTheme ? ThemeVariant.Dark : ThemeVariant.Light;
         Dictionary<string, string> colors = _darkTheme
             ? new()
             {
@@ -2152,7 +2152,7 @@ public partial class MainWindow : Window
 
         foreach ((string key, string color) in colors)
         {
-            Application.Current.Resources[key] = new SolidColorBrush(Color.Parse(color));
+            Avalonia.Application.Current.Resources[key] = new SolidColorBrush(Color.Parse(color));
         }
 
         if (FindControl<Button>("ThemeButton") is { } button)
@@ -2265,7 +2265,7 @@ public partial class MainWindow : Window
 
     private IBrush ResourceBrush(string key)
     {
-        return Application.Current?.Resources[key] as IBrush ?? Brushes.Gray;
+        return Avalonia.Application.Current?.Resources[key] as IBrush ?? Brushes.Gray;
     }
 
     private string DocumentLanguageSuffix() => _language == UiLanguage.English ? "EN" : "FR";
