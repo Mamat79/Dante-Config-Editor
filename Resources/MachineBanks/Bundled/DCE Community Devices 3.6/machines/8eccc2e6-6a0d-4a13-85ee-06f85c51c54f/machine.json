@@ -1,0 +1,21 @@
+{
+  "formatVersion": 1,
+  "templateId": "8eccc2e6-6a0d-4a13-85ee-06f85c51c54f",
+  "templateName": "Rio1608-D2",
+  "manufacturer": "Yamaha Corporation",
+  "model": "Rio1608-D2",
+  "description": "",
+  "category": "StageBox",
+  "tags": [
+    "StageBox"
+  ],
+  "txCount": 16,
+  "rxCount": 8,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "3.6",
+  "createdUtc": "2026-07-26T01:52:17.9611231+02:00",
+  "modifiedUtc": "2026-07-26T01:52:17.9866441+02:00",
+  "templateSha256": "3FC9A700E7420D4797259C39655C91AA6398AEB1E681BDFC7E125824D1B40DA2",
+  "imageFileName": "image.jpg"
+}

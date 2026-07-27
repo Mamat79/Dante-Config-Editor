@@ -1,15 +1,37 @@
-# Dante Config Editor V3.4
+# Dante Config Editor V3.6 - branche de développement
 
 ## Français
 
-Version V3.4 officielle pour Windows et macOS. Le code publié se trouve dans `main`.
+La V3.6 est développée et testée dans la branche `v3.6`, à partir de la V3.5. La V3.4.2 officielle reste publiée dans `main`.
 
-**Version stable : [Release V3.4 Windows et macOS](https://github.com/Mamat79/DanteConfigEditorV3/releases/tag/v3.4)**
+**Version stable : [Release V3.4.2 Windows et macOS](https://github.com/Mamat79/DanteConfigEditorV3/releases/tag/v3.4.2)**
 
-> **Statut : V3.4 officielle. Outil tiers non officiel Audinate.**
-> Cette version peut encore contenir des bugs. La V3.3 reste accessible comme version historique dans les Releases GitHub. Travaillez toujours sur une copie et validez le XML généré dans les outils Dante officiels.
+> **Statut : V3.6 en développement. Outil tiers non officiel Audinate.**
+> Cette branche peut encore contenir des bugs. Travaillez toujours sur une copie et validez le XML généré dans les outils Dante officiels.
+
+**Documentation V3.6 :**
+[notice complète FR](docs/Notice_DanteConfigEditorV3_FR.pdf) ·
+[full English guide](docs/Notice_DanteConfigEditorV3_EN.pdf)
+
+**Présentations historiques V3.5 :**
+[vidéo FR](docs/media/dce-v35-presentation-fr.mp4) ·
+[English video](docs/media/dce-v35-presentation-en.mp4)
 
 > **Import et export de labels en JSON, CSV, DMT XLSX/ODS pour dLive et Avantis, A&H CSV et Yamaha CL/QL ZIP/CSV.** Les modèles natifs sont inclus dans l'application : aucun fichier modèle externe n'est nécessaire pour exporter.
+
+## Nouveautés V3.6
+
+- audit documenté de la fidélité XML, des performances et des risques dans [AUDIT_V3_6.md](AUDIT_V3_6.md) ;
+- bilan détaillé des choix, tests et limites dans [V3_6_IMPLEMENTATION_REPORT.md](V3_6_IMPLEMENTATION_REPORT.md) ;
+- validation renforcée des identifiants, références, canaux, subscriptions, namespaces et ajouts de nœuds ;
+- duplication prudente d'une machine sous forme de rôle générique, sans recopier les identifiants matériels ;
+- banque de machines versionnée et partageable avec métadonnées, labels, image facultative, recherche, import/export et catalogue GitHub ;
+- ajout transactionnel d'une instance indépendante depuis la banque ;
+- création expérimentale d'un projet minimal 3.0.0, à valider impérativement par un import réel dans Dante Controller ;
+- journaux techniques accessibles depuis l'application ;
+- 272 tests Core/Windows et 20 tests Mac sans écran.
+
+La duplication et la banque ne fabriquent pas un appareil Dante réel. Elles créent des rôles de preset génériques dépourvus de `instance_id` et `device_id`. Aucun import V3.6 n'ayant encore été effectué dans Dante Controller, la compatibilité terrain n'est pas présentée comme garantie.
 
 ## Origine et développement assisté
 
@@ -30,6 +52,7 @@ Le CSV générique est proposé en premier et demande uniquement un nom de fichi
 Les formats JSON et CSV restent génériques. Des profils natifs permettent aussi les échanges avec les consoles et outils suivants :
 
 - **DMT → Dante Config Editor** : lecture directe de la feuille `Channels` d'un classeur XLSX ou ODS DMT, puis affectation des labels aux TX ou RX d'une ou plusieurs machines Dante.
+- **DMT 2.14.0-RC1 → Dante Config Editor** : les exports JSON et CSV de la branche `feature/add-json-export` sont couverts par des fixtures reproduisant exactement la sortie des exporteurs DMT au commit `3c34052`.
 - **Dante Config Editor → DMT** : création directe d'un classeur XLSX ou ODS dLive/Avantis depuis l'un des quatre modèles DMT inclus, avec désactivation des lignes absentes de la sélection.
 - **Projet DMT** : [togrupe/dlive-midi-tools](https://github.com/togrupe/dlive-midi-tools).
 - **Allen & Heath dLive / Avantis** : lecture d'un export CSV existant ou création directe d'un nouveau CSV natif depuis le modèle inclus ; seule la colonne des noms `Input` est modifiée.
@@ -41,9 +64,23 @@ Les modèles internes ne sont jamais modifiés : chaque export crée un nouveau 
 
 La V3.2 ajoute un synoptique en couleur dans `Import / Export > Synoptique`. Chaque machine peut recevoir un emplacement physique, être affichée ou masquée en un clic et être réordonnée. Les emplacements déjà saisis restent disponibles dans une liste. Les subscriptions consécutives entre deux machines sont regroupées dans un seul câble, par exemple `TX 1-32 vers RX 1-32`, et les liaisons nombreuses sont réparties sur des points d'arrivée distincts.
 
-Le synoptique peut être exporté en SVG ou en PDF vectoriel. Ces exports et le fichier local de mise en page ne modifient jamais le XML Dante chargé.
+Le synoptique peut être ouvert dans une fenêtre séparée, avec un zoom qui conserve toujours ses proportions, puis exporté en SVG ou en PDF vectoriel. Ces exports et le fichier local de mise en page ne modifient jamais le XML Dante chargé.
 
 Les emplacements et choix de présentation sont enregistrés dans un petit fichier local séparé. Ils ne sont jamais ajoutés au XML Dante. L'export SVG contient les machines, les câbles numérotés et une légende détaillée ; il peut être ouvert dans un navigateur, imprimé ou intégré à un dossier technique.
+
+## Banques de machines partageables
+
+La fenêtre `Banque de machines` permet d'exporter une banque complète dans une archive vérifiée `*.dce-bank.zip`, puis d'importer une banque téléchargée dans un dossier neuf ou vide. L'import contrôle le manifeste, les empreintes SHA-256 et chaque modèle avant de changer de banque ; aucun fichier existant n'est remplacé.
+
+Le bouton `Banques GitHub` ouvre le [catalogue public des banques V3.6](machine-banks/README.md). La banque fournie `DCE Generic Roles 3.6` contient deux rôles génériques 8x8 et 32x32 pour les essais et la formation. Ils ne représentent aucun matériel réel et ne contiennent ni identité matérielle, ni IP, ni abonnement.
+
+Le catalogue et les nouveaux installateurs proposent également
+`DCE Community Devices 3.6`, une banque communautaire illustrée contenant les
+modèles Yamaha QL1 et Rio1608-D2, Fohhn DI4.1000, Lake LM 44 et RME Digiface
+Dante, Glensound Divine, Beatrice D8 et AOIP22, ainsi qu'Allen & Heath SDante
+64x64.
+
+L'installateur Windows propose séparément le dossier de banque actif et le dossier où placer les banques fournies. Les banques `DCE Generic Roles 3.6` et `DCE Community Devices 3.6` sont sélectionnables indépendamment. L'assistant réutilise le chemin déjà configuré lors d'une mise à jour, ne touche jamais au contenu d'une banque existante et choisit un nouveau nom de dossier si une banque fournie est déjà présente.
 
 ## Notices
 
@@ -54,10 +91,10 @@ Les captures et notices utilisent uniquement un preset synthétique anonymisé. 
 
 ## Vidéos de présentation
 
-- **[Présentation française de DCE v3.3](docs/media/dce-v33-presentation-fr.mp4)**
-- **[English presentation of DCE v3.3](docs/media/dce-v33-presentation-en.mp4)**
+- **[Présentation française de DCE v3.5](docs/media/dce-v35-presentation-fr.mp4)**
+- **[English presentation of DCE v3.5](docs/media/dce-v35-presentation-en.mp4)**
 
-Chaque vidéo dure environ une minute et utilise des sous-titres intégrés. Les fichiers `.srt` séparés et les sommes SHA-256 sont également fournis dans la Release V3.3. Les écrans ont été réalisés avec un preset synthétique anonymisé.
+Chaque vidéo dure 55 secondes, sans voix ni piste audio, avec le texte directement intégré à l'image. Les fichiers `.srt` séparés et les sommes SHA-256 sont fournis dans `docs/media`. Les écrans ont été réalisés avec un preset synthétique anonymisé.
 
 ## Ce que fait l'application
 
@@ -65,6 +102,10 @@ Chaque vidéo dure environ une minute et utilise des sous-titres intégrés. Les
 - Affiche les devices, canaux TX/RX, latences, mode réseau et preferred master.
 - Renomme les devices.
 - Supprime un device et nettoie les subscriptions/patchs qui pointent vers lui.
+- Duplique un device sous forme de rôle générique indépendant, avec conservation optionnelle des labels et réglages sûrs.
+- Enregistre, recherche, modifie et partage des modèles ou des banques complètes, avec accès au catalogue GitHub.
+- Ajoute au projet une nouvelle instance indépendante issue de la banque.
+- Crée expérimentalement un projet minimal 3.0.0 vide ou amorcé depuis la banque.
 - Ajoute les devices d'un second XML dans le projet ouvert, avec import des machines uniques même en présence de doublons.
 - Propose de renommer automatiquement ou manuellement les machines en doublon pendant l'import XML.
 - Renomme les canaux TX/RX.
@@ -76,7 +117,10 @@ Chaque vidéo dure environ une minute et utilise des sous-titres intégrés. Les
 - Réinitialise les noms de canaux.
 - Modifie les paramètres réseau et audio exposés par les fichiers XML reconnus.
 - Affiche une page Patch pour visualiser et modifier les abonnements RX vers TX lorsque le format XML le permet.
-- Ajoute l'onglet Windows `Easy patch` avec RX à gauche, TX à droite, navigation rapide entre machines, lot prévisualisé cumulatif, plages strictes, résolution explicite des conflits et matrice interactive compacte avec glissement en série.
+- Ajoute l'onglet Windows `Easy patch` avec RX à gauche, TX à droite, navigation rapide entre machines, application immédiate, plages strictes, alerte optionnelle pour les RX déjà patchés et matrice interactive compacte avec glissement en série.
+- Dans `Easy patch`, propose un bouton `FLIP TX ⇄ RX` très visible, un patch `1:1` accessible depuis `Sélection et plage` ou directement depuis la grille, et la navigation Tab/Maj+Tab pendant le renommage.
+- Dans la matrice `Easy patch`, un clic sur un libellé TX vertical ouvre son renommage direct ; Entrée valide, Tab/Maj+Tab naviguent, Échap annule.
+- La poignée de recopie n'apparaît que pour un nom terminé par un nombre et conserve les zéros initiaux (`Mic 04` devient `Mic 05`, `Mic 06`, etc.).
 - Met à jour les patchs RX quand un canal TX utilisé est renommé.
 - Crée une sauvegarde du fichier source et de toute destination existante avant sauvegarde.
 - Sauvegarde via un fichier temporaire relu puis un remplacement atomique de la destination.
@@ -119,6 +163,8 @@ Chaque vidéo dure environ une minute et utilise des sous-titres intégrés. Les
 - Elle travaille uniquement sur des fichiers XML hors ligne.
 - Elle ne contourne aucune protection Audinate et ne réimplémente pas de protocole propriétaire.
 - La compatibilité dépend de la structure réelle du XML fourni.
+- Les rôles génériques ne portent pas d'identité matérielle et doivent être validés dans Dante Controller.
+- La création d'un nouveau projet est expérimentale et ne constitue pas une garantie d'import.
 - Certains champs de patch peuvent ne pas être détectés si le fichier utilise une structure différente de celles actuellement reconnues.
 - `subscribed_device="."` est interprété comme une source locale, c'est-à-dire le device RX lui-même.
 - Un device TX absent du preset est un avertissement, pas forcément une erreur bloquante, car un preset peut être partiel.
@@ -126,20 +172,25 @@ Chaque vidéo dure environ une minute et utilise des sous-titres intégrés. Les
 
 ## Télécharger / installer
 
-Téléchargez la [Release GitHub V3.4](https://github.com/Mamat79/DanteConfigEditorV3/releases/tag/v3.4).
+La [Release GitHub V3.4.2](https://github.com/Mamat79/DanteConfigEditorV3/releases/tag/v3.4.2) reste la version stable. Les paquets de développement V3.6 sont générés dans les exécutions `Windows CI` et `macOS CI` de la branche `v3.6`.
 
-- Pour Windows x64, utilisez `DanteConfigEditorV3_4_Installer.exe`, un installateur autonome qui remplace les anciennes installations V3.
+- Windows x64 : artefact `DCE-v3.6-Windows-Installer`, contenant `DanteConfigEditorV3_6_Installer.exe` et sa somme SHA-256.
 
 La version autonome inclut le runtime .NET nécessaire. Sur une machine Windows x64, il ne devrait pas être nécessaire d'installer .NET séparément pour utiliser l'application.
+
+L'assistant permet de choisir le dossier de banque actif et le dossier des banques fournies. L'installation de `DCE Generic Roles 3.6` et de `DCE Community Devices 3.6` est proposée par défaut lors d'une première installation ; chaque banque reste facultative. Une mise à jour conserve le chemin existant et ne remplace aucune banque.
 
 ### macOS
 
 Deux DMG autonomes sont fournis :
 
-- `DanteConfigEditorV3_macOS_AppleSilicon.dmg` pour les Mac M1, M2, M3, M4 et suivants ;
-- `DanteConfigEditorV3_macOS_Intel.dmg` pour les Mac Intel 64 bits.
+- `DanteConfigEditorV3_6_macOS_AppleSilicon.dmg` pour les Mac M1, M2, M3, M4 et suivants ;
+- `DanteConfigEditorV3_6_macOS_Intel.dmg` pour les Mac Intel 64 bits.
 
-Ouvrir le DMG, puis glisser `Dante Config Editor` dans `Applications`. Le runtime .NET 8 et les notices FR/EN sont inclus.
+Chaque DMG contient aussi un dossier `Machine Banks` avec les deux archives de
+banques vérifiées, importables depuis la fenêtre Banque de machines.
+
+Ouvrir le DMG, puis glisser `Dante Config Editor V3.6` dans `Applications`. Le runtime .NET 8 et les notices FR/EN sont inclus. Son bundle distinct permet de conserver la V3.4.2.
 
 La distribution Mac n'est pas encore notariée avec un compte Apple Developer. Au premier lancement, faire un clic droit sur l'application dans `Applications`, choisir `Ouvrir`, puis confirmer l'ouverture. Les détails de compilation, signature et notarisation sont documentés dans `MACOS_BUILD.md`.
 
@@ -154,16 +205,13 @@ Notices fournies :
 
 Dans l'application, les boutons d'aide ouvrent automatiquement les fichiers FR ou EN selon la langue active.
 
-L'installateur V3.4 retire les anciennes installations V3 détectées, notamment la V3.3, puis installe une seule V3.4. Les données locales de travail ne sont pas supprimées par cette mise à niveau.
+L'installateur V3.6 utilise l'AppId de la ligne de développement : il remplace une V3.5 déjà installée, nettoie ses anciens raccourcis et conserve les données locales de travail. Une installation neuve utilise `C:\Program Files\Dante Config Editor V3.6\`. L'AppId distinct de la V3.4.2 stable reste intact.
 
 ## Version distribuée
 
 - La branche `main` contient la V3.4 officielle pour Windows et macOS.
-- Le tag immuable `v3.4` identifie le code source des applications distribuées dans la Release V3.4, marquée `Latest`.
-- La Release historique [`v3.3`](https://github.com/Mamat79/DanteConfigEditorV3/releases/tag/v3.3) reste téléchargeable avec ses propres fichiers et ses vidéos de présentation.
-- La Release historique [`v3.2`](https://github.com/Mamat79/DanteConfigEditorV3/releases/tag/v3.2) reste téléchargeable avec ses propres fichiers.
-- La Release V3.1 est retirée à la demande du mainteneur ; son historique source reste dans Git.
-- Les pages de Releases V3.08 et V3.09 ont été retirées à la demande du mainteneur ; leurs tags et commits restent dans l'historique Git.
+- La branche `v3.6` contient la version de développement et ses workflows Windows/macOS ; elle ne remplace pas encore la release stable.
+- Le tag immuable `v3.4.2` identifie le code source de la Release officielle actuellement marquée `Latest`.
 - Chaque version utilise un tag immuable distinct selon [la politique de publication](RELEASE_POLICY.md).
 - L'historique fonctionnel reste également consultable dans les commits de `main` et dans `CHANGELOG_V3.md`.
 
@@ -174,9 +222,9 @@ L'installateur V3.4 retire les anciennes installations V3 détectées, notamment
 3. Sélectionner une copie du fichier de configuration Dante.
 4. Vérifier les devices et paramètres détectés.
 5. Modifier les champs souhaités.
-6. Dans l'onglet `Easy patch`, choisir les machines RX et TX, puis cliquer sur `Prévisualiser` : chaque opération s'ajoute au lot temporaire sans modifier le XML.
-7. Répéter l'opération sur autant de machines, sélections ou plages que nécessaire. Les conflits demandent toujours un choix explicite.
-8. Cliquer sur `Appliquer tout le lot` lorsque tout est prêt, ou utiliser `Appliquer` pour valider immédiatement l'opération courante avec le lot déjà accumulé.
+6. Dans l'onglet `Easy patch`, choisir les machines RX et TX, puis cliquer ou glisser dans la grille : chaque point de patch est appliqué immédiatement. `PATCH 1:1` applique directement une série.
+7. Laisser `M'avertir si le RX est déjà patché` coché pour confirmer chaque remplacement, ou le décocher pour remplacer sans cette alerte.
+8. Utiliser `Annuler action` pour revenir sur une opération de patch si nécessaire.
 9. Si besoin, utiliser `Ajouter XML au projet` pour importer les devices d'un autre export XML.
 10. Sauvegarder sous un nouveau nom.
 11. Valider le fichier généré dans l'outil Dante officiel approprié avant usage terrain.
@@ -442,12 +490,31 @@ Pour lancer les tests automatiques :
 - Tester le fichier final dans les outils Dante officiels avant exploitation.
 - L'application vérifie la cohérence du XML généré, mais la validation définitive doit être faite par un import dans Dante Controller avant toute utilisation en production.
 
+## Soutenir DCE
+
+Dante Config Editor reste entièrement gratuit et toutes ses fonctions sont disponibles sans contribution.
+
+Si DCE vous fait gagner du temps, vous pouvez **[soutenir son développement en
+scannant le QR PayPal](docs/SUPPORT_DCE.md)**. Le QR s'affiche directement dans
+DCE et un bouton PayPal.Me est disponible sur ordinateur ; aucun paiement
+n'est intégré à l'application et aucune connexion n'est effectuée au démarrage.
+
+Vous pouvez aussi aider gratuitement en ajoutant une étoile au projet GitHub ou en partageant un retour. Et si vous êtes vraiment fous, vous pouvez même faire les deux !
+
+Le détail du rappel local facultatif et de la confidentialité est disponible dans **[Soutenir DCE](docs/SUPPORT_DCE.md)**.
+
 ## Crédit
 
 **By Mamat**<br>
 <sub>et ses agents</sub>
 
 Remerciement à **Charles Bouticourt** pour l'idée de la fonction `Atomic Bomb`.
+
+### Un grand merci à Tobias Grupe
+
+Un grand merci à **[Tobias Grupe (@togrupe)](https://github.com/togrupe)** pour le temps consacré à tester Dante Config Editor, pour ses captures et retours précis, ainsi que pour ses nombreuses idées d'amélioration. Ses propositions sur les en-têtes TX/RX fixes, le patch 1:1, le bouton Flip, la navigation au clavier, les performances de la matrice et les échanges de labels avec DMT ont directement contribué à faire progresser la V3.5.
+
+Tobias développe également **[dLive MIDI Tools](https://github.com/togrupe/dlive-midi-tools)**, projet avec lequel les fonctions d'import et d'export de labels de DCE ont été pensées et testées.
 
 ---
 
@@ -456,6 +523,6 @@ Remerciement à **Charles Bouticourt** pour l'idée de la fonction `Atomic Bomb`
 The complete English presentation is kept in a separate section so that both languages remain easy to read:
 
 - **[Open the complete English README](README_EN.md)**
-- **[Download the stable Dante Config Editor V3.3](https://github.com/Mamat79/DanteConfigEditorV3/releases/tag/v3.3)**
+- **[Download the stable Dante Config Editor V3.4.2](https://github.com/Mamat79/DanteConfigEditorV3/releases/tag/v3.4.2)**
 - **[Read the full English guide (PDF)](docs/Notice_DanteConfigEditorV3_EN.pdf)** or the [English quick start](docs/QuickStart_DanteConfigEditorV3_EN.pdf).
 - **[Open the dLive MIDI Tools (DMT) project](https://github.com/togrupe/dlive-midi-tools)**

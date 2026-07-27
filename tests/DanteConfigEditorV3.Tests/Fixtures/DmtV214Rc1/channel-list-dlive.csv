@@ -1,0 +1,4 @@
+format_version,source_app,source_version,device,direction,channel,dante_id,label
+1,"Channel List Manager for Allen & Heath dLive, Avantis & SQ",2.14.0-RC1,dLive,tx,1,1,Kick In
+1,"Channel List Manager for Allen & Heath dLive, Avantis & SQ",2.14.0-RC1,dLive,tx,2,2,Snare Top
+1,"Channel List Manager for Allen & Heath dLive, Avantis & SQ",2.14.0-RC1,dLive,tx,64,64,Talkback

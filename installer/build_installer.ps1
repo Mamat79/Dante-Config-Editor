@@ -41,9 +41,10 @@ function Remove-GeneratedPath {
 $project = Join-Path $root "DanteConfigEditorV3.csproj"
 $dist = Join-Path $root "dist"
 $payload = Join-Path $dist "installer_payload"
-$installer = Join-Path $dist "DanteConfigEditorV3_4_Installer.exe"
+$installer = Join-Path $dist "DanteConfigEditorV3_6_Installer.exe"
 $installerChecksum = "$installer.sha256"
 $script = Join-Path $PSScriptRoot "DanteConfigEditorV3.iss"
+$bankBuilder = Join-Path $root "tools\Build-BundledMachineBanks.ps1"
 $isccCandidates = @(
     $env:ISCC_PATH,
     (Join-Path $env:LOCALAPPDATA "Programs\Inno Setup 6\ISCC.exe"),
@@ -77,6 +78,11 @@ if (-not $iscc) {
 }
 
 New-Item -ItemType Directory -Force -Path $dist | Out-Null
+
+& $bankBuilder
+if ($LASTEXITCODE -ne 0) {
+    throw "La génération des banques de machines fournies a échoué."
+}
 
 foreach ($temporaryPath in @($payload, (Join-Path $dist "self-contained-win-x64"), (Join-Path $dist "portable"), (Join-Path $dist "setup_payload"))) {
     Remove-GeneratedPath -Path $temporaryPath -Recurse

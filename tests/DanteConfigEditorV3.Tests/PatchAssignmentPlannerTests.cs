@@ -263,11 +263,128 @@ public sealed class PatchAssignmentPlannerTests
         PatchSourceDescriptor[] sources = [Source(1, 1, "TX 1"), Source(2, 2, "TX 2")];
         PatchTargetDescriptor[] targets = [Target(10, 1, "RX 10"), Target(20, 2, "RX 20")];
 
-        PatchAssignmentPlan valid = PatchAssignmentPlanner.PlanRange(sources, sources[0], targets, targets[0], 2);
+        PatchAssignmentPlan valid = PatchAssignmentPlanner.PlanOneToOne(sources, sources[0], targets, targets[0], 2);
         Assert.Equal(2, valid.Assignments.Count);
 
         Assert.Throws<InvalidOperationException>(() =>
-            PatchAssignmentPlanner.PlanRange(sources, sources[0], targets, targets[0], 3));
+            PatchAssignmentPlanner.PlanOneToOne(sources, sources[0], targets, targets[0], 3));
+    }
+
+    [Fact]
+    public void OneToOneCapacityReportsEachSideAndTheStrictMaximum()
+    {
+        PatchSourceDescriptor[] sources =
+        [
+            Source(1, 0, "TX 1"),
+            Source(2, 1, "TX 2"),
+            Source(3, 2, "TX 3"),
+            Source(4, 3, "TX 4")
+        ];
+        PatchTargetDescriptor[] targets =
+        [
+            Target(10, 0, "RX 10"),
+            Target(20, 1, "RX 20"),
+            Target(30, 2, "RX 30")
+        ];
+
+        PatchRangeCapacity capacity = PatchAssignmentPlanner.GetRangeCapacity(
+            sources,
+            sources[1],
+            targets,
+            targets[1]);
+
+        Assert.Equal(3, capacity.TxAvailable);
+        Assert.Equal(2, capacity.RxAvailable);
+        Assert.Equal(2, capacity.MaximumCount);
+    }
+
+    [Fact]
+    public void OneToOneRejectsForeignStartChannelsWithoutStagingAPartialPlan()
+    {
+        PatchSourceDescriptor[] sources = [Source(1, 0, "TX 1")];
+        PatchTargetDescriptor[] targets = [Target(10, 0, "RX 10")];
+
+        Assert.Throws<InvalidOperationException>(() =>
+            PatchAssignmentPlanner.PlanOneToOne(
+                sources,
+                new PatchSourceDescriptor("OTHER-TX", 1, 0, "TX 1"),
+                targets,
+                targets[0],
+                1));
+        Assert.Throws<InvalidOperationException>(() =>
+            PatchAssignmentPlanner.PlanOneToOne(
+                sources,
+                sources[0],
+                targets,
+                new PatchTargetDescriptor("OTHER-RX", 10, 0, "RX 10"),
+                1));
+    }
+
+    [Fact]
+    public void DeviceSelectionSwapOnlyChangesOrientationWhenBothDevicesSupportIt()
+    {
+        PatchDeviceSelectionSwapResult result = PatchDeviceSelectionSwapper.TrySwap(
+            "CONSOLE",
+            "STAGEBOX",
+            ["CONSOLE", "STAGEBOX"],
+            ["CONSOLE", "STAGEBOX"]);
+
+        Assert.True(result.Success);
+        Assert.Equal("STAGEBOX", result.TxDeviceName);
+        Assert.Equal("CONSOLE", result.RxDeviceName);
+        Assert.Null(result.ErrorMessage);
+    }
+
+    [Fact]
+    public void DeviceSelectionSwapIsRejectedWithoutChangingEitherSelection()
+    {
+        PatchDeviceSelectionSwapResult result = PatchDeviceSelectionSwapper.TrySwap(
+            "TX-ONLY",
+            "RX-ONLY",
+            ["TX-ONLY"],
+            ["RX-ONLY"]);
+
+        Assert.False(result.Success);
+        Assert.Null(result.TxDeviceName);
+        Assert.Null(result.RxDeviceName);
+        Assert.Contains("Inversion impossible", result.ErrorMessage, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void DeviceSelectionSwapRespectsALockedRxSelector()
+    {
+        PatchDeviceSelectionSwapResult result = PatchDeviceSelectionSwapper.TrySwap(
+            "DEVICE-A",
+            "DEVICE-B",
+            ["DEVICE-A", "DEVICE-B"],
+            ["DEVICE-A", "DEVICE-B"],
+            rxSelectionLocked: true);
+
+        Assert.False(result.Success);
+        Assert.Contains("verrouillée", result.ErrorMessage, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void DeviceSelectionSwapDoesNotAlterPendingPatchChanges()
+    {
+        using TestDirectory directory = new();
+        DanteProject project = DanteProject.Load(directory.CopyFixture("representative-preset.xml"));
+        DanteDevice txDevice = Assert.IsType<DanteDevice>(project.FindDevice("DEVICE-A"));
+        DanteDevice rxDevice = Assert.IsType<DanteDevice>(project.FindDevice("DEVICE-B"));
+        PatchWorkspaceSession workspace = new(project.PatchMatrix.Subscriptions);
+        PatchTargetDescriptor target = TargetFrom(rxDevice.RxChannels[0]);
+        workspace.Assign(new PlannedPatchAssignment(SourceFrom(txDevice.TxChannels[1]), target));
+        PatchEditRequest before = Assert.Single(workspace.Edits);
+
+        PatchDeviceSelectionSwapResult result = PatchDeviceSelectionSwapper.TrySwap(
+            txDevice.Name,
+            rxDevice.Name,
+            [txDevice.Name, rxDevice.Name],
+            [txDevice.Name, rxDevice.Name]);
+
+        Assert.True(result.Success);
+        Assert.Equal(before, Assert.Single(workspace.Edits));
+        Assert.False(project.IsModified);
     }
 
     [Fact]
@@ -397,6 +514,25 @@ public sealed class PatchAssignmentPlannerTests
         Assert.Equal(1, preview.ReplaceCount);
         Assert.Equal(1, preview.CreateCount);
         Assert.False(workspace.HasChanges);
+    }
+
+    [Fact]
+    public void CommittedPreviewStillDetectsAConflictHiddenByAPendingRemoval()
+    {
+        using TestDirectory directory = new();
+        DanteProject project = DanteProject.Load(directory.CopyFixture("representative-preset.xml"));
+        DanteDevice txDevice = Assert.IsType<DanteDevice>(project.FindDevice("DEVICE-A"));
+        DanteDevice rxDevice = Assert.IsType<DanteDevice>(project.FindDevice("DEVICE-B"));
+        PatchWorkspaceSession workspace = new(project.PatchMatrix.Subscriptions);
+        PatchTargetDescriptor target = TargetFrom(rxDevice.RxChannels[0]);
+        PlannedPatchAssignment replacement = new(
+            SourceFrom(txDevice.TxChannels[1]),
+            target);
+
+        workspace.Remove(target);
+
+        Assert.Equal(1, workspace.BuildPreview([replacement]).CreateCount);
+        Assert.Equal(1, workspace.BuildCommittedPreview([replacement]).ReplaceCount);
     }
 
     [Theory]

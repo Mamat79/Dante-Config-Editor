@@ -6,13 +6,13 @@
         d:DesignWidth="1500"
         d:DesignHeight="930"
         x:Class="DanteConfigEditor.Mac.MainWindow"
-        Title="Dante Config Editor V3.4 - macOS"
+        Title="Dante Config Editor V3.6 - macOS"
         Width="1500"
         Height="930"
         MinWidth="1120"
         MinHeight="720"
         WindowStartupLocation="CenterScreen">
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
         <Border Background="{DynamicResource PanelBrush}"
                 BorderBrush="{DynamicResource PanelBorderBrush}"
                 BorderThickness="0,0,0,1"
@@ -20,7 +20,7 @@
             <Grid RowDefinitions="Auto,Auto" RowSpacing="8">
                 <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto,120,Auto" ColumnSpacing="10">
                     <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="Dante Config Editor V3.4" FontSize="20" FontWeight="Bold" />
+                    <TextBlock Text="Dante Config Editor V3.6" FontSize="20" FontWeight="Bold" />
                     <TextBlock x:Name="FilePathText" Classes="muted" Text="Aucun fichier ouvert" TextTrimming="CharacterEllipsis" />
                     </StackPanel>
                     <TextBlock x:Name="DirtyStateText" Grid.Column="1" VerticalAlignment="Center" Foreground="{DynamicResource MutedTextBrush}" Text="Non modifié" />
@@ -32,20 +32,58 @@
                     <Button x:Name="ThemeButton" Grid.Column="4" Click="ThemeButton_Click">Thème clair</Button>
                 </Grid>
 
-                <Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,240,Auto,*" ColumnSpacing="8">
-                    <Button x:Name="OpenButton" Grid.Column="0" Classes="primary" Click="OpenButton_Click" ToolTip.Tip="Charge un export XML Dante Controller.">Ouvrir XML</Button>
-                    <Button x:Name="MergeButton" Grid.Column="1" Click="MergeButton_Click" ToolTip.Tip="Ajoute les machines d'un autre XML au projet ouvert.">Ajouter XML</Button>
-                    <Button x:Name="SaveButton" Grid.Column="2" Classes="primary" Click="SaveButton_Click">Enregistrer sous</Button>
-                    <Button x:Name="EditButton" Grid.Column="3" Click="EditButton_Click">Activer l'édition</Button>
-                    <Button x:Name="UndoButton" Grid.Column="4" Click="UndoButton_Click">Annuler action</Button>
-                    <Button x:Name="RevertButton" Grid.Column="5" Click="RevertButton_Click">Annuler les changements</Button>
-                    <ComboBox x:Name="RecentCombo" Grid.Column="6" PlaceholderText="Fichiers récents" />
-                    <Button x:Name="OpenRecentButton" Grid.Column="7" Click="OpenRecentButton_Click">Ouvrir récent</Button>
-                </Grid>
+                <WrapPanel Grid.Row="1">
+                    <Button x:Name="NewProjectButton"
+                            Margin="0,0,8,8"
+                            Click="NewProjectButton_Click"
+                            ToolTip.Tip="Crée un preset 3.0.0 hors ligne. Un test d'import Dante Controller reste obligatoire.">Nouveau projet (expérimental)</Button>
+                    <Button x:Name="OpenButton" Classes="primary" Margin="0,0,8,8" Click="OpenButton_Click" ToolTip.Tip="Charge un export XML Dante Controller.">Ouvrir XML</Button>
+                    <Button x:Name="MergeButton" Margin="0,0,8,8" Click="MergeButton_Click" ToolTip.Tip="Ajoute les machines d'un autre XML au projet ouvert.">Ajouter XML</Button>
+                    <Button x:Name="OpenMachineBankButton"
+                            Margin="0,0,8,8"
+                            Click="OpenMachineBankButton_Click"
+                            ToolTip.Tip="Consulte, importe, exporte et administre les modèles de machines réutilisables.">Banque de machines</Button>
+                    <Button x:Name="SaveButton" Classes="primary" Margin="0,0,8,8" Click="SaveButton_Click">Enregistrer sous</Button>
+                    <Button x:Name="EditButton" Margin="0,0,8,8" Click="EditButton_Click">Activer l'édition</Button>
+                    <Button x:Name="UndoButton" Margin="0,0,8,8" Click="UndoButton_Click">Annuler action</Button>
+                    <Button x:Name="RevertButton" Margin="0,0,8,8" Click="RevertButton_Click">Annuler les changements</Button>
+                    <ComboBox x:Name="RecentCombo" Width="240" Margin="0,0,8,8" PlaceholderText="Fichiers récents" />
+                    <Button x:Name="OpenRecentButton" Margin="0,0,0,8" Click="OpenRecentButton_Click">Ouvrir récent</Button>
+                </WrapPanel>
             </Grid>
         </Border>
 
-        <Grid Grid.Row="1" ColumnDefinitions="200,*">
+        <Border x:Name="SupportReminderBorder"
+                Grid.Row="1"
+                IsVisible="False"
+                Background="{DynamicResource PanelAltBrush}"
+                BorderBrush="{DynamicResource AccentBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="14,8">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="18">
+                <TextBlock x:Name="SupportReminderText"
+                           VerticalAlignment="Center"
+                           FontWeight="SemiBold"
+                           TextWrapping="Wrap"
+                           Text="DCE vous fait gagner du temps ? Vous pouvez soutenir son développement, sans aucune obligation." />
+                <WrapPanel Grid.Column="1">
+                    <Button x:Name="SupportReminderOpenButton"
+                            Margin="0,0,8,0"
+                            Classes="primary"
+                            Click="SupportReminderOpenButton_Click"
+                            ToolTip.Tip="Affiche les moyens facultatifs de soutenir le projet.">Soutenir DCE</Button>
+                    <Button x:Name="SupportReminderLaterButton"
+                            Margin="0,0,8,0"
+                            Click="SupportReminderLaterButton_Click"
+                            ToolTip.Tip="Masque ce rappel pendant 20 lancements.">Pas maintenant</Button>
+                    <Button x:Name="SupportReminderNeverButton"
+                            Click="SupportReminderNeverButton_Click"
+                            ToolTip.Tip="Désactive définitivement ce rappel local.">Ne plus afficher</Button>
+                </WrapPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="2" ColumnDefinitions="200,*">
             <Border x:Name="ProjectSidebar"
                     Grid.Column="0"
                     Background="{DynamicResource PanelBrush}"
@@ -100,7 +138,12 @@
             <TabControl x:Name="MainTabs" Grid.Column="1" Margin="14">
                 <TabItem x:Name="ConfigurationTab" Header="Configuration">
                     <Grid RowDefinitions="Auto,*" RowSpacing="12" Margin="0,12,0,0">
-                        <Grid Grid.Row="0" ColumnDefinitions="1.05*,1.05*,0.9*" ColumnSpacing="12" Height="385">
+                        <Grid x:Name="ConfigurationEditorsGrid"
+                              Grid.Row="0"
+                              ColumnDefinitions="1.05*,1.05*,0.9*"
+                              ColumnSpacing="12"
+                              MinHeight="350"
+                              MaxHeight="385">
                             <Border Grid.Column="0" Classes="panel">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <StackPanel Spacing="8">
@@ -151,43 +194,48 @@
                                             <Button x:Name="ResetRxButton" Margin="0,0,8,8" Click="ResetRxButton_Click">Reset RX</Button>
                                             <Button x:Name="ResetTxButton" Margin="0,0,8,8" Click="ResetTxButton_Click">Reset TX</Button>
                                             <Button x:Name="DeleteDeviceButton" Classes="danger" Margin="0,0,8,8" Click="DeleteDeviceButton_Click">Supprimer</Button>
+                                            <Button x:Name="DuplicateDeviceButton" Margin="0,0,8,8" Click="DuplicateDeviceButton_Click">Dupliquer</Button>
+                                            <Button x:Name="SaveDeviceToBankButton" Margin="0,0,8,8" Click="SaveDeviceToBankButton_Click">Enregistrer dans la banque</Button>
                                         </WrapPanel>
                                     </StackPanel>
                                 </ScrollViewer>
                             </Border>
 
                             <Border Grid.Column="1" Classes="panel">
-                                <StackPanel Spacing="8">
-                                    <TextBlock Classes="section" Text="Canaux de la machine" />
-                                    <Grid ColumnDefinitions="110,*" ColumnSpacing="8">
-                                        <ComboBox x:Name="ChannelKindCombo" SelectionChanged="ChannelKindCombo_SelectionChanged">
-                                            <ComboBoxItem Tag="tx">TX</ComboBoxItem>
-                                            <ComboBoxItem Tag="rx">RX</ComboBoxItem>
-                                        </ComboBox>
-                                        <ComboBox x:Name="ChannelCombo" Grid.Column="1" SelectionChanged="ChannelCombo_SelectionChanged" />
-                                    </Grid>
-                                    <TextBox x:Name="ChannelNameTextBox" Watermark="Nouveau nom de canal" />
-                                    <Button x:Name="RenameChannelButton" Classes="primary" HorizontalAlignment="Left" Click="RenameChannelButton_Click">Renommer le canal</Button>
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Classes="section" Text="Canaux de la machine" />
+                                        <Grid ColumnDefinitions="110,*" ColumnSpacing="8">
+                                            <ComboBox x:Name="ChannelKindCombo" SelectionChanged="ChannelKindCombo_SelectionChanged">
+                                                <ComboBoxItem Tag="tx">TX</ComboBoxItem>
+                                                <ComboBoxItem Tag="rx">RX</ComboBoxItem>
+                                            </ComboBox>
+                                            <ComboBox x:Name="ChannelCombo" Grid.Column="1" SelectionChanged="ChannelCombo_SelectionChanged" />
+                                        </Grid>
+                                        <TextBox x:Name="ChannelNameTextBox" Watermark="Nouveau nom de canal" />
+                                        <Button x:Name="RenameChannelButton" Classes="primary" HorizontalAlignment="Left" Click="RenameChannelButton_Click">Renommer le canal</Button>
 
-                                    <Border Height="1" Background="{DynamicResource PanelBorderBrush}" Margin="0,4" />
-                                    <TextBlock Text="Renommage en série" FontWeight="SemiBold" />
-                                    <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
-                                        <ComboBox x:Name="StartChannelCombo" PlaceholderText="Canal début" />
-                                        <ComboBox x:Name="EndChannelCombo" Grid.Column="1" PlaceholderText="Canal fin" />
-                                    </Grid>
-                                    <Grid ColumnDefinitions="*,90" ColumnSpacing="8">
-                                        <TextBox x:Name="BatchPrefixTextBox" Watermark="Préfixe ou modèle HF {00}" />
-                                        <TextBox x:Name="BatchNumberTextBox" Grid.Column="1" Text="1" Watermark="Numéro" />
-                                    </Grid>
-                                    <Button x:Name="BatchRenameButton" Classes="primary" Click="BatchRenameButton_Click">Renommer la série</Button>
-                                    <Button x:Name="ResetDeviceChannelsButton" Click="ResetDeviceChannelsButton_Click">Réinitialiser les canaux de la machine</Button>
-                                </StackPanel>
+                                        <Border Height="1" Background="{DynamicResource PanelBorderBrush}" Margin="0,4" />
+                                        <TextBlock Text="Renommage en série" FontWeight="SemiBold" />
+                                        <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                                            <ComboBox x:Name="StartChannelCombo" PlaceholderText="Canal début" />
+                                            <ComboBox x:Name="EndChannelCombo" Grid.Column="1" PlaceholderText="Canal fin" />
+                                        </Grid>
+                                        <Grid ColumnDefinitions="*,90" ColumnSpacing="8">
+                                            <TextBox x:Name="BatchPrefixTextBox" Watermark="Préfixe ou modèle HF {00}" />
+                                            <TextBox x:Name="BatchNumberTextBox" Grid.Column="1" Text="1" Watermark="Numéro" />
+                                        </Grid>
+                                        <Button x:Name="BatchRenameButton" Classes="primary" Click="BatchRenameButton_Click">Renommer la série</Button>
+                                        <Button x:Name="ResetDeviceChannelsButton" Click="ResetDeviceChannelsButton_Click">Réinitialiser les canaux de la machine</Button>
+                                    </StackPanel>
+                                </ScrollViewer>
                             </Border>
 
                             <Border Grid.Column="2" Classes="panel">
-                                <StackPanel Spacing="8">
-                                    <TextBlock Classes="section" Text="Actions globales" />
-                                    <TabControl>
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Classes="section" Text="Actions globales" />
+                                        <TabControl>
                                         <TabItem Header="Réseau / audio">
                                             <ScrollViewer VerticalScrollBarVisibility="Auto">
                                                 <StackPanel Spacing="7" Margin="0,8,0,0">
@@ -235,8 +283,9 @@
                                                 <Button Classes="primary" Click="ApplyExclusivePreferredMasterButton_Click">Conserver un seul Preferred Master</Button>
                                             </StackPanel>
                                         </TabItem>
-                                    </TabControl>
-                                </StackPanel>
+                                        </TabControl>
+                                    </StackPanel>
+                                </ScrollViewer>
                             </Border>
                         </Grid>
 
@@ -470,11 +519,16 @@
                                         <TextBlock x:Name="SynopticZoomText" Width="58" Text="100 %" TextAlignment="Center" VerticalAlignment="Center" />
                                         <Button Click="ResetSynopticZoomButton_Click">100 %</Button>
                                         <Button Click="FitSynopticZoomButton_Click">Ajuster</Button>
+                                        <Button x:Name="OpenSynopticPreviewWindowButton"
+                                                Width="36"
+                                                ToolTip.Tip="Ouvrir l’aperçu dans une fenêtre séparée"
+                                                Click="OpenSynopticPreviewWindowButton_Click">↗</Button>
                                     </StackPanel>
                                     <ScrollViewer x:Name="SynopticScrollViewer"
                                                   Grid.Row="1"
                                                   HorizontalScrollBarVisibility="Auto"
-                                                  VerticalScrollBarVisibility="Auto">
+                                                  VerticalScrollBarVisibility="Auto"
+                                                  PointerWheelChanged="SynopticScrollViewer_PointerWheelChanged">
                                         <LayoutTransformControl x:Name="SynopticZoomHost">
                                             <Canvas x:Name="SynopticCanvas"
                                                     Width="900"
@@ -539,6 +593,13 @@
                                 <Button Margin="0,0,8,8" Click="CompareButton_Click">Comparer XML</Button>
                                 <Button Margin="0,0,8,8" Click="QuickStartButton_Click">Quick start</Button>
                                 <Button Margin="0,0,8,8" Click="FullGuideButton_Click">Notice complète</Button>
+                                <Button x:Name="SupportDceButton"
+                                        Margin="0,0,8,8"
+                                        Click="SupportDceButton_Click"
+                                        ToolTip.Tip="Présente les moyens facultatifs de soutenir ce projet gratuit.">Soutenir DCE</Button>
+                                <Button x:Name="OpenDiagnosticLogsButton"
+                                        Margin="0,0,8,8"
+                                        Click="OpenDiagnosticLogsButton_Click">Ouvrir les journaux</Button>
                             </WrapPanel>
                         </Border>
 
@@ -621,7 +682,7 @@
             </TabControl>
         </Grid>
 
-        <Border Grid.Row="2"
+        <Border Grid.Row="3"
                 Background="{DynamicResource PanelBrush}"
                 BorderBrush="{DynamicResource PanelBorderBrush}"
                 BorderThickness="0,1,0,0"

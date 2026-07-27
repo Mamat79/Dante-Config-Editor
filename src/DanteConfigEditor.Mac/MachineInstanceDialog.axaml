@@ -1,0 +1,63 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="DanteConfigEditor.Mac.MachineInstanceDialog"
+        Width="620"
+        Height="500"
+        MinWidth="520"
+        MinHeight="430"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner">
+    <Grid RowDefinitions="Auto,*,Auto" Margin="20">
+        <StackPanel Spacing="6" Margin="0,0,0,14">
+            <TextBlock x:Name="HeadingText" FontSize="20" FontWeight="SemiBold" />
+            <TextBlock x:Name="SummaryText" Classes="muted" TextWrapping="Wrap" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Spacing="12">
+            <StackPanel Spacing="4">
+                <TextBlock x:Name="NameLabel" />
+                <TextBox x:Name="NameTextBox" />
+                <TextBlock x:Name="NameHintText" Classes="muted" FontSize="12" />
+            </StackPanel>
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                <Border Classes="panel">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="TX" FontWeight="SemiBold" />
+                        <CheckBox x:Name="UseTxLabelsCheckBox"
+                                  IsChecked="True"
+                                  Click="LabelModeChanged" />
+                        <TextBlock x:Name="TxPrefixLabel" Classes="muted" />
+                        <TextBox x:Name="TxPrefixTextBox" Text="TX" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="1" Classes="panel">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="RX" FontWeight="SemiBold" />
+                        <CheckBox x:Name="UseRxLabelsCheckBox"
+                                  IsChecked="True"
+                                  Click="LabelModeChanged" />
+                        <TextBlock x:Name="RxPrefixLabel" Classes="muted" />
+                        <TextBox x:Name="RxPrefixTextBox" Text="RX" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Border BorderBrush="{DynamicResource WarningBrush}"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    Padding="10">
+                <TextBlock x:Name="SafetyText" TextWrapping="Wrap" />
+            </Border>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="8"
+                    Margin="0,16,0,0">
+            <Button x:Name="CancelButton" MinWidth="100" Click="CancelButton_Click" />
+            <Button x:Name="ConfirmButton" Classes="primary" MinWidth="130" Click="ConfirmButton_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

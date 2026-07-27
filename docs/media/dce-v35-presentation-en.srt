@@ -1,0 +1,42 @@
+﻿1
+00:00:00,000 --> 00:00:05,000
+Dante Config Editor v3.5
+
+2
+00:00:05,000 --> 00:00:11,000
+One complete overview
+Review latency, audio formats, network modes, IP, clock, and channels on one screen.
+
+3
+00:00:11,000 --> 00:00:17,000
+Patch
+Filter Rx and Tx, rename channels directly, then apply or remove a subscription.
+
+4
+00:00:17,000 --> 00:00:24,000
+Easy patch
+Prepare selections or ranges without changing XML, then apply the entire batch once.
+
+5
+00:00:24,000 --> 00:00:31,000
+Channel label exchange
+Import and export JSON, CSV, DMT XLSX/ODS, Allen & Heath dLive/Avantis, and Yamaha CL/QL.
+
+6
+00:00:31,000 --> 00:00:38,000
+Visual synoptic
+Group devices by location and export compact connections to SVG or PDF.
+
+7
+00:00:38,000 --> 00:00:44,000
+File health
+Spot mixed network modes, static IPs, audio formats, and subscriptions before saving.
+
+8
+00:00:44,000 --> 00:00:50,000
+Atomic Bomb
+Build an offline exercise by choosing exactly which categories will be scrambled.
+
+9
+00:00:50,000 --> 00:00:55,000
+Dante Config Editor v3.5

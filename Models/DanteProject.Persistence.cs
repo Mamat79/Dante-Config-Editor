@@ -24,12 +24,6 @@ public sealed partial class DanteProject
             throw new InvalidOperationException("Sauvegarde impossible tant que des erreurs bloquantes existent." + Environment.NewLine + validation.ToDisplayText());
         }
 
-        DanteValidationResult guard = ValidateXmlChangeGuard();
-        if (guard.HasErrors)
-        {
-            throw new InvalidOperationException("Sauvegarde refusée : une modification interdite du XML Dante a été détectée." + Environment.NewLine + guard.ToDisplayText());
-        }
-
         string fullDestinationPath = Path.GetFullPath(destinationPath);
         string destinationDirectory = Path.GetDirectoryName(fullDestinationPath)
             ?? throw new InvalidOperationException("Le dossier de destination est introuvable.");
@@ -56,20 +50,39 @@ public sealed partial class DanteProject
                 throw new InvalidOperationException("Sauvegarde refusée : le XML temporaire casse la compatibilité Dante Controller." + Environment.NewLine + compatibility.ToDisplayText());
             }
 
-            DanteValidationResult temporaryValidation = Load(temporaryPath).Validate();
-            if (temporaryValidation.HasErrors)
+            XmlSemanticComparisonResult semanticComparison = XmlSemanticComparisonService.Compare(
+                Document,
+                temporaryDocument);
+            if (!semanticComparison.AreEquivalent)
             {
-                throw new InvalidOperationException("Sauvegarde refusée : le XML temporaire contient des erreurs bloquantes." + Environment.NewLine + temporaryValidation.ToDisplayText());
+                throw new InvalidOperationException(
+                    "Sauvegarde refusée : la sérialisation temporaire a modifié le contenu XML."
+                    + Environment.NewLine
+                    + semanticComparison.ToDisplayText());
             }
 
-            DanteValidationResult temporaryGuard = DanteXmlChangeGuardService.ValidateChanges(_originalDocument, temporaryDocument);
+            DanteValidationResult temporaryIntegrity = DanteProjectIntegrityValidator.Validate(temporaryDocument);
+            if (temporaryIntegrity.HasErrors)
+            {
+                throw new InvalidOperationException(
+                    "Sauvegarde refusée : le XML temporaire contient des erreurs d'intégrité."
+                    + Environment.NewLine
+                    + temporaryIntegrity.ToDisplayText());
+            }
+
+            DanteValidationResult temporaryGuard = DanteXmlChangeGuardService.ValidateChanges(
+                _originalDocument,
+                temporaryDocument,
+                BuildGuardAuthorizations());
             if (temporaryGuard.HasErrors)
             {
                 throw new InvalidOperationException("Sauvegarde refusée : une modification interdite du XML Dante a été détectée dans le fichier temporaire." + Environment.NewLine + temporaryGuard.ToDisplayText());
             }
 
             string previousFilePath = OriginalFilePath;
-            backupPath = SafeFileService.CreateOriginalBackup(previousFilePath);
+            backupPath = File.Exists(previousFilePath)
+                ? SafeFileService.CreateOriginalBackup(previousFilePath)
+                : string.Empty;
             saveStageObserver?.Invoke("BeforeDestinationCommit");
 
             if (File.Exists(fullDestinationPath))
@@ -93,7 +106,9 @@ public sealed partial class DanteProject
         OriginalFilePath = fullDestinationPath;
         LastSavedPath = fullDestinationPath;
         _originalDocument = new XDocument(Document);
+        MachineRoleIdentityService.PairEquivalentDocuments(Document, _originalDocument);
         _originalCompatibilityProfile = DanteXmlCompatibilityService.CaptureProfile(_originalDocument);
+        _authorizedDeviceAdditions.Clear();
         RegisterChange("Sauvegarde", $"Fichier sauvegardé sous {fullDestinationPath}");
         IsModified = false;
         _undoSnapshots.Clear();

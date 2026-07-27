@@ -1,0 +1,23 @@
+{
+  "formatVersion": 1,
+  "templateId": "13eba569-d1bd-4167-86ec-1dc03976d931",
+  "templateName": "AOIP22",
+  "manufacturer": "Glensound",
+  "model": "AOIP22",
+  "description": "Interface analogique Dante 2 TX / 2 RX, fournie comme rôle hors ligne assaini.",
+  "category": "StageBox",
+  "tags": [
+    "interface",
+    "analog audio",
+    "Glensound"
+  ],
+  "txCount": 2,
+  "rxCount": 2,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "3.6.1",
+  "createdUtc": "2026-07-27T06:47:53.8478864+00:00",
+  "modifiedUtc": "2026-07-27T06:49:47.063976+00:00",
+  "templateSha256": "2C77931985B05BA25206D3E817CED8EFFAB59CB8E2917F986DAA72D0E239656C",
+  "imageFileName": "image.jpg"
+}

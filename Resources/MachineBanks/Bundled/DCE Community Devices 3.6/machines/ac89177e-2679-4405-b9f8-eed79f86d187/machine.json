@@ -1,0 +1,24 @@
+{
+  "formatVersion": 1,
+  "templateId": "ac89177e-2679-4405-b9f8-eed79f86d187",
+  "templateName": "SDante 64x64",
+  "manufacturer": "Allen & Heath",
+  "model": "SDante",
+  "description": "Carte d'extension Dante 64 TX / 64 RX, fournie comme rôle hors ligne assaini.",
+  "category": "Extension Card",
+  "tags": [
+    "expansion card",
+    "dLive",
+    "Avantis",
+    "Allen & Heath"
+  ],
+  "txCount": 64,
+  "rxCount": 64,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "3.6.1",
+  "createdUtc": "2026-07-27T06:45:22.4950705+00:00",
+  "modifiedUtc": "2026-07-27T06:50:06.5594439+00:00",
+  "templateSha256": "5CAEA0C388C1777CF928685F25382DC6AC148F3AAC83583A0C35F07F175B1CE7",
+  "imageFileName": "image.jpg"
+}

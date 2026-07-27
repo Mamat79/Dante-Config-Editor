@@ -7,13 +7,13 @@ namespace DanteConfigEditorV3.Tests;
 public sealed class DanteProjectTests
 {
     [Fact]
-    public void AssemblyMetadataUsesV34Version()
+    public void AssemblyMetadataUsesV36Version()
     {
         string version = typeof(DanteProject).Assembly
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
             .InformationalVersion ?? string.Empty;
 
-        Assert.StartsWith("3.4", version, StringComparison.Ordinal);
+        Assert.StartsWith("3.6", version, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -131,6 +131,24 @@ public sealed class DanteProjectTests
         Assert.DoesNotContain(project.PatchMatrix.Subscriptions, subscription => subscription.ResolvedTxDeviceName == "DEVICE-A");
         Assert.Contains(project.BuildDeviceChangeRows(), row => row.DeviceName == "DEVICE-A" && row.Status == "Supprimée");
         Assert.False(project.ValidateXmlChangeGuard().HasErrors);
+    }
+
+    [Fact]
+    public void DeletedDeviceCanBeSavedAndReloadedWithoutDanglingSubscriptions()
+    {
+        using TestWorkspace workspace = new("representative-preset.xml");
+        DanteProject project = DanteProject.Load(workspace.SourcePath);
+        string outputPath = Path.Combine(workspace.DirectoryPath, "device-deleted.xml");
+
+        project.DeleteDevice("DEVICE-A");
+        project.SaveAs(outputPath);
+        DanteProject reloaded = DanteProject.Load(outputPath);
+
+        Assert.Null(reloaded.FindDevice("DEVICE-A"));
+        Assert.DoesNotContain(
+            reloaded.PatchMatrix.Subscriptions,
+            subscription => string.Equals(subscription.ResolvedTxDeviceName, "DEVICE-A", StringComparison.OrdinalIgnoreCase));
+        Assert.False(reloaded.Validate().HasErrors);
     }
 
     [Fact]

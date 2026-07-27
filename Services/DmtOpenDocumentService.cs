@@ -28,17 +28,17 @@ public static class DmtOpenDocumentService
         XElement channelsTable = FindTable(content, "Channels");
         XElement? miscTable = TryFindTable(content, "Misc");
         string version = miscTable is null ? string.Empty : ReadPropertyValue(miscTable, "Version");
-        IReadOnlyList<ChannelLabelEntry> channels = ReadChannels(channelsTable);
-        if (channels.Count == 0)
+        ChannelReadSummary channelSummary = ReadChannels(channelsTable);
+        if (channelSummary.Channels.Count == 0)
         {
             throw new InvalidDataException("La feuille Channels du fichier DMT ODS ne contient aucun label actif.");
         }
 
         ChannelLabelDocument document = ChannelLabelExchangeService.BuildDmtDocument(
             Path.GetFileNameWithoutExtension(path),
-            channels,
+            channelSummary.Channels,
             string.IsNullOrWhiteSpace(version) ? "ODS" : $"ODS template {version}");
-        return new DmtWorkbookReadResult(version, document);
+        return new DmtWorkbookReadResult(version, document, channelSummary.IgnoredRowCount);
     }
 
     public static void WriteCopy(string templatePath, string outputPath, ChannelLabelSet labels, bool adaptLabels)
@@ -99,12 +99,13 @@ public static class DmtOpenDocumentService
         }
     }
 
-    private static IReadOnlyList<ChannelLabelEntry> ReadChannels(XElement table)
+    private static ChannelReadSummary ReadChannels(XElement table)
     {
         XElement[] rows = table.Descendants(Table + "table-row").ToArray();
         HeaderLocation header = FindHeaders(rows, ["Channel", "Name"]);
         int enabledColumn = header.Columns.TryGetValue("Enabled", out int enabled) ? enabled : -1;
         List<ChannelLabelEntry> channels = [];
+        int ignoredRows = 0;
         foreach (XElement row in rows.Skip(header.RowIndex + 1))
         {
             string channelValue = ReadCell(row, header.Columns["Channel"]);
@@ -117,6 +118,7 @@ public static class DmtOpenDocumentService
             if (enabledColumn >= 0
                 && string.Equals(ReadCell(row, enabledColumn).Trim(), "no", StringComparison.OrdinalIgnoreCase))
             {
+                ignoredRows++;
                 continue;
             }
 
@@ -125,9 +127,13 @@ public static class DmtOpenDocumentService
             {
                 channels.Add(new ChannelLabelEntry(channelNumber, label, null));
             }
+            else
+            {
+                ignoredRows++;
+            }
         }
 
-        return channels;
+        return new ChannelReadSummary(channels, ignoredRows);
     }
 
     private static void UpdateChannelNames(
@@ -353,4 +359,8 @@ public static class DmtOpenDocumentService
     }
 
     private sealed record HeaderLocation(int RowIndex, IReadOnlyDictionary<string, int> Columns);
+
+    private sealed record ChannelReadSummary(
+        IReadOnlyList<ChannelLabelEntry> Channels,
+        int IgnoredRowCount);
 }

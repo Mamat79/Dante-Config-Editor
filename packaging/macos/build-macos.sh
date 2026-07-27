@@ -22,17 +22,18 @@ esac
 PROJECT="$ROOT/src/DanteConfigEditor.Mac/DanteConfigEditor.Mac.csproj"
 STAGING="$ROOT/tmp/macos/$RID"
 PUBLISH="$STAGING/publish"
-APP="$STAGING/Dante Config Editor.app"
+APP="$STAGING/Dante Config Editor V3.6.app"
 CONTENTS="$APP/Contents"
 MACOS="$CONTENTS/MacOS"
 RESOURCES="$CONTENTS/Resources"
 ICONSET="$STAGING/DanteEdit.iconset"
 DMG_STAGE="$STAGING/dmg"
 DIST="$ROOT/dist/macos"
-DMG="$DIST/DanteConfigEditorV3_macOS_${ARCH_LABEL}.dmg"
+DMG="$DIST/DanteConfigEditorV3_6_macOS_${ARCH_LABEL}.dmg"
 
 rm -rf "$STAGING"
 mkdir -p "$PUBLISH" "$MACOS" "$RESOURCES/Docs" "$ICONSET" "$DMG_STAGE" "$DIST"
+mkdir -p "$RESOURCES/Resources/Support"
 
 dotnet publish "$PROJECT" \
   -c Release \
@@ -52,6 +53,8 @@ if [[ -d "$MACOS/Docs" ]]; then
 fi
 
 cp "$ROOT/packaging/macos/Info.plist" "$CONTENTS/Info.plist"
+cp "$ROOT/Resources/Support/paypal-support-qr.png" \
+  "$RESOURCES/Resources/Support/paypal-support-qr.png"
 
 # L'icône historique est déclinée aux tailles attendues par iconutil.
 ICON_SOURCE="$ROOT/packaging/macos/DanteEdit.png"
@@ -76,10 +79,17 @@ codesign --force --deep --sign - --timestamp=none "$APP"
 codesign --verify --deep --strict "$APP"
 
 cp -R "$APP" "$DMG_STAGE/"
+mkdir -p "$DMG_STAGE/Machine Banks"
+cp "$ROOT/machine-banks/DCE_Generic_Roles_3_6.dce-bank.zip" \
+  "$DMG_STAGE/Machine Banks/"
+cp "$ROOT/machine-banks/DCE_Community_Devices_3_6.dce-bank.zip" \
+  "$DMG_STAGE/Machine Banks/"
+cp "$ROOT/machine-banks/README.md" \
+  "$DMG_STAGE/Machine Banks/README.md"
 ln -s /Applications "$DMG_STAGE/Applications"
 rm -f "$DMG"
 hdiutil create \
-  -volname "Dante Config Editor V3.4" \
+  -volname "Dante Config Editor V3.6" \
   -srcfolder "$DMG_STAGE" \
   -ov \
   -format UDZO \

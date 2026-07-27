@@ -14,6 +14,7 @@ internal sealed partial class ChannelLabelImportDialog : Window
     private readonly ObservableCollection<MacChannelLabelPreviewRow> _previewRows = [];
     private DanteProject? _project;
     private ChannelLabelDocument? _document;
+    private ChannelLabelImportReport? _importReport;
     private UiLanguage _language;
 
     public ChannelLabelImportDialog()
@@ -27,12 +28,14 @@ internal sealed partial class ChannelLabelImportDialog : Window
         Window owner,
         DanteProject project,
         ChannelLabelDocument document,
+        ChannelLabelImportReport importReport,
         UiLanguage language,
         string? initiallySelectedDevice)
     {
         ChannelLabelImportDialog dialog = new();
         dialog._project = project;
         dialog._document = document;
+        dialog._importReport = importReport;
         dialog._language = language;
         dialog.Populate(initiallySelectedDevice);
         dialog.ApplyLanguage();
@@ -67,7 +70,9 @@ internal sealed partial class ChannelLabelImportDialog : Window
         autoMatch.IsChecked = document.Sets.Count > 1
             && document.Sets.All(set => _project.Devices.Any(device =>
                 string.Equals(device.Name, set.DeviceName, StringComparison.OrdinalIgnoreCase)));
-        FindControl<TextBlock>("SourceInfoText")!.Text = $"{document.SourceApplication} {document.SourceVersion} - {document.Sets.Count} {Local("liste(s)", "set(s)")}".Trim();
+        string source = $"{document.SourceApplication} {document.SourceVersion}".Trim();
+        FindControl<TextBlock>("SourceInfoText")!.Text =
+            $"{source} - {_importReport!.AdapterName}{Environment.NewLine}{_importReport.ToDisplayText(_language == UiLanguage.English)}";
         UpdateRangeDefaults();
         UpdateAutoMatchState();
     }
@@ -225,9 +230,18 @@ internal sealed partial class ChannelLabelImportDialog : Window
 
     private IReadOnlyList<ChannelLabelTransferPreviewRow> BuildPreview()
     {
-        int sourceStart = ParsePositive(FindControl<TextBox>("SourceStartTextBox")!.Text, Local("premier canal source", "first source channel"));
-        int targetStart = ParsePositive(FindControl<TextBox>("TargetStartTextBox")!.Text, Local("premier canal Dante", "first Dante channel"));
-        int count = ParsePositive(FindControl<TextBox>("CountTextBox")!.Text, Local("nombre de canaux", "channel count"));
+        int sourceStart = LocalizedNumberParser.ParsePositive(
+            FindControl<TextBox>("SourceStartTextBox")!.Text,
+            Local("premier canal source", "first source channel"),
+            _language);
+        int targetStart = LocalizedNumberParser.ParsePositive(
+            FindControl<TextBox>("TargetStartTextBox")!.Text,
+            Local("premier canal Dante", "first Dante channel"),
+            _language);
+        int count = LocalizedNumberParser.ParsePositive(
+            FindControl<TextBox>("CountTextBox")!.Text,
+            Local("nombre de canaux", "channel count"),
+            _language);
         DanteChannelKind selectedKind = SelectedValue("KindCombo") == "rx" ? DanteChannelKind.Rx : DanteChannelKind.Tx;
         List<ChannelLabelTransferPreviewRow> rows = [];
 
@@ -301,11 +315,6 @@ internal sealed partial class ChannelLabelImportDialog : Window
 
     private string SelectedValue(string controlName) =>
         (FindControl<ComboBox>(controlName)!.SelectedItem as ChoiceValue)?.Value ?? string.Empty;
-
-    private static int ParsePositive(string? value, string label) =>
-        int.TryParse(value?.Trim(), out int parsed) && parsed > 0
-            ? parsed
-            : throw new InvalidOperationException($"{label} : valeur invalide.");
 
     private string Local(string french, string english) => _language == UiLanguage.English ? english : french;
 }

@@ -8,16 +8,17 @@
     <AssemblyName>DanteConfigEditorV3</AssemblyName>
     <RootNamespace>DanteConfigEditor</RootNamespace>
     <ApplicationIcon>DanteEdit.ico</ApplicationIcon>
-    <Version>3.4.0</Version>
-    <AssemblyVersion>3.4.0.0</AssemblyVersion>
-    <FileVersion>3.4.0.0</FileVersion>
-    <InformationalVersion>3.4</InformationalVersion>
+    <Version>3.6.1</Version>
+    <AssemblyVersion>3.6.1.0</AssemblyVersion>
+    <FileVersion>3.6.1.0</FileVersion>
+    <InformationalVersion>3.6.1</InformationalVersion>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="DanteEdit.ico" />
     <Resource Include="DanteEdit.ico" />
+    <Resource Include="Resources\Support\paypal-support-qr.png" />
   </ItemGroup>
 
   <ItemGroup>

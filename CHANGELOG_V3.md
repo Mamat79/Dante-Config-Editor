@@ -1,5 +1,74 @@
 # Changelog V3
 
+## 2026-07-26 - Version 3.6.1
+
+- La fenêtre `Soutenir DCE` affiche directement le QR PayPal fourni par Mamat
+  Leroy sur Windows et macOS.
+- Un bouton ouvre également la page PayPal.Me `MamatLeroy` sur ordinateur.
+- Suppression du bouton qui ouvrait une redirection PayPal inadaptée aux
+  navigateurs sur ordinateur.
+- La documentation de soutien GitHub explique le scan du QR sur téléphone.
+- Aucun paiement ni aucune donnée financière ne transitent par DCE.
+- Les notices complètes française et anglaise passent à 26 pages avec captures
+  annotées et procédures détaillées pour Configuration, profils, renommage,
+  Patch, Easy Patch, fusion XML, banque de machines, labels, synoptique, santé
+  du fichier et Atomic Bomb.
+- La banque communautaire V3.6 intègre quatre modèles assainis supplémentaires :
+  Glensound Divine, Beatrice D8 et AOIP22, ainsi qu'Allen & Heath SDante 64x64.
+  La V3.6.1 est remplacée sans changement de numéro.
+
+## 2026-07-25 - Version 3.6 en développement
+
+- Audit complet de l'architecture, de la fidélité XML, des performances, des dépendances, des traductions et des risques documenté dans `AUDIT_V3_6.md`.
+- Validation renforcée des identifiants, références de canaux, subscriptions, interfaces réseau, namespaces et ajouts de nœuds.
+- Comparaison XML sémantique et tests de cycle import/export/import avec conservation des éléments inconnus.
+- Duplication d'une machine sous forme de rôle générique indépendant sans recopier ni inventer `instance_id` ou `device_id`.
+- Banque de machines versionnée, partageable et transactionnelle avec métadonnées, labels, image facultative, recherche, filtres, import/export et sauvegarde/restauration.
+- Ajout d'une instance indépendante depuis la banque et création expérimentale d'un projet minimal 3.0.0.
+- Commandes Windows et macOS pour la duplication, la banque, l'ajout de modèle, le nouveau projet et l'ouverture des journaux.
+- Journaux techniques quotidiens et messages de validation plus précis.
+- Corpus local de dix XML, 176 machines et 5 004 labels validé sans modifier les originaux.
+- Numéro d'application, installateur, paquets macOS, workflows et notices passés en V3.6.
+- Easy Patch conserve le point de départ et le nombre demandé après un clic immédiat afin que `PATCH 1:1` reste utilisable.
+- L'aperçu séparé du synoptique conserve désormais ses proportions à tous les niveaux de zoom.
+- Les onglets des fenêtres machine gardent un contraste lisible dans les thèmes clair et sombre, avec RX présenté avant TX.
+- Les notices FR/EN décrivent l'application immédiate d'Easy Patch et l'alerte optionnelle des RX déjà patchés.
+- Les banques complètes utilisent désormais explicitement le format d'échange `*.dce-bank.zip`, avec catalogue GitHub, archive générique 8x8/32x32 vérifiée et accès direct depuis Windows/macOS.
+- L'installateur Windows permet de choisir le dossier de banque actif et celui des banques fournies, sans écraser une banque existante.
+- Les modèles Yamaha QL1 et Rio1608-D2, Fohhn DI4.1000, Lake LM 44, RME Digiface Dante, Glensound Divine, Beatrice D8 et AOIP22, et Allen & Heath SDante 64x64 sont distribués dans une banque communautaire assainie, proposée séparément par l'installateur Windows et incluse dans les DMG macOS.
+- La comparaison XML et ses résultats suivent maintenant la langue active sur Windows et macOS ; les libellés anglais TX/RX ont également été harmonisés.
+- Ajout d'une page bilingue `Soutenir DCE` dans `Sécurité et journal`, sans paiement intégré.
+- Ajout d'un rappel local facultatif après 20 lancements, reportable ou désactivable définitivement, sans télémétrie ni connexion au démarrage.
+- Ajout de la page de soutien dans GitHub Funding, le README français/anglais et les notices complètes.
+- Suite portée à 283 tests Core/Windows et 20 tests Mac sans écran.
+- Aucun import V3.6 réel dans Dante Controller n'est revendiqué ; la création de projet et les rôles génériques restent à valider manuellement.
+
+## V3.5 - ajustements de renommage et d'ergonomie
+
+- Réorganise les actions machine en deux lignes : Reset RX, Reset TX, Reset RX/TX et Supprimer.
+- Rend les libellés TX verticaux de la matrice Easy patch éditables au clic avec Entrée, Tab et Maj+Tab.
+- Affiche la poignée de recopie uniquement pour les noms terminés par un nombre.
+- Conserve les zéros initiaux pendant la recopie, par exemple `Mic 04` vers `Mic 05`.
+- Complète les notices françaises et anglaises avec les méthodes de renommage et des exemples.
+
+## 2026-07-23 - Version 3.5 en développement
+
+- Matrice macOS mise à jour cellule par cellule sans reconstruction complète après chaque clic.
+- Changements visuels conservés en attente jusqu'à `Appliquer au projet`, avec abandon et annulation explicites.
+- En-têtes TX/RX fixes, défilement synchronisé et labels complets en infobulle.
+- Patch 1:1 par plage et directement depuis la grille, échange des sélections TX/RX et zoom 50 à 200 % avec ajustement à la fenêtre.
+- Bouton `FLIP TX ⇄ RX` rendu très visible dans Easy patch.
+- Validation par Tab et retour par Maj+Tab pendant le renommage direct, y compris après le rafraîchissement de la grille.
+- Audit bilingue et corrections de mise en page macOS, notamment dans les imports/exports de labels.
+- Architecture d'import par adaptateurs séparés JSON, CSV, XLSX, ODS et ZIP console.
+- Validation JSON stricte, rejet des versions CSV mélangées, canaux dupliqués et colonnes XLSX/ODS manquantes.
+- Rapport d'import visible : listes, machines, canaux, lignes ignorées, labels vides, doublons et avertissements.
+- Compatibilité automatisée avec la structure JSON/CSV de DMT 2.14.0-RC1 au commit `3c34052`.
+- Création d'appareils génériques abandonnée à la demande de l'utilisateur. La suppression reste testée de bout en bout ; la duplication de rôles n'est pas proposée sans validation Dante Controller.
+- Notices complète et rapide V3.5 régénérées en français et en anglais, avec une carte de tous les écrans et fonctions.
+- Deux présentations V3.5 de 55 secondes, sans voix ni piste audio, avec texte intégré et captures synthétiques anonymisées.
+- Installateurs de développement V3.5 autonomes pour Windows x64, macOS Apple Silicon et macOS Intel, avec identités séparées de la V3.4.2 stable.
+
 ## 2026-07-22 - Version 3.4 officielle - ergonomie Patch et synoptique directionnel
 
 - Maintenance V3.4 : la grille Easy patch affiche désormais le numéro et le label complet de chaque TX dans un en-tête vertical, avec infobulle et renommage direct conservés.

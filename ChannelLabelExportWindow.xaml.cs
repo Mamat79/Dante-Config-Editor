@@ -254,7 +254,8 @@ public partial class ChannelLabelExportWindow : Window
                 List<string> warnings = [];
                 if (consoleTemplate && !compatibility.IsCompatible && !adapt)
                 {
-                    warnings.AddRange(compatibility.Warnings);
+                    warnings.AddRange(compatibility.Warnings.Select(warning =>
+                        LocalizationService.TranslateLiteral(_language, warning)));
                 }
                 if (collisions.TryGetValue(transformed.Label, out ChannelLabelCollision? collision))
                 {
@@ -309,8 +310,11 @@ public partial class ChannelLabelExportWindow : Window
 
             Format = SelectedFormat();
             Kind = KindComboBox.SelectedIndex == 1 ? DanteChannelKind.Rx : DanteChannelKind.Tx;
-            StartChannel = ParsePositive(StartTextBox.Text, L("premier canal", "first channel"));
-            Count = ParseOptionalCount(CountTextBox.Text);
+            StartChannel = LocalizedNumberParser.ParsePositive(
+                StartTextBox.Text,
+                L("premier canal", "first channel"),
+                _language);
+            Count = LocalizedNumberParser.ParseOptionalCount(CountTextBox.Text, _language);
             AdaptConsoleLabels = AdaptDmtCheckBox.IsChecked == true;
             TransformOptions = ReadTransformOptions();
             if (RequiresConsoleCompatibility(Format) && !AdaptConsoleLabels && _preview.Any(row => !string.IsNullOrWhiteSpace(row.Warning)))
@@ -337,20 +341,6 @@ public partial class ChannelLabelExportWindow : Window
     private string SelectedFormat() => (FormatComboBox.SelectedItem as ComboBoxItem)?.Tag as string ?? "json";
 
     private static bool RequiresConsoleCompatibility(string format) => BuiltInChannelLabelTemplateService.IsBuiltInFormat(format);
-
-    private static int ParsePositive(string value, string label) =>
-        int.TryParse(value.Trim(), out int parsed) && parsed > 0
-            ? parsed
-            : throw new InvalidOperationException($"{label} : valeur invalide.");
-
-    private static int? ParseOptionalCount(string value)
-    {
-        if (!int.TryParse(value.Trim(), out int parsed) || parsed < 0)
-        {
-            throw new InvalidOperationException("Nombre de canaux invalide.");
-        }
-        return parsed == 0 ? null : parsed;
-    }
 
     private ChannelLabelTransformOptions ReadTransformOptions()
     {

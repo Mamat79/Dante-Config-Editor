@@ -49,6 +49,7 @@ public partial class DeviceDetailsWindow : Window
         bool useLightTheme)
     {
         InitializeComponent();
+        DialogThemeService.Apply(this, useLightTheme);
         _language = language;
         _project = project ?? throw new ArgumentNullException(nameof(project));
         _useLightTheme = useLightTheme;

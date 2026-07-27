@@ -1,0 +1,21 @@
+{
+  "formatVersion": 1,
+  "templateId": "0bd30c10-f9ad-4ed1-b670-91a594ba3c1f",
+  "templateName": "Digiface Dante",
+  "manufacturer": "RME GmbH",
+  "model": "Digiface Dante",
+  "description": "",
+  "category": "Audio card",
+  "tags": [
+    "Audio Card"
+  ],
+  "txCount": 64,
+  "rxCount": 64,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "3.6",
+  "createdUtc": "2026-07-26T01:54:48.9000527+02:00",
+  "modifiedUtc": "2026-07-26T01:54:48.9181706+02:00",
+  "templateSha256": "4068204CDB899ACFDDB751AD314C420E76DE14F264F0B33C4858EF8FD50A898C",
+  "imageFileName": "image.jpg"
+}

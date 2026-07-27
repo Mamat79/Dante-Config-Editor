@@ -1,4 +1,5 @@
 using System.Xml.Linq;
+using DanteConfigEditor.Services;
 
 namespace DanteConfigEditor.Models;
 
@@ -71,6 +72,10 @@ public sealed class DanteSubscription
     public int? TxDanteId { get; }
 
     public string TxDanteIdDisplay => TxDanteId?.ToString() ?? "-";
+
+    public bool CanExtendRxNameSeries => ChannelNameSeriesService.CanExtend(RxChannelName);
+
+    public bool CanExtendTxNameSeries => ChannelNameSeriesService.CanExtend(TxChannelName);
 
     // Un patch est considéré actif dès qu'un device TX est renseigné.
     // Le canal peut rester vide selon certains formats XML.

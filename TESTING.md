@@ -1,5 +1,95 @@
 # Tests et historique V3
 
+## Validation du soutien facultatif V3.6 du 2026-07-26
+
+Périmètre :
+
+- branche : `v3.6` ;
+- affichage local du QR PayPal et lien PayPal.Me validé, sans paiement intégré ;
+- aucun SDK de paiement, formulaire intégré, WebView, télémétrie ou connexion réseau au démarrage ;
+- aucun XML de production ni code de modification Dante changé.
+
+Résultats :
+
+- 283 tests Core/Windows réussis, 0 échec, 0 ignoré ;
+- 20 tests Avalonia/macOS sans écran réussis, 0 échec, 0 ignoré ;
+- builds Windows et macOS Release réussis, 0 warning, 0 erreur ;
+- ressource QR identique sur Windows et macOS, avec ouverture explicite de PayPal.Me dans le navigateur système ;
+- rappel local testé : absent au premier lancement, visible au vingtième, report de 20 lancements, désactivation définitive, récupération après fichier de préférence corrompu et absence pendant les tests ;
+- GitHub Funding vérifié avec le seul lien PayPal.Me approuvé ;
+- fenêtre `Soutenir DCE` vérifiée dans l'application Windows installée en français et en anglais par l'arbre d'accessibilité, avec noms et descriptions de boutons ;
+- notices complètes FR/EN régénérées en 15 pages et dernière page rendue visuellement sans texte tronqué ni caractère accentué incorrect ;
+- installateur final : `67 812 681` octets, SHA-256 `C16EC7AD735EB7C3A8E105505CAD8A9414847AFFD0CDC72F14631D822295E39D` ;
+- installation finale réussie avec code 0 ; exécutable V3.6, aide au soutien, raccourci Menu Démarrer et raccourci Bureau présents.
+
+Limites de preuve :
+
+- aucun achat ni paiement n'a été effectué ;
+- aucun Mac physique n'a été utilisé ; les DMG restent à construire et contrôler sur le runner GitHub macOS ;
+- la capture graphique automatisée de la fenêtre WPF est restée blanche, mais le contenu, les langues et l'accessibilité ont été vérifiés par UI Automation ;
+- aucun import Dante Controller n'était requis ni réalisé, cette évolution ne modifiant pas le XML.
+
+## Validation locale de la branche V3.6 du 2026-07-25
+
+Périmètre :
+
+- branche : `v3.6`, issue du commit V3.5 `09985050aab242682bab82b792276c68ef3693fb` ;
+- système : Windows `10.0.26200`, .NET SDK `8.0.423`, runtime `8.0.29` ;
+- Inno Setup `6.7.3` ;
+- aucun Mac physique, matériel Dante ni import Dante Controller utilisé.
+
+Résultats :
+
+- 258 tests Core/Windows réussis, 0 échec, 0 ignoré ;
+- 16 tests Avalonia/macOS sans écran réussis, 0 échec, 0 ignoré ;
+- builds Windows et macOS Release réussis, 0 warning, 0 erreur ;
+- publications autonomes `win-x64`, `osx-arm64` et `osx-x64` réussies ;
+- audit NuGet : aucun package vulnérable signalé avec les sources consultées ;
+- dix XML locaux copiés vers un temporaire, soit 176 machines et 5 004 labels, chargés, validés, sauvegardés, comparés sémantiquement et relus ; originaux inchangés ;
+- Quick Start FR/EN : 1 page chacun ; notices complètes FR/EN : 15 pages chacune ;
+- extraction de texte et rendu visuel des 32 pages contrôlés sans `Ø` parasite, caractère de remplacement, chevauchement ni troncature visible ;
+- installateur `DanteConfigEditorV3_6_Installer.exe` : 67 322 778 octets, version produit `3.6`, version fichier `3.6.0`, SHA-256 `321D40BAC7BF99BD66E988810AC81EB3AEE14B0C4B1B7C6D8F78B31A69AA4DAB`, non signé ;
+- installation puis second passage de mise à niveau réussis avec code 0 : une entrée DCE V3.6, un groupe Démarrer, un raccourci Bureau, un désinstalleur et aucune trace de raccourci V3.5 ;
+- lancement de l'exécutable autonome et installé : processus répondant, titre `Dante Config Editor V3.6`, version `3.6.0.0`.
+
+Benchmark synthétique Release, médiane de trois exécutions, 64 TX et 64 RX par machine :
+
+| Machines | Chargement | Modification groupée | Garde-fou | Sauvegarde | Allocation sauvegarde |
+|---:|---:|---:|---:|---:|---:|
+| 10 | 57,4 ms | 109,8 ms | 18,8 ms | 206,5 ms | 22,6 Mio |
+| 50 | 188,8 ms | 393,8 ms | 31,9 ms | 386,1 ms | 110,6 Mio |
+| 200 | 433,8 ms | 1 081,4 ms | 142,8 ms | 996,9 ms | 440,8 Mio |
+
+Limites de preuve :
+
+- aucun XML V3.6 n'a été importé réellement dans Dante Controller ;
+- les publications macOS ont été produites sur Windows, mais les bundles `.app`, signatures ad hoc et DMG doivent être assemblés et vérifiés sur un runner ou un Mac réel ;
+- le contrôle visuel automatisé Windows n'a pas reçu l'autorisation de prise de contrôle dans le délai imparti ;
+- les échelles 125 %, 150 %, 200 %, le contraste élevé, les lecteurs d'écran et VoiceOver restent à tester manuellement.
+
+## Validation locale de la branche V3.5 du 2026-07-23
+
+Périmètre :
+
+- branche : `v3.5` ;
+- base avant optimisation : `174236ab2ce417dfe51c76fcf7237f980c6e2162` ;
+- système de test : Windows, .NET 8 ;
+- aucun Mac physique ni Dante Controller utilisé pendant cette validation.
+
+Résultats :
+
+- 199 tests cœur et contrats Windows réussis ;
+- 16 tests Avalonia/macOS sans écran réussis ;
+- builds Windows et macOS Release réussis sans warning ;
+- clic 64 x 64 avant/après : `4 231,58 ms` / `70,29 ms` ;
+- clic 128 x 128 avant/après : `21 784,06 ms` / `2,87 ms` ;
+- 100 clics en attente dans une matrice 128 x 128 : `490,80 ms`, sans reconstruction ni modification du projet principal ;
+- suppression d'une machine sauvegardée et relue sans subscription pendante ;
+- JSON et CSV DMT 2.14.0-RC1 reproduits depuis les exporteurs du commit `3c34052`, puis importés avec succès ;
+- propriétés JSON inconnues, versions CSV mélangées, canaux dupliqués et colonnes XLSX/ODS manquantes refusés.
+
+Les temps sont issus d'une exécution headless locale et ne constituent pas des seuils contractuels. Le détail se trouve dans `V3_5_IMPLEMENTATION_REPORT.md`.
+
 ## Validation locale de la V3.2 officielle du 2026-07-21
 
 Source validée avant promotion du tag immuable `v3.2` :

@@ -227,6 +227,30 @@ public static class LocalizationService
         ["Profile.48k24b1msRedundant"] = "48 kHz / 24 bit / 1 ms / Redondant / IP auto",
         ["Profile.48k24b1msDaisychain"] = "48 kHz / 24 bit / 1 ms / Daisychain / IP auto",
 
+        ["ChannelLabel.Warning.MoreThanEightCharacters"] = "plus de 8 caractères",
+        ["ChannelLabel.Warning.UnsupportedDmtCharacters"] = "caractères non pris en charge par DMT/dLive",
+        ["Ui.Placeholder.RecentFiles"] = "Fichiers récents",
+
+        ["Support.Title"] = "Soutenir DCE",
+        ["Support.Subtitle"] = "Un geste entièrement facultatif pour accompagner ce projet gratuit.",
+        ["Support.Free"] = "Dante Config Editor reste entièrement gratuit et toutes ses fonctions sont disponibles sans contribution.",
+        ["Support.PayPalDescription"] = "Scannez ce QR code avec l’application PayPal de votre téléphone. DCE ne traite aucun paiement et ne reçoit aucune information financière.",
+        ["Support.OtherWays"] = "Vous pouvez aussi aider gratuitement en ajoutant une étoile au projet GitHub ou en partageant un retour. Et si vous êtes vraiment fous, vous pouvez même faire les deux !",
+        ["Support.PayPalMeButton"] = "Ouvrir PayPal sur cet ordinateur",
+        ["Support.PayPalMeAutomation"] = "Ouvrir PayPal.Me",
+        ["Support.PayPalMeHelp"] = "Ouvre la page PayPal.Me de MamatLeroy dans le navigateur par défaut.",
+        ["Support.Close"] = "Fermer",
+        ["Support.CloseAutomation"] = "Fermer la fenêtre de soutien",
+        ["Support.OpenErrorTitle"] = "Ouverture de PayPal impossible",
+        ["Support.OpenError"] = "La page PayPal.Me n’a pas pu être ouverte dans le navigateur.",
+        ["Support.Reminder"] = "DCE vous fait gagner du temps ? Vous pouvez soutenir son développement, sans aucune obligation.",
+        ["Support.Later"] = "Pas maintenant",
+        ["Support.Never"] = "Ne plus afficher",
+        ["Support.Tooltip"] = "Présente les moyens facultatifs de soutenir ce projet gratuit.",
+        ["Support.ReminderTooltip"] = "Affiche les moyens facultatifs de soutenir le projet.",
+        ["Support.LaterTooltip"] = "Masque ce rappel pendant 20 lancements.",
+        ["Support.NeverTooltip"] = "Désactive définitivement ce rappel local.",
+
         ["Blank"] = "(vide)"
     };
 
@@ -242,7 +266,7 @@ public static class LocalizationService
 
         ["Filter.AllSenders"] = "All transmitters",
         ["Filter.AllReceivers"] = "All receivers",
-        ["Filter.AllRx"] = "All Rx",
+        ["Filter.AllRx"] = "All Rx channels",
         ["Filter.ActivePatches"] = "Active subscriptions",
         ["Filter.FreeRx"] = "Free Rx",
         ["Filter.LocalPatches"] = "Local subscriptions",
@@ -273,10 +297,10 @@ public static class LocalizationService
         ["DeviceFilter.Modified"] = "Modified only",
         ["DeviceFilter.WarningSelection"] = "Selected warning",
         ["DeviceFilter.SampleRateDifferent"] = "Different sample rate",
-        ["DeviceFilter.EncodingDifferent"] = "Different bits",
+        ["DeviceFilter.EncodingDifferent"] = "Different bit depth",
         ["Target.AllUnlocked"] = "All unlocked",
         ["Target.SelectedUnlocked"] = "Selected unlocked",
-        ["Target.FilteredUnlocked"] = "Visible filter unlocked",
+        ["Target.FilteredUnlocked"] = "Unlocked devices in current filter",
 
         ["PatchView.Simple"] = "Simple",
         ["PatchView.Expert"] = "Expert",
@@ -356,7 +380,7 @@ public static class LocalizationService
         ["Dialog.NoRecentFileMessage"] = "Select a recent file to open.",
         ["Dialog.FileMissingTitle"] = "File not found",
         ["Dialog.FileMissingMessage"] = "This recent file no longer exists.",
-        ["Dialog.OpenFailedTitle"] = "The file cannot be opened.",
+        ["Dialog.OpenFailedTitle"] = "Unable to open file",
         ["Dialog.SaveImpossibleTitle"] = "Save unavailable",
         ["Dialog.ChooseAnotherNameTitle"] = "Choose another name",
         ["Dialog.ChooseAnotherNameMessage"] = "To protect the original XML, the application does not save over the opened file. Choose a new file name.",
@@ -455,6 +479,30 @@ public static class LocalizationService
         ["Profile.48k24b1msRedundant"] = "48 kHz / 24 bit / 1 ms / Redundant / automatic IP",
         ["Profile.48k24b1msDaisychain"] = "48 kHz / 24 bit / 1 ms / Daisy-chain / automatic IP",
 
+        ["ChannelLabel.Warning.MoreThanEightCharacters"] = "more than 8 characters",
+        ["ChannelLabel.Warning.UnsupportedDmtCharacters"] = "characters not supported by DMT/dLive",
+        ["Ui.Placeholder.RecentFiles"] = "Recent files",
+
+        ["Support.Title"] = "Support DCE",
+        ["Support.Subtitle"] = "A completely optional way to support this free project.",
+        ["Support.Free"] = "Dante Config Editor remains completely free, and every feature is available without contributing.",
+        ["Support.PayPalDescription"] = "Scan this QR code with the PayPal app on your phone. DCE does not process payments or receive financial information.",
+        ["Support.OtherWays"] = "You can also help for free by starring the GitHub project or sharing feedback. And if you are truly crazy, you can even do both!",
+        ["Support.PayPalMeButton"] = "Open PayPal on this computer",
+        ["Support.PayPalMeAutomation"] = "Open PayPal.Me",
+        ["Support.PayPalMeHelp"] = "Opens MamatLeroy's PayPal.Me page in the default browser.",
+        ["Support.Close"] = "Close",
+        ["Support.CloseAutomation"] = "Close the support window",
+        ["Support.OpenErrorTitle"] = "Unable to open PayPal",
+        ["Support.OpenError"] = "The PayPal.Me page could not be opened in the browser.",
+        ["Support.Reminder"] = "Does DCE save you time? You can support its development, with no obligation.",
+        ["Support.Later"] = "Not now",
+        ["Support.Never"] = "Do not show again",
+        ["Support.Tooltip"] = "Shows optional ways to support this free project.",
+        ["Support.ReminderTooltip"] = "Shows optional ways to support the project.",
+        ["Support.LaterTooltip"] = "Hides this reminder for 20 launches.",
+        ["Support.NeverTooltip"] = "Permanently disables this local reminder.",
+
         ["Blank"] = "(empty)"
     };
 
@@ -505,6 +553,10 @@ public static class LocalizationService
         }
 
         Add(map, "Ouvrir XML", "Open XML");
+        Add(map, "Nouveau projet (expérimental)", "New project (experimental)");
+        Add(map, "Crée un preset 3.0.0 hors ligne. Un test d'import Dante Controller reste obligatoire.", "Creates an offline 3.0.0 preset. A Dante Controller import test is still required.");
+        Add(map, "Banque de machines", "Device bank");
+        Add(map, "Consulte, importe, exporte et administre les modèles de machines réutilisables.", "Browses, imports, exports, and manages reusable device templates.");
         Add(map, "Ajouter XML", "Add XML");
         Add(map, "Ajouter XML au projet", "Add XML to project");
         Add(map, "Enregistrer sous", "Save as");
@@ -556,6 +608,9 @@ public static class LocalizationService
         Add(map, "Reset patch RX/TX", "Clear Rx/Tx");
         Add(map, "Reset patch RX", "Clear Rx");
         Add(map, "Reset patch TX", "Clear Tx");
+        Add(map, "Reset RX/TX", "Clear Rx/Tx");
+        Add(map, "Reset RX", "Clear Rx");
+        Add(map, "Reset TX", "Clear Tx");
         Add(map, "Étendre la série de noms jusqu'ici", "Extend the name series to this channel");
         Add(map, "Étendre la série RX jusqu'à la ligne déposée", "Extend the Rx series to the dropped row");
         Add(map, "Étendre la série TX jusqu'à la ligne déposée", "Extend the Tx series to the dropped row");
@@ -641,10 +696,10 @@ public static class LocalizationService
         Add(map, "Chargez un XML pour commencer.", "Load an XML file to begin.");
         Add(map, "Cliquez pour affecter ou retirer ce patch. Maintenez et glissez pour préparer une série.", "Click to add or remove this patch. Hold and drag to prepare a range.");
         Add(map, "Machine RX précédente", "Previous Rx device");
-        Add(map, "Machine réceptrice RX", "Rx receiving device");
+        Add(map, "Machine réceptrice RX", "Receiving device (Rx)");
         Add(map, "Machine RX suivante", "Next Rx device");
         Add(map, "Machine TX précédente", "Previous Tx device");
-        Add(map, "Machine émettrice TX", "Tx transmitting device");
+        Add(map, "Machine émettrice TX", "Transmitting device (Tx)");
         Add(map, "Machine TX suivante", "Next Tx device");
         Add(map, "Canaux RX et source actuelle", "Rx channels and current source");
         Add(map, "Canaux TX disponibles", "Available Tx channels");
@@ -790,11 +845,19 @@ public static class LocalizationService
         Add(map, "Applique en une seule fois le nom, le mode réseau, la latence et le statut Preferred master.", "Applies the name, network mode, latency, and Preferred Master status in one operation.");
         Add(map, "Ouvre tous les réglages de la machine : IP automatique ou fixe, formats audio et noms des canaux.", "Opens all device settings: automatic or static IP, audio formats, and channel names.");
         Add(map, "Supprime la machine et nettoie les patchs qui lui sont associés.", "Deletes the device and removes its associated subscriptions.");
+        Add(map, "Dupliquer", "Duplicate");
+        Add(map, "Crée un rôle générique indépendant sans recopier l'identité matérielle.", "Creates an independent generic role without copying the hardware identity.");
+        Add(map, "Enregistrer dans la banque", "Save to device bank");
+        Add(map, "Crée un modèle réutilisable et partageable à partir de cette machine.", "Creates a reusable, shareable template from this device.");
+        Add(map, "Ouvrir les journaux", "Open logs");
+        Add(map, "Ouvre le dossier des journaux techniques utiles au diagnostic.", "Opens the technical log folder used for diagnostics.");
         Add(map, "Masque les panneaux de réglage pour agrandir le tableau des machines.", "Hides the settings panels to enlarge the device table.");
         Add(map, "Affiche les panneaux de réglage de la configuration.", "Shows the configuration settings panels.");
         Add(map, "Affiche toutes les différences de machines, canaux et patchs depuis l'ouverture du XML.", "Shows all device, channel, and subscription differences since the XML was opened.");
         Add(map, "Applique en une seule action les formats audio, la latence, l'IP automatique et éventuellement le mode réseau du profil à la cible choisie.", "Applies the profile audio formats, latency, automatic IP, and optional network mode to the selected target in one operation.");
         Add(map, "Ouvre une vue TX/RX avec glisser-déposer, affectation en série et grille de patch.", "Opens a Tx/Rx view with drag and drop, sequential assignment, and a patch matrix.");
+        Add(map, "Ouvrir l’aperçu dans une fenêtre séparée", "Open the preview in a separate window");
+        Add(map, "Ouvrir l’aperçu du synoptique dans une fenêtre séparée", "Open the synoptic preview in a separate window");
         Add(map, "Patch RX", "Rx patch");
         Add(map, "Ouvrir Easy patch", "Open Easy patch");
         Add(map, "Affectez des canaux TX disponibles aux entrées RX de cette machine.", "Assign available Tx channels to this device's Rx inputs.");

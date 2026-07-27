@@ -18,6 +18,7 @@
             </StackPanel>
         </Border>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,14,0,0">
+            <Button x:Name="TertiaryButton" MinWidth="110" IsVisible="False" Click="TertiaryButton_Click" />
             <Button x:Name="SecondaryButton" MinWidth="110" Click="SecondaryButton_Click" />
             <Button x:Name="PrimaryButton" Classes="primary" MinWidth="110" Click="PrimaryButton_Click" />
         </StackPanel>

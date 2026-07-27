@@ -13,6 +13,7 @@ public partial class ChannelLabelImportWindow : Window
     private readonly UiLanguage _language;
     private readonly DanteProject _project;
     private readonly ChannelLabelDocument _document;
+    private readonly ChannelLabelImportReport _importReport;
     private readonly ObservableCollection<ChannelLabelTransferPreviewRow> _previewRows = [];
     private readonly ObservableCollection<ChannelLabelDeviceSelection> _targetDevices;
 
@@ -20,12 +21,14 @@ public partial class ChannelLabelImportWindow : Window
         UiLanguage language,
         DanteProject project,
         ChannelLabelDocument document,
+        ChannelLabelImportReport importReport,
         string? initiallySelectedDevice)
     {
         InitializeComponent();
         _language = language;
         _project = project;
         _document = document;
+        _importReport = importReport;
         _targetDevices = new ObservableCollection<ChannelLabelDeviceSelection>(project.Devices.Select(device =>
             new ChannelLabelDeviceSelection(
                 device.Name,
@@ -44,7 +47,7 @@ public partial class ChannelLabelImportWindow : Window
             && document.Sets.All(set => project.Devices.Any(device =>
                 string.Equals(device.Name, set.DeviceName, StringComparison.OrdinalIgnoreCase)));
         TargetKindComboBox.SelectedIndex = document.Sets[0].Direction == ChannelLabelDirection.Tx ? 0 : 1;
-        SourceInfoTextBlock.Text = $"{document.SourceApplication} {document.SourceVersion} - {document.Sets.Count} liste(s)".Trim();
+        SourceInfoTextBlock.Text = BuildSourceInfo();
         ApplyLanguage();
         UpdateRangeDefaults();
     }
@@ -52,6 +55,12 @@ public partial class ChannelLabelImportWindow : Window
     public IReadOnlyList<ChannelLabelAssignment> Assignments { get; private set; } = [];
 
     private bool IsEnglish => _language == UiLanguage.English;
+
+    private string BuildSourceInfo()
+    {
+        string source = $"{_document.SourceApplication} {_document.SourceVersion}".Trim();
+        return $"{source} - {_importReport.AdapterName}{Environment.NewLine}{_importReport.ToDisplayText(IsEnglish)}";
+    }
 
     private void ApplyLanguage()
     {
@@ -171,9 +180,18 @@ public partial class ChannelLabelImportWindow : Window
         {
             TargetDevicesGrid.CommitEdit(DataGridEditingUnit.Cell, true);
             TargetDevicesGrid.CommitEdit(DataGridEditingUnit.Row, true);
-            int sourceStart = ParsePositive(SourceStartTextBox.Text, L("premier canal source", "first source channel"));
-            int targetStart = ParsePositive(TargetStartTextBox.Text, L("premier canal Dante", "first Dante channel"));
-            int count = ParsePositive(CountTextBox.Text, L("nombre de canaux", "channel count"));
+            int sourceStart = LocalizedNumberParser.ParsePositive(
+                SourceStartTextBox.Text,
+                L("premier canal source", "first source channel"),
+                _language);
+            int targetStart = LocalizedNumberParser.ParsePositive(
+                TargetStartTextBox.Text,
+                L("premier canal Dante", "first Dante channel"),
+                _language);
+            int count = LocalizedNumberParser.ParsePositive(
+                CountTextBox.Text,
+                L("nombre de canaux", "channel count"),
+                _language);
             DanteChannelKind selectedKind = TargetKindComboBox.SelectedIndex == 0 ? DanteChannelKind.Tx : DanteChannelKind.Rx;
             List<ChannelLabelTransferPreviewRow> rows = [];
 
@@ -258,13 +276,6 @@ public partial class ChannelLabelImportWindow : Window
             "Prévisualisez le transfert pour vérifier chaque correspondance.",
             "Preview the transfer to verify each mapping.");
         ApplyButton.IsEnabled = false;
-    }
-
-    private static int ParsePositive(string value, string label)
-    {
-        return int.TryParse(value.Trim(), out int parsed) && parsed > 0
-            ? parsed
-            : throw new InvalidOperationException($"{label} : valeur invalide.");
     }
 
     private string L(string french, string english) => IsEnglish ? english : french;

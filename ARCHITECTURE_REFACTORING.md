@@ -2,7 +2,7 @@
 
 ## Objectif
 
-La V3.3 conserve le projet existant et extrait progressivement les responsabilités risquées. Il n'y a pas de réécriture générale : chaque déplacement doit préserver le XML produit, rester couvert par les tests et faire l'objet d'un commit isolé.
+La V3.6 conserve le projet existant et extrait progressivement les responsabilités risquées. Il n'y a pas de réécriture générale : chaque déplacement doit préserver le XML produit, rester couvert par les tests et faire l'objet d'un commit isolé.
 
 ## Projets
 
@@ -29,22 +29,29 @@ La V3.3 conserve le projet existant et extrait progressivement les responsabilit
 | garde-fou XML | `Services/DanteXmlChangeGuardService.cs` | chemins inconnus bloqués et identités techniques protégées |
 | patch visuel partagé | `Services/PatchAssignmentPlanner.cs`, `Services/PatchWorkspaceSession.cs` | changements en attente puis lot unique et annulable |
 | échange de labels | `Services/ChannelLabelExchangeService.cs`, `Services/DmtChannelWorkbookService.cs`, `Services/ChannelLabelTransferPlanner.cs` | aperçu avant application, modèle DMT original intact, lot unique et références TX mises à jour |
+| identité de rôle | `Services/MachineRoleIdentityService.cs`, `Models/MachineRoleModels.cs` | identité de session non sérialisée, aucun identifiant matériel inventé |
+| duplication et insertion | `Services/MachineRoleInstantiationService.cs`, `Models/DanteProject.MachineRoles.cs` | clone indépendant, options explicites, opération annulable et transactionnelle |
+| conversion de modèle | `Services/MachineTemplateService.cs`, `Models/MachineTemplateModels.cs` | neutralisation des données de projet, métadonnées versionnées et labels génériques |
+| stockage de banque | `Services/MachineBankRepository.cs`, `Services/MachineBankArchiveService.cs`, `Services/MachineBankMigrationService.cs` | écritures atomiques, empreintes, archives protégées et migration explicite |
+| création de projet | `Services/ProjectCreationService.cs`, `Models/DanteProject.Creation.cs` | structure minimale expérimentale 3.0.0 et validation avant remplacement |
+| comparaison sémantique | `Services/XmlSemanticComparisonService.cs` | distinction entre mise en forme et perte de contenu XML |
+| diagnostic | `Services/DiagnosticLogService.cs` | journal quotidien pour les échecs sans donnée sensible imposée |
 
 Les interfaces `PatchWorkspaceWindow` (WPF) et `PatchWorkspaceDialog` (Avalonia) restent propres à chaque plateforme, mais utilisent le même planificateur et la même session partagée.
 
 ## Fichiers encore volumineux
 
-Mesure du 2026-07-11 avant la validation finale :
+Mesure du 2026-07-25 avant la validation finale :
 
 | Fichier | Lignes | Risque principal |
 |---|---:|---|
-| `MainWindow.xaml.cs` | 3 284 | orchestration, état UI et commandes Windows encore mêlés |
-| `Models/DanteProject.cs` | 1 673 | chargement, mutations unitaires et recherche XML encore concentrés |
-| `src/DanteConfigEditor.Mac/MainWindow.axaml.cs` | 1 680 | orchestration Mac et adaptation de vues encore regroupées |
-| `Services/LocalizationService.cs` | 695 | dictionnaire bilingue monolithique |
-| `Services/DanteXmlChangeGuardService.cs` | 576 | comparaison de sécurité complexe et sensible |
+| `MainWindow.xaml.cs` | 4 276 | orchestration, état UI et commandes Windows encore mêlés |
+| `Models/DanteProject.cs` | 1 750 | chargement, mutations unitaires et recherche XML encore concentrés |
+| `src/DanteConfigEditor.Mac/MainWindow.axaml.cs` | 2 221 | orchestration Mac et adaptation de vues encore regroupées |
+| `Services/LocalizationService.cs` | 843 | dictionnaire bilingue monolithique |
+| `Services/DanteXmlChangeGuardService.cs` | 672 | comparaison de sécurité complexe et sensible |
 
-La réduction de `DanteProject.cs` depuis 2 449 lignes provient des extractions ciblées. La croissance des fenêtres principales inclut le patch visuel et doit être contenue par des contrôleurs de vue, sans déplacer la logique XML vers l'interface.
+La réduction historique de `DanteProject.cs` depuis 2 449 lignes provient des extractions ciblées. La croissance des fenêtres principales inclut le patch visuel et l'orchestration de la banque ; elle doit être contenue par des contrôleurs de vue, sans déplacer la logique XML vers l'interface.
 
 ## Prochaines extractions prudentes
 

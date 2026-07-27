@@ -1,0 +1,22 @@
+{
+  "formatVersion": 1,
+  "templateId": "55b2bc9e-01af-4b0f-b845-87851fefbcff",
+  "templateName": "DI4.1000",
+  "manufacturer": "Fohhn",
+  "model": "DI-AMP DAN",
+  "description": "",
+  "category": "Amplis",
+  "tags": [
+    "Amplis",
+    "Fohhn"
+  ],
+  "txCount": 0,
+  "rxCount": 4,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "3.6",
+  "createdUtc": "2026-07-26T01:40:44.0999914+02:00",
+  "modifiedUtc": "2026-07-26T01:40:44.1374796+02:00",
+  "templateSha256": "DEE7ED4580302C0E9B3B0D9CC672B29240DE2E8D028010CB2A93E8848FF85F47",
+  "imageFileName": "image.png"
+}

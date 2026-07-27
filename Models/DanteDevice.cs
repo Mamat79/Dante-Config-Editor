@@ -9,15 +9,15 @@ public sealed class DanteDevice
     internal DanteDevice(XElement element)
     {
         Element = element;
-        Name = ReadElementValue(element, "name");
+        Name = MachineRoleIdentityService.ReadVisibleName(element);
         FriendlyName = ReadElementValue(element, "friendly_name");
+        Manufacturer = ReadElementValue(element, "manufacturer_name");
+        Model = ReadElementValue(element, "model_name");
         string technicalDeviceId = element.Child("instance_id").ChildValue("device_id");
-        string defaultName = ReadElementValue(element, "default_name");
-        StableIdentity = !string.IsNullOrWhiteSpace(technicalDeviceId)
-            ? $"device-id:{technicalDeviceId.Trim()}"
-            : !string.IsNullOrWhiteSpace(defaultName)
-                ? $"default-name:{defaultName.Trim()}"
-                : $"name:{Name.Trim()}";
+        TechnicalDeviceId = technicalDeviceId.Trim();
+        ProcessId = element.Child("instance_id").ChildValue("process_id");
+        IsGenericRole = string.IsNullOrWhiteSpace(TechnicalDeviceId);
+        StableIdentity = MachineRoleIdentityService.GetOrCreateSessionIdentity(element);
         IsRedundant = string.Equals(element.Child("redundancy")?.Attribute("value")?.Value, "true", StringComparison.OrdinalIgnoreCase);
         PreferredMaster = string.Equals(element.Child("preferred_master")?.Attribute("value")?.Value, "true", StringComparison.OrdinalIgnoreCase);
         Latency = ReadElementValue(element, "unicast_latency");
@@ -44,9 +44,21 @@ public sealed class DanteDevice
 
     public string FriendlyName { get; }
 
-    // Identité de lecture seule utilisée par les données annexes de l'application.
+    // Métadonnées intrinsèques exposées sans donner à l'interface un accès
+    // direct au document XML mutable.
+    public string Manufacturer { get; }
+
+    public string Model { get; }
+
+    // Identité de session utilisée par les données annexes de l'application.
     // Elle n'est jamais écrite dans le XML et reste stable après un renommage.
     public string StableIdentity { get; }
+
+    public string TechnicalDeviceId { get; }
+
+    public string ProcessId { get; }
+
+    public bool IsGenericRole { get; }
 
     public bool IsRedundant { get; }
 

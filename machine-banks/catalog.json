@@ -1,0 +1,26 @@
+{
+  "formatVersion": 1,
+  "updatedUtc": "2026-07-27T00:00:00+00:00",
+  "banks": [
+    {
+      "id": "dce-generic-roles-3.6",
+      "name": "DCE Generic Roles 3.6",
+      "file": "DCE_Generic_Roles_3_6.dce-bank.zip",
+      "sha256": "bd24239205a83cb9aec60938bf10d5eeab798385775e945cf5ec0051ee32d8df",
+      "minimumDceVersion": "3.6",
+      "language": "fr-en",
+      "descriptionFr": "Deux rôles génériques 8x8 et 32x32 sans identité matérielle, réseau ni abonnement.",
+      "descriptionEn": "Two generic 8x8 and 32x32 roles without hardware identity, network settings or subscriptions."
+    },
+    {
+      "id": "dce-community-devices-3.6",
+      "name": "DCE Community Devices 3.6",
+      "file": "DCE_Community_Devices_3_6.dce-bank.zip",
+      "sha256": "9e11b024c9c201f32e3ccfdad64f648e51a77e75176be91aae5f699bc5f55158",
+      "minimumDceVersion": "3.6",
+      "language": "fr-en",
+      "descriptionFr": "Neuf modèles illustrés : Yamaha QL1 et Rio1608-D2, Fohhn DI4.1000, Lake LM 44, RME Digiface Dante, Glensound Divine, Beatrice D8 et AOIP22, et Allen & Heath SDante 64x64, sans identité matérielle, réseau ni abonnement.",
+      "descriptionEn": "Nine illustrated templates: Yamaha QL1 and Rio1608-D2, Fohhn DI4.1000, Lake LM 44, RME Digiface Dante, Glensound Divine, Beatrice D8 and AOIP22, and Allen & Heath SDante 64x64, without hardware identity, network settings or subscriptions."
+    }
+  ]
+}

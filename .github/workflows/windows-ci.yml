@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - v3.6
       - "agent/**"
   pull_request:
     branches:
@@ -20,7 +21,7 @@ jobs:
   test-build-publish:
     name: Test, build and publish
     runs-on: windows-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
 
     steps:
       - name: Checkout
@@ -47,12 +48,22 @@ jobs:
       - name: Build
         run: dotnet build .\DanteConfigEditorV3.csproj -c Release --no-restore
 
+      - name: Install Inno Setup
+        shell: pwsh
+        run: |
+          choco install innosetup --no-progress -y
+          if ($LASTEXITCODE -ne 0) { throw "Inno Setup installation failed." }
+
+      - name: Build self-contained installer
+        shell: pwsh
+        run: .\installer\build_installer.ps1
+
       - name: Publish win-x64
         run: >-
           dotnet publish .\DanteConfigEditorV3.csproj
           -c Release
           -r win-x64
-          --self-contained false
+          --self-contained true
           -o .\artifacts\publish
 
       - name: Upload test results
@@ -67,7 +78,17 @@ jobs:
       - name: Upload published application
         uses: actions/upload-artifact@v7
         with:
-          name: DanteConfigEditorV3-win-x64
+          name: DanteConfigEditorV3-6-win-x64
           path: .\artifacts\publish
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload Windows installer
+        uses: actions/upload-artifact@v7
+        with:
+          name: DCE-v3.6-Windows-Installer
+          path: |
+            .\dist\DanteConfigEditorV3_6_Installer.exe
+            .\dist\DanteConfigEditorV3_6_Installer.exe.sha256
           if-no-files-found: error
           retention-days: 14

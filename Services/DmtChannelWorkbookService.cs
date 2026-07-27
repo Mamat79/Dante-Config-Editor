@@ -24,17 +24,17 @@ public static class DmtChannelWorkbookService
         XDocument channelsSheet = LoadWorksheet(archive, "Channels");
         XDocument? miscSheet = TryLoadWorksheet(archive, "Misc");
         string version = miscSheet is null ? string.Empty : ReadPropertyValue(miscSheet, sharedStrings, "Version");
-        IReadOnlyList<ChannelLabelEntry> channels = ReadChannels(channelsSheet, sharedStrings);
-        if (channels.Count == 0)
+        ChannelReadSummary channelSummary = ReadChannels(channelsSheet, sharedStrings);
+        if (channelSummary.Channels.Count == 0)
         {
             throw new InvalidDataException("La feuille Channels du classeur DMT ne contient aucun label actif.");
         }
 
         ChannelLabelDocument document = ChannelLabelExchangeService.BuildDmtDocument(
             Path.GetFileNameWithoutExtension(path),
-            channels,
+            channelSummary.Channels,
             string.IsNullOrWhiteSpace(version) ? "XLSX" : $"XLSX template {version}");
-        return new DmtWorkbookReadResult(version, document);
+        return new DmtWorkbookReadResult(version, document, channelSummary.IgnoredRowCount);
     }
 
     public static void WriteCopy(string templatePath, string outputPath, ChannelLabelSet labels, bool adaptLabels)
@@ -195,12 +195,13 @@ public static class DmtChannelWorkbookService
         return builder.ToString().Normalize(NormalizationForm.FormC);
     }
 
-    private static IReadOnlyList<ChannelLabelEntry> ReadChannels(XDocument sheet, IReadOnlyList<string> sharedStrings)
+    private static ChannelReadSummary ReadChannels(XDocument sheet, IReadOnlyList<string> sharedStrings)
     {
         XElement[] rows = sheet.Descendants(SpreadsheetNamespace + "row").ToArray();
         HeaderLocation header = FindHeaders(rows, sharedStrings, ["Channel", "Name"]);
         int enabledColumn = header.Columns.TryGetValue("Enabled", out int enabled) ? enabled : -1;
         List<ChannelLabelEntry> channels = [];
+        int ignoredRows = 0;
         foreach (XElement row in rows.Skip(header.RowIndex + 1))
         {
             Dictionary<int, string> values = ReadRow(row, sharedStrings);
@@ -215,6 +216,7 @@ public static class DmtChannelWorkbookService
                 && values.TryGetValue(enabledColumn, out string? enabledValue)
                 && string.Equals(enabledValue.Trim(), "no", StringComparison.OrdinalIgnoreCase))
             {
+                ignoredRows++;
                 continue;
             }
 
@@ -223,9 +225,13 @@ public static class DmtChannelWorkbookService
             {
                 channels.Add(new ChannelLabelEntry(channelNumber, label, null));
             }
+            else
+            {
+                ignoredRows++;
+            }
         }
 
-        return channels;
+        return new ChannelReadSummary(channels, ignoredRows);
     }
 
     private static void UpdateChannelNames(
@@ -483,4 +489,8 @@ public static class DmtChannelWorkbookService
     }
 
     private sealed record HeaderLocation(int RowIndex, IReadOnlyDictionary<string, int> Columns);
+
+    private sealed record ChannelReadSummary(
+        IReadOnlyList<ChannelLabelEntry> Channels,
+        int IgnoredRowCount);
 }

@@ -1,21 +1,21 @@
-#define MyAppName "Dante Config Editor V3.4"
-#define MyAppVersion "3.4"
+#define MyAppName "Dante Config Editor V3.6"
+#define MyAppVersion "3.6.1"
 #define MyAppPublisher "Mamat"
 #define MyAppExeName "DanteConfigEditorV3.exe"
-#define MyAppShortcutName "Dante Config Editor V3.4"
+#define MyAppShortcutName "DCE V3.6"
 #define SourceRoot ".."
 
 [Setup]
-AppId={{76E68F80-5C89-4415-A090-370CA60EB3AD}
+AppId={{A11FA3C8-3461-46CA-AC61-6A14316E8DBB}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
-DefaultDirName={autopf}\Dante Config Editor V3.4
-DefaultGroupName=Dante Config Editor V3.4
+DefaultDirName={autopf}\Dante Config Editor V3.6
+DefaultGroupName=Dante Config Editor V3.6
 DisableProgramGroupPage=no
 AllowNoIcons=yes
 OutputDir={#SourceRoot}\dist
-OutputBaseFilename=DanteConfigEditorV3_4_Installer
+OutputBaseFilename=DanteConfigEditorV3_6_Installer
 SetupIconFile={#SourceRoot}\DanteEdit.ico
 Compression=lzma2
 SolidCompression=yes
@@ -23,15 +23,17 @@ WizardStyle=modern
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 PrivilegesRequired=admin
+; La mise à niveau nettoie uniquement les anciens raccourcis V3.5 du profil courant.
+UsedUserAreasWarning=no
 UninstallDisplayIcon={app}\{#MyAppExeName}
-VersionInfoVersion=3.4.0
+VersionInfoVersion=3.6.1
 VersionInfoCompany={#MyAppPublisher}
-VersionInfoDescription=Dante Config Editor V3.4 installer
+VersionInfoDescription=Dante Config Editor V3.6 installer
 VersionInfoProductName={#MyAppName}
 SetupLogging=yes
 CloseApplications=yes
 RestartApplications=no
-UsePreviousAppDir=no
+UsePreviousAppDir=yes
 UsePreviousGroup=no
 
 [Languages]
@@ -54,12 +56,20 @@ Source: "{#SourceRoot}\docs\QuickStart_DanteConfigEditorV3_FR.pdf"; DestDir: "{a
 Source: "{#SourceRoot}\docs\QuickStart_DanteConfigEditorV3_EN.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourceRoot}\docs\Notice_DanteConfigEditorV3_FR.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourceRoot}\docs\Notice_DanteConfigEditorV3_EN.pdf"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#SourceRoot}\docs\SUPPORT_DCE.md"; DestDir: "{app}\docs"; Flags: ignoreversion
+Source: "{#SourceRoot}\Resources\Support\paypal-support-qr.png"; DestDir: "{app}\Resources\Support"; Flags: ignoreversion
+Source: "{#SourceRoot}\Resources\MachineBanks\Bundled\DCE Generic Roles 3.6\*"; DestDir: "{code:GetBundledBankDestination}"; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist; Check: ShouldInstallBundledBank
+Source: "{#SourceRoot}\Resources\MachineBanks\Bundled\DCE Community Devices 3.6\*"; DestDir: "{code:GetCommunityBankDestination}"; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist; Check: ShouldInstallCommunityBank
 
 [InstallDelete]
 Type: files; Name: "{app}\QuickStart_DanteConfigEditorV3.pdf"
 Type: files; Name: "{app}\Notice_DanteConfigEditorV3.pdf"
 Type: files; Name: "{group}\Quick start PDF.lnk"
 Type: files; Name: "{group}\Notice PDF.lnk"
+Type: filesandordirs; Name: "{commonprograms}\Dante Config Editor V3.5"
+Type: filesandordirs; Name: "{userprograms}\Dante Config Editor V3.5"
+Type: files; Name: "{commondesktop}\DCE V3.5.lnk"
+Type: files; Name: "{userdesktop}\DCE V3.5.lnk"
 
 [Icons]
 Name: "{group}\{code:GetShortcutAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"; IconFilename: "{app}\DanteEdit.ico"
@@ -75,7 +85,7 @@ Name: "{group}\Désinstaller {code:GetShortcutAppName}"; Filename: "{uninstallex
 Name: "{autodesktop}\{code:GetShortcutAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"; IconFilename: "{app}\DanteEdit.ico"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,Dante Config Editor V3.4}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,Dante Config Editor V3.6}"; Flags: nowait postinstall skipifsilent
 Filename: "{app}\RELEASE_NOTES.md"; Description: "Ouvrir les notes de version"; Flags: postinstall shellexec unchecked skipifsilent; Check: IsFrenchLanguage
 Filename: "{app}\RELEASE_NOTES_EN.md"; Description: "Open the release notes"; Flags: postinstall shellexec unchecked skipifsilent; Check: IsEnglishLanguage
 Filename: "{app}\QuickStart_DanteConfigEditorV3_FR.pdf"; Description: "Ouvrir le démarrage rapide en français"; Flags: postinstall shellexec unchecked skipifsilent; Check: IsFrenchLanguage
@@ -90,11 +100,12 @@ var
   GithubLabel: TNewStaticText;
   ExistingInstallDir: String;
   ExistingInstallVersion: String;
-  LegacyV31Uninstaller: String;
-  LegacyBetaV32Uninstaller: String;
-  LegacyV309Uninstaller: String;
-  LegacyV308Uninstaller: String;
-  LegacyV307Uninstaller: String;
+  BankDirectoriesPage: TInputDirWizardPage;
+  BankOptionsPage: TInputOptionWizardPage;
+  BundledBankDestination: String;
+  CommunityBankDestination: String;
+  InstallBundledBankFiles: Boolean;
+  InstallCommunityBankFiles: Boolean;
 
 function GetShortcutAppName(Param: String): String;
 begin
@@ -109,6 +120,71 @@ end;
 function IsEnglishLanguage(): Boolean;
 begin
   Result := ActiveLanguage = 'english';
+end;
+
+function InstallerText(FrenchText: String; EnglishText: String): String;
+begin
+  if IsEnglishLanguage() then
+    Result := EnglishText
+  else
+    Result := FrenchText;
+end;
+
+function MachineBankSettingsPath(): String;
+begin
+  Result := ExpandConstant(
+    '{localappdata}\DanteConfigEditorV3.2\machine-bank-location.txt');
+end;
+
+function DefaultMachineBankPath(): String;
+begin
+  Result := ExpandConstant(
+    '{userdocs}\Dante Config Editor\Machine Bank');
+end;
+
+function DefaultBundledBanksPath(): String;
+begin
+  Result := ExpandConstant(
+    '{userdocs}\Dante Config Editor\Included Machine Banks');
+end;
+
+function ConfiguredMachineBankPath(): String;
+var
+  RawContent: AnsiString;
+  Content: String;
+begin
+  Result := DefaultMachineBankPath();
+  if LoadStringFromFile(MachineBankSettingsPath(), RawContent) then
+  begin
+    Content := UTF8Decode(RawContent);
+    StringChangeEx(Content, #13, '', True);
+    StringChangeEx(Content, #10, '', True);
+    Content := Trim(Content);
+    if Content <> '' then
+    begin
+      Result := Content;
+    end;
+  end;
+end;
+
+function GetBundledBankDestination(Param: String): String;
+begin
+  Result := BundledBankDestination;
+end;
+
+function ShouldInstallBundledBank(): Boolean;
+begin
+  Result := InstallBundledBankFiles;
+end;
+
+function GetCommunityBankDestination(Param: String): String;
+begin
+  Result := CommunityBankDestination;
+end;
+
+function ShouldInstallCommunityBank(): Boolean;
+begin
+  Result := InstallCommunityBankFiles;
 end;
 
 procedure OpenGithub(Sender: TObject);
@@ -131,61 +207,14 @@ begin
 end;
 
 function DetectExistingInstall(): Boolean;
-var
-  CandidateDir: String;
 begin
   ExistingInstallDir := '';
   ExistingInstallVersion := '';
-  LegacyV31Uninstaller := '';
-  LegacyBetaV32Uninstaller := '';
-  LegacyV309Uninstaller := '';
-  LegacyV308Uninstaller := '';
-  LegacyV307Uninstaller := '';
-
-  QueryInstallValue('76E68F80-5C89-4415-A090-370CA60EB3AD', 'UninstallString', LegacyV31Uninstaller);
-  QueryInstallValue('A2CC4547-2811-4EB5-B0BC-FBE4B7B847DF', 'UninstallString', LegacyBetaV32Uninstaller);
-  QueryInstallValue('C72399DF-AC3B-4FFA-A503-D79A4D6D9380', 'UninstallString', LegacyV309Uninstaller);
-  QueryInstallValue('23FF6543-561B-4C55-B733-817C9F92F5AA', 'UninstallString', LegacyV308Uninstaller);
-  QueryInstallValue('D9A22EA8-8370-4C6D-9E7C-DBC5A59F53A1', 'UninstallString', LegacyV307Uninstaller);
-
-  Result := QueryInstallValue('76E68F80-5C89-4415-A090-370CA60EB3AD', 'InstallLocation', ExistingInstallDir);
-  if not Result then
-  begin
-    CandidateDir := '';
-    if QueryInstallValue('A2CC4547-2811-4EB5-B0BC-FBE4B7B847DF', 'InstallLocation', CandidateDir) then
-    begin
-      ExistingInstallDir := CandidateDir;
-      Result := True;
-    end
-    else if QueryInstallValue('C72399DF-AC3B-4FFA-A503-D79A4D6D9380', 'InstallLocation', CandidateDir) then
-    begin
-      ExistingInstallDir := CandidateDir;
-      Result := True;
-    end
-    else if QueryInstallValue('23FF6543-561B-4C55-B733-817C9F92F5AA', 'InstallLocation', CandidateDir) then
-    begin
-      ExistingInstallDir := CandidateDir;
-      Result := True;
-    end
-    else if QueryInstallValue('D9A22EA8-8370-4C6D-9E7C-DBC5A59F53A1', 'InstallLocation', CandidateDir) then
-    begin
-      ExistingInstallDir := CandidateDir;
-      Result := True;
-    end;
-  end;
+  Result := QueryInstallValue('A11FA3C8-3461-46CA-AC61-6A14316E8DBB', 'InstallLocation', ExistingInstallDir);
 
   if Result then
   begin
-    if LegacyV31Uninstaller <> '' then
-      QueryInstallValue('76E68F80-5C89-4415-A090-370CA60EB3AD', 'DisplayVersion', ExistingInstallVersion)
-    else if LegacyBetaV32Uninstaller <> '' then
-      QueryInstallValue('A2CC4547-2811-4EB5-B0BC-FBE4B7B847DF', 'DisplayVersion', ExistingInstallVersion)
-    else if LegacyV309Uninstaller <> '' then
-      QueryInstallValue('C72399DF-AC3B-4FFA-A503-D79A4D6D9380', 'DisplayVersion', ExistingInstallVersion)
-    else if LegacyV308Uninstaller <> '' then
-      QueryInstallValue('23FF6543-561B-4C55-B733-817C9F92F5AA', 'DisplayVersion', ExistingInstallVersion)
-    else
-      QueryInstallValue('D9A22EA8-8370-4C6D-9E7C-DBC5A59F53A1', 'DisplayVersion', ExistingInstallVersion);
+    QueryInstallValue('A11FA3C8-3461-46CA-AC61-6A14316E8DBB', 'DisplayVersion', ExistingInstallVersion);
 
     if ExistingInstallVersion = '' then
     begin
@@ -199,7 +228,7 @@ begin
   if ActiveLanguage = 'english' then
   begin
     Result :=
-      'A previous installation of Dante Config Editor was found.' + #13#10#13#10 +
+      'An existing Dante Config Editor installation was found.' + #13#10#13#10 +
       'Detected version: ' + ExistingInstallVersion + #13#10 +
       'Folder: ' + ExistingInstallDir + #13#10#13#10 +
       'Yes = replace/update this installation.' + #13#10 +
@@ -208,7 +237,7 @@ begin
   else
   begin
     Result :=
-      'Une version précédente de Dante Config Editor est déjà installée.' + #13#10#13#10 +
+      'Une installation de Dante Config Editor est déjà présente.' + #13#10#13#10 +
       'Version détectée : ' + ExistingInstallVersion + #13#10 +
       'Dossier : ' + ExistingInstallDir + #13#10#13#10 +
       'Oui = remplacer / mettre à jour cette installation.' + #13#10 +
@@ -218,6 +247,59 @@ end;
 
 procedure InitializeWizard();
 begin
+  if ActiveLanguage = 'english' then
+  begin
+    BankDirectoriesPage := CreateInputDirPage(
+      wpSelectDir,
+      'Device banks',
+      'Choose where DCE uses and installs device banks.',
+      'The active bank may already exist. Each included bank is installed in a separate folder and never overwrites an existing bank.',
+      False,
+      '');
+    BankDirectoriesPage.Add('Active device-bank folder:');
+    BankDirectoriesPage.Add('Folder for included banks:');
+    BankOptionsPage := CreateInputOptionPage(
+      BankDirectoriesPage.ID,
+      'Device-bank options',
+      'Choose the settings to apply.',
+      'These choices can later be changed from the Device bank window.',
+      False,
+      False);
+    BankOptionsPage.Add('Use the selected active-bank folder in DCE');
+    BankOptionsPage.Add('Install DCE Generic Roles 3.6');
+    BankOptionsPage.Add('Install DCE Community Devices 3.6');
+  end
+  else
+  begin
+    BankDirectoriesPage := CreateInputDirPage(
+      wpSelectDir,
+      'Banques de machines',
+      'Choisissez où DCE utilise et installe les banques de machines.',
+      'La banque active peut déjà exister. Chaque banque fournie est installée dans un dossier séparé et ne remplace jamais une banque existante.',
+      False,
+      '');
+    BankDirectoriesPage.Add('Dossier de la banque active :');
+    BankDirectoriesPage.Add('Dossier des banques fournies :');
+    BankOptionsPage := CreateInputOptionPage(
+      BankDirectoriesPage.ID,
+      'Options des banques de machines',
+      'Choisissez les réglages à appliquer.',
+      'Ces choix restent modifiables depuis la fenêtre Banque de machines.',
+      False,
+      False);
+    BankOptionsPage.Add('Utiliser le dossier de banque active choisi dans DCE');
+    BankOptionsPage.Add('Installer DCE Generic Roles 3.6');
+    BankOptionsPage.Add('Installer DCE Community Devices 3.6');
+  end;
+
+  BankDirectoriesPage.Values[0] := ConfiguredMachineBankPath();
+  BankDirectoriesPage.Values[1] := DefaultBundledBanksPath();
+  BankOptionsPage.Values[0] := True;
+  BankOptionsPage.Values[1] := not DirExists(
+    AddBackslash(BankDirectoriesPage.Values[1]) + 'DCE Generic Roles 3.6');
+  BankOptionsPage.Values[2] := not DirExists(
+    AddBackslash(BankDirectoriesPage.Values[1]) + 'DCE Community Devices 3.6');
+
   GithubLabel := TNewStaticText.Create(WizardForm);
   GithubLabel.Parent := WizardForm;
   GithubLabel.Caption := 'GitHub public';
@@ -244,79 +326,157 @@ begin
   SignatureAgentsLabel.Font.Size := 7;
 end;
 
-function RunLegacyUninstaller(UninstallCommand: String): Boolean;
+function NextButtonClick(CurPageID: Integer): Boolean;
 var
-  ResultCode: Integer;
-  UninstallerPath: String;
+  MessageText: String;
 begin
   Result := True;
-  if UninstallCommand = '' then
+  if CurPageID <> BankOptionsPage.ID then
+  begin
     Exit;
+  end;
 
-  UninstallerPath := RemoveQuotes(UninstallCommand);
-  Result := Exec(
-    UninstallerPath,
-    '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART',
-    '',
-    SW_HIDE,
-    ewWaitUntilTerminated,
-    ResultCode) and (ResultCode = 0);
+  if BankOptionsPage.Values[0]
+    and (Trim(BankDirectoriesPage.Values[0]) = '') then
+  begin
+    if ActiveLanguage = 'english' then
+      MessageText := 'Choose an active device-bank folder.'
+    else
+      MessageText := 'Choisissez un dossier de banque active.';
+    MsgBox(MessageText, mbError, MB_OK);
+    Result := False;
+    Exit;
+  end;
+
+  if (BankOptionsPage.Values[1] or BankOptionsPage.Values[2])
+    and (Trim(BankDirectoriesPage.Values[1]) = '') then
+  begin
+    if ActiveLanguage = 'english' then
+      MessageText := 'Choose a folder for the included banks.'
+    else
+      MessageText := 'Choisissez un dossier pour les banques fournies.';
+    MsgBox(MessageText, mbError, MB_OK);
+    Result := False;
+  end;
 end;
 
-procedure DeleteLegacyShortcutVersion(VersionName: String);
+function FindAvailableBankDestination(
+  BanksRoot: String;
+  BankFolderName: String): String;
+var
+  BaseDestination: String;
+  Candidate: String;
+  Suffix: Integer;
 begin
-  DeleteFile(ExpandConstant('{userprograms}\Dante Config Editor ' + VersionName + '.lnk'));
-  DeleteFile(ExpandConstant('{commonprograms}\Dante Config Editor ' + VersionName + '.lnk'));
-  DeleteFile(ExpandConstant('{userdesktop}\Dante Config Editor ' + VersionName + '.lnk'));
-  DeleteFile(ExpandConstant('{commondesktop}\Dante Config Editor ' + VersionName + '.lnk'));
-  DelTree(ExpandConstant('{userprograms}\Dante Config Editor ' + VersionName), True, True, True);
-  DelTree(ExpandConstant('{commonprograms}\Dante Config Editor ' + VersionName), True, True, True);
-end;
-
-procedure DeleteLegacyShortcuts();
-begin
-  DeleteLegacyShortcutVersion('V3.07');
-  DeleteLegacyShortcutVersion('V3.08');
-  DeleteLegacyShortcutVersion('V3.09');
-  DeleteLegacyShortcutVersion('V3.1');
-  DeleteLegacyShortcutVersion('V3.2');
-  DeleteLegacyShortcutVersion('V3.2 Beta');
+  BaseDestination := AddBackslash(BanksRoot) + BankFolderName;
+  Candidate := BaseDestination;
+  Suffix := 2;
+  while DirExists(Candidate) or FileExists(Candidate) do
+  begin
+    Candidate := BaseDestination + ' (' + IntToStr(Suffix) + ')';
+    Suffix := Suffix + 1;
+  end;
+  Result := Candidate;
 end;
 
 function PrepareToInstall(var NeedsRestart: Boolean): String;
+var
+  ActiveBankPath: String;
+  BundledBanksPath: String;
 begin
   Result := '';
-
-  if not RunLegacyUninstaller(LegacyBetaV32Uninstaller) then
+  ActiveBankPath := BankDirectoriesPage.Values[0];
+  BundledBanksPath := BankDirectoriesPage.Values[1];
+  if BankOptionsPage.Values[0] then
   begin
-    Result := 'Impossible de remplacer automatiquement Dante Config Editor V3.2 Beta.';
-    Exit;
-  end;
-  { Les versions V3 récentes partagent l'AppId stable. Une version différente doit
-    être retirée avant la migration vers le dossier de la V3.4. }
-  if (LegacyV31Uninstaller <> '') and (ExistingInstallVersion <> '{#MyAppVersion}') and
-     (not RunLegacyUninstaller(LegacyV31Uninstaller)) then
-  begin
-    Result := 'Impossible de remplacer automatiquement la version installée de Dante Config Editor.';
-    Exit;
-  end;
-  if not RunLegacyUninstaller(LegacyV309Uninstaller) then
-  begin
-    Result := 'Impossible de remplacer automatiquement Dante Config Editor V3.09.';
-    Exit;
-  end;
-  if not RunLegacyUninstaller(LegacyV308Uninstaller) then
-  begin
-    Result := 'Impossible de remplacer automatiquement Dante Config Editor V3.08.';
-    Exit;
-  end;
-  if not RunLegacyUninstaller(LegacyV307Uninstaller) then
-  begin
-    Result := 'Impossible de remplacer automatiquement Dante Config Editor V3.07.';
-    Exit;
+    if FileExists(ActiveBankPath) then
+    begin
+      Result := InstallerText(
+        'Le chemin de banque active désigne un fichier : ',
+        'The active-bank path points to a file: ') + ActiveBankPath;
+      Exit;
+    end;
+    if not DirExists(ActiveBankPath)
+      and not ForceDirectories(ActiveBankPath) then
+    begin
+      Result := InstallerText(
+        'Impossible de créer le dossier de banque active : ',
+        'Unable to create the active-bank folder: ') + ActiveBankPath;
+      Exit;
+    end;
   end;
 
-  DeleteLegacyShortcuts();
+  InstallBundledBankFiles := BankOptionsPage.Values[1];
+  InstallCommunityBankFiles := BankOptionsPage.Values[2];
+  BundledBankDestination := '';
+  CommunityBankDestination := '';
+  if not InstallBundledBankFiles
+    and not InstallCommunityBankFiles then
+  begin
+    Exit;
+  end;
+
+  if FileExists(BundledBanksPath) then
+  begin
+    Result := InstallerText(
+      'Le chemin des banques fournies désigne un fichier : ',
+      'The included-banks path points to a file: ') + BundledBanksPath;
+    Exit;
+  end;
+  if not DirExists(BundledBanksPath)
+    and not ForceDirectories(BundledBanksPath) then
+  begin
+    Result := InstallerText(
+      'Impossible de créer le dossier des banques fournies : ',
+      'Unable to create the included-banks folder: ') + BundledBanksPath;
+    Exit;
+  end;
+
+  if InstallBundledBankFiles then
+  begin
+    BundledBankDestination := FindAvailableBankDestination(
+      BundledBanksPath,
+      'DCE Generic Roles 3.6');
+  end;
+  if InstallCommunityBankFiles then
+  begin
+    CommunityBankDestination := FindAvailableBankDestination(
+      BundledBanksPath,
+      'DCE Community Devices 3.6');
+  end;
+end;
+
+procedure SaveMachineBankLocation();
+var
+  BankPath: String;
+  EncodedBankPath: AnsiString;
+  SettingsPath: String;
+  SettingsDirectory: String;
+begin
+  if not BankOptionsPage.Values[0] then
+  begin
+    Exit;
+  end;
+
+  BankPath := BankDirectoriesPage.Values[0];
+  SettingsPath := MachineBankSettingsPath();
+  SettingsDirectory := ExtractFileDir(SettingsPath);
+  ForceDirectories(BankPath);
+  ForceDirectories(SettingsDirectory);
+  if FileExists(SettingsPath) then
+  begin
+    CopyFile(SettingsPath, SettingsPath + '.bak', False);
+  end;
+  EncodedBankPath := UTF8Encode(BankPath + #13#10);
+  SaveStringToFile(SettingsPath, EncodedBankPath, False);
+end;
+
+procedure CurStepChanged(CurStep: TSetupStep);
+begin
+  if CurStep = ssPostInstall then
+  begin
+    SaveMachineBankLocation();
+  end;
 end;
 
 function InitializeSetup(): Boolean;

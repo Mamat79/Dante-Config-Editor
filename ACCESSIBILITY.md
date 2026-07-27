@@ -1,5 +1,20 @@
 # Accessibilité et affichage
 
+## État spécifique V3.6
+
+- Les 16 tests Avalonia/macOS sans écran passent, y compris les commandes de
+  banque, duplication, ajout de modèle, nouveau projet et l'ordre initial de la
+  barre d'outils.
+- Les contrats Windows vérifient la présence des libellés, infobulles,
+  dimensions minimales et panneaux défilables des nouveaux dialogues.
+- Le lancement de l'exécutable autonome et installé a été vérifié avec un
+  processus répondant et le titre V3.6.
+- La prise de contrôle visuelle automatisée Windows n'a pas été autorisée dans
+  le délai du contrôle final. Les nouveaux dialogues V3.6 ne sont donc pas
+  déclarés validés visuellement à 125 %, 150 % ou 200 %.
+- Aucun contrôle réel n'a été effectué sur un Mac, avec VoiceOver, Narrator ou
+  NVDA.
+
 ## Contrôles réellement effectués
 
 ### Windows
@@ -17,7 +32,10 @@
 - sélecteur de machine de `Détail machine` utilisé au clavier, avec alerte de protection des changements en attente ;
 - exécutable final installé contrôlé : démarrage, bouton `Ouvrir XML`, ouverture d'une fixture anonymisée et résumé du projet lus par l'arbre d'accessibilité.
 
-Les captures WPF de ce cycle ont permis un contrôle visuel à environ `1920 x 1032`. Ce contrôle ne remplace pas les essais encore manuels de contraste élevé, d'échelle système et de lecteur d'écran.
+Les captures WPF de ce cycle antérieur ont permis un contrôle visuel à environ
+`1920 x 1032`. Elles ne couvrent pas les nouveaux dialogues de banque V3.6 et
+ne remplacent pas les essais encore manuels de contraste élevé, d'échelle
+système et de lecteur d'écran.
 
 ### macOS / Avalonia headless
 

@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <None Include="Fixtures\*.xml" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="Fixtures\DmtV214Rc1\*.*" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="..\TestSupport\SyntheticPresetFactory.cs" Link="TestSupport\SyntheticPresetFactory.cs" />
     <Using Include="Xunit" />
   </ItemGroup>

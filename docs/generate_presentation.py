@@ -13,8 +13,8 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 ROOT = Path(__file__).resolve().parent
 MEDIA = ROOT / "media"
-CAPTURES = MEDIA / "v3.3"
-VERSION = "3.3"
+CAPTURES = MEDIA / "v3.5"
+VERSION = "3.5"
 
 WIDTH = 1920
 HEIGHT = 1080
@@ -91,13 +91,12 @@ def load_capture(language: str, image_name: str) -> Image.Image:
         raise FileNotFoundError(f"Capture manquante : {capture_path}")
 
     image = Image.open(capture_path).convert("RGB")
-    if image.size != (1920, 1009):
+    if image.width != 1920 or image.height < 650:
         raise ValueError(f"Capture inattendue {capture_path}: {image.size}")
 
-    # La barre supérieure contient le chemin local du preset de démonstration.
-    # Elle est retirée de toutes les images publiées.
-    crop_top = 305 if image_name == "health.png" else 140
-    return image.crop((0, crop_top, image.width, image.height))
+    # Les sources versionnées sont déjà recadrées et ne contiennent aucun
+    # chemin local ni nom de preset de production.
+    return image
 
 
 def draw_brand(draw: ImageDraw.ImageDraw) -> None:
@@ -174,7 +173,7 @@ def make_end_card(language: str) -> Image.Image:
     draw_brand(draw)
 
     if language == "fr":
-        heading = "Dante Config Editor v3.3"
+        heading = "Dante Config Editor v3.5"
         points = (
             "Travaillez sur une copie du XML.",
             "Contrôlez les différences avant sauvegarde.",
@@ -182,7 +181,7 @@ def make_end_card(language: str) -> Image.Image:
         )
         label = "Projet gratuit et public"
     else:
-        heading = "Dante Config Editor v3.3"
+        heading = "Dante Config Editor v3.5"
         points = (
             "Work on a copy of the XML.",
             "Review differences before saving.",
@@ -238,27 +237,27 @@ def make_slide(language: str, scene: Scene) -> Image.Image:
 def scenes(language: str) -> list[Scene]:
     if language == "fr":
         return [
-            Scene("intro", "Dante Config Editor v3.3", "", 6.5, kind="intro"),
-            Scene("configuration", "Une vue d'ensemble", "Latences, fréquences, modes réseau, IP, Preferred Master et canaux restent visibles sur un même écran.", 7.0, "configuration.png"),
-            Scene("patch", "Patch", "Filtrez les récepteurs et les émetteurs, retrouvez une source, puis appliquez ou retirez une subscription.", 7.0, "patch.png"),
-            Scene("easy-patch", "Easy patch", "Prévisualisez des sélections ou des plages, accumulez plusieurs opérations, puis appliquez tout le lot en une fois.", 8.0, "easy-patch.png"),
-            Scene("labels", "Échange de labels", "Importez et exportez des labels JSON, CSV, DMT XLSX ou ODS, Allen & Heath dLive/Avantis et Yamaha CL/QL.", 8.0, "labels.png"),
-            Scene("synoptic", "Synoptique visuel", "Regroupez les machines par emplacement et représentez les patchs consécutifs par des liaisons lisibles, exportables en SVG ou PDF.", 8.0, "synoptic.png"),
-            Scene("health", "Santé du fichier", "Repérez rapidement les modes réseau mélangés, les IP fixes, les formats audio et les patchs à vérifier.", 7.0, "health.png"),
-            Scene("atomic", "Atomic Bomb", "Composez un exercice de dépannage en choisissant précisément ce qui sera désorganisé dans la copie de travail.", 8.0, "atomic-bomb.png"),
-            Scene("end", "Dante Config Editor v3.3", "", 6.5, kind="end"),
+            Scene("intro", "Dante Config Editor v3.5", "", 5.0, kind="intro"),
+            Scene("configuration", "Une vue d'ensemble", "Contrôlez les latences, formats audio, modes réseau, IP, horloge et canaux sur un même écran.", 6.0, "configuration.png"),
+            Scene("patch", "Patch", "Filtrez RX et TX, renommez directement les canaux, puis appliquez ou retirez une subscription.", 6.0, "patch.png"),
+            Scene("easy-patch", "Easy patch", "Préparez des sélections ou plages sans toucher au XML, puis appliquez tout le lot en une seule opération.", 7.0, "easy-patch.png"),
+            Scene("labels", "Échange de labels", "Importez et exportez JSON, CSV, DMT XLSX/ODS, Allen & Heath dLive/Avantis et Yamaha CL/QL.", 7.0, "labels.png"),
+            Scene("synoptic", "Synoptique visuel", "Regroupez les machines par emplacement et exportez des liaisons compactes en SVG ou PDF.", 7.0, "synoptic.png"),
+            Scene("health", "Santé du fichier", "Repérez les modes réseau mélangés, IP fixes, formats audio et patchs à vérifier avant sauvegarde.", 6.0, "health.png"),
+            Scene("atomic", "Atomic Bomb", "Créez un exercice hors ligne en choisissant exactement les catégories à désorganiser.", 6.0, "atomic-bomb.png"),
+            Scene("end", "Dante Config Editor v3.5", "", 5.0, kind="end"),
         ]
 
     return [
-        Scene("intro", "Dante Config Editor v3.3", "", 6.5, kind="intro"),
-        Scene("configuration", "One complete overview", "Latency, sample rates, network modes, IP, Preferred Master, and channels remain visible on one screen.", 7.0, "configuration.png"),
-        Scene("patch", "Patch", "Filter receivers and transmitters, find a source, then apply or remove a subscription.", 7.0, "patch.png"),
-        Scene("easy-patch", "Easy patch", "Preview selections or exact ranges, accumulate several operations, then apply the entire batch once.", 8.0, "easy-patch.png"),
-        Scene("labels", "Channel label exchange", "Import and export JSON, CSV, DMT XLSX or ODS, Allen & Heath dLive/Avantis, and Yamaha CL/QL labels.", 8.0, "labels.png"),
-        Scene("synoptic", "Visual synoptic", "Group devices by location and display consecutive subscriptions as readable links, exportable to SVG or PDF.", 8.0, "synoptic.png"),
-        Scene("health", "File health", "Quickly spot mixed network modes, static IPs, audio formats, and subscriptions that need review.", 7.0, "health.png"),
-        Scene("atomic", "Atomic Bomb", "Build a troubleshooting exercise by choosing exactly what will be scrambled in the working copy.", 8.0, "atomic-bomb.png"),
-        Scene("end", "Dante Config Editor v3.3", "", 6.5, kind="end"),
+        Scene("intro", "Dante Config Editor v3.5", "", 5.0, kind="intro"),
+        Scene("configuration", "One complete overview", "Review latency, audio formats, network modes, IP, clock, and channels on one screen.", 6.0, "configuration.png"),
+        Scene("patch", "Patch", "Filter Rx and Tx, rename channels directly, then apply or remove a subscription.", 6.0, "patch.png"),
+        Scene("easy-patch", "Easy patch", "Prepare selections or ranges without changing XML, then apply the entire batch once.", 7.0, "easy-patch.png"),
+        Scene("labels", "Channel label exchange", "Import and export JSON, CSV, DMT XLSX/ODS, Allen & Heath dLive/Avantis, and Yamaha CL/QL.", 7.0, "labels.png"),
+        Scene("synoptic", "Visual synoptic", "Group devices by location and export compact connections to SVG or PDF.", 7.0, "synoptic.png"),
+        Scene("health", "File health", "Spot mixed network modes, static IPs, audio formats, and subscriptions before saving.", 6.0, "health.png"),
+        Scene("atomic", "Atomic Bomb", "Build an offline exercise by choosing exactly which categories will be scrambled.", 6.0, "atomic-bomb.png"),
+        Scene("end", "Dante Config Editor v3.5", "", 5.0, kind="end"),
     ]
 
 
@@ -284,7 +283,7 @@ def write_srt(language: str, sequence: list[Scene]) -> None:
         end = starts[index] if index < len(starts) else start + scene.duration
         blocks.append(f"{index}\n{format_srt_time(start)} --> {format_srt_time(end)}\n{text}\n")
 
-    output = MEDIA / f"dce-v33-presentation-{language}.srt"
+    output = MEDIA / f"dce-v35-presentation-{language}.srt"
     output.write_text("\n".join(blocks), encoding="utf-8-sig")
 
 
@@ -302,8 +301,8 @@ def build_video(language: str) -> None:
         raise SystemExit("Installez imageio-ffmpeg avant de générer les vidéos.") from exc
 
     sequence = scenes(language)
-    output = MEDIA / f"dce-v33-presentation-{language}.mp4"
-    with tempfile.TemporaryDirectory(prefix=f"dce-v33-{language}-") as temporary:
+    output = MEDIA / f"dce-v35-presentation-{language}.mp4"
+    with tempfile.TemporaryDirectory(prefix=f"dce-v35-{language}-") as temporary:
         folder = Path(temporary)
         slides: list[Path] = []
         for index, scene in enumerate(sequence, start=1):

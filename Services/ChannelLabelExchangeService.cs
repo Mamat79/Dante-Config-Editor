@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Reflection;
 using DanteConfigEditor.Models;
 
 namespace DanteConfigEditor.Services;
@@ -16,23 +17,17 @@ public static class ChannelLabelExchangeService
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         WriteIndented = true,
+        UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
         Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
     };
 
     public static ChannelLabelDocument Read(string path)
     {
-        string extension = Path.GetExtension(path).ToLowerInvariant();
-        return extension switch
-        {
-            ".json" => ParseJson(File.ReadAllText(path, Encoding.UTF8)),
-            ".csv" when ConsoleChannelFileService.IsConsoleCsv(path) => ConsoleChannelFileService.Read(path).Document,
-            ".csv" => ParseCsv(File.ReadAllText(path, Encoding.UTF8)),
-            ".xlsx" => DmtChannelWorkbookService.Read(path).Document,
-            ".ods" => DmtOpenDocumentService.Read(path).Document,
-            ".zip" => ConsoleChannelFileService.Read(path).Document,
-            _ => throw new InvalidDataException("Format de labels non pris en charge. Utilisez JSON, CSV, XLSX/ODS DMT ou ZIP Yamaha CL/QL.")
-        };
+        return ReadWithReport(path).Document;
     }
+
+    public static ChannelLabelReadResult ReadWithReport(string path) =>
+        ChannelLabelImportAdapterRegistry.Read(path);
 
     public static void Write(string path, ChannelLabelDocument document)
     {
@@ -100,7 +95,7 @@ public static class ChannelLabelExchangeService
             throw new InvalidOperationException($"Aucune machine sélectionnée ne contient de canal {direction} dans la plage demandée.");
         }
 
-        return new ChannelLabelDocument(FormatName, CurrentSchemaVersion, "Dante Config Editor", "3.2", sets.ToArray());
+        return new ChannelLabelDocument(FormatName, CurrentSchemaVersion, "Dante Config Editor", ReadApplicationVersion(), sets.ToArray());
     }
 
     public static string SerializeJson(ChannelLabelDocument document)
@@ -181,6 +176,20 @@ public static class ChannelLabelExchangeService
         int sourceAppColumn = FindColumn(headers, "source_app", "sourceapplication");
         int sourceVersionColumn = FindColumn(headers, "source_version", "sourceversion");
         int formatVersionColumn = FindColumn(headers, "format_version", "schemaversion");
+
+        if (formatVersionColumn >= 0)
+        {
+            string[] declaredVersions = rows.Skip(1)
+                .Select(row => ValueAt(row, formatVersionColumn).Trim())
+                .Where(value => !string.IsNullOrWhiteSpace(value))
+                .Distinct(StringComparer.Ordinal)
+                .ToArray();
+            if (declaredVersions.Length > 1)
+            {
+                throw new InvalidDataException(
+                    $"Le CSV déclare plusieurs versions de format : {string.Join(", ", declaredVersions)}.");
+            }
+        }
 
         List<(string Device, ChannelLabelDirection Direction, ChannelLabelEntry Entry)> entries = [];
         foreach (string[] row in rows.Skip(1).Where(row => row.Any(value => !string.IsNullOrWhiteSpace(value))))
@@ -265,6 +274,11 @@ public static class ChannelLabelExchangeService
 
         foreach (ChannelLabelSet set in document.Sets)
         {
+            if (string.IsNullOrWhiteSpace(set.DeviceName))
+            {
+                throw new InvalidDataException("Une liste de labels ne contient pas de nom de machine.");
+            }
+
             if (set.Channels.Count == 0)
             {
                 throw new InvalidDataException($"La liste '{set.DeviceName}' ne contient aucun canal.");
@@ -274,7 +288,37 @@ public static class ChannelLabelExchangeService
             {
                 throw new InvalidDataException($"La liste '{set.DeviceName}' contient un numéro de canal invalide.");
             }
+
+            int[] duplicateChannels = set.Channels
+                .GroupBy(channel => channel.ChannelNumber)
+                .Where(group => group.Count() > 1)
+                .Select(group => group.Key)
+                .OrderBy(value => value)
+                .ToArray();
+            if (duplicateChannels.Length > 0)
+            {
+                throw new InvalidDataException(
+                    $"La liste '{set.DeviceName}' contient plusieurs fois le(s) canal(aux) {string.Join(", ", duplicateChannels)}.");
+            }
+
+            if (set.Channels.Any(channel => channel.DanteId is <= 0))
+            {
+                throw new InvalidDataException($"La liste '{set.DeviceName}' contient un Dante ID invalide.");
+            }
+
+            if (set.Channels.Any(channel => channel.Label.Any(char.IsControl)))
+            {
+                throw new InvalidDataException($"La liste '{set.DeviceName}' contient un label avec des caractères non imprimables.");
+            }
         }
+    }
+
+    private static string ReadApplicationVersion()
+    {
+        string? informationalVersion = typeof(ChannelLabelExchangeService).Assembly
+            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+            ?.InformationalVersion;
+        return string.IsNullOrWhiteSpace(informationalVersion) ? "3.6" : informationalVersion;
     }
 
     private static string DirectionToken(ChannelLabelDirection direction) => direction switch

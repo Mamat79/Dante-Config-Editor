@@ -8,7 +8,7 @@
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
         Background="{DynamicResource AppBackgroundBrush}">
-    <Grid RowDefinitions="Auto,286,*,Auto" Margin="18" RowSpacing="12">
+    <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="18" RowSpacing="12">
         <Border Classes="panel">
             <StackPanel Spacing="5">
                 <TextBlock x:Name="IntroText" TextWrapping="Wrap" />
@@ -16,7 +16,11 @@
             </StackPanel>
         </Border>
 
-        <Grid Grid.Row="1" ColumnDefinitions="1.05*,1.25*,1.1*" ColumnSpacing="10">
+        <Grid Grid.Row="1"
+              ColumnDefinitions="1.05*,1.25*,1.1*"
+              ColumnSpacing="10"
+              MinHeight="320"
+              MaxHeight="350">
             <Border Classes="panel">
                 <StackPanel Spacing="8">
                     <TextBlock x:Name="SourceTitle" Classes="section" />
@@ -105,8 +109,8 @@
                        Classes="muted"
                        VerticalAlignment="Center"
                        TextWrapping="Wrap" />
-            <Button x:Name="CancelButton" Grid.Column="1" MinWidth="100" Click="CancelButton_Click" />
-            <Button x:Name="ApplyButton" Grid.Column="2" Classes="primary" MinWidth="120" IsEnabled="False" Click="ApplyButton_Click" />
+            <Button x:Name="CancelButton" Grid.Column="1" MinWidth="100" MinHeight="34" Click="CancelButton_Click" />
+            <Button x:Name="ApplyButton" Grid.Column="2" Classes="primary" MinWidth="120" MinHeight="34" IsEnabled="False" Click="ApplyButton_Click" />
         </Grid>
     </Grid>
 </Window>

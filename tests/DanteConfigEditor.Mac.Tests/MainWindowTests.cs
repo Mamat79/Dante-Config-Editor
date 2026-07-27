@@ -15,7 +15,7 @@ namespace DanteConfigEditor.Mac.Tests;
 public sealed class MainWindowTests
 {
     [AvaloniaFact]
-    public void OfficialV34VersionIsShownInMacApplication()
+    public void DevelopmentV36VersionIsShownInMacApplication()
     {
         string version = typeof(MainWindow).Assembly
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
@@ -24,8 +24,8 @@ public sealed class MainWindowTests
         window.Show();
         try
         {
-            Assert.Equal("3.4", version);
-            Assert.Equal("Dante Config Editor V3.4 - macOS", window.Title);
+            Assert.Equal("3.6.1", version);
+            Assert.Equal("Dante Config Editor V3.6 - macOS", window.Title);
             Assert.Equal("Add XML", LocalizationService.TranslateLiteral(UiLanguage.English, "Ajouter XML"));
             Assert.Equal("Device or channel", LocalizationService.TranslateLiteral(UiLanguage.English, "Machine ou canal"));
             Assert.Equal("All", LocalizationService.TranslateLiteral(UiLanguage.English, "Toutes"));
@@ -33,6 +33,198 @@ public sealed class MainWindowTests
         finally
         {
             window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void ConfigurationEditorsAreVisibleOnFirstLaunch()
+    {
+        MainWindow window = new();
+        window.Show();
+        try
+        {
+            Assert.True(window.FindControl<TabItem>("ConfigurationTab")!.IsSelected);
+            Assert.True(window.FindControl<Grid>("ConfigurationEditorsGrid")!.IsEffectivelyVisible);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void SynopticPreviewCanOpenInASeparateScalableWindow()
+    {
+        Canvas source = new()
+        {
+            Width = 900,
+            Height = 560,
+            Background = Avalonia.Media.Brushes.White
+        };
+        SynopticPreviewWindow preview = new(source, source.Width, source.Height, UiLanguage.French);
+        preview.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal("Aperçu du synoptique", preview.Title);
+            Assert.True(preview.FindControl<Control>("PreviewSurface")!.IsEffectivelyVisible);
+            Assert.True(preview.FindControl<Slider>("ZoomSlider")!.Value > 0);
+            Assert.Equal("Fermer", preview.FindControl<Button>("CloseButton")!.Content);
+        }
+        finally
+        {
+            preview.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public async Task VisualPatchOpenedFromTheMacAppUsesImmediateMode()
+    {
+        string source = Path.Combine(AppContext.BaseDirectory, "Fixtures", "representative-preset.xml");
+        DanteProject project = DanteProject.Load(source);
+        IReadOnlyList<PatchEditRequest>? applied = null;
+        PatchWorkspaceDialog dialog = new(
+            UiLanguage.French,
+            project,
+            initialTxDeviceName: "DEVICE-A",
+            initialRxDeviceName: "DEVICE-B",
+            immediateApply: edits =>
+            {
+                applied = edits.ToArray();
+                project.ApplyBatch(batch =>
+                {
+                    foreach (PatchEditRequest edit in edits)
+                    {
+                        if (edit.IsRemoval)
+                        {
+                            batch.RemovePatch(edit.RxDeviceName, edit.RxDanteId);
+                        }
+                        else
+                        {
+                            batch.ApplyPatch(
+                                edit.RxDeviceName,
+                                edit.RxDanteId,
+                                edit.TxDeviceName!,
+                                edit.TxChannelName ?? string.Empty);
+                        }
+                    }
+                });
+                return Task.CompletedTask;
+            });
+        dialog.Show();
+        try
+        {
+            Assert.True(dialog.FindControl<CheckBox>("WarnOnExistingPatchCheckBox")!.IsChecked);
+            Assert.False(dialog.FindControl<Button>("ResetPendingButton")!.IsVisible);
+            Assert.False(dialog.FindControl<Button>("ApplyButton")!.IsVisible);
+            Assert.Equal("Appliquer", dialog.FindControl<Button>("PreviewOneToOneButton")!.Content);
+
+            Grid matrix = dialog.FindControl<Grid>("MatrixPanel")!;
+            Button activeCell = matrix.Children.OfType<Button>()
+                .First(button => Equals(button.Content, "●"));
+            activeCell.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
+            await Task.Yield();
+
+            PatchEditRequest edit = Assert.Single(Assert.IsAssignableFrom<IReadOnlyList<PatchEditRequest>>(applied));
+            Assert.True(edit.IsRemoval);
+            Assert.True(project.IsModified);
+            Assert.Empty(dialog.Edits);
+        }
+        finally
+        {
+            dialog.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void LanguageSwitchTranslatesTabHeadersAndComboBoxPlaceholdersBothWays()
+    {
+        MainWindow window = new();
+        window.Show();
+        try
+        {
+            ApplyLanguage(window, UiLanguage.English);
+
+            Assert.Equal("Reports and patchbook", window.FindControl<TabItem>("ReportsExportTab")!.Header);
+            Assert.Equal("Synoptic", window.FindControl<TabItem>("SynopticTab")!.Header);
+            Assert.Equal("File health", window.FindControl<TabItem>("HealthTab")!.Header);
+            Assert.Equal("Recent files", window.FindControl<ComboBox>("RecentCombo")!.PlaceholderText);
+            Assert.Equal("Start channel", window.FindControl<ComboBox>("StartChannelCombo")!.PlaceholderText);
+            Assert.Equal("Tx source to apply", window.FindControl<ComboBox>("SourceDeviceCombo")!.PlaceholderText);
+            Assert.Equal("Add XML", window.FindControl<Button>("MergeButton")!.Content);
+            Assert.Equal("New project (experimental)", window.FindControl<Button>("NewProjectButton")!.Content);
+            Assert.Equal("Device bank", window.FindControl<Button>("OpenMachineBankButton")!.Content);
+            Assert.Equal("Duplicate", window.FindControl<Button>("DuplicateDeviceButton")!.Content);
+            Assert.Equal("Save to device bank", window.FindControl<Button>("SaveDeviceToBankButton")!.Content);
+            Assert.Equal("Open logs", window.FindControl<Button>("OpenDiagnosticLogsButton")!.Content);
+
+            ApplyLanguage(window, UiLanguage.French);
+
+            Assert.Equal("Rapports et patchbook", window.FindControl<TabItem>("ReportsExportTab")!.Header);
+            Assert.Equal("Synoptique", window.FindControl<TabItem>("SynopticTab")!.Header);
+            Assert.Equal("Fichiers récents", window.FindControl<ComboBox>("RecentCombo")!.PlaceholderText);
+            Assert.Equal("Nouveau projet (expérimental)", window.FindControl<Button>("NewProjectButton")!.Content);
+            Assert.Equal("Banque de machines", window.FindControl<Button>("OpenMachineBankButton")!.Content);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void SecondaryMacViewsUsePolishedEnglishLabels()
+    {
+        string source = Path.Combine(AppContext.BaseDirectory, "Fixtures", "representative-preset.xml");
+        DanteProject project = DanteProject.Load(source);
+        PatchWorkspaceDialog patch = new(
+            UiLanguage.English,
+            project,
+            initialTxDeviceName: "DEVICE-A",
+            initialRxDeviceName: "DEVICE-B");
+        MachineBankDialog bank = new();
+        Canvas synopticSource = new()
+        {
+            Width = 900,
+            Height = 560,
+            Background = Avalonia.Media.Brushes.White
+        };
+        SynopticPreviewWindow synoptic = new(
+            synopticSource,
+            synopticSource.Width,
+            synopticSource.Height,
+            UiLanguage.English);
+
+        typeof(MachineBankDialog)
+            .GetField("_language", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .SetValue(bank, UiLanguage.English);
+        bank.Title = "Device bank";
+        typeof(MachineBankDialog)
+            .GetMethod("ApplyLanguage", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .Invoke(bank, null);
+
+        patch.Show();
+        bank.Show();
+        synoptic.Show();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal("Transmitting device (Tx)", patch.FindControl<TextBlock>("TxDeviceLabel")!.Text);
+            Assert.Equal("Receiving device (Rx)", patch.FindControl<TextBlock>("RxDeviceLabel")!.Text);
+            Assert.Equal("Selection and one-to-one patch", patch.FindControl<TabItem>("AssignmentTab")!.Header);
+            Assert.Equal("Patch matrix", patch.FindControl<TabItem>("MatrixTab")!.Header);
+            Assert.Equal("GitHub banks", bank.FindControl<Button>("GithubBanksButton")!.Content);
+            Assert.Equal("Export bank", bank.FindControl<Button>("BackupBankButton")!.Content);
+            Assert.Equal("Import bank", bank.FindControl<Button>("RestoreBankButton")!.Content);
+            Assert.Equal("Synoptic preview", synoptic.Title);
+            Assert.Equal("Close", synoptic.FindControl<Button>("CloseButton")!.Content);
+        }
+        finally
+        {
+            synoptic.Close();
+            bank.Close();
+            patch.Close();
         }
     }
 
@@ -113,6 +305,8 @@ public sealed class MainWindowTests
         try
         {
             await window.OpenStartupFileAsync(temporaryXml);
+            AssertControlFits(window, window.FindControl<Button>("NewProjectButton")!);
+            AssertControlFits(window, window.FindControl<Button>("OpenMachineBankButton")!);
             window.FindControl<TabItem>("PatchTab")!.IsSelected = true;
             Dispatcher.UIThread.RunJobs();
 
@@ -219,6 +413,18 @@ public sealed class MainWindowTests
             owner,
             project,
             document,
+            new ChannelLabelImportReport(
+                "Test JSON",
+                document.SourceApplication,
+                document.SourceVersion,
+                document.Sets.Count,
+                1,
+                document.Sets.Sum(set => set.Channels.Count),
+                0,
+                0,
+                0,
+                [],
+                []),
             UiLanguage.English,
             "DEVICE-A");
         Dispatcher.UIThread.RunJobs();
@@ -228,15 +434,63 @@ public sealed class MainWindowTests
         {
             Button preview = dialog.FindControl<Button>("PreviewButton")!;
             Button apply = dialog.FindControl<Button>("ApplyButton")!;
+            dialog.Width = 900;
+            dialog.Height = 620;
+            Dispatcher.UIThread.RunJobs();
             preview.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Dispatcher.UIThread.RunJobs();
 
             AssertControlFits(dialog, preview);
             AssertControlFits(dialog, apply);
+            AssertControlFitsInside(
+                dialog.FindControl<TextBlock>("MappingTitle")!.GetLogicalAncestors().OfType<Border>().First(),
+                preview);
             Assert.True(preview.Bounds.Height >= 34);
             Assert.False(apply.IsEnabled);
+            Assert.Contains("Test JSON", dialog.FindControl<TextBlock>("SourceInfoText")!.Text);
             Assert.Contains("0 change", dialog.FindControl<TextBlock>("PreviewSummaryText")!.Text);
             Assert.Contains("already match", dialog.FindControl<TextBlock>("SafetyText")!.Text);
+        }
+        finally
+        {
+            dialog.Close();
+            owner.Close();
+        }
+
+        Assert.Null(await resultTask);
+    }
+
+    [AvaloniaFact]
+    public async Task LabelExportPreviewActionBelongsToPreviewPanelAndFitsCompactWindow()
+    {
+        string source = Path.Combine(AppContext.BaseDirectory, "Fixtures", "representative-preset.xml");
+        DanteProject project = DanteProject.Load(source);
+        MainWindow owner = new() { Width = 1366, Height = 768 };
+        owner.Show();
+
+        Task<ChannelLabelExportDialogResult?> resultTask = ChannelLabelExportDialog.ShowAsync(
+            owner,
+            project,
+            UiLanguage.English,
+            "DEVICE-A");
+        Dispatcher.UIThread.RunJobs();
+
+        Window dialog = Assert.Single(owner.OwnedWindows);
+        try
+        {
+            dialog.Width = 900;
+            dialog.Height = 650;
+            Dispatcher.UIThread.RunJobs();
+
+            Button preview = dialog.FindControl<Button>("PreviewButton")!;
+            TextBlock title = dialog.FindControl<TextBlock>("PreviewTitle")!;
+            Border previewPanel = title.GetLogicalAncestors().OfType<Border>().First();
+
+            Assert.Equal("Refresh preview", preview.Content);
+            Assert.Contains(previewPanel, preview.GetLogicalAncestors());
+            AssertControlFits(dialog, preview);
+            AssertControlFitsInside(previewPanel, preview);
+            AssertControlFits(dialog, dialog.FindControl<Button>("ExportButton")!);
         }
         finally
         {
@@ -300,20 +554,28 @@ public sealed class MainWindowTests
             ListBox txList = dialog.FindControl<ListBox>("TxChannelList")!;
             ListBox rxList = dialog.FindControl<ListBox>("RxChannelList")!;
             Grid matrix = dialog.FindControl<Grid>("MatrixPanel")!;
+            Grid txHeaders = dialog.FindControl<Grid>("MatrixTxHeaderPanel")!;
+            Grid rxHeaders = dialog.FindControl<Grid>("MatrixRxHeaderPanel")!;
             Button apply = dialog.FindControl<Button>("ApplyButton")!;
 
             Assert.Equal(2, txList.ItemCount);
             Assert.Equal(2, rxList.ItemCount);
-            Assert.Equal(3, matrix.ColumnDefinitions.Count);
-            Assert.Equal(3, matrix.RowDefinitions.Count);
+            Assert.Equal(2, matrix.ColumnDefinitions.Count);
+            Assert.Equal(2, matrix.RowDefinitions.Count);
+            Assert.Equal(2, txHeaders.ColumnDefinitions.Count);
+            Assert.Equal(2, rxHeaders.RowDefinitions.Count);
+            Assert.Equal(1, Grid.GetColumn(dialog.FindControl<ScrollViewer>("MatrixTxHeaderScrollViewer")!));
+            Assert.Equal(1, Grid.GetRow(dialog.FindControl<ScrollViewer>("MatrixRxHeaderScrollViewer")!));
             Assert.False(apply.IsEnabled);
             Assert.Empty(dialog.Edits);
             Assert.False(project.IsModified);
 
+            int matrixBuildCount = dialog.MatrixBuildCount;
             Button activeCell = matrix.Children.OfType<Button>().First(button => Equals(button.Content, "●"));
             activeCell.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
 
             Assert.True(apply.IsEnabled);
+            Assert.Equal(matrixBuildCount, dialog.MatrixBuildCount);
             PatchEditRequest edit = Assert.Single(dialog.Edits);
             Assert.True(edit.IsRemoval);
             Assert.Equal("DEVICE-B", edit.RxDeviceName);
@@ -370,5 +632,28 @@ public sealed class MainWindowTests
         Assert.InRange(origin.Value.Y, -0.5, window.ClientSize.Height + 0.5);
         Assert.True(origin.Value.X + control.Bounds.Width <= window.ClientSize.Width + 0.5, $"{control.Name} dépasse horizontalement.");
         Assert.True(origin.Value.Y + control.Bounds.Height <= window.ClientSize.Height + 0.5, $"{control.Name} dépasse verticalement.");
+    }
+
+    private static void AssertControlFitsInside(Control container, Control control)
+    {
+        Point? origin = control.TranslatePoint(default, container);
+        Assert.NotNull(origin);
+        Assert.InRange(origin.Value.X, -0.5, container.Bounds.Width + 0.5);
+        Assert.InRange(origin.Value.Y, -0.5, container.Bounds.Height + 0.5);
+        Assert.True(origin.Value.X + control.Bounds.Width <= container.Bounds.Width + 0.5,
+            $"{control.Name} dépasse horizontalement de {container.Name}.");
+        Assert.True(origin.Value.Y + control.Bounds.Height <= container.Bounds.Height + 0.5,
+            $"{control.Name} dépasse verticalement de {container.Name}.");
+    }
+
+    private static void ApplyLanguage(MainWindow window, UiLanguage language)
+    {
+        typeof(MainWindow)
+            .GetField("_language", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .SetValue(window, language);
+        typeof(MainWindow)
+            .GetMethod("ApplyLanguageToVisualTree", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .Invoke(window, null);
+        Dispatcher.UIThread.RunJobs();
     }
 }

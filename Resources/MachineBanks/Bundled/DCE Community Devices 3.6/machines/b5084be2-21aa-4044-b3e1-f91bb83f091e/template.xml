@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<device>
+        <captureInfo>
+            <device_name />
+            <device_samplerate />
+            <device_unicast_latency />
+            <clock />
+            <clock_priority />
+            <txchannel_names />
+            <txflows />
+            <rxchannel_names />
+            <rxchannel_subscriptions />
+            <rxflows />
+        </captureInfo>
+
+
+
+        <manufacturer_id>4C616B6500000000</manufacturer_id>
+        <manufacturer_name>Lake</manufacturer_name>
+        <model_id>4C4D34340032306B</model_id>
+        <model_name>LM 44</model_name>
+        <model_version>3.86.0</model_version>
+        <device_type>4C616B6500000000</device_type>
+        <friendly_name>MACHINE-TEMPLATE</friendly_name>
+        <preferred_master value="false" />
+        <samplerate>48000</samplerate>
+        <unicast_latency>1000</unicast_latency>
+        <rxchannel danteId="1" mediaType="audio">
+            <name>RX 1</name>
+
+
+        </rxchannel>
+        <rxchannel danteId="2" mediaType="audio">
+            <name>RX 2</name>
+
+
+        </rxchannel>
+        <rxchannel danteId="3" mediaType="audio">
+            <name>RX 3</name>
+        </rxchannel>
+        <rxchannel danteId="4" mediaType="audio">
+            <name>RX 4</name>
+        </rxchannel>
+        <clock>
+            <subdomain_name>_DFLT</subdomain_name>
+            <unicast_delay_requests>false</unicast_delay_requests>
+            <v1_enabled>false</v1_enabled>
+            <v2_enabled>false</v2_enabled>
+        </clock>
+        <clock_priority>
+            <preferred>true</preferred>
+        </clock_priority>
+    </device>

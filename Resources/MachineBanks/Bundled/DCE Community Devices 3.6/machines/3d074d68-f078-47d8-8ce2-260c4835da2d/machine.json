@@ -1,0 +1,21 @@
+{
+  "formatVersion": 1,
+  "templateId": "3d074d68-f078-47d8-8ce2-260c4835da2d",
+  "templateName": "QL1",
+  "manufacturer": "Yamaha Corporation",
+  "model": "QL1",
+  "description": "",
+  "category": "Mixing Desk",
+  "tags": [
+    "Consoles"
+  ],
+  "txCount": 32,
+  "rxCount": 32,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "3.6",
+  "createdUtc": "2026-07-26T01:41:53.9235278+02:00",
+  "modifiedUtc": "2026-07-26T01:42:13.3092624+02:00",
+  "templateSha256": "299A8C133D9D61B6B68F89A4AB624F05B825520F3780302ADCD742F14089455D",
+  "imageFileName": "image.jpg"
+}

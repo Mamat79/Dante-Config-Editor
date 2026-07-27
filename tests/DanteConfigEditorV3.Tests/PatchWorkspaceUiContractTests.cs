@@ -5,7 +5,7 @@ namespace DanteConfigEditorV3.Tests;
 public sealed class PatchWorkspaceUiContractTests
 {
     [Fact]
-    public void WindowsPatchWorkspaceUsesSelectionPreviewAndRangeControls()
+    public void WindowsPatchWorkspaceUsesSelectionRangeAndMatrixControls()
     {
         string xaml = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml"));
         string codeBehind = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml.cs"));
@@ -28,9 +28,45 @@ public sealed class PatchWorkspaceUiContractTests
         Assert.Contains("PreviewMouseMove=\"MatrixGrid_PreviewMouseMove\"", xaml, StringComparison.Ordinal);
         Assert.Contains("PreviewMouseLeftButtonUp=\"MatrixGrid_PreviewMouseLeftButtonUp\"", xaml, StringComparison.Ordinal);
         Assert.Contains("PlanMatrixGesture", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"SwapDeviceSelectionButton\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("Content=\"FLIP TX ⇄ RX\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("Style=\"{StaticResource FlipButtonStyle}\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("<Setter Property=\"Background\" Value=\"{DynamicResource WarningBrush}\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"RangeCapacityTextBlock\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("PlanOneToOne", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"MatrixOneToOneButton\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"MatrixOneToOneCountTextBox\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("MatrixOneToOneButton_Click", xaml, StringComparison.Ordinal);
+        Assert.Contains("_matrixOneToOneStart.Source", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"MatrixZoomOutButton\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"MatrixZoomResetButton\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"MatrixZoomInButton\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"MatrixZoomFitButton\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("PreviewMouseWheel=\"MatrixGrid_PreviewMouseWheel\"", xaml, StringComparison.Ordinal);
 
         string mainWindowXaml = File.ReadAllText(RepositoryFile("MainWindow.xaml"));
         Assert.DoesNotContain("glisser-déposer", mainWindowXaml, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void WindowsImmediatePatchRefreshPreservesMatrixOneToOneStartAndCount()
+    {
+        string workspaceCode = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml.cs"));
+        string mainWindowCode = File.ReadAllText(RepositoryFile("MainWindow.xaml.cs"));
+
+        Assert.Contains("CaptureMatrixOneToOneState()", workspaceCode, StringComparison.Ordinal);
+        Assert.Contains("MatrixOneToOneCountTextBox.Text", workspaceCode, StringComparison.Ordinal);
+        Assert.Contains("_matrixOneToOneStart?.Source.DanteId", workspaceCode, StringComparison.Ordinal);
+        Assert.Contains("_matrixOneToOneStart?.Target.DanteId", workspaceCode, StringComparison.Ordinal);
+        Assert.Contains("RestoreMatrixOneToOneState", workspaceCode, StringComparison.Ordinal);
+        Assert.Contains(
+            "_easyPatchWorkspace?.CaptureMatrixOneToOneState()",
+            mainWindowCode,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "workspace.RestoreMatrixOneToOneState(matrixOneToOneState)",
+            mainWindowCode,
+            StringComparison.Ordinal);
     }
 
     [Fact]
@@ -62,7 +98,8 @@ public sealed class PatchWorkspaceUiContractTests
         Assert.Contains("Header=\"Easy patch\"", xaml, StringComparison.Ordinal);
         Assert.Contains("x:Name=\"EasyPatchHost\"", xaml, StringComparison.Ordinal);
         Assert.Contains("embedded: true", codeBehind, StringComparison.Ordinal);
-        Assert.Contains("EasyPatchWorkspace_ApplyRequested", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("EasyPatchWorkspace_DirectApplyRequested", codeBehind, StringComparison.Ordinal);
+        Assert.DoesNotContain("EasyPatchWorkspace_ApplyRequested", codeBehind, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -79,14 +116,71 @@ public sealed class PatchWorkspaceUiContractTests
         Assert.Equal(2, CountOccurrences(xaml, "PreviewMouseLeftButtonDown=\"InlineChannelNameTextBox_PreviewMouseLeftButtonDown\""));
         Assert.Contains("ChannelSeriesThumb_DragStarted", xaml, StringComparison.Ordinal);
         Assert.Contains("ChannelSeriesThumb_DragCompleted", xaml, StringComparison.Ordinal);
-        Assert.Contains("MatrixTxHeader_MouseLeftButtonDown", codeBehind, StringComparison.Ordinal);
-        Assert.Contains("ColumnHeaderHeight=\"168\"", xaml, StringComparison.Ordinal);
-        Assert.Contains("Text = source.Display", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("MatrixTxHeader_Click", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("MinHeight=\"230\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("ColumnHeaderHeight=\"132\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("Content = source.Display", codeBehind, StringComparison.Ordinal);
         Assert.Contains("LayoutTransform = new RotateTransform(-90)", codeBehind, StringComparison.Ordinal);
         Assert.Contains("MatrixSeriesThumb_DragStarted", codeBehind, StringComparison.Ordinal);
         Assert.Contains("MatrixSeriesThumb_DragCompleted", codeBehind, StringComparison.Ordinal);
         Assert.Contains("RenameMatrixChannel", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("e.Key == Key.Tab", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("FocusInlineChannelEditor", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("InlineChannelNavigationRequested", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("RequestInlineChannelNavigation(target)", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("case PatchSourceDescriptor source:", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("FindVisualParent<DataGridCell>(hit)", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("row.Cells[sourceIndex]", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("EasyPatchWorkspace_InlineChannelNavigationRequested", File.ReadAllText(RepositoryFile("MainWindow.xaml.cs")), StringComparison.Ordinal);
         Assert.Contains("ExtendEasyPatchChannelSeries", File.ReadAllText(RepositoryFile("MainWindow.xaml.cs")), StringComparison.Ordinal);
+        Assert.Contains("label.Click += MatrixTxHeader_Click", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("sender is Button { Tag: PatchSourceDescriptor source }", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("OpenMatrixTxRenameEditor", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("Dispatcher.BeginInvoke(new Action(() => OpenMatrixTxRenameEditor", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("args.Key == Key.Enter", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("args.Key == Key.Tab", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("ModifierKeys.Shift", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("ChannelSeriesHandleVisibilityConverter", xaml, StringComparison.Ordinal);
+        Assert.Contains("source.CanExtendNameSeries ? Visibility.Visible : Visibility.Collapsed", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("e.Canceled", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"WarnOnExistingPatchCheckBox\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("IsChecked=\"True\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("ApplyMatrixCellDirectly", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("ApplyPlanImmediately", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("BuildCommittedPreview", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("DirectApplyRequested", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("WarnOnExistingPatch", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("if (!WarnOnExistingPatch)", codeBehind, StringComparison.Ordinal);
+
+        string mainCode = File.ReadAllText(RepositoryFile("MainWindow.xaml.cs"));
+        Assert.Contains("EasyPatchWorkspace_DirectApplyRequested", mainCode, StringComparison.Ordinal);
+        Assert.DoesNotContain("pendingEdits", mainCode[mainCode.IndexOf("private void RefreshEasyPatchWorkspace", StringComparison.Ordinal)..mainCode.IndexOf("private void ApplyPatchEdits", StringComparison.Ordinal)], StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void DevicePatchButtonsUseTheRequestedTwoByTwoOrder()
+    {
+        XDocument document = XDocument.Parse(File.ReadAllText(RepositoryFile("MainWindow.xaml")));
+        XNamespace xamlNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
+        XElement actionGrid = NamedElement(document, xamlNamespace, "DevicePatchActionGrid");
+
+        string[] names = actionGrid.Elements()
+            .Select(element => element.Attribute(xamlNamespace + "Name")?.Value)
+            .Where(name => name is not null)
+            .Cast<string>()
+            .ToArray();
+        string[] labels = actionGrid.Elements()
+            .Select(element => element.Attribute("Content")?.Value)
+            .Where(label => label is not null)
+            .Cast<string>()
+            .ToArray();
+
+        Assert.Equal(
+            ["ResetDeviceRxPatchesButton", "ResetDeviceTxPatchesButton", "ResetDevicePatchesButton", "DeleteDeviceButton"],
+            names);
+        Assert.Equal(["Reset RX", "Reset TX", "Reset RX/TX", "Supprimer"], labels);
+        Assert.Equal("2", actionGrid.Attribute("Columns")?.Value);
+        Assert.Contains("ChannelSeriesHandleVisibilityConverter", File.ReadAllText(RepositoryFile("MainWindow.xaml")), StringComparison.Ordinal);
     }
 
     [Fact]
@@ -143,7 +237,7 @@ public sealed class PatchWorkspaceUiContractTests
     }
 
     [Fact]
-    public void WindowsPatchWorkspaceOffersCumulativePreviewAndDirectApplyPaths()
+    public void EmbeddedEasyPatchIsImmediateWhileStandaloneDialogKeepsItsReturnBatch()
     {
         string xaml = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml"));
         string codeBehind = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml.cs"));
@@ -158,6 +252,12 @@ public sealed class PatchWorkspaceUiContractTests
         Assert.Contains("StagePlanAsPreview", codeBehind, StringComparison.Ordinal);
         Assert.Contains("PendingChanges", codeBehind, StringComparison.Ordinal);
         Assert.Contains("ApplyPlanDirectly", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("ApplyPlanImmediately", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("PreviewSelectionButton.Visibility = Visibility.Collapsed", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("PreviewRangeButton.Visibility = Visibility.Collapsed", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("PreviewGroupBox.Visibility = Visibility.Collapsed", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("ApplyButton.Visibility = Visibility.Collapsed", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("if (_embedded)", codeBehind, StringComparison.Ordinal);
 
         XElement preview = NamedElement(document, xamlNamespace, "PreviewGroupBox");
         Assert.Equal("Collapsed", preview.Attribute("Visibility")?.Value);
@@ -186,6 +286,84 @@ public sealed class PatchWorkspaceUiContractTests
 
         Assert.True(setters["Width"] <= 30);
         Assert.True(setters["Height"] <= 24);
+    }
+
+    [Fact]
+    public void MacPatchWorkspaceOffersOneToOneSwapAndZoomWithoutRebuildingOnZoom()
+    {
+        string xaml = File.ReadAllText(RepositoryFile(
+            "src",
+            "DanteConfigEditor.Mac",
+            "PatchWorkspaceDialog.axaml"));
+        string codeBehind = File.ReadAllText(RepositoryFile(
+            "src",
+            "DanteConfigEditor.Mac",
+            "PatchWorkspaceDialog.axaml.cs"));
+
+        Assert.Contains("x:Name=\"SwapDeviceSelectionButton\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"OneToOneFirstTxCombo\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"OneToOneFirstRxCombo\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"OneToOneCountTextBox\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"PreviewOneToOneButton\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"WarnOnExistingPatchCheckBox\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("PlanOneToOne", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("ShowChoiceAsync", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("ApplyPlanImmediatelyAsync", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("_immediateApply", codeBehind, StringComparison.Ordinal);
+        Assert.Contains(
+            "immediateApply: edits => ExecuteMutationAsync",
+            File.ReadAllText(RepositoryFile("src", "DanteConfigEditor.Mac", "MainWindow.axaml.cs")),
+            StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"MatrixZoomFitButton\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("PointerWheelChanged=\"MatrixViewport_PointerWheelChanged\"", xaml, StringComparison.Ordinal);
+
+        int zoomStart = codeBehind.IndexOf("private void SetMatrixZoom", StringComparison.Ordinal);
+        int nextMethod = codeBehind.IndexOf("private void TxChannelList_PointerPressed", zoomStart, StringComparison.Ordinal);
+        Assert.True(zoomStart >= 0 && nextMethod > zoomStart);
+        Assert.DoesNotContain("BuildMatrix()", codeBehind[zoomStart..nextMethod], StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void PatchAndSynopticZoomSupportButtonsAndControlMouseWheel()
+    {
+        string patchXaml = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml"));
+        string mainXaml = File.ReadAllText(RepositoryFile("MainWindow.xaml"));
+        string macPatchXaml = File.ReadAllText(RepositoryFile(
+            "src",
+            "DanteConfigEditor.Mac",
+            "PatchWorkspaceDialog.axaml"));
+        string macMainXaml = File.ReadAllText(RepositoryFile(
+            "src",
+            "DanteConfigEditor.Mac",
+            "MainWindow.axaml"));
+
+        Assert.Contains("PreviewMouseWheel=\"MatrixGrid_PreviewMouseWheel\"", patchXaml, StringComparison.Ordinal);
+        Assert.Contains("PreviewMouseWheel=\"SynopticScrollViewer_PreviewMouseWheel\"", mainXaml, StringComparison.Ordinal);
+        Assert.Contains("PointerWheelChanged=\"MatrixViewport_PointerWheelChanged\"", macPatchXaml, StringComparison.Ordinal);
+        Assert.Contains("PointerWheelChanged=\"SynopticScrollViewer_PointerWheelChanged\"", macMainXaml, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void PatchMatrixKeepsHeadersFixedAndUsesIncrementalRowUpdates()
+    {
+        string xaml = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml"));
+        string codeBehind = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml.cs"));
+        XDocument document = XDocument.Parse(xaml);
+        XNamespace xamlNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
+        XElement matrix = NamedElement(document, xamlNamespace, "MatrixGrid");
+
+        Assert.Equal("1", matrix.Attribute("FrozenColumnCount")?.Value);
+        Assert.Equal("Column", matrix.Attribute("HeadersVisibility")?.Value);
+        Assert.Equal("True", matrix.Attribute("EnableRowVirtualization")?.Value);
+        Assert.Equal("True", matrix.Attribute("EnableColumnVirtualization")?.Value);
+        Assert.Contains("ObservableCollection<PatchMatrixRow>", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("RefreshTargetStates", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("RefreshTargetState(targetIndex)", codeBehind, StringComparison.Ordinal);
+
+        int gestureStart = codeBehind.IndexOf("private void ExecuteMatrixGesture", StringComparison.Ordinal);
+        int nextMethod = codeBehind.IndexOf("private void UpdateMatrixGestureHighlight", gestureStart, StringComparison.Ordinal);
+        string gestureMethod = codeBehind[gestureStart..nextMethod];
+        Assert.DoesNotContain("RefreshTargetRows()", gestureMethod, StringComparison.Ordinal);
     }
 
     [Fact]

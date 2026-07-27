@@ -22,6 +22,8 @@
     <None Include="..\DanteConfigEditorV3.Tests\Fixtures\representative-preset.xml"
           Link="Fixtures\representative-preset.xml"
           CopyToOutputDirectory="PreserveNewest" />
+    <Compile Include="..\TestSupport\SyntheticPresetFactory.cs"
+             Link="TestSupport\SyntheticPresetFactory.cs" />
     <Using Include="Xunit" />
   </ItemGroup>
 </Project>

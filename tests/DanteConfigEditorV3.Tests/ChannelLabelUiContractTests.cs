@@ -62,7 +62,13 @@ public sealed class ChannelLabelUiContractTests
         Assert.Contains("StartPositionTextBox", macExport, StringComparison.Ordinal);
         Assert.Contains("FromEndCheckBox", macExport, StringComparison.Ordinal);
         Assert.Contains("IsEnabled=\"{Binding IsAvailable}\"", macExport, StringComparison.Ordinal);
-        Assert.Contains("RowDefinitions=\"Auto,286,*,Auto\"", macImport, StringComparison.Ordinal);
+        Assert.Contains("RowDefinitions=\"Auto,Auto,*,Auto\"", macImport, StringComparison.Ordinal);
+        Assert.Contains("MinHeight=\"320\"", macImport, StringComparison.Ordinal);
+        Assert.Contains("MaxHeight=\"350\"", macImport, StringComparison.Ordinal);
+        Assert.Contains("RowDefinitions=\"Auto,Auto,*,Auto\"", macExport, StringComparison.Ordinal);
+        Assert.Contains("MinHeight=\"330\"", macExport, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"PreviewButton\"", macExport, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"PreviewTitle\"", macExport, StringComparison.Ordinal);
         Assert.Contains("TargetDeviceCheckBox_Click", macImport, StringComparison.Ordinal);
         string windowsMain = Read("MainWindow.xaml.cs");
         string macMain = Read("src", "DanteConfigEditor.Mac", "MainWindow.axaml.cs");
@@ -122,6 +128,22 @@ public sealed class ChannelLabelUiContractTests
         Assert.Contains("SynopticDevice_PointerMoved", macCode, StringComparison.Ordinal);
         Assert.Contains("UpdateSynopticCablesDuringDrag", windowsCode, StringComparison.Ordinal);
         Assert.Contains("UpdateSynopticCablesDuringDrag", macCode, StringComparison.Ordinal);
+        Assert.Contains("OpenSynopticPreviewWindowButton", windowsXaml, StringComparison.Ordinal);
+        Assert.Contains("OpenSynopticPreviewWindowButton", macXaml, StringComparison.Ordinal);
+        Assert.Contains("new SynopticPreviewWindow", windowsCode, StringComparison.Ordinal);
+        Assert.Contains("new SynopticPreviewWindow", macCode, StringComparison.Ordinal);
+        string windowsPreview = Read("SynopticPreviewWindow.xaml.cs");
+        string macPreview = Read("src", "DanteConfigEditor.Mac", "SynopticPreviewWindow.axaml.cs");
+        Assert.Contains("VisualBrush", windowsPreview, StringComparison.Ordinal);
+        Assert.Contains("Stretch = Stretch.Uniform", windowsPreview, StringComparison.Ordinal);
+        Assert.Contains("ViewboxUnits = BrushMappingMode.Absolute", windowsPreview, StringComparison.Ordinal);
+        Assert.DoesNotContain("Stretch = Stretch.Fill", windowsPreview, StringComparison.Ordinal);
+        Assert.Contains(
+            "VisualBrush",
+            macPreview,
+            StringComparison.Ordinal);
+        Assert.Contains("Stretch = Stretch.Uniform", macPreview, StringComparison.Ordinal);
+        Assert.DoesNotContain("Stretch = Stretch.Fill", macPreview, StringComparison.Ordinal);
     }
 
     private static string Read(params string[] parts)

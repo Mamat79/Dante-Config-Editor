@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<device>
+        <captureInfo>
+            <device_name />
+            <device_redundancy />
+            <device_switch_vlan />
+            <interface_ipv4_addresses />
+            <device_samplerate />
+            <device_clock_pullup />
+            <device_encoding />
+            <device_unicast_latency />
+            <rtp />
+            <clock />
+            <clock_priority />
+            <txchannel_names />
+            <txflows />
+            <rxchannel_names />
+            <rxchannel_subscriptions />
+            <rxflows />
+        </captureInfo>
+
+
+
+        <manufacturer_id>59616D6168610000</manufacturer_id>
+        <manufacturer_name>Yamaha Corporation</manufacturer_name>
+        <model_id>3852323000000000</model_id>
+        <model_name>Rio1608-D2</model_name>
+        <model_version>1.85.0</model_version>
+        <model_version_string>V1.85</model_version_string>
+        <device_type>426B6C796E320000</device_type>
+        <device_type_string>Brooklyn II</device_type_string>
+        <friendly_name>MACHINE-TEMPLATE</friendly_name>
+        <redundancy value="false" />
+        <switch_vlan value="1" />
+        <preferred_master value="false" />
+        <clock_pullup value="0" />
+        <samplerate>48000</samplerate>
+        <encoding>24</encoding>
+        <unicast_latency>2000</unicast_latency>
+
+        <txchannel danteId="1" mediaType="audio">
+            <label>TX 1</label>
+        </txchannel>
+        <txchannel danteId="2" mediaType="audio">
+            <label>TX 2</label>
+        </txchannel>
+        <txchannel danteId="3" mediaType="audio">
+            <label>TX 3</label>
+        </txchannel>
+        <txchannel danteId="4" mediaType="audio">
+            <label>TX 4</label>
+        </txchannel>
+        <txchannel danteId="5" mediaType="audio">
+            <label>TX 5</label>
+        </txchannel>
+        <txchannel danteId="6" mediaType="audio">
+            <label>TX 6</label>
+        </txchannel>
+        <txchannel danteId="7" mediaType="audio">
+            <label>TX 7</label>
+        </txchannel>
+        <txchannel danteId="8" mediaType="audio">
+            <label>TX 8</label>
+        </txchannel>
+        <txchannel danteId="9" mediaType="audio">
+            <label>TX 9</label>
+        </txchannel>
+        <txchannel danteId="10" mediaType="audio">
+            <label>TX 10</label>
+        </txchannel>
+        <txchannel danteId="11" mediaType="audio">
+            <label>TX 11</label>
+        </txchannel>
+        <txchannel danteId="12" mediaType="audio">
+            <label>TX 12</label>
+        </txchannel>
+        <txchannel danteId="13" mediaType="audio">
+            <label>TX 13</label>
+        </txchannel>
+        <txchannel danteId="14" mediaType="audio">
+            <label>TX 14</label>
+        </txchannel>
+        <txchannel danteId="15" mediaType="audio">
+            <label>TX 15</label>
+        </txchannel>
+        <txchannel danteId="16" mediaType="audio">
+            <label>TX 16</label>
+        </txchannel>
+        <rxchannel danteId="1" mediaType="audio">
+            <name>RX 1</name>
+
+
+        </rxchannel>
+        <rxchannel danteId="2" mediaType="audio">
+            <name>RX 2</name>
+
+
+        </rxchannel>
+        <rxchannel danteId="3" mediaType="audio">
+            <name>RX 3</name>
+
+
+        </rxchannel>
+        <rxchannel danteId="4" mediaType="audio">
+            <name>RX 4</name>
+
+
+        </rxchannel>
+        <rxchannel danteId="5" mediaType="audio">
+            <name>RX 5</name>
+
+
+        </rxchannel>
+        <rxchannel danteId="6" mediaType="audio">
+            <name>RX 6</name>
+        </rxchannel>
+        <rxchannel danteId="7" mediaType="audio">
+            <name>RX 7</name>
+
+
+        </rxchannel>
+        <rxchannel danteId="8" mediaType="audio">
+            <name>RX 8</name>
+
+
+        </rxchannel>
+        <rtp>
+            <interop_mode>none</interop_mode>
+            <aes67_multicast_address_prefix>4014276608</aes67_multicast_address_prefix>
+        </rtp>
+        <clock>
+            <subdomain_name>_DFLT</subdomain_name>
+            <v1_unicast_delay_requests>false</v1_unicast_delay_requests>
+            <v2_unicast_delay_requests>false</v2_unicast_delay_requests>
+            <v1_enabled>true</v1_enabled>
+            <v2_enabled>false</v2_enabled>
+        </clock>
+        <clock_priority>
+            <preferred>false</preferred>
+            <follower_only>false</follower_only>
+        </clock_priority>
+    </device>

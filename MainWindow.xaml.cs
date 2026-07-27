@@ -32,6 +32,7 @@ public partial class MainWindow : Window
     private readonly HashSet<string> _lockedDeviceNames = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _warningDeviceNames = new(StringComparer.OrdinalIgnoreCase);
     private readonly DispatcherTimer _recoveryTimer;
+    private readonly SupportReminderSettingsService _supportReminderSettings = new();
     private CancellationTokenSource? _recoveryWriteCancellation;
     private string? _selectedWarningKey;
     private readonly LatencyChoice[] _latencies =
@@ -266,6 +267,7 @@ public partial class MainWindow : Window
         RefreshRecentFiles();
         RefreshAll();
         UpdateResponsiveConfigurationLayout(ActualWidth, ActualHeight);
+        InitializeSupportReminder();
     }
 
     private void OpenButton_Click(object sender, RoutedEventArgs e)
@@ -282,6 +284,111 @@ public partial class MainWindow : Window
         }
 
         LoadProjectFromPath(dialog.FileName);
+    }
+
+    private void NewProjectButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_project?.IsModified == true)
+        {
+            MessageBoxResult abandon = MessageBox.Show(
+                this,
+                _language == UiLanguage.English
+                    ? "The current project has unsaved changes. Create another project without saving them?"
+                    : "Le projet courant contient des changements non enregistrés. Créer un autre projet sans les sauvegarder ?",
+                T("Dialog.ConfirmTitle"),
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+            if (abandon != MessageBoxResult.Yes)
+            {
+                return;
+            }
+        }
+
+        NewProjectWindow window = new(
+            _language,
+            ThemeToggleButton.IsChecked == true)
+        {
+            Owner = this
+        };
+        if (window.ShowDialog() != true || window.Result is null)
+        {
+            return;
+        }
+
+        try
+        {
+            NewProjectFormResult form = window.Result;
+            DanteProject created;
+            if (form.TemplateId.HasValue)
+            {
+                MachineTemplatePackage template = new MachineBankRepository(
+                    form.BankPath).Load(form.TemplateId.Value);
+                created = DanteProject.CreateNewFromTemplate(
+                    form.DestinationPath,
+                    form.ProjectName,
+                    form.Description,
+                    template,
+                    form.TemplateOptions
+                        ?? throw new InvalidOperationException(
+                            "Les options d'instance du modèle sont absentes."));
+            }
+            else
+            {
+                created = DanteProject.CreateNew(
+                    form.DestinationPath,
+                    new NewProjectOptions
+                    {
+                        ProjectName = form.ProjectName,
+                        Description = form.Description,
+                        Machines =
+                        [
+                            new NewCustomMachineDefinition
+                            {
+                                Name = form.DeviceName,
+                                TxCount = form.TxCount,
+                                RxCount = form.RxCount,
+                                SampleRate = form.SampleRate,
+                                Encoding = form.Encoding,
+                                UnicastLatency = form.UnicastLatency
+                            }
+                        ]
+                    });
+            }
+
+            created.SaveAs(form.DestinationPath);
+            _project = created;
+            _editModeEnabled = true;
+            _logs.Clear();
+            RecentFilesService.Add(form.DestinationPath);
+            RefreshRecentFiles();
+            AddLog(_language == UiLanguage.English
+                ? $"Experimental project created: {form.DestinationPath}"
+                : $"Projet expérimental créé : {form.DestinationPath}");
+            RefreshAll();
+            SetStatus(_language == UiLanguage.English
+                ? "Experimental project created. Validate it in Dante Controller."
+                : "Projet expérimental créé. Validez-le dans Dante Controller.");
+            MessageBox.Show(
+                this,
+                _language == UiLanguage.English
+                    ? "The XML was created and reloaded by DCE. This validates its internal structure only. "
+                    + "Import it in Dante Controller before production use."
+                    : "Le XML a été créé puis rechargé par DCE. Cela valide seulement sa structure interne. "
+                    + "Importez-le dans Dante Controller avant tout usage en production.",
+                _language == UiLanguage.English
+                    ? "Manual validation required"
+                    : "Validation manuelle obligatoire",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+        }
+        catch (Exception ex)
+        {
+            ShowError(
+                _language == UiLanguage.English
+                    ? "Unable to create project"
+                    : "Création du projet impossible",
+                ex);
+        }
     }
 
     private void MergeXmlButton_Click(object sender, RoutedEventArgs e)
@@ -310,7 +417,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(T("Dialog.OpenFailedTitle"), ex.Message);
+            ShowError(T("Dialog.OpenFailedTitle"), ex);
             return;
         }
 
@@ -416,7 +523,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(T("Dialog.OpenFailedTitle"), ex.Message);
+            ShowError(T("Dialog.OpenFailedTitle"), ex);
         }
     }
 
@@ -530,7 +637,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(T("Dialog.SaveErrorTitle"), ex.Message);
+            ShowError(T("Dialog.SaveErrorTitle"), ex);
         }
     }
 
@@ -567,7 +674,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(T("Dialog.ReloadErrorTitle"), ex.Message);
+            ShowError(T("Dialog.ReloadErrorTitle"), ex);
         }
     }
 
@@ -588,7 +695,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(T("Dialog.UndoErrorTitle"), ex.Message);
+            ShowError(T("Dialog.UndoErrorTitle"), ex);
         }
     }
 
@@ -712,6 +819,188 @@ public partial class MainWindow : Window
             T("Action.DeviceDeleted"),
             () => _project!.DeleteDevice(deviceName),
             Tf("Dialog.DeleteDeviceWarning", deviceName));
+    }
+
+    private void OpenMachineBankButton_Click(object sender, RoutedEventArgs e)
+    {
+        MachineBankWindow window = new(
+            _language,
+            ThemeToggleButton.IsChecked == true,
+            _project?.Devices.Select(device => device.Name) ?? [],
+            _project is not null && _editModeEnabled)
+        {
+            Owner = this
+        };
+        if (window.ShowDialog() != true
+            || window.SelectedPackageToAdd is null
+            || window.SelectedInstanceOptions is null
+            || _project is null)
+        {
+            return;
+        }
+
+        MachineTemplatePackage package = window.SelectedPackageToAdd;
+        MachineInstanceOptions options = window.SelectedInstanceOptions;
+        bool completed = RunProjectAction(
+            _language == UiLanguage.English
+                ? $"Device added from bank: {options.NewName}"
+                : $"Machine ajoutée depuis la banque : {options.NewName}",
+            () => _project.AddDeviceFromTemplate(package, options));
+        if (completed)
+        {
+            DeviceComboBox.SelectedItem = options.NewName;
+        }
+    }
+
+    private void DuplicateDeviceButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (!EnsureProjectLoaded())
+        {
+            return;
+        }
+
+        string? sourceName = DeviceComboBox.SelectedItem as string;
+        DanteDevice? source = _project!.FindDevice(sourceName);
+        if (source is null)
+        {
+            ShowError(
+                LocalizeLiteral("Action impossible"),
+                LocalizeLiteral("Sélectionnez d'abord une machine."));
+            return;
+        }
+
+        HashSet<string> usedNames = _project.Devices
+            .Select(device => device.Name)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        string suggestedName = DanteNameRules.BuildUniqueSuffixedDeviceName(
+            source.Name,
+            _language == UiLanguage.English ? "Copy" : "Copie",
+            usedNames);
+        MachineCloneWindow window = new(
+            _language,
+            ThemeToggleButton.IsChecked == true,
+            source.Name,
+            suggestedName)
+        {
+            Owner = this
+        };
+        if (window.ShowDialog() != true || window.Options is null)
+        {
+            return;
+        }
+
+        string newName = window.Options.NewName;
+        bool completed = RunProjectAction(
+            _language == UiLanguage.English
+                ? $"Device duplicated: {source.Name} -> {newName}"
+                : $"Machine dupliquée : {source.Name} -> {newName}",
+            () => _project.DuplicateDevice(source.Name, window.Options));
+        if (completed)
+        {
+            DeviceComboBox.SelectedItem = newName;
+        }
+    }
+
+    private void SaveDeviceToBankButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (!EnsureProjectLoaded())
+        {
+            return;
+        }
+
+        string? deviceName = DeviceComboBox.SelectedItem as string;
+        DanteDevice? device = _project!.FindDevice(deviceName);
+        if (device is null)
+        {
+            ShowError(
+                LocalizeLiteral("Action impossible"),
+                LocalizeLiteral("Sélectionnez d'abord une machine."));
+            return;
+        }
+
+        string manufacturer = device.Manufacturer;
+        string model = device.Model;
+        string suggestedTemplateName = string.Join(
+            " ",
+            new[] { manufacturer, model }
+                .Where(value => !string.IsNullOrWhiteSpace(value)));
+        if (string.IsNullOrWhiteSpace(suggestedTemplateName))
+        {
+            suggestedTemplateName = device.Name;
+        }
+
+        MachineTemplateEditorWindow window = new(
+            _language,
+            ThemeToggleButton.IsChecked == true,
+            _language == UiLanguage.English
+                ? "Save to device bank"
+                : "Enregistrer dans la banque de machines",
+            _language == UiLanguage.English
+                ? $"Prepare a reusable template from {device.Name}. Hardware identity, network addresses, subscriptions and multicast flows will be removed."
+                : $"Préparez un modèle réutilisable à partir de {device.Name}. L'identité matérielle, le réseau, les subscriptions et les flows multicast seront retirés.",
+            suggestedTemplateName,
+            manufacturer,
+            model,
+            string.Empty,
+            string.Empty,
+            [],
+            device.TxChannels.Select(channel => channel.DisplayName),
+            device.RxChannels.Select(channel => channel.DisplayName))
+        {
+            Owner = this
+        };
+        if (window.ShowDialog() != true || window.Result is null)
+        {
+            return;
+        }
+
+        try
+        {
+            MachineTemplateFormResult form = window.Result;
+            MachineTemplatePackage package = MachineTemplateService.CreateFromDevice(
+                device,
+                _project.PresetVersion,
+                new MachineTemplateCreateRequest
+                {
+                    TemplateName = form.TemplateName,
+                    Manufacturer = form.Manufacturer,
+                    Model = form.Model,
+                    Description = form.Description,
+                    Category = form.Category,
+                    Tags = form.Tags,
+                    TxLabels = form.TxLabels,
+                    RxLabels = form.RxLabels,
+                    ImageSourcePath = form.ImageSourcePath
+                });
+            string bankPath = MachineBankLocationService.CreateDefault().Load();
+            MachineTemplateMetadata saved = new MachineBankRepository(bankPath).Save(package);
+            AddLog((_language == UiLanguage.English
+                ? "Device template saved: "
+                : "Modèle de machine enregistré : ") + saved.TemplateName);
+            SetStatus(_language == UiLanguage.English
+                ? "Device template saved."
+                : "Modèle enregistré dans la banque.");
+            MessageBox.Show(
+                this,
+                _language == UiLanguage.English
+                    ? $"“{saved.TemplateName}” was saved in:{Environment.NewLine}{bankPath}"
+                    : $"« {saved.TemplateName} » a été enregistré dans :{Environment.NewLine}{bankPath}",
+                _language == UiLanguage.English ? "Device bank" : "Banque de machines",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            DiagnosticLogService.Default.Write(
+                "MachineBank",
+                "Impossible d'enregistrer un modèle depuis la machine sélectionnée.",
+                ex);
+            ShowError(
+                _language == UiLanguage.English
+                    ? "Unable to save template"
+                    : "Enregistrement du modèle impossible",
+                ex);
+        }
     }
 
     private void ResetDeviceChannelsButton_Click(object sender, RoutedEventArgs e)
@@ -1770,9 +2059,11 @@ public partial class MainWindow : Window
         bool sameProject = ReferenceEquals(_easyPatchProject, _project);
         bool startInAssignmentMode = sameProject
             && _easyPatchWorkspace?.IsAssignmentModeSelected == true;
-        PatchEditRequest[] pendingEdits = sameProject
-            ? _easyPatchWorkspace?.Edits.ToArray() ?? []
-            : [];
+        bool warnOnExistingPatch = !sameProject
+            || _easyPatchWorkspace?.WarnOnExistingPatch != false;
+        PatchMatrixOneToOneState? matrixOneToOneState = sameProject
+            ? _easyPatchWorkspace?.CaptureMatrixOneToOneState()
+            : null;
         string? initialTxDevice = sameProject
             ? _easyPatchWorkspace?.SelectedTxDeviceName
             : SourceDeviceComboBox.SelectedItem as string;
@@ -1795,12 +2086,15 @@ public partial class MainWindow : Window
                 ThemeToggleButton.IsChecked == true,
                 initialTxDevice,
                 initialRxDevice,
-                pendingEdits,
+                initialEdits: null,
                 embedded: true,
                 renameChannelAction: RenameEasyPatchChannel,
                 extendChannelSeriesAction: ExtendEasyPatchChannelSeries,
-                startInAssignmentMode: startInAssignmentMode);
-            workspace.ApplyRequested += EasyPatchWorkspace_ApplyRequested;
+                startInAssignmentMode: startInAssignmentMode,
+                warnOnExistingPatch: warnOnExistingPatch);
+            workspace.RestoreMatrixOneToOneState(matrixOneToOneState);
+            workspace.DirectApplyRequested += EasyPatchWorkspace_DirectApplyRequested;
+            workspace.InlineChannelNavigationRequested += EasyPatchWorkspace_InlineChannelNavigationRequested;
             _easyPatchProject = _project;
             _easyPatchWorkspace = workspace;
             EasyPatchHost.Content = workspace;
@@ -1812,22 +2106,26 @@ public partial class MainWindow : Window
         }
     }
 
-    private void EasyPatchWorkspace_ApplyRequested(object? sender, EventArgs e)
+    private void EasyPatchWorkspace_InlineChannelNavigationRequested(
+        object? sender,
+        InlineChannelNavigationRequestEventArgs e)
     {
-        if (sender is not PatchWorkspaceView workspace || workspace.Edits.Count == 0)
+        Dispatcher.BeginInvoke(new Action(() =>
+            _easyPatchWorkspace?.FocusChannelEditor(e.Kind, e.DanteId, e.Matrix)));
+    }
+
+    private void EasyPatchWorkspace_DirectApplyRequested(
+        object? sender,
+        DirectPatchRequestEventArgs e)
+    {
+        if (sender is not PatchWorkspaceView workspace || e.Edits.Count == 0)
         {
             return;
         }
 
-        PatchEditRequest[] edits = workspace.Edits.ToArray();
-        bool applied = RunProjectAction(
-            Tf("Action.VisualPatchesApplied", edits.Length),
-            () => ApplyPatchEdits(edits));
-        if (applied)
-        {
-            _easyPatchWorkspace?.ResetPendingChanges();
-            RefreshEasyPatchWorkspace();
-        }
+        RunProjectAction(
+            Tf("Action.VisualPatchesApplied", e.Edits.Count),
+            () => ApplyPatchEdits(e.Edits));
     }
 
     private void ApplyPatchEdits(IEnumerable<PatchEditRequest> edits)
@@ -2118,8 +2416,13 @@ public partial class MainWindow : Window
 
         try
         {
-            ChannelLabelDocument document = ChannelLabelExchangeService.Read(dialog.FileName);
-            ChannelLabelImportWindow window = new(_language, _project!, document, DeviceComboBox.SelectedItem as string)
+            ChannelLabelReadResult readResult = ChannelLabelExchangeService.ReadWithReport(dialog.FileName);
+            ChannelLabelImportWindow window = new(
+                _language,
+                _project!,
+                readResult.Document,
+                readResult.Report,
+                DeviceComboBox.SelectedItem as string)
             {
                 Owner = this
             };
@@ -2145,7 +2448,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(_language == UiLanguage.English ? "Label import unavailable" : "Import de labels impossible", ex.Message);
+            ShowError(_language == UiLanguage.English ? "Label import unavailable" : "Import de labels impossible", ex);
         }
     }
 
@@ -2162,7 +2465,7 @@ public partial class MainWindow : Window
         {
             ShowError(
                 LocalizeLiteral("Ouverture du projet DMT impossible"),
-                ex.Message);
+                ex);
         }
     }
 
@@ -2219,7 +2522,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(_language == UiLanguage.English ? "Label export unavailable" : "Export de labels impossible", ex.Message);
+            ShowError(_language == UiLanguage.English ? "Label export unavailable" : "Export de labels impossible", ex);
         }
     }
 
@@ -2447,6 +2750,104 @@ public partial class MainWindow : Window
         OpenBundledDocument($"Notice_DanteConfigEditorV3_{DocumentLanguageSuffix()}.pdf");
     }
 
+    private void SupportDceButton_Click(object sender, RoutedEventArgs e)
+    {
+        ShowSupportDceWindow();
+    }
+
+    private void SupportReminderOpenButton_Click(object sender, RoutedEventArgs e)
+    {
+        PostponeSupportReminder();
+        ShowSupportDceWindow();
+    }
+
+    private void SupportReminderLaterButton_Click(object sender, RoutedEventArgs e)
+    {
+        PostponeSupportReminder();
+    }
+
+    private void SupportReminderNeverButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            _supportReminderSettings.Suppress();
+        }
+        catch (Exception exception)
+        {
+            DiagnosticLogService.Default.Write("Support", "Impossible de mémoriser la désactivation du rappel.", exception);
+        }
+
+        SupportReminderBorder.Visibility = Visibility.Collapsed;
+    }
+
+    private void InitializeSupportReminder()
+    {
+        if (SupportReminderSettingsService.IsAutomatedTestProcess())
+        {
+            return;
+        }
+
+        try
+        {
+            string version = GetType().Assembly.GetName().Version?.ToString(2) ?? "3.6";
+            SupportReminderDecision decision = _supportReminderSettings.RegisterSuccessfulLaunch(version);
+            SupportReminderBorder.Visibility = decision.ShouldShow
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+        }
+        catch (Exception exception)
+        {
+            // Le rappel est accessoire : une préférence locale inaccessible
+            // ne doit jamais perturber l'ouverture de l'éditeur.
+            DiagnosticLogService.Default.Write("Support", "Rappel de soutien indisponible.", exception);
+            SupportReminderBorder.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    private void PostponeSupportReminder()
+    {
+        try
+        {
+            _supportReminderSettings.Postpone();
+        }
+        catch (Exception exception)
+        {
+            DiagnosticLogService.Default.Write("Support", "Impossible de reporter le rappel.", exception);
+        }
+
+        SupportReminderBorder.Visibility = Visibility.Collapsed;
+    }
+
+    private void ShowSupportDceWindow()
+    {
+        SupportDceWindow dialog = new(_language, ThemeToggleButton.IsChecked == true)
+        {
+            Owner = this
+        };
+        dialog.ShowDialog();
+    }
+
+    private void OpenDiagnosticLogsButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            string directory = DiagnosticLogService.Default.DirectoryPath;
+            Directory.CreateDirectory(directory);
+            Process.Start(new ProcessStartInfo(directory)
+            {
+                UseShellExecute = true
+            });
+        }
+        catch (Exception ex)
+        {
+            ShowError(
+                _language == UiLanguage.English
+                    ? "Unable to open diagnostic logs"
+                    : "Ouverture des journaux impossible",
+                ex);
+        }
+    }
+
     private string DocumentLanguageSuffix()
     {
         return _language == UiLanguage.English ? "EN" : "FR";
@@ -2480,7 +2881,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(T("Dialog.ExportImpossibleTitle"), ex.Message);
+            ShowError(T("Dialog.ExportImpossibleTitle"), ex);
         }
     }
 
@@ -2512,7 +2913,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(T("Dialog.ExportImpossibleTitle"), ex.Message);
+            ShowError(T("Dialog.ExportImpossibleTitle"), ex);
         }
     }
 
@@ -2546,7 +2947,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(T("Dialog.ExportPatchbookImpossibleTitle"), ex.Message);
+            ShowError(T("Dialog.ExportPatchbookImpossibleTitle"), ex);
         }
     }
 
@@ -2579,7 +2980,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            ShowError(T("Dialog.ExportPatchbookCsvImpossibleTitle"), ex.Message);
+            ShowError(T("Dialog.ExportPatchbookCsvImpossibleTitle"), ex);
         }
     }
 
@@ -2604,8 +3005,10 @@ public partial class MainWindow : Window
 
         OpenFileDialog dialog = new()
         {
-            Filter = "Fichiers XML (*.xml)|*.xml|Tous les fichiers (*.*)|*.*",
-            Title = "Comparer avec un autre XML"
+            Filter = T("Dialog.XmlFilter"),
+            Title = _language == UiLanguage.English
+                ? "Compare with another XML file"
+                : "Comparer avec un autre XML"
         };
 
         if (dialog.ShowDialog(this) != true)
@@ -2617,19 +3020,28 @@ public partial class MainWindow : Window
         {
             DanteProject otherProject = DanteProject.Load(dialog.FileName);
             ComparisonDisplayRow[] comparisonRows = BuildComparisonRows(otherProject);
-            SaveSummaryTextBox.Text = _project!.CompareWith(otherProject);
+            SaveSummaryTextBox.Text = _project!.CompareWith(otherProject, _language);
             MainTabs.SelectedItem = SafetyTab;
-            ComparisonResultWindow window = new(comparisonRows)
+            ComparisonResultWindow window = new(
+                _language,
+                ThemeToggleButton.IsChecked == true,
+                comparisonRows)
             {
                 Owner = this
             };
             window.Show();
-            AddLog("Comparaison XML effectuée : " + dialog.FileName);
-            SetStatus("Comparaison XML affichée.");
+            AddLog((_language == UiLanguage.English
+                ? "XML comparison completed: "
+                : "Comparaison XML effectuée : ") + dialog.FileName);
+            SetStatus(_language == UiLanguage.English
+                ? "XML comparison displayed."
+                : "Comparaison XML affichée.");
         }
         catch (Exception ex)
         {
-            ShowError("Comparaison impossible", ex.Message);
+            ShowError(
+                _language == UiLanguage.English ? "Comparison failed" : "Comparaison impossible",
+                ex);
         }
     }
 
@@ -2652,12 +3064,20 @@ public partial class MainWindow : Window
 
         foreach (string deviceName in currentDevices.Keys.Except(otherDevices.Keys, StringComparer.OrdinalIgnoreCase).OrderBy(name => name, StringComparer.OrdinalIgnoreCase))
         {
-            rows.Add(new ComparisonDisplayRow("Machine / " + deviceName, "présente", "absente", "Seulement fichier ouvert"));
+            rows.Add(new ComparisonDisplayRow(
+                (_language == UiLanguage.English ? "Device / " : "Machine / ") + deviceName,
+                _language == UiLanguage.English ? "present" : "présente",
+                _language == UiLanguage.English ? "absent" : "absente",
+                _language == UiLanguage.English ? "Open file only" : "Seulement fichier ouvert"));
         }
 
         foreach (string deviceName in otherDevices.Keys.Except(currentDevices.Keys, StringComparer.OrdinalIgnoreCase).OrderBy(name => name, StringComparer.OrdinalIgnoreCase))
         {
-            rows.Add(new ComparisonDisplayRow("Machine / " + deviceName, "absente", "présente", "Seulement fichier comparé"));
+            rows.Add(new ComparisonDisplayRow(
+                (_language == UiLanguage.English ? "Device / " : "Machine / ") + deviceName,
+                _language == UiLanguage.English ? "absent" : "absente",
+                _language == UiLanguage.English ? "present" : "présente",
+                _language == UiLanguage.English ? "Compared file only" : "Seulement fichier comparé"));
         }
 
         foreach (string deviceName in currentDevices.Keys.Intersect(otherDevices.Keys, StringComparer.OrdinalIgnoreCase).OrderBy(name => name, StringComparer.OrdinalIgnoreCase))
@@ -2665,12 +3085,20 @@ public partial class MainWindow : Window
             DanteDevice current = currentDevices[deviceName];
             DanteDevice compared = otherDevices[deviceName];
             AddComparisonRow(rows, $"{deviceName} / Friendly name", current.FriendlyName, compared.FriendlyName);
-            AddComparisonRow(rows, $"{deviceName} / Mode réseau", current.NetworkMode, compared.NetworkMode);
-            AddComparisonRow(rows, $"{deviceName} / Latence", current.LatencyDisplay, compared.LatencyDisplay);
+            AddComparisonRow(rows, $"{deviceName} / {(_language == UiLanguage.English ? "Network mode" : "Mode réseau")}", current.NetworkMode, compared.NetworkMode);
+            AddComparisonRow(rows, $"{deviceName} / {(_language == UiLanguage.English ? "Latency" : "Latence")}", current.LatencyDisplay, compared.LatencyDisplay);
             AddComparisonRow(rows, $"{deviceName} / Sample rate", current.SampleRateDisplay, compared.SampleRateDisplay);
             AddComparisonRow(rows, $"{deviceName} / Bits", current.EncodingDisplay, compared.EncodingDisplay);
             AddComparisonRow(rows, $"{deviceName} / IP", current.IpModeDisplay, compared.IpModeDisplay);
-            AddComparisonRow(rows, $"{deviceName} / Preferred master", current.PreferredMaster ? "oui" : "non", compared.PreferredMaster ? "oui" : "non");
+            AddComparisonRow(
+                rows,
+                $"{deviceName} / Preferred Master",
+                current.PreferredMaster
+                    ? (_language == UiLanguage.English ? "yes" : "oui")
+                    : (_language == UiLanguage.English ? "no" : "non"),
+                compared.PreferredMaster
+                    ? (_language == UiLanguage.English ? "yes" : "oui")
+                    : (_language == UiLanguage.English ? "no" : "non"));
             AddChannelComparisonRows(rows, deviceName, "TX", current.TxChannels, compared.TxChannels);
             AddChannelComparisonRows(rows, deviceName, "RX", current.RxChannels, compared.RxChannels);
         }
@@ -2684,12 +3112,20 @@ public partial class MainWindow : Window
 
         foreach (string patchKey in currentPatches.Keys.Except(otherPatches.Keys, StringComparer.OrdinalIgnoreCase).OrderBy(key => key, StringComparer.OrdinalIgnoreCase))
         {
-            rows.Add(new ComparisonDisplayRow("Patch / " + patchKey, FormatSubscriptionForComparison(currentPatches[patchKey]), "absent", "Seulement fichier ouvert"));
+            rows.Add(new ComparisonDisplayRow(
+                "Patch / " + patchKey,
+                FormatSubscriptionForComparison(currentPatches[patchKey]),
+                "absent",
+                _language == UiLanguage.English ? "Open file only" : "Seulement fichier ouvert"));
         }
 
         foreach (string patchKey in otherPatches.Keys.Except(currentPatches.Keys, StringComparer.OrdinalIgnoreCase).OrderBy(key => key, StringComparer.OrdinalIgnoreCase))
         {
-            rows.Add(new ComparisonDisplayRow("Patch / " + patchKey, "absent", FormatSubscriptionForComparison(otherPatches[patchKey]), "Seulement fichier comparé"));
+            rows.Add(new ComparisonDisplayRow(
+                "Patch / " + patchKey,
+                "absent",
+                FormatSubscriptionForComparison(otherPatches[patchKey]),
+                _language == UiLanguage.English ? "Compared file only" : "Seulement fichier comparé"));
         }
 
         foreach (string patchKey in currentPatches.Keys.Intersect(otherPatches.Keys, StringComparer.OrdinalIgnoreCase).OrderBy(key => key, StringComparer.OrdinalIgnoreCase))
@@ -2699,7 +3135,11 @@ public partial class MainWindow : Window
 
         if (rows.Count == 0)
         {
-            rows.Add(new ComparisonDisplayRow("Champs connus", "identiques", "identiques", "Aucune différence détectée"));
+            rows.Add(new ComparisonDisplayRow(
+                _language == UiLanguage.English ? "Known fields" : "Champs connus",
+                _language == UiLanguage.English ? "identical" : "identiques",
+                _language == UiLanguage.English ? "identical" : "identiques",
+                _language == UiLanguage.English ? "No difference detected" : "Aucune différence détectée"));
         }
 
         return rows.Take(1000).ToArray();
@@ -2721,12 +3161,20 @@ public partial class MainWindow : Window
 
         foreach (int index in currentByIndex.Keys.Except(comparedByIndex.Keys).Order())
         {
-            rows.Add(new ComparisonDisplayRow($"{deviceName} / {channelKind} {index}", currentByIndex[index].DisplayName, "absent", "Seulement fichier ouvert"));
+            rows.Add(new ComparisonDisplayRow(
+                $"{deviceName} / {channelKind} {index}",
+                currentByIndex[index].DisplayName,
+                "absent",
+                _language == UiLanguage.English ? "Open file only" : "Seulement fichier ouvert"));
         }
 
         foreach (int index in comparedByIndex.Keys.Except(currentByIndex.Keys).Order())
         {
-            rows.Add(new ComparisonDisplayRow($"{deviceName} / {channelKind} {index}", "absent", comparedByIndex[index].DisplayName, "Seulement fichier comparé"));
+            rows.Add(new ComparisonDisplayRow(
+                $"{deviceName} / {channelKind} {index}",
+                "absent",
+                comparedByIndex[index].DisplayName,
+                _language == UiLanguage.English ? "Compared file only" : "Seulement fichier comparé"));
         }
 
         foreach (int index in currentByIndex.Keys.Intersect(comparedByIndex.Keys).Order())
@@ -2739,7 +3187,11 @@ public partial class MainWindow : Window
     {
         if (!string.Equals(currentValue, comparedValue, StringComparison.OrdinalIgnoreCase))
         {
-            rows.Add(new ComparisonDisplayRow(item, Blank(currentValue), Blank(comparedValue), "Différent"));
+            rows.Add(new ComparisonDisplayRow(
+                item,
+                Blank(currentValue),
+                Blank(comparedValue),
+                _language == UiLanguage.English ? "Different" : "Différent"));
         }
     }
 
@@ -2748,9 +3200,11 @@ public partial class MainWindow : Window
         return $"{subscription.RxDevice} / RX {subscription.RxDanteId}";
     }
 
-    private static string FormatSubscriptionForComparison(DanteSubscription subscription)
+    private string FormatSubscriptionForComparison(DanteSubscription subscription)
     {
-        return subscription.IsActive ? subscription.SourceFull : "Libre";
+        return subscription.IsActive
+            ? subscription.SourceFull
+            : (_language == UiLanguage.English ? "Free" : "Libre");
     }
 
     private void ThemeToggleButton_Checked(object sender, RoutedEventArgs e)
@@ -3547,6 +4001,7 @@ public partial class MainWindow : Window
         yield return MergeXmlButton;
         yield return ApplyDeviceSettingsButton;
         yield return DeleteDeviceButton;
+        yield return DuplicateDeviceButton;
         yield return ResetDevicePatchesButton;
         yield return ResetDeviceRxPatchesButton;
         yield return ResetDeviceTxPatchesButton;
@@ -3637,7 +4092,7 @@ public partial class MainWindow : Window
             _project?.RestoreLastUndoSnapshot();
             RefreshAll();
             ScheduleRecoverySnapshot();
-            ShowError("Action impossible", ex.Message);
+            ShowError("Action impossible", ex);
             return false;
         }
     }
@@ -3851,7 +4306,16 @@ public partial class MainWindow : Window
     {
         AddLog(title + " - " + message);
         SetStatus(title);
+        DiagnosticLogService.Default.Write("UI", $"{title}: {message}");
         MessageBox.Show(this, message, title, MessageBoxButton.OK, MessageBoxImage.Error);
+    }
+
+    private void ShowError(string title, Exception exception)
+    {
+        AddLog(title + " - " + exception.Message);
+        SetStatus(title);
+        DiagnosticLogService.Default.Write("UI", title, exception);
+        MessageBox.Show(this, exception.Message, title, MessageBoxButton.OK, MessageBoxImage.Error);
     }
 
     private void OpenBundledDocument(string fileName)

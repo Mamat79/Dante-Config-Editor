@@ -9,6 +9,8 @@ public sealed record PatchSourceDescriptor(
     public string Display => $"{DanteId:000} - {ChannelName}";
 
     public string FullDisplay => $"{DeviceName} / {Display}";
+
+    public bool CanExtendNameSeries => ChannelNameSeriesService.CanExtend(ChannelName);
 }
 
 public sealed record PatchTargetDescriptor(
@@ -20,6 +22,8 @@ public sealed record PatchTargetDescriptor(
     public string Display => $"{DanteId:000} - {ChannelName}";
 
     public string FullDisplay => $"{DeviceName} / {Display}";
+
+    public bool CanExtendNameSeries => ChannelNameSeriesService.CanExtend(ChannelName);
 }
 
 public sealed record PlannedPatchAssignment(
@@ -32,6 +36,13 @@ public sealed record SequentialPatchPlan(
 
 public sealed record PatchAssignmentPlan(
     IReadOnlyList<PlannedPatchAssignment> Assignments);
+
+public sealed record PatchRangeCapacity(
+    int TxAvailable,
+    int RxAvailable)
+{
+    public int MaximumCount => Math.Min(TxAvailable, RxAvailable);
+}
 
 public sealed record PatchEditRequest(
     string RxDeviceName,
@@ -111,6 +122,19 @@ public static class PatchAssignmentPlanner
             throw new InvalidOperationException("Le nombre de canaux doit être supérieur à zéro.");
         }
 
+        PatchRangeCapacity capacity = GetRangeCapacity(
+            availableSources,
+            firstSource,
+            availableTargets,
+            firstTarget);
+        if (count > capacity.MaximumCount)
+        {
+            throw new InvalidOperationException(
+                $"La plage demandée dépasse les canaux disponibles " +
+                $"({capacity.TxAvailable} TX et {capacity.RxAvailable} RX à partir des canaux choisis). " +
+                "Aucun patch n'a été préparé.");
+        }
+
         PatchSourceDescriptor knownFirstSource = FindKnownSource(availableSources, firstSource)
             ?? throw new InvalidOperationException("Le canal TX de départ n'appartient pas à la liste disponible.");
         PatchTargetDescriptor knownFirstTarget = FindKnownTarget(availableTargets, firstTarget)
@@ -129,13 +153,43 @@ public static class PatchAssignmentPlanner
             .Take(count)
             .ToArray();
 
-        if (sources.Length != count || targets.Length != count)
-        {
-            throw new InvalidOperationException("La plage demandée dépasse les canaux TX ou RX disponibles. Aucun patch n'a été préparé.");
-        }
-
         return new PatchAssignmentPlan(
             sources.Zip(targets, (source, target) => new PlannedPatchAssignment(source, target)).ToArray());
+    }
+
+    public static PatchAssignmentPlan PlanOneToOne(
+        IReadOnlyList<PatchSourceDescriptor> availableSources,
+        PatchSourceDescriptor firstSource,
+        IReadOnlyList<PatchTargetDescriptor> availableTargets,
+        PatchTargetDescriptor firstTarget,
+        int count)
+    {
+        return PlanRange(availableSources, firstSource, availableTargets, firstTarget, count);
+    }
+
+    public static PatchRangeCapacity GetRangeCapacity(
+        IReadOnlyList<PatchSourceDescriptor> availableSources,
+        PatchSourceDescriptor firstSource,
+        IReadOnlyList<PatchTargetDescriptor> availableTargets,
+        PatchTargetDescriptor firstTarget)
+    {
+        ArgumentNullException.ThrowIfNull(availableSources);
+        ArgumentNullException.ThrowIfNull(firstSource);
+        ArgumentNullException.ThrowIfNull(availableTargets);
+        ArgumentNullException.ThrowIfNull(firstTarget);
+
+        PatchSourceDescriptor knownFirstSource = FindKnownSource(availableSources, firstSource)
+            ?? throw new InvalidOperationException("Le canal TX de départ n'appartient pas à la liste disponible.");
+        PatchTargetDescriptor knownFirstTarget = FindKnownTarget(availableTargets, firstTarget)
+            ?? throw new InvalidOperationException("Le canal RX de départ n'appartient pas à la liste disponible.");
+
+        int txAvailable = availableSources.Count(source =>
+            string.Equals(source.DeviceName, knownFirstSource.DeviceName, StringComparison.OrdinalIgnoreCase)
+            && source.PositionIndex >= knownFirstSource.PositionIndex);
+        int rxAvailable = availableTargets.Count(target =>
+            string.Equals(target.DeviceName, knownFirstTarget.DeviceName, StringComparison.OrdinalIgnoreCase)
+            && target.PositionIndex >= knownFirstTarget.PositionIndex);
+        return new PatchRangeCapacity(txAvailable, rxAvailable);
     }
 
     public static PatchAssignmentPlan PlanMatrixGesture(

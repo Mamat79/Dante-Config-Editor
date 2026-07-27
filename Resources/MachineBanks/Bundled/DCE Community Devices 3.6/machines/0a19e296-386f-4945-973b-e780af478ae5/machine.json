@@ -1,0 +1,23 @@
+{
+  "formatVersion": 1,
+  "templateId": "0a19e296-386f-4945-973b-e780af478ae5",
+  "templateName": "Divine",
+  "manufacturer": "Glensound",
+  "model": "Divine",
+  "description": "Moniteur personnel Dante 4 TX / 4 RX, fourni comme rôle hors ligne assaini.",
+  "category": "Monitor",
+  "tags": [
+    "monitor",
+    "personal monitoring",
+    "Glensound"
+  ],
+  "txCount": 4,
+  "rxCount": 4,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "3.6.1",
+  "createdUtc": "2026-07-27T06:43:15.4249147+00:00",
+  "modifiedUtc": "2026-07-27T06:50:57.6623465+00:00",
+  "templateSha256": "BBBE170EE81C615579B81C83DD2BF1894F45B5D0B7F4F0400D6E2F527A53C078",
+  "imageFileName": "image.jpg"
+}

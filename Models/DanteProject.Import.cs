@@ -42,6 +42,32 @@ public sealed partial class DanteProject
     public DanteMergeResult MergeDevicesFromXml(string path, IReadOnlyDictionary<string, string>? duplicateRenameMap = null)
     {
         DanteProject importedProject = Load(path);
+        if (!string.Equals(importedProject.PresetVersion, PresetVersion, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException(
+                $"Import refusé : le preset ajouté est en version {importedProject.PresetVersion}, "
+                + $"le projet courant en version {PresetVersion}. "
+                + "Une fusion entre versions XML différentes doit être validée avant d'être autorisée.");
+        }
+
+        if (!string.Equals(
+                importedProject.Document.Root?.Name.NamespaceName,
+                Document.Root?.Name.NamespaceName,
+                StringComparison.Ordinal))
+        {
+            throw new InvalidOperationException(
+                "Import refusé : les deux presets n'utilisent pas le même namespace XML.");
+        }
+
+        DanteValidationResult importedValidation = importedProject.Validate();
+        if (importedValidation.HasErrors)
+        {
+            throw new InvalidOperationException(
+                "Import refusé : le fichier ajouté contient des erreurs bloquantes."
+                + Environment.NewLine
+                + importedValidation.ToDisplayText());
+        }
+
         Dictionary<string, string> cleanRenameMap = NormalizeRenameMap(duplicateRenameMap);
         HashSet<string> usedNames = Devices.Select(device => device.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
         List<XElement> devicesToImport = [];
@@ -81,10 +107,12 @@ public sealed partial class DanteProject
             devicesToImport.Add(clone);
         }
 
+        EnsureStructuralCandidateIsValid(devicesToImport);
         foreach (XElement device in devicesToImport)
         {
             UpdateImportedSubscriptionDeviceNames(device, appliedRenames);
             Document.Root!.Add(device);
+            AuthorizeAddedDevice(device);
         }
 
         RegisterChange("Import XML", $"{devicesToImport.Count} machine(s) ajoutée(s) depuis {Path.GetFileName(path)}");
@@ -120,30 +148,19 @@ public sealed partial class DanteProject
     private static string NormalizeImportSuffix(string suffix)
     {
         string clean = (suffix ?? string.Empty).Trim().Trim('(', ')').Trim();
-        clean = string.Join("-", clean.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
+        clean = DanteNameRules.NormalizeDeviceNamePart(
+            string.Join("-", clean.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries)),
+            string.Empty);
         if (string.IsNullOrWhiteSpace(clean))
         {
             throw new InvalidOperationException("Le suffixe de renommage ne peut pas être vide.");
-        }
-        if (ContainsProblematicCharacters(clean))
-        {
-            throw new InvalidOperationException("Le suffixe de renommage contient des caractères non imprimables.");
         }
         return clean;
     }
 
     private static string BuildUniqueImportedDeviceName(string originalName, string suffix, ISet<string> usedNames)
     {
-        string baseName = string.IsNullOrWhiteSpace(originalName) ? "Imported device" : originalName.Trim();
-        string candidate = $"{baseName}-{suffix}";
-        int index = 2;
-        while (usedNames.Contains(candidate))
-        {
-            candidate = $"{baseName}-{suffix}-{index}";
-            index++;
-        }
-
-        return candidate;
+        return DanteNameRules.BuildUniqueSuffixedDeviceName(originalName, suffix, usedNames);
     }
 
     private static void RenameDeviceElement(XElement deviceElement, string newName)

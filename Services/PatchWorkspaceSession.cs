@@ -133,6 +133,19 @@ public sealed class PatchWorkspaceSession
             IsPending: false);
     }
 
+    public EffectivePatchAssignment GetCommittedAssignment(PatchTargetDescriptor target)
+    {
+        ArgumentNullException.ThrowIfNull(target);
+        PatchTargetKey key = RequireKnownTarget(target);
+        PatchSourceValue original = _originalAssignments[key];
+        return new EffectivePatchAssignment(
+            target.DeviceName,
+            target.DanteId,
+            original.DeviceName,
+            original.ChannelName,
+            IsPending: false);
+    }
+
     public void Assign(PlannedPatchAssignment assignment)
     {
         ArgumentNullException.ThrowIfNull(assignment);
@@ -144,7 +157,21 @@ public sealed class PatchWorkspaceSession
 
     public PatchBatchPreview BuildPreview(IEnumerable<PlannedPatchAssignment> assignments)
     {
+        return BuildPreview(assignments, GetEffectiveAssignment);
+    }
+
+    public PatchBatchPreview BuildCommittedPreview(
+        IEnumerable<PlannedPatchAssignment> assignments)
+    {
+        return BuildPreview(assignments, GetCommittedAssignment);
+    }
+
+    private PatchBatchPreview BuildPreview(
+        IEnumerable<PlannedPatchAssignment> assignments,
+        Func<PatchTargetDescriptor, EffectivePatchAssignment> assignmentResolver)
+    {
         ArgumentNullException.ThrowIfNull(assignments);
+        ArgumentNullException.ThrowIfNull(assignmentResolver);
         PlannedPatchAssignment[] requested = assignments.ToArray();
         if (requested.Length == 0)
         {
@@ -161,7 +188,7 @@ public sealed class PatchWorkspaceSession
 
         PatchPreviewItem[] items = requested.Select(assignment =>
         {
-            EffectivePatchAssignment current = GetEffectiveAssignment(assignment.Target);
+            EffectivePatchAssignment current = assignmentResolver(assignment.Target);
             PatchPreviewAction action = !current.IsActive
                 ? PatchPreviewAction.Create
                 : SameSource(

@@ -5,13 +5,20 @@ namespace DanteConfigEditor.Models;
 
 public sealed partial class DanteProject
 {
-    public string CompareWith(DanteProject other)
+    public string CompareWith(
+        DanteProject other,
+        UiLanguage language = UiLanguage.French)
     {
+        bool english = language == UiLanguage.English;
         StringBuilder builder = new();
-        builder.AppendLine("COMPARAISON XML");
-        builder.AppendLine("===============");
-        builder.AppendLine($"Fichier ouvert : {OriginalFilePath}");
-        builder.AppendLine($"Fichier comparé : {other.OriginalFilePath}");
+        builder.AppendLine(english ? "XML COMPARISON" : "COMPARAISON XML");
+        builder.AppendLine("==============");
+        builder.AppendLine(english
+            ? $"Open file: {OriginalFilePath}"
+            : $"Fichier ouvert : {OriginalFilePath}");
+        builder.AppendLine(english
+            ? $"Compared file: {other.OriginalFilePath}"
+            : $"Fichier comparé : {other.OriginalFilePath}");
         builder.AppendLine();
 
         Dictionary<string, DanteDevice> currentDevices = Devices
@@ -25,25 +32,29 @@ public sealed partial class DanteProject
 
         foreach (string deviceName in currentDevices.Keys.Except(otherDevices.Keys, StringComparer.OrdinalIgnoreCase))
         {
-            differences.Add($"Device seulement dans le fichier ouvert : {deviceName}");
+            differences.Add(english
+                ? $"Device only in the open file: {deviceName}"
+                : $"Device seulement dans le fichier ouvert : {deviceName}");
         }
 
         foreach (string deviceName in otherDevices.Keys.Except(currentDevices.Keys, StringComparer.OrdinalIgnoreCase))
         {
-            differences.Add($"Device seulement dans le fichier comparé : {deviceName}");
+            differences.Add(english
+                ? $"Device only in the compared file: {deviceName}"
+                : $"Device seulement dans le fichier comparé : {deviceName}");
         }
 
         foreach (string deviceName in currentDevices.Keys.Intersect(otherDevices.Keys, StringComparer.OrdinalIgnoreCase))
         {
             DanteDevice current = currentDevices[deviceName];
             DanteDevice compared = otherDevices[deviceName];
-            CompareValue(differences, $"{deviceName} / mode réseau", current.NetworkMode, compared.NetworkMode);
-            CompareValue(differences, $"{deviceName} / latence", DanteLatencyFormatter.FormatLatencyDisplay(current.Latency), DanteLatencyFormatter.FormatLatencyDisplay(compared.Latency));
-            CompareValue(differences, $"{deviceName} / preferred master", current.PreferredMaster.ToString(), compared.PreferredMaster.ToString());
-            CompareValue(differences, $"{deviceName} / samplerate", current.Element.Child("samplerate")?.Value.Trim() ?? string.Empty, compared.Element.Child("samplerate")?.Value.Trim() ?? string.Empty);
+            CompareValue(differences, $"{deviceName} / {(english ? "network mode" : "mode réseau")}", current.NetworkMode, compared.NetworkMode);
+            CompareValue(differences, $"{deviceName} / {(english ? "latency" : "latence")}", DanteLatencyFormatter.FormatLatencyDisplay(current.Latency), DanteLatencyFormatter.FormatLatencyDisplay(compared.Latency));
+            CompareValue(differences, $"{deviceName} / Preferred Master", current.PreferredMaster.ToString(), compared.PreferredMaster.ToString());
+            CompareValue(differences, $"{deviceName} / sample rate", current.Element.Child("samplerate")?.Value.Trim() ?? string.Empty, compared.Element.Child("samplerate")?.Value.Trim() ?? string.Empty);
             CompareValue(differences, $"{deviceName} / encoding", current.Element.Child("encoding")?.Value.Trim() ?? string.Empty, compared.Element.Child("encoding")?.Value.Trim() ?? string.Empty);
-            CompareChannels(differences, deviceName, "TX", current.TxChannels, compared.TxChannels);
-            CompareChannels(differences, deviceName, "RX", current.RxChannels, compared.RxChannels);
+            CompareChannels(differences, deviceName, "TX", current.TxChannels, compared.TxChannels, english);
+            CompareChannels(differences, deviceName, "RX", current.RxChannels, compared.RxChannels, english);
         }
 
         Dictionary<string, DanteSubscription> currentPatches = PatchMatrix.Subscriptions
@@ -55,29 +66,37 @@ public sealed partial class DanteProject
 
         foreach (string patchKey in currentPatches.Keys.Except(otherPatches.Keys, StringComparer.OrdinalIgnoreCase))
         {
-            differences.Add($"{patchKey} : patch seulement dans le fichier ouvert ({FormatPatchForComparison(currentPatches[patchKey])})");
+            differences.Add(english
+                ? $"{patchKey}: subscription only in the open file ({FormatPatchForComparison(currentPatches[patchKey], english)})"
+                : $"{patchKey} : patch seulement dans le fichier ouvert ({FormatPatchForComparison(currentPatches[patchKey], english)})");
         }
 
         foreach (string patchKey in otherPatches.Keys.Except(currentPatches.Keys, StringComparer.OrdinalIgnoreCase))
         {
-            differences.Add($"{patchKey} : patch seulement dans le fichier comparé ({FormatPatchForComparison(otherPatches[patchKey])})");
+            differences.Add(english
+                ? $"{patchKey}: subscription only in the compared file ({FormatPatchForComparison(otherPatches[patchKey], english)})"
+                : $"{patchKey} : patch seulement dans le fichier comparé ({FormatPatchForComparison(otherPatches[patchKey], english)})");
         }
 
         foreach (string patchKey in currentPatches.Keys.Intersect(otherPatches.Keys, StringComparer.OrdinalIgnoreCase))
         {
             DanteSubscription current = currentPatches[patchKey];
             DanteSubscription compared = otherPatches[patchKey];
-            string currentPatch = FormatPatchForComparison(current);
-            string comparedPatch = FormatPatchForComparison(compared);
+            string currentPatch = FormatPatchForComparison(current, english);
+            string comparedPatch = FormatPatchForComparison(compared, english);
             if (!string.Equals(currentPatch, comparedPatch, StringComparison.OrdinalIgnoreCase))
             {
-                differences.Add($"{patchKey} : fichier ouvert = {currentPatch} | fichier comparé = {comparedPatch}");
+                differences.Add(english
+                    ? $"{patchKey}: open file = {currentPatch} | compared file = {comparedPatch}"
+                    : $"{patchKey} : fichier ouvert = {currentPatch} | fichier comparé = {comparedPatch}");
             }
         }
 
         if (differences.Count == 0)
         {
-            builder.AppendLine("Aucune différence détectée dans les champs connus.");
+            builder.AppendLine(english
+                ? "No difference detected in known fields."
+                : "Aucune différence détectée dans les champs connus.");
         }
         else
         {
@@ -88,7 +107,9 @@ public sealed partial class DanteProject
 
             if (differences.Count > 250)
             {
-                builder.AppendLine($"- {differences.Count - 250} différence(s) supplémentaire(s) non affichée(s).");
+                builder.AppendLine(english
+                    ? $"- {differences.Count - 250} additional difference(s) not displayed."
+                    : $"- {differences.Count - 250} différence(s) supplémentaire(s) non affichée(s).");
             }
         }
 
@@ -108,7 +129,8 @@ public sealed partial class DanteProject
         string deviceName,
         string kind,
         IReadOnlyList<DanteChannel> currentChannels,
-        IReadOnlyList<DanteChannel> comparedChannels)
+        IReadOnlyList<DanteChannel> comparedChannels,
+        bool english)
     {
         Dictionary<int, DanteChannel> currentById = currentChannels
             .GroupBy(channel => channel.DanteId)
@@ -119,12 +141,16 @@ public sealed partial class DanteProject
 
         foreach (int danteId in currentById.Keys.Except(comparedById.Keys).OrderBy(id => id))
         {
-            differences.Add($"{deviceName} / {kind} Dante Id {danteId}: seulement dans le fichier ouvert ({currentById[danteId].DisplayName})");
+            differences.Add(english
+                ? $"{deviceName} / {kind} Dante ID {danteId}: only in the open file ({currentById[danteId].DisplayName})"
+                : $"{deviceName} / {kind} Dante Id {danteId}: seulement dans le fichier ouvert ({currentById[danteId].DisplayName})");
         }
 
         foreach (int danteId in comparedById.Keys.Except(currentById.Keys).OrderBy(id => id))
         {
-            differences.Add($"{deviceName} / {kind} Dante Id {danteId}: seulement dans le fichier comparé ({comparedById[danteId].DisplayName})");
+            differences.Add(english
+                ? $"{deviceName} / {kind} Dante ID {danteId}: only in the compared file ({comparedById[danteId].DisplayName})"
+                : $"{deviceName} / {kind} Dante Id {danteId}: seulement dans le fichier comparé ({comparedById[danteId].DisplayName})");
         }
 
         foreach (int danteId in currentById.Keys.Intersect(comparedById.Keys).OrderBy(id => id))
@@ -133,7 +159,7 @@ public sealed partial class DanteProject
             DanteChannel compared = comparedById[danteId];
             if (!string.Equals(current.DisplayName, compared.DisplayName, StringComparison.OrdinalIgnoreCase))
             {
-                differences.Add($"{deviceName} / {kind} Dante Id {danteId}: {current.DisplayName} -> {compared.DisplayName}");
+                differences.Add($"{deviceName} / {kind} {(english ? "Dante ID" : "Dante Id")} {danteId}: {current.DisplayName} -> {compared.DisplayName}");
             }
         }
     }
@@ -143,11 +169,13 @@ public sealed partial class DanteProject
         return $"{subscription.RxDevice} / RX Dante Id {subscription.RxDanteId}";
     }
 
-    private static string FormatPatchForComparison(DanteSubscription subscription)
+    private static string FormatPatchForComparison(
+        DanteSubscription subscription,
+        bool english)
     {
         if (!subscription.IsActive)
         {
-            return "(libre)";
+            return english ? "(free)" : "(libre)";
         }
 
         string sourceDevice = subscription.IsLocalSubscription

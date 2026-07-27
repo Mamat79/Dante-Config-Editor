@@ -1,0 +1,111 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="DanteConfigEditor.Mac.NewProjectDialog"
+        Width="760"
+        Height="690"
+        MinWidth="620"
+        MinHeight="580"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner">
+    <Grid RowDefinitions="Auto,*,Auto" Margin="20">
+        <StackPanel Spacing="8" Margin="0,0,0,14">
+            <TextBlock x:Name="HeadingText" FontSize="20" FontWeight="SemiBold" />
+            <Border BorderBrush="{DynamicResource WarningBrush}"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    Padding="10">
+                <TextBlock x:Name="ExperimentalWarningText" TextWrapping="Wrap" />
+            </Border>
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="12">
+                <StackPanel Spacing="4">
+                    <TextBlock x:Name="PathLabel" />
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <TextBox x:Name="PathTextBox" IsReadOnly="True" />
+                        <Button x:Name="BrowsePathButton" Grid.Column="1" Click="BrowsePathButton_Click" />
+                    </Grid>
+                </StackPanel>
+
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                    <StackPanel Spacing="4">
+                        <TextBlock x:Name="ProjectNameLabel" />
+                        <TextBox x:Name="ProjectNameTextBox" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Spacing="4">
+                        <TextBlock x:Name="DescriptionLabel" />
+                        <TextBox x:Name="DescriptionTextBox" />
+                    </StackPanel>
+                </Grid>
+
+                <Border Classes="panel">
+                    <StackPanel Spacing="10">
+                        <TextBlock x:Name="InitialDeviceHeading" FontWeight="SemiBold" />
+                        <StackPanel Spacing="4">
+                            <TextBlock x:Name="SourceLabel" Classes="muted" />
+                            <ComboBox x:Name="SourceComboBox"
+                                      SelectionChanged="SourceComboBox_SelectionChanged" />
+                        </StackPanel>
+                        <StackPanel Spacing="4">
+                            <TextBlock x:Name="DeviceNameLabel" Classes="muted" />
+                            <TextBox x:Name="DeviceNameTextBox" Text="DEVICE-1" />
+                        </StackPanel>
+
+                        <Grid x:Name="CustomDeviceGrid"
+                              ColumnDefinitions="*,*,*,*,*"
+                              ColumnSpacing="8">
+                            <StackPanel Spacing="3">
+                                <TextBlock Text="TX" Classes="muted" />
+                                <TextBox x:Name="TxCountTextBox" Text="8" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Spacing="3">
+                                <TextBlock Text="RX" Classes="muted" />
+                                <TextBox x:Name="RxCountTextBox" Text="8" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Spacing="3">
+                                <TextBlock Text="Sample rate" Classes="muted" />
+                                <ComboBox x:Name="SampleRateComboBox" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="3" Spacing="3">
+                                <TextBlock x:Name="EncodingLabel" Classes="muted" />
+                                <ComboBox x:Name="EncodingComboBox" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="4" Spacing="3">
+                                <TextBlock x:Name="LatencyLabel" Classes="muted" />
+                                <ComboBox x:Name="LatencyComboBox" />
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid x:Name="TemplateLabelsGrid"
+                              ColumnDefinitions="*,*"
+                              ColumnSpacing="10"
+                              IsVisible="False">
+                            <StackPanel Spacing="6">
+                                <CheckBox x:Name="UseTemplateTxCheckBox"
+                                          IsChecked="True"
+                                          Click="TemplateLabelModeChanged" />
+                                <TextBox x:Name="TxPrefixTextBox" Text="TX" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Spacing="6">
+                                <CheckBox x:Name="UseTemplateRxCheckBox"
+                                          IsChecked="True"
+                                          Click="TemplateLabelModeChanged" />
+                                <TextBox x:Name="RxPrefixTextBox" Text="RX" />
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="8"
+                    Margin="0,16,0,0">
+            <Button x:Name="CancelButton" MinWidth="100" Click="CancelButton_Click" />
+            <Button x:Name="CreateButton" Classes="primary" MinWidth="130" Click="CreateButton_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

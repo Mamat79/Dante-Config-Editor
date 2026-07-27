@@ -47,16 +47,16 @@
         </Border>
 
         <TabControl Grid.Row="2">
-            <TabItem x:Name="TxTab" Header="TX">
-                <DataGrid x:Name="TxGrid" AutoGenerateColumns="False" IsReadOnly="False">
+            <TabItem x:Name="RxTab" Header="RX">
+                <DataGrid x:Name="RxGrid" AutoGenerateColumns="False" IsReadOnly="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding DanteId}" IsReadOnly="True" Width="100" />
                         <DataGridTextColumn Header="Nom" Binding="{Binding Name, Mode=TwoWay}" Width="*" />
                     </DataGrid.Columns>
                 </DataGrid>
             </TabItem>
-            <TabItem x:Name="RxTab" Header="RX">
-                <DataGrid x:Name="RxGrid" AutoGenerateColumns="False" IsReadOnly="False">
+            <TabItem x:Name="TxTab" Header="TX">
+                <DataGrid x:Name="TxGrid" AutoGenerateColumns="False" IsReadOnly="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding DanteId}" IsReadOnly="True" Width="100" />
                         <DataGridTextColumn Header="Nom" Binding="{Binding Name, Mode=TwoWay}" Width="*" />

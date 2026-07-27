@@ -1,7 +1,8 @@
 <Window x:Class="DanteConfigEditor.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Dante Config Editor V3.4"
+        xmlns:converters="clr-namespace:DanteConfigEditor.Converters"
+        Title="Dante Config Editor V3.6"
         Width="1280"
         Height="820"
         MinWidth="1120"
@@ -10,6 +11,7 @@
         SizeChanged="Window_SizeChanged"
         Loaded="Window_Loaded">
     <Window.Resources>
+        <converters:ChannelSeriesHandleVisibilityConverter x:Key="ChannelSeriesHandleVisibilityConverter" />
         <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#10141F" />
         <SolidColorBrush x:Key="SurfaceBrush" Color="#171D2B" />
         <SolidColorBrush x:Key="SurfaceAltBrush" Color="#202838" />
@@ -410,6 +412,7 @@
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -435,7 +438,7 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Margin="0,0,18,0" VerticalAlignment="Center">
-                        <TextBlock Text="Dante Config Editor V3.4"
+                        <TextBlock Text="Dante Config Editor V3.6"
                                    FontSize="20"
                                    FontWeight="SemiBold"
                                    TextWrapping="NoWrap" />
@@ -474,11 +477,21 @@
                     </StackPanel>
                 </Grid>
 
-                <!-- Les commandes passent sur une seconde ligne si la fenêtre est
-                     étroite, sans masquer les onglets ni le tableau des machines. -->
-                <WrapPanel Grid.Row="1" Margin="0,10,0,0" VerticalAlignment="Center">
-                    <Button Content="Ouvrir XML" Click="OpenButton_Click" ToolTip="Charge un export XML Dante Controller." />
-                    <Button x:Name="MergeXmlButton" Content="Ajouter XML au projet" Style="{StaticResource SecondaryButtonStyle}" Click="MergeXmlButton_Click" ToolTip="Ajoute les machines d'un autre XML au projet ouvert. Les doublons peuvent être renommés." />
+                 <!-- Les commandes passent sur une seconde ligne si la fenêtre est
+                      étroite, sans masquer les onglets ni le tableau des machines. -->
+                 <WrapPanel Grid.Row="1" Margin="0,10,0,0" VerticalAlignment="Center">
+                     <Button x:Name="NewProjectButton"
+                             Content="Nouveau projet (expérimental)"
+                             Style="{StaticResource SecondaryButtonStyle}"
+                             Click="NewProjectButton_Click"
+                             ToolTip="Crée un preset 3.0.0 hors ligne. Un test d'import Dante Controller reste obligatoire." />
+                     <Button Content="Ouvrir XML" Click="OpenButton_Click" ToolTip="Charge un export XML Dante Controller." />
+                     <Button x:Name="OpenMachineBankButton"
+                             Content="Banque de machines"
+                             Style="{StaticResource SecondaryButtonStyle}"
+                             Click="OpenMachineBankButton_Click"
+                             ToolTip="Consulte, importe, exporte et administre les modèles de machines réutilisables." />
+                     <Button x:Name="MergeXmlButton" Content="Ajouter XML au projet" Style="{StaticResource SecondaryButtonStyle}" Click="MergeXmlButton_Click" ToolTip="Ajoute les machines d'un autre XML au projet ouvert. Les doublons peuvent être renommés." />
                     <Button x:Name="SaveAsButton" Content="Enregistrer sous" Click="SaveAsButton_Click" ToolTip="Enregistre un nouveau XML et crée un backup de sécurité." />
                     <Button x:Name="ActivateEditButton" Content="Activer l'édition" Style="{StaticResource SecondaryButtonStyle}" Click="ActivateEditButton_Click" ToolTip="Autorise les modifications dans l'interface. La sauvegarde reste faite sous un nouveau nom." />
                     <Button x:Name="UndoLastButton" Content="Annuler action" Style="{StaticResource SecondaryButtonStyle}" Click="UndoLastButton_Click" IsEnabled="False" ToolTip="Annule la dernière action réalisée dans cette session." />
@@ -493,8 +506,40 @@
             </Grid>
         </Border>
 
+        <Border x:Name="SupportReminderBorder"
+                Grid.Row="1"
+                Visibility="Collapsed"
+                Background="{DynamicResource SurfaceAltBrush}"
+                BorderBrush="{DynamicResource AccentBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="14,8"
+                AutomationProperties.Name="Rappel facultatif pour soutenir DCE">
+            <DockPanel LastChildFill="True">
+                <WrapPanel DockPanel.Dock="Right" Margin="18,0,0,0">
+                    <Button x:Name="SupportReminderOpenButton"
+                            Content="Soutenir DCE"
+                            Click="SupportReminderOpenButton_Click"
+                            ToolTip="Affiche les moyens facultatifs de soutenir le projet." />
+                    <Button x:Name="SupportReminderLaterButton"
+                            Content="Pas maintenant"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            Click="SupportReminderLaterButton_Click"
+                            ToolTip="Masque ce rappel pendant 20 lancements." />
+                    <Button x:Name="SupportReminderNeverButton"
+                            Content="Ne plus afficher"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            Click="SupportReminderNeverButton_Click"
+                            ToolTip="Désactive définitivement ce rappel local." />
+                </WrapPanel>
+                <TextBlock x:Name="SupportReminderTextBlock"
+                           VerticalAlignment="Center"
+                           FontWeight="SemiBold"
+                           Text="DCE vous fait gagner du temps ? Vous pouvez soutenir son développement, sans aucune obligation." />
+            </DockPanel>
+        </Border>
+
         <!-- Corps principal : navigation à gauche, onglets de travail à droite. -->
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="220" />
                 <ColumnDefinition Width="*" />
@@ -635,9 +680,10 @@
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
+                                             <RowDefinition Height="Auto" />
+                                             <RowDefinition Height="Auto" />
+                                             <RowDefinition Height="Auto" />
+                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
@@ -688,30 +734,49 @@
                                                     Click="OpenDeviceDetailsButton_Click" />
                                         </Grid>
 
-                                        <UniformGrid Grid.Row="4" Grid.ColumnSpan="2" Columns="2" Margin="0,2,0,0">
-                                            <Button x:Name="ResetDevicePatchesButton"
-                                                    Content="Reset patch RX/TX"
-                                                    Style="{StaticResource SecondaryButtonStyle}"
-                                                    ToolTip="Déconnecte les RX de la machine et supprime les patchs qui utilisent ses TX."
-                                                    Click="ResetDevicePatchesButton_Click" />
+                                        <UniformGrid x:Name="DevicePatchActionGrid"
+                                                     Grid.Row="4"
+                                                     Grid.ColumnSpan="2"
+                                                     Columns="2" Margin="0,2,0,0">
                                             <Button x:Name="ResetDeviceRxPatchesButton"
-                                                    Content="Reset patch RX"
+                                                    Content="Reset RX"
                                                     Style="{StaticResource SecondaryButtonStyle}"
                                                     ToolTip="Déconnecte seulement les entrées RX de la machine sélectionnée."
                                                     Click="ResetDeviceRxPatchesButton_Click" />
                                             <Button x:Name="ResetDeviceTxPatchesButton"
-                                                    Content="Reset patch TX"
+                                                    Content="Reset TX"
                                                     Style="{StaticResource SecondaryButtonStyle}"
                                                     ToolTip="Supprime seulement les patchs qui utilisent les TX de la machine sélectionnée."
                                                     Click="ResetDeviceTxPatchesButton_Click" />
+                                            <Button x:Name="ResetDevicePatchesButton"
+                                                    Content="Reset RX/TX"
+                                                    Style="{StaticResource SecondaryButtonStyle}"
+                                                    ToolTip="Déconnecte les RX de la machine et supprime les patchs qui utilisent ses TX."
+                                                    Click="ResetDevicePatchesButton_Click" />
                                             <Button x:Name="DeleteDeviceButton"
                                                     Content="Supprimer"
                                                     Style="{StaticResource SecondaryButtonStyle}"
                                                     ToolTip="Supprime la machine et nettoie les patchs qui lui sont associés."
                                                     Click="DeleteDeviceButton_Click" />
-                                        </UniformGrid>
-                                    </Grid>
-                                </GroupBox>
+                                         </UniformGrid>
+
+                                         <UniformGrid Grid.Row="5"
+                                                      Grid.ColumnSpan="2"
+                                                      Columns="2"
+                                                      Margin="0,2,0,0">
+                                             <Button x:Name="DuplicateDeviceButton"
+                                                     Content="Dupliquer"
+                                                     Style="{StaticResource SecondaryButtonStyle}"
+                                                     ToolTip="Crée un rôle générique indépendant sans recopier l'identité matérielle."
+                                                     Click="DuplicateDeviceButton_Click" />
+                                             <Button x:Name="SaveDeviceToBankButton"
+                                                     Content="Enregistrer dans la banque"
+                                                     Style="{StaticResource SecondaryButtonStyle}"
+                                                     ToolTip="Crée un modèle réutilisable et partageable à partir de cette machine."
+                                                     Click="SaveDeviceToBankButton_Click" />
+                                         </UniformGrid>
+                                     </Grid>
+                                 </GroupBox>
 
                                 <GroupBox Grid.Column="2"
                                           Header="Canaux de la machine"
@@ -1166,6 +1231,7 @@
                                                 <Thumb Grid.Column="1"
                                                        Uid="Rx"
                                                        Tag="{Binding}"
+                                                       Visibility="{Binding RxChannelName, Converter={StaticResource ChannelSeriesHandleVisibilityConverter}}"
                                                        Width="16"
                                                        Height="20"
                                                        Margin="5,0,0,0"
@@ -1206,6 +1272,7 @@
                                                 <Thumb Grid.Column="1"
                                                        Uid="Tx"
                                                        Tag="{Binding}"
+                                                       Visibility="{Binding TxChannelName, Converter={StaticResource ChannelSeriesHandleVisibilityConverter}}"
                                                        Width="16"
                                                        Height="20"
                                                        Margin="5,0,0,0"
@@ -1530,12 +1597,20 @@
                                             <TextBlock x:Name="SynopticZoomTextBlock" Text="100 %" Width="58" TextAlignment="Center" VerticalAlignment="Center" />
                                             <Button Content="100 %" Margin="5,0,0,0" Click="ResetSynopticZoomButton_Click" ToolTip="Revenir à la taille réelle" />
                                             <Button Content="Ajuster" Margin="5,0,0,0" Click="FitSynopticZoomButton_Click" ToolTip="Afficher tout le synoptique" />
+                                            <Button x:Name="OpenSynopticPreviewWindowButton"
+                                                    Content="↗"
+                                                    Width="36"
+                                                    Margin="5,0,0,0"
+                                                    ToolTip="Ouvrir l’aperçu dans une fenêtre séparée"
+                                                    AutomationProperties.Name="Ouvrir l’aperçu du synoptique dans une fenêtre séparée"
+                                                    Click="OpenSynopticPreviewWindowButton_Click" />
                                         </StackPanel>
                                     </Border>
                                     <ScrollViewer x:Name="SynopticScrollViewer"
                                                   Grid.Row="1"
                                                   HorizontalScrollBarVisibility="Auto"
-                                                  VerticalScrollBarVisibility="Auto">
+                                                  VerticalScrollBarVisibility="Auto"
+                                                  PreviewMouseWheel="SynopticScrollViewer_PreviewMouseWheel">
                                         <Canvas x:Name="SynopticCanvas"
                                                 Width="900"
                                                 Height="560"
@@ -1670,11 +1745,20 @@
                                     Style="{StaticResource SecondaryButtonStyle}"
                                     Click="OpenQuickStartButton_Click"
                                     ToolTip="Ouvre la notice rapide PDF." />
-                            <Button Content="Notice complète"
-                                    Style="{StaticResource SecondaryButtonStyle}"
-                                    Click="OpenFullNoticeButton_Click"
-                                    ToolTip="Ouvre la notice complète PDF." />
-                        </WrapPanel>
+                             <Button Content="Notice complète"
+                                     Style="{StaticResource SecondaryButtonStyle}"
+                                     Click="OpenFullNoticeButton_Click"
+                                     ToolTip="Ouvre la notice complète PDF." />
+                             <Button x:Name="SupportDceButton"
+                                     Content="Soutenir DCE"
+                                     Style="{StaticResource SecondaryButtonStyle}"
+                                     Click="SupportDceButton_Click"
+                                     ToolTip="Présente les moyens facultatifs de soutenir ce projet gratuit." />
+                             <Button Content="Ouvrir les journaux"
+                                     Style="{StaticResource SecondaryButtonStyle}"
+                                     Click="OpenDiagnosticLogsButton_Click"
+                                     ToolTip="Ouvre le dossier des journaux techniques utiles au diagnostic." />
+                         </WrapPanel>
 
                         <Grid Grid.Row="1">
                             <Grid.ColumnDefinitions>
@@ -1777,7 +1861,7 @@
 
         <!-- Une grille dédiée garantit que le crédit reste visible à droite.
              Le StatusBar natif compressait son dernier élément sur deux lignes. -->
-        <Border Grid.Row="2"
+        <Border Grid.Row="3"
                 MinHeight="34"
                 Background="{DynamicResource SurfaceBrush}"
                 BorderBrush="{DynamicResource BorderLineBrush}"

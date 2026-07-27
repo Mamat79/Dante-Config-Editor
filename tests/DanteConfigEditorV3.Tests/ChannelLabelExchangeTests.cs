@@ -63,6 +63,7 @@ public sealed class ChannelLabelExchangeTests
         DmtWorkbookReadResult result = DmtChannelWorkbookService.Read(template);
 
         Assert.Equal("14", result.TemplateVersion);
+        Assert.Equal(1, result.IgnoredRowCount);
         ChannelLabelSet set = Assert.Single(result.Document.Sets);
         Assert.Equal(ChannelLabelDirection.ConsoleInput, set.Direction);
         Assert.Collection(
@@ -187,7 +188,129 @@ public sealed class ChannelLabelExchangeTests
         Assert.Contains("99", error.Message, StringComparison.Ordinal);
     }
 
-    private static string CreateDmtWorkbook(string directory, IReadOnlyList<(string Enabled, int Channel, string Name)> rows)
+    [Theory]
+    [InlineData("channel-list-dlive.json")]
+    [InlineData("channel-list-dlive.csv")]
+    public void DmtV214Rc1ExportsAreImportedThroughStableExchangeAdapters(string fileName)
+    {
+        string path = Path.Combine(AppContext.BaseDirectory, "Fixtures", "DmtV214Rc1", fileName);
+
+        ChannelLabelReadResult result = ChannelLabelExchangeService.ReadWithReport(path);
+
+        Assert.Equal("2.14.0-RC1", result.Document.SourceVersion);
+        Assert.Equal(3, result.Report.ChannelCount);
+        Assert.Equal(0, result.Report.IgnoredLineCount);
+        Assert.Contains(result.Report.Warnings, warning => warning.Contains("2.14.0-RC1", StringComparison.Ordinal));
+        ChannelLabelSet set = Assert.Single(result.Document.Sets);
+        Assert.Equal("dLive", set.DeviceName);
+        Assert.Equal(ChannelLabelDirection.Tx, set.Direction);
+        Assert.Equal([1, 2, 64], set.Channels.Select(channel => channel.ChannelNumber));
+        Assert.Equal(["Kick In", "Snare Top", "Talkback"], set.Channels.Select(channel => channel.Label));
+    }
+
+    [Fact]
+    public void ImportAdaptersDeclareEachSupportedExtensionOnlyOnce()
+    {
+        IChannelLabelImportAdapter[] adapters = ChannelLabelImportAdapterRegistry.RegisteredAdapters.ToArray();
+        string[] extensions = adapters.SelectMany(adapter => adapter.Extensions).ToArray();
+
+        Assert.Equal(5, adapters.Length);
+        Assert.Equal(extensions.Length, extensions.Distinct(StringComparer.OrdinalIgnoreCase).Count());
+        Assert.Equal([".csv", ".json", ".ods", ".xlsx", ".zip"], extensions.OrderBy(value => value));
+    }
+
+    [Fact]
+    public void JsonWithUnknownPropertyIsRejectedInsteadOfBeingSilentlyMisread()
+    {
+        string json = """
+            {
+              "format": "dante-config-editor-channel-labels",
+              "schemaVersion": 1,
+              "sourceApplication": "test",
+              "sourceVersion": "1",
+              "unexpected": true,
+              "sets": [
+                {
+                  "deviceName": "DEVICE",
+                  "direction": "tx",
+                  "channels": [{"channelNumber":1,"label":"Kick","danteId":1}]
+                }
+              ]
+            }
+            """;
+
+        InvalidDataException error = Assert.Throws<InvalidDataException>(() => ChannelLabelExchangeService.ParseJson(json));
+
+        Assert.Contains("JSON", error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void DuplicateChannelNumberIsRejectedInsteadOfSelectingOneSilently()
+    {
+        ChannelLabelDocument document = new(
+            ChannelLabelExchangeService.FormatName,
+            ChannelLabelExchangeService.CurrentSchemaVersion,
+            "test",
+            "1",
+            [
+                new ChannelLabelSet("DEVICE", ChannelLabelDirection.Tx,
+                [
+                    new ChannelLabelEntry(1, "Kick", 1),
+                    new ChannelLabelEntry(1, "Snare", 1)
+                ])
+            ]);
+
+        InvalidDataException error = Assert.Throws<InvalidDataException>(() =>
+            ChannelLabelExchangeService.SerializeJson(document));
+
+        Assert.Contains("plusieurs fois", error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void CsvWithMixedSchemaVersionsIsRejected()
+    {
+        string csv = """
+            format_version,source_app,source_version,device,direction,channel,dante_id,label
+            1,test,1,DEVICE,tx,1,1,Kick
+            2,test,1,DEVICE,tx,2,2,Snare
+            """;
+
+        InvalidDataException error = Assert.Throws<InvalidDataException>(() =>
+            ChannelLabelExchangeService.ParseCsv(csv));
+
+        Assert.Contains("plusieurs versions", error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void XlsxAdapterReportsMissingRequiredColumns()
+    {
+        using TemporaryDirectory temp = new();
+        string path = CreateDmtWorkbook(temp.Path, [("yes", 1, "Kick")], nameHeader: "Unexpected");
+
+        InvalidDataException error = Assert.Throws<InvalidDataException>(() =>
+            ChannelLabelExchangeService.ReadWithReport(path));
+
+        Assert.Contains("XLSX", error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("colonnes", error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void OdsAdapterReportsMissingRequiredColumns()
+    {
+        using TemporaryDirectory temp = new();
+        string path = CreateDmtOdsWithHeaders(temp.Path, "Channel", "Unexpected");
+
+        InvalidDataException error = Assert.Throws<InvalidDataException>(() =>
+            ChannelLabelExchangeService.ReadWithReport(path));
+
+        Assert.Contains("ODS", error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("colonnes", error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string CreateDmtWorkbook(
+        string directory,
+        IReadOnlyList<(string Enabled, int Channel, string Name)> rows,
+        string nameHeader = "Name")
     {
         string path = System.IO.Path.Combine(directory, "dLiveChannelList.xlsx");
         using FileStream stream = File.Create(path);
@@ -226,6 +349,7 @@ public sealed class ChannelLabelExchangeTests
             <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>
               <row r="1"><c r="A1" t="inlineStr"><is><t>Enabled</t></is></c><c r="B1" t="inlineStr"><is><t>Channel</t></is></c><c r="C1" t="inlineStr"><is><t>Name</t></is></c><c r="D1" t="inlineStr"><is><t>Color</t></is></c></row>
             """);
+        sheet.Replace(">Name<", $">{nameHeader}<");
         for (int index = 0; index < rows.Count; index++)
         {
             int row = index + 2;
@@ -241,6 +365,41 @@ public sealed class ChannelLabelExchangeTests
               <row r="2"><c r="A2" t="inlineStr"><is><t>Version</t></is></c><c r="B2" t="inlineStr"><is><t>14</t></is></c></row>
             </sheetData></worksheet>
             """);
+        return path;
+    }
+
+    private static string CreateDmtOdsWithHeaders(string directory, string channelHeader, string nameHeader)
+    {
+        string path = System.IO.Path.Combine(directory, "dLiveChannelList.ods");
+        using FileStream stream = File.Create(path);
+        using ZipArchive archive = new(stream, ZipArchiveMode.Create);
+        string content = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <office:document-content
+              xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
+              xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0"
+              xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0">
+              <office:body>
+                <office:spreadsheet>
+                  <table:table table:name="Channels">
+                    <table:table-row>
+                      <table:table-cell office:value-type="string"><text:p>Enabled</text:p></table:table-cell>
+                      <table:table-cell office:value-type="string"><text:p>CHANNEL_HEADER</text:p></table:table-cell>
+                      <table:table-cell office:value-type="string"><text:p>NAME_HEADER</text:p></table:table-cell>
+                    </table:table-row>
+                    <table:table-row>
+                      <table:table-cell office:value-type="string"><text:p>yes</text:p></table:table-cell>
+                      <table:table-cell office:value-type="string"><text:p>1</text:p></table:table-cell>
+                      <table:table-cell office:value-type="string"><text:p>Kick</text:p></table:table-cell>
+                    </table:table-row>
+                  </table:table>
+                </office:spreadsheet>
+              </office:body>
+            </office:document-content>
+            """
+            .Replace("CHANNEL_HEADER", channelHeader, StringComparison.Ordinal)
+            .Replace("NAME_HEADER", nameHeader, StringComparison.Ordinal);
+        WriteEntry(archive, "content.xml", content);
         return path;
     }
 

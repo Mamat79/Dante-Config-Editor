@@ -1,6 +1,6 @@
 param(
     [string]$InstallerPath = "",
-    [string]$ExpectedVersion = "3.4",
+    [string]$ExpectedVersion = "3.6",
     [switch]$AllowCustomInstallLocation
 )
 
@@ -8,7 +8,7 @@ $ErrorActionPreference = "Stop"
 
 $root = Split-Path $PSScriptRoot -Parent
 if ([string]::IsNullOrWhiteSpace($InstallerPath)) {
-    $InstallerPath = Join-Path $root "dist\DanteConfigEditorV3_4_Installer.exe"
+    $InstallerPath = Join-Path $root "dist\DanteConfigEditorV3_6_Installer.exe"
 }
 
 $installer = (Resolve-Path -LiteralPath $InstallerPath -ErrorAction Stop).Path
@@ -19,47 +19,51 @@ if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administra
 }
 
 $targetRegistryPaths = @(
+    "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{A11FA3C8-3461-46CA-AC61-6A14316E8DBB}_is1",
+    "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{A11FA3C8-3461-46CA-AC61-6A14316E8DBB}_is1"
+)
+
+# V3.4.2 reste la version stable installée en parallèle. Le test vérifie que
+# l'installation et la mise à niveau V3.6 ne modifient jamais cette entrée.
+$stableRegistryPaths = @(
     "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{76E68F80-5C89-4415-A090-370CA60EB3AD}_is1",
     "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{76E68F80-5C89-4415-A090-370CA60EB3AD}_is1"
 )
 
-$obsoleteBetaRegistryPaths = @(
-    "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{A2CC4547-2811-4EB5-B0BC-FBE4B7B847DF}_is1",
-    "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{A2CC4547-2811-4EB5-B0BC-FBE4B7B847DF}_is1"
-)
+function Get-InstallRecords {
+    param([Parameter(Mandatory = $true)][string[]]$Paths)
+
+    return @(
+        foreach ($registryPath in $Paths) {
+            if (Test-Path -LiteralPath $registryPath) {
+                Get-ItemProperty -LiteralPath $registryPath
+            }
+        }
+    )
+}
 
 function Get-TargetInstallRecords {
-    return @(
-        foreach ($registryPath in $targetRegistryPaths) {
-            if (Test-Path -LiteralPath $registryPath) {
-                Get-ItemProperty -LiteralPath $registryPath
-            }
-        }
-    )
+    return @(Get-InstallRecords -Paths $targetRegistryPaths)
 }
 
-function Get-ObsoleteBetaInstallRecords {
-    return @(
-        foreach ($registryPath in $obsoleteBetaRegistryPaths) {
-            if (Test-Path -LiteralPath $registryPath) {
-                Get-ItemProperty -LiteralPath $registryPath
-            }
-        }
-    )
+function Get-StableInstallRecords {
+    return @(Get-InstallRecords -Paths $stableRegistryPaths)
 }
 
-function Get-AllV3InstallRecords {
-    $roots = @(
-        "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall",
-        "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall"
-    )
-
+function Get-StableSnapshot {
     return @(
-        foreach ($registryRoot in $roots) {
-            Get-ChildItem -LiteralPath $registryRoot -ErrorAction SilentlyContinue |
-                ForEach-Object { Get-ItemProperty -LiteralPath $_.PSPath -ErrorAction SilentlyContinue } |
-                Where-Object { $_.DisplayName -like "Dante Config Editor V3*" }
-        }
+        Get-StableInstallRecords | ForEach-Object {
+            $installLocation = [string]$_.InstallLocation
+            $exePath = if ($installLocation) { Join-Path $installLocation "DanteConfigEditorV3.exe" } else { "" }
+            $hash = if ($exePath -and (Test-Path -LiteralPath $exePath)) {
+                (Get-FileHash -LiteralPath $exePath -Algorithm SHA256).Hash
+            }
+            else {
+                ""
+            }
+
+            "$($_.DisplayVersion)|$installLocation|$hash"
+        } | Sort-Object
     )
 }
 
@@ -78,22 +82,25 @@ function Invoke-InstallerPass {
     }
 }
 
+function Assert-StableInstallUnchanged {
+    param(
+        [Parameter(Mandatory = $true)][string]$Step,
+        [AllowEmptyCollection()]
+        [Parameter(Mandatory = $true)][string[]]$ExpectedSnapshot
+    )
+
+    $actualSnapshot = @(Get-StableSnapshot)
+    if (($actualSnapshot -join "`n") -ne ($ExpectedSnapshot -join "`n")) {
+        throw "$Step : l'installation stable V3.4.2 a été modifiée."
+    }
+}
+
 function Assert-InstalledState {
     param([Parameter(Mandatory = $true)][string]$Step)
 
     $targetRecords = @(Get-TargetInstallRecords)
     if ($targetRecords.Count -ne 1) {
-        throw "$Step : une seule entrée V3.4 était attendue, trouvé $($targetRecords.Count)."
-    }
-
-    $obsoleteBetaRecords = @(Get-ObsoleteBetaInstallRecords)
-    if ($obsoleteBetaRecords.Count -ne 0) {
-        throw "$Step : l'ancienne V3.2 Beta est encore installée."
-    }
-
-    $allRecords = @(Get-AllV3InstallRecords)
-    if ($allRecords.Count -ne 1) {
-        throw "$Step : une seule installation V3 était attendue, trouvé $($allRecords.Count)."
+        throw "$Step : une seule entrée V3.6 était attendue, trouvé $($targetRecords.Count)."
     }
 
     $record = $targetRecords[0]
@@ -129,31 +136,43 @@ function Assert-InstalledState {
         }
     }
 
-    $shortcut = Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonPrograms)) "Dante Config Editor V3.4\Dante Config Editor V3.4.lnk"
+    $shortcut = Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonPrograms)) "Dante Config Editor V3.6\DCE V3.6.lnk"
     if (-not (Test-Path -LiteralPath $shortcut)) {
         throw "$Step : raccourci Menu Démarrer manquant : $shortcut"
     }
 
     $desktopShortcutCandidates = @(
-        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::DesktopDirectory)) "Dante Config Editor V3.4.lnk"),
-        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonDesktopDirectory)) "Dante Config Editor V3.4.lnk")
+        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::DesktopDirectory)) "DCE V3.6.lnk"),
+        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonDesktopDirectory)) "DCE V3.6.lnk")
     ) | Select-Object -Unique
     if (-not ($desktopShortcutCandidates | Where-Object { Test-Path -LiteralPath $_ })) {
         throw "$Step : raccourci Bureau manquant. Chemins vérifiés : $($desktopShortcutCandidates -join ', ')"
     }
 
+    $legacyShortcutCandidates = @(
+        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::Programs)) "Dante Config Editor V3.5"),
+        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonPrograms)) "Dante Config Editor V3.5"),
+        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::DesktopDirectory)) "DCE V3.5.lnk"),
+        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonDesktopDirectory)) "DCE V3.5.lnk")
+    ) | Select-Object -Unique
+    $remainingLegacyShortcuts = @($legacyShortcutCandidates | Where-Object { Test-Path -LiteralPath $_ })
+    if ($remainingLegacyShortcuts.Count -gt 0) {
+        throw "$Step : ancien raccourci V3.5 encore présent : $($remainingLegacyShortcuts -join ', ')"
+    }
+
     return $record
 }
 
-$script:V3InstallRecordsBefore = @(Get-AllV3InstallRecords).Count
-$script:TargetInstallRecordsBefore = @(Get-TargetInstallRecords).Count
+$stableSnapshotBefore = @(Get-StableSnapshot)
+$targetInstallRecordsBefore = @(Get-TargetInstallRecords).Count
 
-# La V3.4 remplace les anciennes installations ; le second passage valide sa mise à niveau.
-Invoke-InstallerPass -Name "Installation V3.4"
+Invoke-InstallerPass -Name "Installation V3.6"
 $firstRecord = Assert-InstalledState -Step "Après le premier passage"
+Assert-StableInstallUnchanged -Step "Après le premier passage" -ExpectedSnapshot $stableSnapshotBefore
 
 Invoke-InstallerPass -Name "Mise à niveau de contrôle"
 $secondRecord = Assert-InstalledState -Step "Après le second passage"
+Assert-StableInstallUnchanged -Step "Après le second passage" -ExpectedSnapshot $stableSnapshotBefore
 
 if (-not [string]::Equals([string]$firstRecord.InstallLocation, [string]$secondRecord.InstallLocation, [System.StringComparison]::OrdinalIgnoreCase)) {
     throw "Le chemin d'installation a changé pendant la mise à niveau."
@@ -170,7 +189,7 @@ $fileVersion = (Get-Item -LiteralPath $exePath).VersionInfo.FileVersion
     Installer = $installer
     InstallerSha256 = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash
     UpgradePasses = 2
+    TargetInstallRecordsBefore = $targetInstallRecordsBefore
     TargetInstallRecords = @(Get-TargetInstallRecords).Count
-    ObsoleteBetaInstallRecords = @(Get-ObsoleteBetaInstallRecords).Count
-    V3InstallRecords = @(Get-AllV3InstallRecords).Count
+    StableInstallRecords = @(Get-StableInstallRecords).Count
 } | ConvertTo-Json -Depth 3

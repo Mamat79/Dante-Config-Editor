@@ -8,10 +8,14 @@
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
         Background="{DynamicResource AppBackgroundBrush}">
-    <Grid RowDefinitions="Auto,380,*,Auto" Margin="18" RowSpacing="12">
+    <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="18" RowSpacing="12">
         <TextBlock x:Name="IntroText" TextWrapping="Wrap" />
 
-        <Grid Grid.Row="1" ColumnDefinitions="1.3*,*" ColumnSpacing="12">
+        <Grid Grid.Row="1"
+              ColumnDefinitions="1.3*,*"
+              ColumnSpacing="12"
+              MinHeight="330"
+              MaxHeight="360">
             <Border Classes="panel">
                 <Grid RowDefinitions="Auto,*">
                     <TextBlock x:Name="DevicesTitle" Classes="section" />
@@ -75,7 +79,6 @@
                         <CheckBox x:Name="AdaptDmtCheckBox" Click="AdaptDmtCheckBox_Click">
                             <TextBlock x:Name="AdaptDmtText" TextWrapping="Wrap" />
                         </CheckBox>
-                        <Button x:Name="PreviewButton" Click="PreviewButton_Click" />
                     </StackPanel>
                     <TextBlock x:Name="FormatHelpText"
                                Grid.Row="7"
@@ -88,7 +91,16 @@
 
         <Border Grid.Row="2" Classes="panel">
             <Grid RowDefinitions="Auto,Auto,*" RowSpacing="8">
-                <TextBlock x:Name="PreviewTitle" Classes="section" />
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                    <TextBlock x:Name="PreviewTitle"
+                               Classes="section"
+                               VerticalAlignment="Center" />
+                    <Button x:Name="PreviewButton"
+                            Grid.Column="1"
+                            MinHeight="34"
+                            HorizontalAlignment="Right"
+                            Click="PreviewButton_Click" />
+                </Grid>
                 <TextBlock x:Name="SummaryText" Grid.Row="1" TextWrapping="Wrap" />
                 <DataGrid x:Name="PreviewGrid" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True">
                     <DataGrid.Columns>
@@ -104,8 +116,8 @@
         </Border>
 
         <Grid Grid.Row="3" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
-            <Button x:Name="CancelButton" Grid.Column="1" MinWidth="100" Click="CancelButton_Click" />
-            <Button x:Name="ExportButton" Grid.Column="2" Classes="primary" MinWidth="120" Click="ExportButton_Click" />
+            <Button x:Name="CancelButton" Grid.Column="1" MinWidth="100" MinHeight="34" Click="CancelButton_Click" />
+            <Button x:Name="ExportButton" Grid.Column="2" Classes="primary" MinWidth="120" MinHeight="34" Click="ExportButton_Click" />
         </Grid>
     </Grid>
 </Window>

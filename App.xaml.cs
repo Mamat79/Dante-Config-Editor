@@ -60,16 +60,9 @@ public partial class App : Application
 
     private static void WriteCrashLog(Exception exception)
     {
-        try
-        {
-            string directory = ApplicationStoragePaths.Resolve("Logs");
-            Directory.CreateDirectory(directory);
-            string path = Path.Combine(directory, $"crash_{DateTime.Now:yyyyMMdd_HHmmss}.log");
-            File.WriteAllText(path, exception.ToString());
-        }
-        catch
-        {
-            // Le journal de secours ne doit jamais faire planter l'application.
-        }
+        DiagnosticLogService.Default.Write(
+            "Crash",
+            "Une exception non gérée a été interceptée.",
+            exception);
     }
 }

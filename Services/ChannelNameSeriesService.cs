@@ -6,8 +6,13 @@ public sealed record ChannelSeriesValue(int ChannelIndex, string Name);
 
 public static partial class ChannelNameSeriesService
 {
-    [GeneratedRegex("^(?<prefix>.*?)(?<number>\\d+)(?<suffix>\\s*)$", RegexOptions.CultureInvariant)]
+    [GeneratedRegex("^(?<prefix>.*?)(?<number>\\d+)$", RegexOptions.CultureInvariant)]
     private static partial Regex NumericSuffixRegex();
+
+    public static bool CanExtend(string? name)
+    {
+        return !string.IsNullOrEmpty(name) && NumericSuffixRegex().IsMatch(name);
+    }
 
     public static IReadOnlyList<ChannelSeriesValue> Extend(
         IReadOnlyList<ChannelSeriesValue> orderedChannels,
@@ -46,20 +51,26 @@ public static partial class ChannelNameSeriesService
         }
 
         string prefix = firstMatch.Groups["prefix"].Value;
-        string suffix = firstMatch.Groups["suffix"].Value;
-        int firstNumber = int.Parse(firstMatch.Groups["number"].Value);
+        if (!int.TryParse(firstMatch.Groups["number"].Value, out int firstNumber))
+        {
+            throw new InvalidOperationException("Le numéro final est trop grand pour être prolongé.");
+        }
+
         int step = 1;
         if (seeds.Length >= 2)
         {
             Match secondMatch = NumericSuffixRegex().Match(seeds[1].Name);
             if (!secondMatch.Success
-                || !string.Equals(prefix, secondMatch.Groups["prefix"].Value, StringComparison.Ordinal)
-                || !string.Equals(suffix, secondMatch.Groups["suffix"].Value, StringComparison.Ordinal))
+                || !string.Equals(prefix, secondMatch.Groups["prefix"].Value, StringComparison.Ordinal))
             {
                 throw new InvalidOperationException("Les noms sélectionnés doivent partager le même préfixe.");
             }
 
-            int secondNumber = int.Parse(secondMatch.Groups["number"].Value);
+            if (!int.TryParse(secondMatch.Groups["number"].Value, out int secondNumber))
+            {
+                throw new InvalidOperationException("Le numéro final est trop grand pour être prolongé.");
+            }
+
             step = secondNumber - firstNumber;
             if (step == 0)
             {
@@ -73,7 +84,6 @@ public static partial class ChannelNameSeriesService
             int expected = firstNumber + step * index;
             if (!match.Success
                 || !string.Equals(prefix, match.Groups["prefix"].Value, StringComparison.Ordinal)
-                || !string.Equals(suffix, match.Groups["suffix"].Value, StringComparison.Ordinal)
                 || !int.TryParse(match.Groups["number"].Value, out int actual)
                 || actual != expected)
             {
@@ -97,7 +107,7 @@ public static partial class ChannelNameSeriesService
             string number = preserveLeadingZeroes
                 ? nextNumber.ToString().PadLeft(numberWidth, '0')
                 : nextNumber.ToString();
-            result.Add(new ChannelSeriesValue(orderedChannels[position].ChannelIndex, $"{prefix}{number}{suffix}"));
+            result.Add(new ChannelSeriesValue(orderedChannels[position].ChannelIndex, $"{prefix}{number}"));
             nextNumber += step;
         }
 

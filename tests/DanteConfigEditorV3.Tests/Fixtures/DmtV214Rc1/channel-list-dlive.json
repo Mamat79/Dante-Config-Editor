@@ -1,0 +1,29 @@
+{
+  "format": "dante-config-editor-channel-labels",
+  "schemaVersion": 1,
+  "sourceApplication": "Channel List Manager for Allen & Heath dLive, Avantis & SQ",
+  "sourceVersion": "2.14.0-RC1",
+  "sets": [
+    {
+      "deviceName": "dLive",
+      "direction": "tx",
+      "channels": [
+        {
+          "channelNumber": 1,
+          "label": "Kick In",
+          "danteId": 1
+        },
+        {
+          "channelNumber": 2,
+          "label": "Snare Top",
+          "danteId": 2
+        },
+        {
+          "channelNumber": 64,
+          "label": "Talkback",
+          "danteId": 64
+        }
+      ]
+    }
+  ]
+}

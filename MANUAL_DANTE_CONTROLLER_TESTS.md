@@ -86,6 +86,29 @@ Toujours utiliser une copie et un environnement de test. Ne jamais modifier le X
 - [ ] Les anomalies sont reportées dans `COMPATIBILITY_MATRIX.md` sans publier de données sensibles.
 - [ ] Le résultat d'import, la date et le testeur sont renseignés dans la matrice.
 
+## Scénarios V3.6 : rôles génériques et banque
+
+Réaliser ces scénarios séparément afin qu'un échec reste attribuable :
+
+- [ ] Une machine physique existante a été dupliquée avec les options par défaut.
+- [ ] Le rôle dupliqué ne contient ni `instance_id` ni `device_id`.
+- [ ] Dante Controller accepte ou refuse explicitement ce rôle générique ; le message exact est conservé.
+- [ ] Le rôle peut être associé à l'appareil ou au modèle attendu sans modifier la machine source.
+- [ ] Le nombre, les Dante Id, mediaType et labels TX/RX correspondent à la source.
+- [ ] Aucune IP, subscription, flow ni Preferred Master n'a été recopié par défaut.
+- [ ] Un modèle enregistré dans la banque a été ajouté à un autre preset de même version.
+- [ ] L'instance ajoutée reste indépendante du modèle et ne réutilise aucune identité matérielle.
+- [ ] Les propriétés constructeur inconnues conservées n'entraînent aucun avertissement inattendu.
+
+## Scénario V3.6 : nouveau projet expérimental
+
+- [ ] Le fichier minimal 3.0.0 se rouvre dans DCE sans erreur.
+- [ ] Santé du fichier ne contient aucune erreur bloquante non expliquée.
+- [ ] Dante Controller accepte ou refuse l'import ; le message exact est conservé.
+- [ ] Le rôle initial éventuel est visible avec le bon nombre de TX/RX.
+- [ ] Une sauvegarde depuis Dante Controller, si possible, est comparée au XML DCE.
+- [ ] Le résultat reste marqué expérimental tant que plusieurs versions de Dante Controller n'ont pas été testées.
+
 ## Conclusion
 
 - résultat : réussi / échec / partiel / interrompu ;

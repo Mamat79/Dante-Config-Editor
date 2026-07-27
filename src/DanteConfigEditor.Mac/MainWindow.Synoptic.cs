@@ -24,6 +24,7 @@ public partial class MainWindow
     private string? _draggedSynopticIdentity;
     private Point _synopticDragOffset;
     private IReadOnlyList<SynopticCable> _synopticPreviewCables = [];
+    private SynopticPreviewWindow? _synopticPreviewWindow;
 
     private void RefreshSynopticWorkspace(bool captureRows = true)
     {
@@ -464,18 +465,47 @@ public partial class MainWindow
     }
 
     private void ResetSynopticZoomButton_Click(object? sender, RoutedEventArgs e)
-        => FindControl<Slider>("SynopticZoomSlider")!.Value = 1;
+        => SetSynopticZoomPreservingCenter(1);
 
     private void ZoomOutSynopticButton_Click(object? sender, RoutedEventArgs e)
     {
         Slider slider = FindControl<Slider>("SynopticZoomSlider")!;
-        slider.Value = Math.Max(slider.Minimum, slider.Value - 0.25);
+        SetSynopticZoomPreservingCenter(slider.Value - 0.25);
     }
 
     private void ZoomInSynopticButton_Click(object? sender, RoutedEventArgs e)
     {
         Slider slider = FindControl<Slider>("SynopticZoomSlider")!;
-        slider.Value = Math.Min(slider.Maximum, slider.Value + 0.25);
+        SetSynopticZoomPreservingCenter(slider.Value + 0.25);
+    }
+
+    private void SynopticScrollViewer_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
+    {
+        if (!e.KeyModifiers.HasFlag(KeyModifiers.Control))
+        {
+            return;
+        }
+
+        Slider slider = FindControl<Slider>("SynopticZoomSlider")!;
+        SetSynopticZoomPreservingCenter(slider.Value + (e.Delta.Y > 0 ? 0.1 : -0.1));
+        e.Handled = true;
+    }
+
+    private void SetSynopticZoomPreservingCenter(double requestedValue)
+    {
+        ScrollViewer viewer = FindControl<ScrollViewer>("SynopticScrollViewer")!;
+        Slider slider = FindControl<Slider>("SynopticZoomSlider")!;
+        double horizontalRatio = viewer.Extent.Width <= 0
+            ? 0.5
+            : (viewer.Offset.X + (viewer.Viewport.Width / 2)) / viewer.Extent.Width;
+        double verticalRatio = viewer.Extent.Height <= 0
+            ? 0.5
+            : (viewer.Offset.Y + (viewer.Viewport.Height / 2)) / viewer.Extent.Height;
+        slider.Value = Math.Clamp(requestedValue, slider.Minimum, slider.Maximum);
+        viewer.UpdateLayout();
+        viewer.Offset = new Vector(
+            Math.Max(0, (horizontalRatio * viewer.Extent.Width) - (viewer.Viewport.Width / 2)),
+            Math.Max(0, (verticalRatio * viewer.Extent.Height) - (viewer.Viewport.Height / 2)));
     }
 
     private void FitSynopticZoomButton_Click(object? sender, RoutedEventArgs e)
@@ -495,6 +525,30 @@ public partial class MainWindow
             slider.Minimum,
             1);
         viewer.ScrollToHome();
+    }
+
+    private void OpenSynopticPreviewWindowButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_project is null || _synopticLayout is null)
+        {
+            return;
+        }
+
+        RenderSynopticPreview();
+        if (_synopticPreviewWindow?.IsVisible == true)
+        {
+            _synopticPreviewWindow.Activate();
+            return;
+        }
+
+        Canvas canvas = FindControl<Canvas>("SynopticCanvas")!;
+        _synopticPreviewWindow = new SynopticPreviewWindow(
+            canvas,
+            canvas.Width,
+            canvas.Height,
+            _language);
+        _synopticPreviewWindow.Closed += (_, _) => _synopticPreviewWindow = null;
+        _synopticPreviewWindow.Show(this);
     }
 
     private void SynopticDeviceGrid_CellEditEnded(object? sender, DataGridCellEditEndedEventArgs e)
