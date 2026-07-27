@@ -16,6 +16,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\DanteConfigEditor.Core\DanteConfigEditor.Core.csproj" />
+    <ProjectReference Include="..\..\src\DanteConfigEditor.Domain\DanteConfigEditor.Domain.csproj" />
+    <ProjectReference Include="..\..\src\DanteConfigEditor.DanteXml\DanteConfigEditor.DanteXml.csproj" />
   </ItemGroup>
 
   <ItemGroup>

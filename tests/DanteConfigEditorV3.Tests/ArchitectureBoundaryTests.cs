@@ -1,4 +1,5 @@
 using System.Xml.Linq;
+using DanteConfigEditor.Domain.Projects;
 
 namespace DanteConfigEditorV3.Tests;
 
@@ -85,6 +86,38 @@ public sealed class ArchitectureBoundaryTests
             string source = File.ReadAllText(sourcePath);
             Assert.DoesNotContain("using System.Windows", source, StringComparison.Ordinal);
             Assert.DoesNotContain("using Avalonia", source, StringComparison.Ordinal);
+        }
+    }
+
+    [Fact]
+    public void DomainAssemblyDoesNotReferenceXmlUiOrFileInfrastructure()
+    {
+        string[] referencedAssemblies = typeof(DanteXmlCapabilities).Assembly
+            .GetReferencedAssemblies()
+            .Select(reference => reference.Name ?? string.Empty)
+            .ToArray();
+
+        Assert.DoesNotContain("System.Xml.XDocument", referencedAssemblies);
+        Assert.DoesNotContain("PresentationFramework", referencedAssemblies);
+        Assert.DoesNotContain("Avalonia", referencedAssemblies);
+
+        string domainRoot = RepositoryFile("src", "DanteConfigEditor.Domain");
+        IEnumerable<string> domainSources = Directory
+            .EnumerateFiles(domainRoot, "*.cs", SearchOption.AllDirectories)
+            .Where(path => !path.Contains(
+                $"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}",
+                StringComparison.OrdinalIgnoreCase))
+            .Where(path => !path.Contains(
+                $"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}",
+                StringComparison.OrdinalIgnoreCase));
+
+        foreach (string sourcePath in domainSources)
+        {
+            string source = File.ReadAllText(sourcePath);
+            Assert.DoesNotContain("System.Xml", source, StringComparison.Ordinal);
+            Assert.DoesNotContain("System.IO", source, StringComparison.Ordinal);
+            Assert.DoesNotContain("System.Windows", source, StringComparison.Ordinal);
+            Assert.DoesNotContain("Avalonia", source, StringComparison.Ordinal);
         }
     }
 
