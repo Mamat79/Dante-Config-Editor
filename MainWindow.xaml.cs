@@ -14,6 +14,8 @@ using System.Windows.Threading;
 using DanteConfigEditor.Application;
 using DanteConfigEditor.Application.Navigation;
 using DanteConfigEditor.Application.Patch;
+using DanteConfigEditor.Domain.Projects;
+using DanteConfigEditor.Domain.Validation;
 using DanteConfigEditor.Infrastructure.Migration;
 using DanteConfigEditor.Models;
 using DanteConfigEditor.Services;
@@ -32,7 +34,7 @@ public partial class MainWindow : Window
     private readonly ObservableCollection<DanteSubscription> _patchRows = [];
     private readonly ObservableCollection<string> _logs = [];
     private readonly ObservableCollection<GlobalSearchResult> _searchResults = [];
-    private readonly ObservableCollection<DanteValidationIssue> _healthIssues = [];
+    private readonly ObservableCollection<ValidationCenterRow> _healthIssues = [];
     private readonly ObservableCollection<PendingPatchRow> _pendingPatchRows = [];
     private readonly HashSet<string> _lockedDeviceNames = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _warningDeviceNames = new(StringComparer.OrdinalIgnoreCase);
@@ -3049,9 +3051,16 @@ public partial class MainWindow : Window
             return;
         }
 
-        DanteValidationResult validation = _project!.Validate();
-        SaveSummaryTextBox.Text = _project.BuildCompatibilityReport();
-        MessageBox.Show(this, validation.ToDisplayText(), LocalizeLiteral("Vérification"), MessageBoxButton.OK, validation.HasErrors ? MessageBoxImage.Error : MessageBoxImage.Information);
+        _projectSession.RefreshValidation();
+        RefreshHealthPage();
+        SaveSummaryTextBox.Text = BuildValidationReport();
+        _workspaceNavigation.NavigateTo(WorkspaceSection.Validation);
+        SetStatus(Tf(
+            "Validation.Center.Summary",
+            _projectSession.Validation.Issues.Count,
+            _projectSession.Validation.ErrorCount,
+            _projectSession.Validation.WarningCount,
+            _projectSession.Validation.InformationCount));
     }
 
     private void ImportChannelLabelsButton_Click(object sender, RoutedEventArgs e)
@@ -3918,6 +3927,11 @@ public partial class MainWindow : Window
                 AddLog(warning);
             }
         }
+
+        // Une partie des écrans historiques modifie encore directement le
+        // modèle XML. Le centre doit donc recalculer son état à chaque
+        // rafraîchissement global, même hors du nouveau dispatcher.
+        _projectSession.RefreshValidation();
     }
 
     private void ReplaceUnifiedPatchSession(UnifiedPatchSession? session)
@@ -4403,58 +4417,66 @@ public partial class MainWindow : Window
 
     private void RefreshHealthPage()
     {
+        string? selectedCode = (HealthIssuesGrid.SelectedItem as ValidationCenterRow)?.Issue.Code;
         _healthIssues.Clear();
 
-        if (_project is null)
+        if (_project is null || !_projectSession.HasProject)
         {
             HealthSummaryTextBlock.Text = T("Status.NoFileLoaded");
+            HealthProfileTextBlock.Text = string.Empty;
+            ValidationErrorCountTextBlock.Text = Tf("Validation.Count.Errors", 0);
+            ValidationWarningCountTextBlock.Text = Tf("Validation.Count.Warnings", 0);
+            ValidationInformationCountTextBlock.Text = Tf("Validation.Count.Information", 0);
+            ValidationDetailTextBlock.Text = T("Validation.Center.NoSelection");
+            ValidationSuggestedActionTextBlock.Text = string.Empty;
+            OpenValidationTargetButton.IsEnabled = false;
             return;
         }
 
-        DanteValidationResult validation = _project.Validate();
+        ProjectValidationState validation = _projectSession.Validation;
         string filter = SelectedOptionKey(HealthFilterComboBox, _healthFilterKeys[0]);
-        IEnumerable<DanteValidationIssue> issues = validation.Issues;
-        issues = filter switch
-        {
-            "Filter.Info" => issues.Where(issue => issue.Severity == DanteIssueSeverity.Info),
-            "Filter.HealthWarnings" => issues.Where(issue => issue.Severity == DanteIssueSeverity.Warning),
-            "Filter.Errors" => issues.Where(issue => issue.Severity == DanteIssueSeverity.Error),
-            "Filter.Patches" => issues.Where(issue => issue.Category == DanteIssueCategory.Patch),
-            "Filter.Devices" => issues.Where(issue => issue.Category == DanteIssueCategory.Device),
-            "Filter.Clock" => issues.Where(issue => issue.Category == DanteIssueCategory.Clock),
-            "Filter.Network" => issues.Where(issue => issue.Category == DanteIssueCategory.Network),
-            "Filter.XmlCompatibility" => issues.Where(issue => issue.Category == DanteIssueCategory.XmlCompatibility),
-            _ => issues
-        };
+        string search = HealthSearchTextBox.Text.Trim();
+        IEnumerable<ProjectValidationIssue> issues = validation.Issues
+            .Where(issue => MatchesHealthFilter(issue, filter))
+            .Where(issue => MatchesValidationSearch(issue, search));
 
-        foreach (DanteValidationIssue issue in issues.OrderByDescending(issue => issue.Severity).ThenBy(issue => issue.CategoryLabel).Take(500))
+        foreach (ProjectValidationIssue issue in issues.Take(1000))
         {
-            _healthIssues.Add(issue);
+            _healthIssues.Add(CreateValidationCenterRow(issue));
         }
 
         HealthSummaryTextBlock.Text = Tf(
-            "Summary.Health",
-            _project.PresetName,
-            Blank(_project.PresetVersion),
-            _editModeEnabled ? T("Status.EditMode").Replace("Mode : ", string.Empty).Replace("Mode: ", string.Empty) : T("Status.ReadOnlyMode").Replace("Mode : ", string.Empty).Replace("Mode: ", string.Empty),
-            _project.OriginalFilePath,
-            _project.Devices.Count,
-            _project.Devices.Sum(device => device.TxCount),
-            _project.Devices.Sum(device => device.RxCount),
-            _project.PatchMatrix.ActivePatchCount,
-            _project.PatchMatrix.FreeRxCount,
-            _project.PatchMatrix.LocalPatchCount,
-            _project.PatchMatrix.ExternalMissingDeviceCount,
-            _project.PatchMatrix.MissingTxChannelCount,
-            _project.Devices.Count(device => device.PreferredMaster),
-            DistinctDeviceValues(device => device.Samplerate),
-            DistinctDeviceValues(device => device.Encoding),
-            DistinctLatencies(),
-            _project.Devices.Count(device => device.IsRedundant),
-            _project.Devices.Count(device => !device.IsRedundant),
-            _project.Devices.Count(device => device.UsesStaticIp),
-            validation.Errors.Count,
-            validation.Warnings.Count);
+            "Validation.Center.Summary",
+            validation.Issues.Count,
+            validation.ErrorCount,
+            validation.WarningCount,
+            validation.InformationCount);
+        HealthProfileTextBlock.Text = Tf(
+            "Validation.Center.Profile",
+            _projectSession.Profile.Id,
+            LocalizedRecognitionLevel(_projectSession.Profile.RecognitionLevel),
+            LocalizedAccessMode(_projectSession.Profile.AccessMode),
+            Blank(_projectSession.Profile.PresetVersion));
+        ValidationErrorCountTextBlock.Text = Tf(
+            "Validation.Count.Errors",
+            validation.ErrorCount);
+        ValidationWarningCountTextBlock.Text = Tf(
+            "Validation.Count.Warnings",
+            validation.WarningCount);
+        ValidationInformationCountTextBlock.Text = Tf(
+            "Validation.Count.Information",
+            validation.InformationCount);
+        ValidationScopeTextBlock.Text = T("Validation.Center.Scope");
+
+        ValidationCenterRow? selected = _healthIssues.FirstOrDefault(
+            row => row.Issue.Code == selectedCode);
+        HealthIssuesGrid.SelectedItem = selected ?? _healthIssues.FirstOrDefault();
+        if (HealthIssuesGrid.SelectedItem is null)
+        {
+            ValidationDetailTextBlock.Text = T("Validation.Center.NoIssue");
+            ValidationSuggestedActionTextBlock.Text = string.Empty;
+            OpenValidationTargetButton.IsEnabled = false;
+        }
     }
 
     private void RefreshSourceChannels()
@@ -4579,8 +4601,8 @@ public partial class MainWindow : Window
         IReadOnlyList<DanteDevice> devices = _project.Devices;
         int txCount = devices.Sum(device => device.TxCount);
         int rxCount = devices.Sum(device => device.RxCount);
-        int errorCount = _healthIssues.Count(issue => issue.Severity == DanteIssueSeverity.Error);
-        int warningCount = _healthIssues.Count(issue => issue.Severity == DanteIssueSeverity.Warning);
+        int errorCount = _projectSession.Validation.ErrorCount;
+        int warningCount = _projectSession.Validation.WarningCount;
         int unpatchedDeviceCount = devices.Count(device =>
             !_project.PatchMatrix.Subscriptions.Any(subscription =>
                 subscription.IsActive
@@ -4721,9 +4743,16 @@ public partial class MainWindow : Window
                 : "Rôle hors ligne générique : aucun device_id matériel n'est copié.")
             : $"device_id: {device.TechnicalDeviceId}\nprocess_id: {Blank(device.ProcessId)}";
 
-        int deviceWarnings = _healthIssues.Count(issue =>
-            issue.Severity != DanteIssueSeverity.Info
-            && string.Equals(issue.DeviceName, device.Name, StringComparison.OrdinalIgnoreCase));
+        int deviceWarnings = _projectSession.Validation.Issues.Count(issue =>
+            issue.Severity != ProjectValidationSeverity.Information
+            && (string.Equals(
+                    issue.Target?.StableId,
+                    device.StableIdentity,
+                    StringComparison.Ordinal)
+                || string.Equals(
+                    issue.Target?.ParentStableId,
+                    device.StableIdentity,
+                    StringComparison.Ordinal)));
         InspectorWarningsTextBlock.Text = deviceWarnings == 0
             ? string.Empty
             : (_language == UiLanguage.English
@@ -4925,15 +4954,22 @@ public partial class MainWindow : Window
     private void UpdateCommandState()
     {
         bool hasProject = _project is not null;
-        bool canUseProjectActions = hasProject;
+        bool canUseProjectActions = hasProject
+            && _projectSession.HasProject
+            && _projectSession.Profile.Capabilities.AllowsEditing;
+        bool canSave = hasProject
+            && _projectSession.HasProject
+            && _projectSession.Profile.Capabilities.CanSave;
 
-        ActivateEditButton.IsEnabled = hasProject && !_editModeEnabled;
+        ActivateEditButton.IsEnabled = canUseProjectActions && !_editModeEnabled;
         ActivateEditButton.Content = hasProject && _editModeEnabled ? T("Status.EditActiveButton") : T("Status.ActivateEditButton");
-        SaveButton.IsEnabled = hasProject;
-        SaveAsButton.IsEnabled = hasProject;
+        SaveButton.IsEnabled = canSave;
+        SaveAsButton.IsEnabled = canSave;
         RevertButton.IsEnabled = hasProject;
         HomeRevertButton.IsEnabled = hasProject;
-        HomeMergeXmlButton.IsEnabled = hasProject;
+        HomeMergeXmlButton.IsEnabled = hasProject
+            && _projectSession.HasProject
+            && _projectSession.Profile.Capabilities.CanCreateDevices;
         ShowDeviceChangesButton.IsEnabled = hasProject;
         UndoLastButton.IsEnabled = hasProject
             && (_projectSession.CommandDispatcher.CanUndo || _project?.CanUndo == true);
@@ -4944,6 +4980,43 @@ public partial class MainWindow : Window
         {
             control.IsEnabled = canUseProjectActions;
         }
+
+        if (!hasProject || !_projectSession.HasProject)
+        {
+            return;
+        }
+
+        DanteXmlCapabilities capabilities = _projectSession.Profile.Capabilities;
+        bool canEditChannels =
+            capabilities.CanEditTxLabels || capabilities.CanEditRxLabels;
+        MergeXmlButton.IsEnabled = capabilities.CanCreateDevices;
+        ApplyDeviceSettingsButton.IsEnabled =
+            capabilities.CanEditDeviceNames
+            || capabilities.CanEditNetwork
+            || capabilities.CanEditAudioFormat;
+        DeleteDeviceButton.IsEnabled = capabilities.CanCreateDevices;
+        DuplicateDeviceButton.IsEnabled = capabilities.CanCreateDevices;
+        ResetDevicePatchesButton.IsEnabled = capabilities.CanEditPatch;
+        ResetDeviceRxPatchesButton.IsEnabled = capabilities.CanEditPatch;
+        ResetDeviceTxPatchesButton.IsEnabled = capabilities.CanEditPatch;
+        RenameChannelButton.IsEnabled = canEditChannels;
+        ResetDeviceChannelsButton.IsEnabled = canEditChannels;
+        BatchRenameButton.IsEnabled = canEditChannels;
+        ImportChannelLabelsButton.IsEnabled = canEditChannels;
+        ExportChannelLabelsButton.IsEnabled = true;
+        ApplyAllNetworkButton.IsEnabled = capabilities.CanEditNetwork;
+        ApplyAllIpAutoButton.IsEnabled = capabilities.CanEditNetwork;
+        ApplyAllIpStaticButton.IsEnabled = capabilities.CanEditNetwork;
+        ApplyAllLatencyButton.IsEnabled = capabilities.CanEditAudioFormat;
+        ApplyAllSampleRateButton.IsEnabled = capabilities.CanEditAudioFormat;
+        ApplyAllEncodingButton.IsEnabled = capabilities.CanEditAudioFormat;
+        ApplyQuickProfileButton.IsEnabled =
+            capabilities.CanEditAudioFormat || capabilities.CanEditNetwork;
+        ResetAllChannelsButton.IsEnabled = canEditChannels;
+        ApplyPatchButton.IsEnabled = capabilities.CanEditPatch;
+        RemovePatchButton.IsEnabled = capabilities.CanEditPatch;
+        ApplyExclusivePreferredMasterButton.IsEnabled =
+            capabilities.CanEditAudioFormat;
     }
 
     private IEnumerable<Control> EditableControls()
@@ -5309,6 +5382,7 @@ public partial class MainWindow : Window
             SetBrush("AccentBrush", "#1D4ED8");
             SetBrush("AccentDarkBrush", "#1E40AF");
             SetBrush("DangerBrush", "#B91C1C");
+            SetBrush("WarningBrush", "#A16207");
             SetBrush("SuccessBrush", "#047857");
         }
         else
@@ -5322,6 +5396,7 @@ public partial class MainWindow : Window
             SetBrush("AccentBrush", "#2F80ED");
             SetBrush("AccentDarkBrush", "#1D5FB8");
             SetBrush("DangerBrush", "#D64545");
+            SetBrush("WarningBrush", "#E0A52B");
             SetBrush("SuccessBrush", "#2E9D62");
         }
     }

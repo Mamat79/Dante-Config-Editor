@@ -1,4 +1,5 @@
 using DanteConfigEditor.Application.Commands;
+using DanteConfigEditor.Application.Validation;
 using DanteConfigEditor.DanteXml;
 using DanteConfigEditor.DanteXml.Profiles;
 using DanteConfigEditor.Domain.History;
@@ -30,6 +31,7 @@ public sealed class ProjectSession
 {
     private readonly List<ProjectHistoryEntry> _history = [];
     private readonly Dictionary<string, string> _filters = new(StringComparer.Ordinal);
+    private readonly ProjectValidationService _validationService = new();
     private DanteXmlOpenResult? _openedProject;
 
     public ProjectSession(int undoLimit = 30)
@@ -166,11 +168,7 @@ public sealed class ProjectSession
             return;
         }
 
-        DanteValidationResult legacyValidation = Project.Validate();
-        ProjectValidationIssue[] issues = legacyValidation.Issues
-            .Select((issue, index) => MapValidationIssue(issue, index))
-            .ToArray();
-        Validation = new ProjectValidationState(DateTimeOffset.Now, issues);
+        Validation = _validationService.Validate(Project, Profile);
         RaiseChanged(ProjectSessionChangeKind.ValidationChanged);
     }
 
@@ -206,38 +204,6 @@ public sealed class ProjectSession
     {
         CommandDispatcher.Clear();
         RaiseChanged(ProjectSessionChangeKind.Saved);
-    }
-
-    private ProjectValidationIssue MapValidationIssue(
-        DanteValidationIssue issue,
-        int index)
-    {
-        ProjectEntityReference? target = null;
-        if (!string.IsNullOrWhiteSpace(issue.DeviceName))
-        {
-            DanteDevice? device = Project.FindDevice(issue.DeviceName);
-            target = device is null
-                ? null
-                : new ProjectEntityReference(
-                    ProjectEntityKind.Device,
-                    device.StableIdentity,
-                    device.Name);
-        }
-
-        ProjectValidationSeverity severity = issue.Severity switch
-        {
-            DanteIssueSeverity.Error => ProjectValidationSeverity.Error,
-            DanteIssueSeverity.Warning => ProjectValidationSeverity.Warning,
-            _ => ProjectValidationSeverity.Information
-        };
-
-        return new ProjectValidationIssue(
-            $"legacy.{issue.Category}.{index}",
-            severity,
-            issue.Category.ToString(),
-            $"Validation.{issue.Category}",
-            issue.Message,
-            target);
     }
 
     private void RaiseChanged(ProjectSessionChangeKind kind, string? commandId = null)

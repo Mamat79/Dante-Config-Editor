@@ -65,11 +65,11 @@ public sealed class DanteXmlProfileDetector : IDanteXmlProfileDetector
             CanEditDeviceNames: everyDeviceNamed,
             CanEditTxLabels: hasTx,
             CanEditRxLabels: hasRx,
-            CanEditPatch: hasRx,
+            CanEditPatch: hasRx && everyChannelIdentified,
             CanEditNetwork: hasNetwork,
             CanEditAudioFormat: hasAudio,
-            CanCreateDevices: supportsGenericRoles,
-            CanCreateProject: supportsGenericRoles,
+            CanCreateDevices: supportsGenericRoles && complete,
+            CanCreateProject: supportsGenericRoles && complete,
             CanSave: true);
 
         return new DanteXmlProfileDescriptor(

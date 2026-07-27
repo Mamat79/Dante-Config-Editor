@@ -180,6 +180,11 @@ Réalisé :
 - rebase explicite des changements préparés après renommage ;
 - synoptique Windows sélectionnable relié aux subscriptions Patch par
   identités stables, avec filtre visuel, navigation et inspecteur de liaison ;
+- service de validation applicatif combinant moteur XML, profil et capacités ;
+- Centre de validation Windows filtrable, recherchable, navigable et
+  exportable, avec séparation du périmètre Dante Controller ;
+- actions Windows bloquées selon les capacités du profil, y compris la
+  sauvegarde des structures inconnues ;
 - tests d'architecture et de profils.
 
 À poursuivre :
@@ -187,9 +192,10 @@ Réalisé :
 - branchement progressif de toutes les vues sur la session ;
 - remplacement progressif des snapshots par des deltas ciblés ;
 - migration des renommages historiques vers le dispatcher de commandes ;
-- Centre de validation et navigation par cible ;
+- adaptation progressive du Centre de validation à l'interface macOS ;
 - réduction progressive du Core historique.
 
 L'organisation visuelle et les contrôles réellement effectués sont détaillés
 dans `WINDOWS_WORKSPACE_SHELL.md`, `UNIFIED_PATCH_WORKSPACE.md` et
-`INTERACTIVE_SYNOPTIC.md`.
+`INTERACTIVE_SYNOPTIC.md`. Le Centre de validation est décrit dans
+`VALIDATION_CENTER.md`.

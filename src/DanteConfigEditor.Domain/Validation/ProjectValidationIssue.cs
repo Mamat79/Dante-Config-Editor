@@ -32,5 +32,8 @@ public sealed record ProjectValidationState(
     public int WarningCount =>
         Issues.Count(issue => issue.Severity == ProjectValidationSeverity.Warning);
 
+    public int InformationCount =>
+        Issues.Count(issue => issue.Severity == ProjectValidationSeverity.Information);
+
     public bool CanSave => ErrorCount == 0;
 }

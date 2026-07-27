@@ -53,6 +53,8 @@ public sealed class DanteXmlProfileTests
             Assert.Equal(DanteXmlRecognitionLevel.Partial, profile.RecognitionLevel);
             Assert.Equal(ProjectAccessMode.Restricted, profile.AccessMode);
             Assert.True(profile.Capabilities.CanSave);
+            Assert.False(profile.Capabilities.CanEditPatch);
+            Assert.False(profile.Capabilities.CanCreateDevices);
             Assert.Contains("XmlProfile.SomeChannelsHaveNoDanteIdOrMediaType", profile.Reasons);
         }
         finally
