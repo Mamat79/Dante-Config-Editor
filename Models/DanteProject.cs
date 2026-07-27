@@ -132,6 +132,41 @@ public sealed partial class DanteProject
         return project;
     }
 
+    public static DanteProject LoadFromStream(string sourceIdentity, Stream stream)
+    {
+        if (string.IsNullOrWhiteSpace(sourceIdentity))
+        {
+            throw new ArgumentException("L'identité de la source XML est obligatoire.", nameof(sourceIdentity));
+        }
+
+        ArgumentNullException.ThrowIfNull(stream);
+        XDocument document;
+        try
+        {
+            document = XDocument.Load(
+                stream,
+                LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
+        }
+        catch (XmlException ex)
+        {
+            throw new InvalidOperationException($"Le fichier XML n'est pas lisible : {ex.Message}", ex);
+        }
+
+        if (document.Root is null)
+        {
+            throw new InvalidOperationException("Le fichier XML ne contient pas de racine.");
+        }
+
+        DanteProject project = new(sourceIdentity, document);
+        if (project.Devices.Count == 0)
+        {
+            throw new InvalidOperationException(
+                "Aucun élément <device> n'a été trouvé. Ce fichier ne semble pas compatible avec cette version.");
+        }
+
+        return project;
+    }
+
     public static DanteProject LoadRecovered(string originalPath, string recoveryPath)
     {
         XDocument originalDocument = LoadDocument(originalPath);

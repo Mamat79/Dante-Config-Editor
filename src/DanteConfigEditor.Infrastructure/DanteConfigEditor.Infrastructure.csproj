@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>DanteConfigEditor.Infrastructure</AssemblyName>
+    <RootNamespace>DanteConfigEditor.Infrastructure</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DanteConfigEditor.Core\DanteConfigEditor.Core.csproj" />
+    <ProjectReference Include="..\DanteConfigEditor.Domain\DanteConfigEditor.Domain.csproj" />
+    <ProjectReference Include="..\DanteConfigEditor.DanteXml\DanteConfigEditor.DanteXml.csproj" />
+    <ProjectReference Include="..\DanteConfigEditor.Application\DanteConfigEditor.Application.csproj" />
+  </ItemGroup>
+</Project>

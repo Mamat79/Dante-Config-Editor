@@ -159,14 +159,18 @@ Réalisé :
 - dispatcher de commandes transactionnelles ;
 - Annuler, Rétablir et historique borné ;
 - commandes typées pour renommages, plages, patch, suppression et format audio ;
+- paquet `.dceproj` 1.0 avec manifeste, espace de travail, journal, validation
+  et images ;
+- contrôle des chemins internes, tailles et empreintes du paquet ;
+- sauvegarde atomique du projet DCE avec backup de la destination ;
 - tests d'architecture et de profils.
 
 À poursuivre :
 
 - branchement progressif de toutes les vues sur la session ;
 - remplacement progressif des snapshots par des deltas ciblés ;
-- paquet `.dceproj` ;
-- infrastructure et migration ;
+- migration non destructive des paramètres V3.6 ;
+- récupération des projets DCE ;
 - branchement progressif des vues Windows sur la session ;
 - moteur Patch unique ;
 - Centre de validation et navigation par cible ;
