@@ -50,6 +50,10 @@ public sealed record PatchEditRequest(
     string? TxDeviceName,
     string? TxChannelName)
 {
+    // Le nom reste nécessaire au XML Dante. Le Dante Id facultatif permet à
+    // la session 2026.1 de retrouver le même canal après un renommage.
+    public int? TxDanteId { get; init; }
+
     public bool IsRemoval => string.IsNullOrWhiteSpace(TxDeviceName);
 
     public static PatchEditRequest Apply(PlannedPatchAssignment assignment)
@@ -58,7 +62,10 @@ public sealed record PatchEditRequest(
             assignment.Target.DeviceName,
             assignment.Target.DanteId,
             assignment.Source.DeviceName,
-            assignment.Source.ChannelName);
+            assignment.Source.ChannelName)
+        {
+            TxDanteId = assignment.Source.DanteId
+        };
     }
 
     public static PatchEditRequest Remove(PatchTargetDescriptor target)

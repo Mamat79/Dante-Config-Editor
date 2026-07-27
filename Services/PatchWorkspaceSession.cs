@@ -62,7 +62,7 @@ public sealed record PendingPatchChange(
     public bool IsRemoval => string.IsNullOrWhiteSpace(DesiredTxDeviceName);
 }
 
-public sealed class PatchWorkspaceSession
+public sealed class PatchWorkspaceSession : IPatchWorkspaceSession
 {
     private readonly Dictionary<PatchTargetKey, PatchSourceValue> _originalAssignments;
     private readonly Dictionary<PatchTargetKey, PatchEditRequest> _pendingEdits = new();
@@ -152,7 +152,8 @@ public sealed class PatchWorkspaceSession
         SetDesiredSource(
             assignment.Target,
             assignment.Source.DeviceName,
-            assignment.Source.ChannelName);
+            assignment.Source.ChannelName,
+            assignment.Source.DanteId);
     }
 
     public PatchBatchPreview BuildPreview(IEnumerable<PlannedPatchAssignment> assignments)
@@ -271,7 +272,7 @@ public sealed class PatchWorkspaceSession
     public void Remove(PatchTargetDescriptor target)
     {
         ArgumentNullException.ThrowIfNull(target);
-        SetDesiredSource(target, null, null);
+        SetDesiredSource(target, null, null, null);
     }
 
     public int RemoveMany(IEnumerable<PatchTargetDescriptor> targets)
@@ -331,7 +332,11 @@ public sealed class PatchWorkspaceSession
         }
     }
 
-    private void SetDesiredSource(PatchTargetDescriptor target, string? txDeviceName, string? txChannelName)
+    private void SetDesiredSource(
+        PatchTargetDescriptor target,
+        string? txDeviceName,
+        string? txChannelName,
+        int? txDanteId)
     {
         PatchTargetKey key = RequireKnownTarget(target);
         PatchSourceValue original = _originalAssignments[key];
@@ -351,7 +356,10 @@ public sealed class PatchWorkspaceSession
                 target.DeviceName,
                 target.DanteId,
                 desired.DeviceName,
-                desired.ChannelName);
+                desired.ChannelName)
+            {
+                TxDanteId = txDanteId
+            };
     }
 
     private void LoadInitialEdits(IEnumerable<PatchEditRequest> initialEdits)
@@ -359,7 +367,7 @@ public sealed class PatchWorkspaceSession
         foreach (PatchEditRequest edit in initialEdits)
         {
             PatchTargetDescriptor target = new(edit.RxDeviceName, edit.RxDanteId, 0, string.Empty);
-            SetDesiredSource(target, edit.TxDeviceName, edit.TxChannelName);
+            SetDesiredSource(target, edit.TxDeviceName, edit.TxChannelName, edit.TxDanteId);
         }
     }
 

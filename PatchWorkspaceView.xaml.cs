@@ -46,7 +46,7 @@ public partial class PatchWorkspaceView : UserControl
 
     private readonly UiLanguage _language;
     private readonly DanteProject _project;
-    private readonly PatchWorkspaceSession _session;
+    private readonly IPatchWorkspaceSession _session;
     private readonly bool _returnEditsOnly;
     private readonly bool _lockRxDeviceSelection;
     private readonly bool _embedded;
@@ -84,7 +84,8 @@ public partial class PatchWorkspaceView : UserControl
         Func<string, DanteChannelKind, int, string, bool>? renameChannelAction = null,
         Func<string, DanteChannelKind, IReadOnlyList<int>, int, bool>? extendChannelSeriesAction = null,
         bool startInAssignmentMode = false,
-        bool warnOnExistingPatch = true)
+        bool warnOnExistingPatch = true,
+        IPatchWorkspaceSession? sharedSession = null)
     {
         InitializeComponent();
         // La grille est le mode principal d'Easy patch. La sélection par plage
@@ -101,7 +102,8 @@ public partial class PatchWorkspaceView : UserControl
         }
         _language = language;
         _project = project ?? throw new ArgumentNullException(nameof(project));
-        _session = new PatchWorkspaceSession(project.PatchMatrix.Subscriptions, initialEdits);
+        _session = sharedSession
+            ?? new PatchWorkspaceSession(project.PatchMatrix.Subscriptions, initialEdits);
         _returnEditsOnly = returnEditsOnly;
         _lockRxDeviceSelection = lockRxDeviceSelection;
         _embedded = embedded;

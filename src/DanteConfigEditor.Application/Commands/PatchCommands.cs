@@ -9,6 +9,124 @@ public sealed record SubscriptionAssignment(
     string TxDeviceStableIdentity,
     int TxChannelIndex);
 
+public sealed record StableSubscriptionEdit(
+    string RxDeviceStableIdentity,
+    int RxChannelIndex,
+    string? TxDeviceStableIdentity,
+    int? TxChannelIndex)
+{
+    public bool IsRemoval => string.IsNullOrWhiteSpace(TxDeviceStableIdentity);
+}
+
+public sealed class ApplyPatchBatchCommand : IProjectCommand
+{
+    private readonly IReadOnlyList<StableSubscriptionEdit> _edits;
+
+    public ApplyPatchBatchCommand(IEnumerable<StableSubscriptionEdit> edits)
+    {
+        _edits = edits.ToArray();
+    }
+
+    public string Id => "patch.apply-batch";
+
+    public string DescriptionKey => "History.ApplyPatchBatch";
+
+    public CommandPreparation Prepare(ProjectSession session)
+    {
+        List<CommandProblem> errors = [];
+        List<ProjectEntityReference> affected = [];
+        if (!session.Profile.Capabilities.CanEditPatch)
+        {
+            errors.Add(ProjectCommandHelpers.Error("CapabilityUnavailable", Id));
+        }
+
+        if (_edits.Count == 0)
+        {
+            errors.Add(ProjectCommandHelpers.Error("RangeEmpty", Id));
+        }
+
+        bool duplicateTarget = _edits
+            .GroupBy(edit => (edit.RxDeviceStableIdentity, edit.RxChannelIndex))
+            .Any(group => group.Count() > 1);
+        if (duplicateTarget)
+        {
+            errors.Add(ProjectCommandHelpers.Error("DuplicatePatchTarget", Id));
+        }
+
+        foreach (StableSubscriptionEdit edit in _edits)
+        {
+            DanteDevice? rxDevice = ProjectCommandHelpers.FindDevice(
+                session,
+                edit.RxDeviceStableIdentity);
+            if (rxDevice is null
+                || rxDevice.RxChannels.All(channel => channel.Index != edit.RxChannelIndex))
+            {
+                errors.Add(ProjectCommandHelpers.Error(
+                    "ChannelNotFound",
+                    $"{edit.RxDeviceStableIdentity}:RX:{edit.RxChannelIndex}"));
+                continue;
+            }
+
+            affected.Add(ProjectCommandHelpers.ChannelReference(
+                rxDevice,
+                DanteChannelKind.Rx,
+                edit.RxChannelIndex));
+            if (edit.IsRemoval)
+            {
+                continue;
+            }
+
+            DanteDevice? txDevice = ProjectCommandHelpers.FindDevice(
+                session,
+                edit.TxDeviceStableIdentity!);
+            if (txDevice is null
+                || edit.TxChannelIndex is not int txChannelIndex
+                || txDevice.TxChannels.All(channel => channel.Index != txChannelIndex))
+            {
+                errors.Add(ProjectCommandHelpers.Error(
+                    "ChannelNotFound",
+                    $"{edit.TxDeviceStableIdentity}:TX:{edit.TxChannelIndex}"));
+            }
+        }
+
+        return new CommandPreparation(
+            Id,
+            DescriptionKey,
+            affected.Distinct().ToArray(),
+            [],
+            errors);
+    }
+
+    public void Execute(ProjectSession session)
+    {
+        session.Project.ApplyBatch(project =>
+        {
+            foreach (StableSubscriptionEdit edit in _edits)
+            {
+                DanteDevice rxDevice = project.FindDeviceByStableIdentity(
+                    edit.RxDeviceStableIdentity)
+                    ?? throw new InvalidOperationException("Command.Error.DeviceNotFound");
+                if (edit.IsRemoval)
+                {
+                    project.RemovePatch(rxDevice.Name, edit.RxChannelIndex);
+                    continue;
+                }
+
+                DanteDevice txDevice = project.FindDeviceByStableIdentity(
+                    edit.TxDeviceStableIdentity!)
+                    ?? throw new InvalidOperationException("Command.Error.DeviceNotFound");
+                DanteChannel txChannel = txDevice.TxChannels.First(channel =>
+                    channel.Index == edit.TxChannelIndex);
+                project.ApplyPatch(
+                    rxDevice.Name,
+                    edit.RxChannelIndex,
+                    txDevice.Name,
+                    txChannel.DisplayName);
+            }
+        });
+    }
+}
+
 public sealed class AssignSubscriptionRangeCommand : IProjectCommand
 {
     private readonly IReadOnlyList<SubscriptionAssignment> _assignments;
