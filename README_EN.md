@@ -17,6 +17,10 @@ for the exact commit and preset structure being evaluated.
 
 ## Documentation
 
+- [2026.1 presentation video - English](docs/media/dce-2026-1-presentation-en.mp4)
+- [Separate English subtitles](docs/media/dce-2026-1-presentation-en.srt)
+- [Vidéo de présentation 2026.1 - français](docs/media/dce-2026-1-presentation-fr.mp4)
+- [Sous-titres français séparés](docs/media/dce-2026-1-presentation-fr.srt)
 - [English quick start](docs/QuickStart_DanteConfigEditorV3_EN.pdf)
 - [Full English guide](docs/Notice_DanteConfigEditorV3_EN.pdf)
 - [Démarrage rapide FR](docs/QuickStart_DanteConfigEditorV3_FR.pdf)

@@ -192,8 +192,10 @@ public sealed class InstallerContractTests
         Assert.Contains("make_latest", workflow, StringComparison.Ordinal);
         Assert.Contains("find docs -maxdepth 1 -type f -name '*.pdf'", workflow, StringComparison.Ordinal);
         Assert.Contains("find docs/media -maxdepth 1 -type f", workflow, StringComparison.Ordinal);
-        Assert.Contains("dce-v${version_token}-presentation-*.mp4", workflow, StringComparison.Ordinal);
-        Assert.Contains("dce-v${version_token}-presentation-*.srt", workflow, StringComparison.Ordinal);
+        Assert.Contains("dce-v${legacy_token}-presentation-*.mp4", workflow, StringComparison.Ordinal);
+        Assert.Contains("dce-v${legacy_token}-presentation-*.srt", workflow, StringComparison.Ordinal);
+        Assert.Contains("dce-${calendar_token}-presentation-*.mp4", workflow, StringComparison.Ordinal);
+        Assert.Contains("dce-${calendar_token}-presentation-*.srt", workflow, StringComparison.Ordinal);
         Assert.Contains("RELEASE_NOTES_EN.md", workflow, StringComparison.Ordinal);
         Assert.DoesNotContain("gh release delete", workflow, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("--clobber", workflow, StringComparison.OrdinalIgnoreCase);

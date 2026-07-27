@@ -1,72 +1,72 @@
 1
-00:00:00,000 --> 00:00:05,000
-Dante Config Editor 2026.1 Beta
-Préparer et vérifier des presets Dante hors ligne.
+00:00:00,000 --> 00:00:04,999
+Dante Config Editor 2026.1 Beta Préparer
+et vérifier des presets Dante hors ligne.
 
 2
-00:00:05,000 --> 00:00:12,000
-Un espace de travail unifié
-Ouvrez un XML ou un projet .dceproj, puis retrouvez machines, canaux, alertes et actions dans une interface plus lisible.
+00:00:05,000 --> 00:00:11,999
+Un espace de travail unifié Ouvrez un XML ou un projet .dceproj, puis
+retrouvez machines, canaux, alertes et actions dans une interface plus lisible.
 
 3
-00:00:12,000 --> 00:00:20,000
-Patch immédiat
-Choisissez les RX à gauche et les TX à droite. Un clic applique directement la subscription.
+00:00:12,000 --> 00:00:19,999
+Patch immédiat Choisissez les RX à gauche et les TX à
+droite. Un clic applique directement la subscription.
 
 4
-00:00:20,000 --> 00:00:27,000
-Un remplacement sous contrôle
-L’avertissement reste activé par défaut lorsqu’un RX est déjà patché, et peut être désactivé volontairement.
+00:00:20,000 --> 00:00:26,999
+Un remplacement sous contrôle L’avertissement reste activé par défaut
+lorsqu’un RX est déjà patché, et peut être désactivé volontairement.
 
 5
-00:00:27,000 --> 00:00:34,000
-Renommages cohérents
-Renommez machines, RX et TX avec Entrée, Tab ou Maj+Tab. Les références de patch suivent les changements.
+00:00:27,000 --> 00:00:33,999
+Renommages cohérents Renommez machines, RX et TX avec Entrée,
+Tab ou Maj+Tab. Les références de patch suivent les changements.
 
 6
-00:00:34,000 --> 00:00:42,000
-Banques de machines
-Enregistrez des rôles assainis, partagez les banques et ajoutez une instance indépendante sans recopier l’identité matérielle.
+00:00:34,000 --> 00:00:41,999
+Banques de machines Enregistrez des rôles assainis, partagez les banques
+et ajoutez une instance indépendante sans recopier l’identité matérielle.
 
 7
-00:00:42,000 --> 00:00:49,000
-Projets et profils
-Le format .dceproj regroupe XML, notes et métadonnées. Les profils appliquent des réglages audio et réseau contrôlés.
+00:00:42,000 --> 00:00:48,999
+Projets et profils Le format .dceproj regroupe XML, notes et métadonnées.
+Les profils appliquent des réglages audio et réseau contrôlés.
 
 8
-00:00:49,000 --> 00:00:57,000
-Validation avant sauvegarde
-Le centre de validation signale identifiants, références, formats audio et incohérences réseau avant l’écriture atomique.
+00:00:49,000 --> 00:00:56,999
+Validation avant sauvegarde Le centre de validation signale identifiants,
+références, formats audio et incohérences réseau avant l’écriture atomique.
 
 9
-00:00:57,000 --> 00:01:04,000
-Synoptique interactif
-Organisez les machines, suivez les liaisons et exportez en SVG ou PDF sans modifier le XML Dante.
+00:00:57,000 --> 00:01:03,999
+Synoptique interactif Organisez les machines, suivez les
+liaisons et exportez en SVG ou PDF sans modifier le XML Dante.
 
 10
-00:01:04,000 --> 00:01:12,000
-Import et export de labels
-Échangez JSON, CSV, DMT XLSX/ODS, Allen & Heath dLive/Avantis et Yamaha CL/QL.
+00:01:04,000 --> 00:01:11,999
+Import et export de labels Échangez JSON, CSV, DMT
+XLSX/ODS, Allen & Heath dLive/Avantis et Yamaha CL/QL.
 
 11
-00:01:12,000 --> 00:01:19,000
-Windows et macOS
-L’installateur Windows et les DMG Apple Silicon et Intel incluent .NET 8 et les notices françaises et anglaises.
+00:01:12,000 --> 00:01:18,999
+Windows et macOS L’installateur Windows et les DMG Apple Silicon
+et Intel incluent .NET 8 et les notices françaises et anglaises.
 
 12
-00:01:19,000 --> 00:01:27,000
-Un projet gratuit
-Toutes les fonctions restent gratuites. Une étoile GitHub, un retour ou un soutien PayPal facultatif peuvent aider le projet.
+00:01:19,000 --> 00:01:26,999
+Un projet gratuit Toutes les fonctions restent gratuites. Une étoile
+GitHub, un retour ou un soutien PayPal facultatif peuvent aider le projet.
 
 13
-00:01:27,000 --> 00:01:35,000
-Merci aux contributeurs
-Merci à Tobi / @togrupe pour DMT et ses retours, et à Charles Bouticourt pour l’idée d’Atomic Bomb.
+00:01:27,000 --> 00:01:34,999
+Merci aux contributeurs Merci à Tobi / @togrupe pour DMT et
+ses retours, et à Charles Bouticourt pour l’idée d’Atomic Bomb.
 
 14
-00:01:35,000 --> 00:01:42,000
-Un outil tiers prudent
-Travaillez sur une copie et validez les structures importantes dans Dante Controller.
+00:01:35,000 --> 00:01:41,999
+Un outil tiers prudent Travaillez sur une copie et
+validez les structures importantes dans Dante Controller.
 
 15
 00:01:42,000 --> 00:01:48,000

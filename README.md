@@ -17,6 +17,10 @@ de tests structurels et sémantiques renforcés, mais sa validation manuelle doi
 
 ## Documentation
 
+- [Vidéo de présentation 2026.1 - français](docs/media/dce-2026-1-presentation-fr.mp4)
+- [Sous-titres français séparés](docs/media/dce-2026-1-presentation-fr.srt)
+- [2026.1 presentation video - English](docs/media/dce-2026-1-presentation-en.mp4)
+- [Separate English subtitles](docs/media/dce-2026-1-presentation-en.srt)
 - [Démarrage rapide FR](docs/QuickStart_DanteConfigEditorV3_FR.pdf)
 - [Notice complète FR](docs/Notice_DanteConfigEditorV3_FR.pdf)
 - [English quick start](docs/QuickStart_DanteConfigEditorV3_EN.pdf)

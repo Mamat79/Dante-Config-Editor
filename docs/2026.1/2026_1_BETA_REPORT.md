@@ -227,5 +227,9 @@ banques stockés ailleurs.
 - notices complètes FR/EN de 27 pages ;
 - Quick Start FR/EN ;
 - limites, accessibilité, tests et procédure macOS ;
-- SRT français et anglais préparés pour validation avant production de la
-  vidéo de présentation.
+- vidéos de présentation françaises et anglaises en H.264, 1920 × 1080,
+  30 images/s et 1 min 48 s, sans piste audio ;
+- sous-titres corrigés incrustés dans chaque vidéo et conservés séparément au
+  format SRT ;
+- captures réalisées uniquement avec le preset synthétique anonymisé, avec
+  masquage des chemins locaux avant versionnement.

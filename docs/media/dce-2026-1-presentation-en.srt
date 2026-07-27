@@ -1,72 +1,72 @@
 1
-00:00:00,000 --> 00:00:05,000
+00:00:00,000 --> 00:00:04,999
 Dante Config Editor 2026.1 Beta
 Prepare and review Dante presets offline.
 
 2
-00:00:05,000 --> 00:00:12,000
-One unified workspace
-Open an XML file or a .dceproj project, then review devices, channels, alerts, and actions in a clearer interface.
+00:00:05,000 --> 00:00:11,999
+One unified workspace Open an XML file or a .dceproj project, then
+review devices, channels, alerts, and actions in a clearer interface.
 
 3
-00:00:12,000 --> 00:00:20,000
-Immediate patching
-Choose Rx channels on the left and Tx channels on the right. One click applies the subscription immediately.
+00:00:12,000 --> 00:00:19,999
+Immediate patching Choose Rx channels on the left and Tx channels
+on the right. One click applies the subscription immediately.
 
 4
-00:00:20,000 --> 00:00:27,000
-Controlled replacement
-The warning remains enabled by default when an Rx is already patched, and can be deliberately disabled.
+00:00:20,000 --> 00:00:26,999
+Controlled replacement The warning remains enabled by default
+when an Rx is already patched, and can be deliberately disabled.
 
 5
-00:00:27,000 --> 00:00:34,000
-Consistent renaming
-Rename devices, Rx, and Tx with Enter, Tab, or Shift+Tab. Patch references follow the changes.
+00:00:27,000 --> 00:00:33,999
+Consistent renaming Rename devices, Rx, and Tx with Enter,
+Tab, or Shift+Tab. Patch references follow the changes.
 
 6
-00:00:34,000 --> 00:00:42,000
-Device banks
-Save sanitized roles, share banks, and add an independent instance without copying hardware identity.
+00:00:34,000 --> 00:00:41,999
+Device banks Save sanitized roles, share banks, and add
+an independent instance without copying hardware identity.
 
 7
-00:00:42,000 --> 00:00:49,000
-Projects and profiles
-The .dceproj format groups XML, notes, and metadata. Profiles apply controlled audio and network settings.
+00:00:42,000 --> 00:00:48,999
+Projects and profiles The .dceproj format groups XML, notes, and
+metadata. Profiles apply controlled audio and network settings.
 
 8
-00:00:49,000 --> 00:00:57,000
-Validation before saving
-The validation center reports identifiers, references, audio formats, and network inconsistencies before atomic writing.
+00:00:49,000 --> 00:00:56,999
+Validation before saving The validation center reports identifiers,
+references, audio formats, and network inconsistencies before atomic writing.
 
 9
-00:00:57,000 --> 00:01:04,000
-Interactive synoptic
-Arrange devices, follow connections, and export SVG or PDF without changing the Dante XML.
+00:00:57,000 --> 00:01:03,999
+Interactive synoptic Arrange devices, follow connections,
+and export SVG or PDF without changing the Dante XML.
 
 10
-00:01:04,000 --> 00:01:12,000
-Channel label exchange
-Exchange JSON, CSV, DMT XLSX/ODS, Allen & Heath dLive/Avantis, and Yamaha CL/QL files.
+00:01:04,000 --> 00:01:11,999
+Channel label exchange Exchange JSON, CSV, DMT XLSX/ODS,
+Allen & Heath dLive/Avantis, and Yamaha CL/QL files.
 
 11
-00:01:12,000 --> 00:01:19,000
-Windows and macOS
-The Windows installer and Apple Silicon and Intel DMGs include .NET 8 and the French and English guides.
+00:01:12,000 --> 00:01:18,999
+Windows and macOS The Windows installer and Apple Silicon and
+Intel DMGs include .NET 8 and the French and English guides.
 
 12
-00:01:19,000 --> 00:01:27,000
-A free project
-Every feature remains free. A GitHub star, feedback, or optional PayPal support can help the project.
+00:01:19,000 --> 00:01:26,999
+A free project Every feature remains free. A GitHub star,
+feedback, or optional PayPal support can help the project.
 
 13
-00:01:27,000 --> 00:01:35,000
-Thanks to the contributors
-Thanks to Tobi / @togrupe for DMT and his feedback, and to Charles Bouticourt for the Atomic Bomb idea.
+00:01:27,000 --> 00:01:34,999
+Thanks to the contributors Thanks to Tobi / @togrupe for DMT and
+his feedback, and to Charles Bouticourt for the Atomic Bomb idea.
 
 14
-00:01:35,000 --> 00:01:42,000
-A cautious third-party tool
-Work on a copy and validate important preset structures in Dante Controller.
+00:01:35,000 --> 00:01:41,999
+A cautious third-party tool Work on a copy and validate
+important preset structures in Dante Controller.
 
 15
 00:01:42,000 --> 00:01:48,000

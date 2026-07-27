@@ -212,13 +212,17 @@ jobs:
           RELEASE_TAG: ${{ needs.prepare.outputs.tag }}
         run: |
           set -euo pipefail
-          version_token="${RELEASE_TAG#v}"
-          version_token="${version_token//./}"
+          release_version="${RELEASE_TAG#v}"
+          legacy_token="${release_version//./}"
+          calendar_token="${release_version//./-}"
           mkdir -p release-assets/media
           find docs/media -maxdepth 1 -type f \
-            \( -name "dce-v${version_token}-presentation-*.mp4" \
-            -o -name "dce-v${version_token}-presentation-*.srt" \
-            -o -name "dce-v${version_token}-presentation-*.mp4.sha256" \) \
+            \( -name "dce-v${legacy_token}-presentation-*.mp4" \
+            -o -name "dce-v${legacy_token}-presentation-*.srt" \
+            -o -name "dce-v${legacy_token}-presentation-*.mp4.sha256" \
+            -o -name "dce-${calendar_token}-presentation-*.mp4" \
+            -o -name "dce-${calendar_token}-presentation-*.srt" \
+            -o -name "dce-${calendar_token}-presentation-*.mp4.sha256" \) \
             -exec cp '{}' release-assets/media/ \;
 
       - name: Assemble bilingual release notes
