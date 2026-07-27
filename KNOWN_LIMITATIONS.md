@@ -1,4 +1,4 @@
-# Limites connues - V3.6 en développement
+# Limites connues - 2026.1 Beta
 
 ## Compatibilité Dante
 
@@ -19,8 +19,8 @@
 - Une sélection multiple doit contenir autant de TX que de RX, sauf lorsqu'un seul TX alimente plusieurs RX. Plusieurs TX vers un RX sont refusés.
 - Une plage est entièrement refusée si le nombre demandé dépasse les TX ou RX disponibles ; il n'existe pas d'application partielle silencieuse.
 - Dans la grille Windows, un glissement horizontal représente une série TX/RX à partir du RX choisi, car un RX Dante ne peut pas recevoir plusieurs TX. Une diagonale doit avancer du même nombre de cases TX et RX ; les gestes ambigus sont refusés sans changement partiel.
-- Un RX déjà patché demande un choix explicite : annuler, ignorer le conflit ou remplacer la subscription.
-- Les changements du patch visuel restent en attente jusqu'à `Appliquer au projet`. Fermer sans appliquer les abandonne.
+- Un RX déjà patché demande par défaut un choix explicite : annuler, ignorer le conflit ou remplacer la subscription. L'utilisateur peut désactiver cet avertissement pour la session.
+- Dans l'espace Patch unifié 2026.1, un clic applique immédiatement la subscription au modèle de travail. L'action reste réversible avec Annuler et ne touche le fichier sur disque qu'au moment de la sauvegarde.
 
 ## Fichiers et récupération
 
@@ -57,12 +57,12 @@
 
 - L'installateur Windows est autonome pour Windows x64 et inclut .NET 8. Les architectures Windows ARM64 et x86 ne sont pas distribuées.
 - L'installateur Windows n'est pas signé avec un certificat Authenticode public. Vérifier le SHA-256 publié avant distribution ; Windows peut afficher un avertissement de réputation.
-- La V3.6 de développement est produite pour Windows x64, macOS Apple Silicon et macOS Intel. Windows ARM64 et x86 ne sont pas distribués.
+- La 2026.1 Beta est produite pour Windows x64, macOS Apple Silicon et macOS Intel. Windows ARM64 et x86 ne sont pas distribués.
 - Les DMG macOS sont signés ad hoc, sans certificat Apple Developer ID ni notarisation. Gatekeeper peut demander un clic droit puis `Ouvrir` au premier lancement.
-- Le moteur XML est partagé, mais l'interface Mac n'offre pas encore le nouvel onglet Windows `Easy patch` à l'identique. Elle conserve l'atelier visuel Avalonia avec sélection multiple, glisser-déposer et matrice.
+- Le moteur XML et les services principaux sont partagés, mais l'interface Avalonia macOS n'est pas une reproduction pixel par pixel du nouvel espace de travail WPF Windows.
 - Les tests Avalonia sans écran ne remplacent pas une validation manuelle sur plusieurs modèles de Mac, ni un contrôle VoiceOver réel.
 - Le contraste élevé, les lecteurs d'écran et les échelles Windows 125 %, 150 % et 200 % nécessitent encore la validation manuelle décrite dans `ACCESSIBILITY.md`.
 
 ## Statut de la version
 
-La V3.4.2 reste la version officielle courante de `main` pour Windows et macOS. La V3.6 est une branche de développement et ses paquets ne remplacent pas la release stable. Dante Config Editor reste un outil tiers non officiel Audinate. Toujours travailler sur une copie, lire le rapport avant/après et valider le fichier généré dans l'outil Dante officiel avant une utilisation terrain.
+La V3.6 reste la base stable de `main`. La 2026.1 Beta est isolée dans la branche `2026.1`, avec une identité d'installation et un profil distincts ; aucune Release GitHub ni fusion dans `main` n'est effectuée automatiquement. Dante Config Editor reste un outil tiers non officiel Audinate. Toujours travailler sur une copie, lire le rapport avant/après et valider les structures de preset importantes dans Dante Controller avant une utilisation terrain.

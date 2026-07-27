@@ -13,13 +13,19 @@
   fixture XML anonymisée.
 - Les listes nouvelles utilisent des couleurs explicites pour éviter un fond
   blanc avec texte clair en thème sombre.
-- `338/338` tests Windows et `20/20` tests macOS sans écran passent.
+- `364/364` tests Core/Windows et `20/20` tests macOS sans écran passent.
+- Le cycle final 2026.1 a aussi contrôlé visuellement les vues Vue d'ensemble,
+  Machines, Patch, Synoptique et Centre de validation avec une fixture
+  synthétique. Le thème clair, le thème sombre et le passage français/anglais
+  ont été vérifiés dans l'exécutable Windows.
+- L'application installée a été lancée avec succès et les réglages sont
+  visibles par défaut au premier affichage.
 
 Ce contrôle ne remplace pas un essai matériel aux échelles Windows 125 %,
 150 % et 200 %, en contraste élevé ou avec un lecteur d'écran. Aucun Mac
 physique n'a été utilisé pour ce lot.
 
-## État spécifique V3.6
+## Contrôles historiques V3.6 conservés
 
 - Les 16 tests Avalonia/macOS sans écran passent, y compris les commandes de
   banque, duplication, ajout de modèle, nouveau projet et l'ordre initial de la

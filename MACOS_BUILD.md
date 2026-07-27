@@ -1,31 +1,28 @@
-# Version macOS - V3.3
+# Version macOS - 2026.1 Beta
 
-La version macOS utilise Avalonia pour l'interface et compile exactement les mêmes classes métier et services XML que la version Windows.
+La version macOS utilise Avalonia et compile le même moteur XML, les mêmes
+services de projet, la même validation et les mêmes migrations que la version
+Windows. L'interface reste adaptée à macOS et n'est pas une reproduction pixel
+par pixel du shell WPF Windows.
 
 ## Paquets utilisateurs
 
 Deux DMG autonomes sont produits :
 
-- `DanteConfigEditorV3_macOS_AppleSilicon.dmg` pour les Mac M1, M2, M3, M4 et suivants ;
-- `DanteConfigEditorV3_macOS_Intel.dmg` pour les Mac Intel 64 bits.
+- `DanteConfigEditor2026_1_Beta_macOS_AppleSilicon.dmg` pour les Mac Apple
+  Silicon ;
+- `DanteConfigEditor2026_1_Beta_macOS_Intel.dmg` pour les Mac Intel 64 bits.
 
-Le runtime .NET 8 et les notices FR/EN sont inclus. L'utilisateur ouvre le DMG puis glisse `Dante Config Editor` vers `Applications`.
+Le runtime .NET 8, les notices FR/EN et les banques publiques assainies sont
+inclus. L'utilisateur ouvre le DMG puis glisse
+`Dante Config Editor 2026.1 Beta` vers `Applications`.
 
-## Limite de signature
+L'identifiant du bundle bêta est
+`fr.mamat.danteconfigeditor.y2026-1-beta`. Il reste distinct de la V3.6.
 
-Les paquets publics sont signés localement de façon ad hoc, mais ils ne sont pas encore signés avec un certificat Apple Developer ID ni notariés par Apple. Au premier lancement, macOS peut donc afficher une alerte de sécurité.
+## Construction vérifiée
 
-Pour cette distribution, ouvrir `Applications`, faire un clic droit sur `Dante Config Editor`, choisir `Ouvrir`, puis confirmer. Une distribution sans cette étape exige un compte Apple Developer, un certificat `Developer ID Application`, le hardened runtime et une notarisation Apple.
-
-## Compilation locale
-
-Prérequis :
-
-- macOS 11 ou plus récent ;
-- SDK .NET 8 ;
-- outils Apple `codesign`, `iconutil`, `sips` et `hdiutil` fournis avec macOS.
-
-Depuis la racine du dépôt :
+Depuis la racine du dépôt, sur macOS :
 
 ```bash
 bash packaging/macos/build-macos.sh osx-arm64
@@ -34,18 +31,36 @@ bash packaging/macos/build-macos.sh osx-x64
 
 Les DMG et leurs sommes SHA-256 sont créés dans `dist/macos`.
 
-## Signature et notarisation officielles
+Le workflow macOS du commit `7a50b3c` a réussi :
 
-Le script actuel utilise `codesign --sign -`, c'est-à-dire une signature ad hoc. Pour une distribution Apple sans avertissement Gatekeeper, remplacer cette étape par une signature Developer ID avec hardened runtime, envoyer le DMG au service notarial Apple, attendre son acceptation, puis agrafer le ticket de notarisation au DMG.
+- 364 tests du moteur partagé ;
+- 20 tests Avalonia sans écran ;
+- publication autonome Apple Silicon et Intel ;
+- création et vérification des deux DMG.
 
-Le moteur XML reste protégé par les mêmes tests de non-régression que sous Windows. La validation finale d'un fichier exporté doit néanmoins toujours être faite dans l'outil Dante officiel approprié avant une utilisation terrain.
+Artefacts vérifiés après téléchargement :
 
-## Interface et patch visuel
+| Architecture | Taille | SHA-256 |
+|---|---:|---|
+| Apple Silicon | 52 850 639 octets | `b1774f3eb710853b289242b3a090544438ff1b5d2ba5cfdd51fb03f9223cd206` |
+| Intel | 54 282 491 octets | `0e4c9b52930ac8191b77270d5cab487cf70e970b326c0c5a927410806c9097a6` |
 
-La version Mac inclut l'atelier de patch visuel Avalonia : sélection de plusieurs TX, affectation séquentielle, glisser-déposer et matrice interactive. Les changements restent en attente jusqu'à `Appliquer au projet`. L'onglet Windows `Easy patch`, introduit en V3.08, n'est pas reproduit à l'identique sur Mac.
+## Signature et Gatekeeper
 
-La V3.3 propose sur Mac les mêmes imports et exports de labels que sous Windows : JSON/CSV génériques, XLSX/ODS DMT, CSV Allen & Heath dLive/Avantis et packages ZIP ou `InName.csv` Yamaha CL/QL. La sélection des machines, les plages, la prévisualisation et l'application groupée utilisent le moteur partagé. `Atomic Bomb` se trouve dans un onglet dédié après `Sécurité et journal` et permet d'exclure chaque catégorie de modification.
+Le script utilise `codesign --sign -`, donc une signature ad hoc. Les paquets
+ne sont ni signés avec un certificat Apple Developer ID ni notariés. Au premier
+lancement, macOS peut demander un clic droit sur l'application, puis
+`Ouvrir`.
 
-Pour garder la matrice utilisable sur de gros presets, elle affiche un couple de devices à la fois et limite la vue Mac aux 128 premiers TX et RX. Les listes de canaux conservent tous les éléments.
+Une distribution sans cet avertissement exige un compte Apple Developer, une
+signature `Developer ID Application`, le hardened runtime et une notarisation
+Apple.
 
-La suite courante exécute les tests du moteur partagé et les tests Avalonia sans écran. Ces derniers couvrent notamment les alertes latérales, la navigation au clavier, les dimensions compactes, le patch visuel, l'onglet Atomic Bomb et l'identité V3.3 ; ils ne remplacent pas un contrôle VoiceOver sur un Mac réel.
+## Limites de validation
+
+- Aucun Mac physique n'a été utilisé dans ce cycle.
+- Les tests Avalonia sans écran valident la structure, les commandes et les
+  traductions, mais ne remplacent pas un essai VoiceOver.
+- La compatibilité XML automatisée est partagée avec Windows. L'import final
+  d'une nouvelle structure de preset doit néanmoins être vérifié dans Dante
+  Controller.

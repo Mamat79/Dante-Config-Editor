@@ -1,5 +1,65 @@
 # Tests et historique DCE
 
+## Validation finale des paquets 2026.1 Beta du 2026-07-27
+
+Périmètre :
+
+- version : `2026.1.0-beta.1` ;
+- branche : `2026.1` ;
+- base V3.6 : `25a1e7c` ;
+- commit de code et de paquets validé : `7a50b3c` ;
+- installation et profil distincts de la V3.6 ;
+- aucune fusion dans `main` et aucune Release GitHub dans ce cycle.
+
+Résultats locaux :
+
+- restore Windows, tests Core et tests Mac réussi ;
+- 364 tests Core/Windows réussis, 0 échec ;
+- 20 tests Avalonia/macOS sans écran réussis, 0 échec ;
+- builds Windows et macOS Release : 0 warning, 0 erreur ;
+- publications autonomes `win-x64`, `osx-arm64` et `osx-x64` réussies ;
+- aucun package NuGet vulnérable signalé ;
+- installateur Windows construit avec Inno Setup 6.7.3 ;
+- installation silencieuse, lancement et deux passages de mise à niveau
+  réussis ;
+- une seule inscription bêta après mise à niveau et inscription V3.6 stable
+  conservée ;
+- vues principales contrôlées en français/anglais et thèmes sombre/clair avec
+  une fixture synthétique ;
+- patch immédiat, avertissement de remplacement et annulation vérifiés sans
+  ouvrir de XML de production.
+
+Installateur local réellement installé :
+
+- fichier : `DanteConfigEditor2026_1_Beta_Installer.exe` ;
+- taille : `69 759 045` octets ;
+- SHA-256 :
+  `2ad5fa4ab53b1621738c1c30841e5f1a0af4f89eb928e9f41482f305d8404b90` ;
+- signature Authenticode : absente.
+
+GitHub Actions au commit `7a50b3c` :
+
+- [Windows CI](https://github.com/Mamat79/DanteConfigEditorV3/actions/runs/30298793379) :
+  364 tests réussis et installateur produit ;
+- [macOS CI](https://github.com/Mamat79/DanteConfigEditorV3/actions/runs/30298792909) :
+  364 tests Core et 20 tests Avalonia réussis, deux DMG produits ;
+- installateur CI : `69 767 745` octets, SHA-256
+  `72b84b0e6effb03d534d2a68b94ad5119231c7a0237077081e0fe56ef6fa044b` ;
+- DMG Apple Silicon : `52 850 639` octets, SHA-256
+  `b1774f3eb710853b289242b3a090544438ff1b5d2ba5cfdd51fb03f9223cd206` ;
+- DMG Intel : `54 282 491` octets, SHA-256
+  `0e4c9b52930ac8191b77270d5cab487cf70e970b326c0c5a927410806c9097a6`.
+
+La différence d'empreinte entre l'installateur local et celui de CI provient
+de deux constructions distinctes ; chaque artefact correspond à son propre
+fichier `.sha256`. Le paquet local est celui qui a été installé et testé sur
+ce PC.
+
+La V3.6 a été importée avec succès dans Dante Controller par le mainteneur.
+Le commit 2026.1 ci-dessus a été validé par tests XML structurels et
+sémantiques, mais n'a pas fait l'objet d'un nouvel import manuel Dante
+Controller consigné pendant ce cycle.
+
 ## Validation performance et corpus 2026.1 du 2026-07-27
 
 Périmètre :
