@@ -1,0 +1,106 @@
+using System.Xml.Linq;
+
+namespace DanteConfigEditorV3.Tests;
+
+public sealed class ArchitectureBoundaryTests
+{
+    [Fact]
+    public void WindowsAndMacShareTheSameCoreAssembly()
+    {
+        XDocument windowsProject = XDocument.Load(RepositoryFile("DanteConfigEditorV3.csproj"));
+        XDocument macProject = XDocument.Load(
+            RepositoryFile("src", "DanteConfigEditor.Mac", "DanteConfigEditor.Mac.csproj"));
+
+        string[] windowsReferences = windowsProject
+            .Descendants("ProjectReference")
+            .Select(element => element.Attribute("Include")?.Value ?? string.Empty)
+            .ToArray();
+        string[] macReferences = macProject
+            .Descendants("ProjectReference")
+            .Select(element => element.Attribute("Include")?.Value ?? string.Empty)
+            .ToArray();
+
+        Assert.Contains(@"src\DanteConfigEditor.Core\DanteConfigEditor.Core.csproj", windowsReferences);
+        Assert.Contains(@"..\DanteConfigEditor.Core\DanteConfigEditor.Core.csproj", macReferences);
+
+        string[] removedSources = windowsProject
+            .Descendants("Compile")
+            .Select(element => element.Attribute("Remove")?.Value ?? string.Empty)
+            .ToArray();
+        Assert.Contains(@"Models\**\*.cs", removedSources);
+        Assert.Contains(@"Services\**\*.cs", removedSources);
+    }
+
+    [Fact]
+    public void DesktopViewsDoNotManipulateLinqToXmlDirectly()
+    {
+        string repository = RepositoryDirectory();
+        IEnumerable<string> desktopSources = Directory
+            .EnumerateFiles(repository, "*.cs", SearchOption.TopDirectoryOnly)
+            .Where(path => path.EndsWith(".xaml.cs", StringComparison.OrdinalIgnoreCase))
+            .Concat(Directory.EnumerateFiles(
+                Path.Combine(repository, "src", "DanteConfigEditor.Mac"),
+                "*.axaml.cs",
+                SearchOption.TopDirectoryOnly));
+
+        string[] forbiddenTokens =
+        [
+            "using System.Xml.Linq",
+            "XDocument",
+            "XElement",
+            "XAttribute",
+            "XNamespace"
+        ];
+
+        foreach (string sourcePath in desktopSources)
+        {
+            string source = File.ReadAllText(sourcePath);
+            foreach (string token in forbiddenTokens)
+            {
+                Assert.False(
+                    source.Contains(token, StringComparison.Ordinal),
+                    $"XML access '{token}' found in {Path.GetRelativePath(repository, sourcePath)}");
+            }
+        }
+    }
+
+    [Fact]
+    public void SharedCoreDoesNotReferenceDesktopUiFrameworks()
+    {
+        string project = File.ReadAllText(
+            RepositoryFile("src", "DanteConfigEditor.Core", "DanteConfigEditor.Core.csproj"));
+        Assert.DoesNotContain("<UseWPF>", project, StringComparison.Ordinal);
+        Assert.DoesNotContain("Avalonia", project, StringComparison.Ordinal);
+
+        string repository = RepositoryDirectory();
+        IEnumerable<string> coreSources = Directory
+            .EnumerateFiles(Path.Combine(repository, "Models"), "*.cs", SearchOption.AllDirectories)
+            .Concat(Directory.EnumerateFiles(
+                Path.Combine(repository, "Services"),
+                "*.cs",
+                SearchOption.AllDirectories));
+
+        foreach (string sourcePath in coreSources)
+        {
+            string source = File.ReadAllText(sourcePath);
+            Assert.DoesNotContain("using System.Windows", source, StringComparison.Ordinal);
+            Assert.DoesNotContain("using Avalonia", source, StringComparison.Ordinal);
+        }
+    }
+
+    private static string RepositoryFile(params string[] relativeParts) =>
+        Path.Combine([RepositoryDirectory(), .. relativeParts]);
+
+    private static string RepositoryDirectory()
+    {
+        DirectoryInfo? directory = new(AppContext.BaseDirectory);
+        while (directory is not null
+               && !File.Exists(Path.Combine(directory.FullName, "DanteConfigEditorV3.csproj")))
+        {
+            directory = directory.Parent;
+        }
+
+        Assert.NotNull(directory);
+        return directory!.FullName;
+    }
+}

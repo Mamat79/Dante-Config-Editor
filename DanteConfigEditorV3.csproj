@@ -34,7 +34,14 @@
     <Compile Remove="benchmarks\**\*.cs" />
     <Compile Remove="src\**\*.cs" />
     <Compile Remove="tools\**\*.cs" />
+    <Compile Remove="Models\**\*.cs" />
+    <Compile Remove="Services\**\*.cs" />
     <None Remove="tmp\**\*" />
     <None Remove="tools\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Windows et macOS consomment désormais le même assemblage métier. -->
+    <ProjectReference Include="src\DanteConfigEditor.Core\DanteConfigEditor.Core.csproj" />
   </ItemGroup>
 </Project>

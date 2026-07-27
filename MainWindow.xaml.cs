@@ -3708,8 +3708,8 @@ public partial class MainWindow : Window
             _project.PatchMatrix.ExternalMissingDeviceCount,
             _project.PatchMatrix.MissingTxChannelCount,
             _project.Devices.Count(device => device.PreferredMaster),
-            DistinctDeviceValues("samplerate"),
-            DistinctDeviceValues("encoding"),
+            DistinctDeviceValues(device => device.Samplerate),
+            DistinctDeviceValues(device => device.Encoding),
             DistinctLatencies(),
             _project.Devices.Count(device => device.IsRedundant),
             _project.Devices.Count(device => !device.IsRedundant),
@@ -4259,10 +4259,10 @@ public partial class MainWindow : Window
         PatchSourceFullColumn.Visibility = expertVisibility;
     }
 
-    private string DistinctDeviceValues(string elementName)
+    private string DistinctDeviceValues(Func<DanteDevice, string> valueSelector)
     {
         string[] values = _project?.Devices
-            .Select(device => device.Element.Element(elementName)?.Value.Trim() ?? string.Empty)
+            .Select(valueSelector)
             .Where(value => !string.IsNullOrWhiteSpace(value))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToArray() ?? [];
