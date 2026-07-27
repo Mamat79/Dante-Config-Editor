@@ -112,6 +112,19 @@ installées sans remplacer un dossier existant.
 - interface française/anglaise et thèmes clair/sombre ;
 - outil de formation Atomic Bomb, entièrement hors ligne.
 
+## Import et export de labels
+
+DCE échange les labels en JSON/CSV générique, dans les classeurs DMT
+XLSX/ODS pour dLive et Avantis, dans les CSV natifs Allen & Heath dLive et
+Avantis, ainsi que dans les packages Yamaha CL/QL. Les modèles natifs sont
+fournis avec l’application et chaque export crée un nouveau fichier sans
+modifier le modèle source.
+
+L’intégration DMT a d’abord été pensée avec
+[dLive MIDI Tools](https://github.com/togrupe/dlive-midi-tools). Elle reste un
+échange de fichiers hors ligne : DCE ne communique directement ni avec DMT ni
+avec une console.
+
 ## Sécurité XML
 
 DCE bloque par défaut une sauvegarde lorsque le garde-fou détecte une mutation
@@ -186,6 +199,12 @@ dotnet publish .\DanteConfigEditorV3.csproj -c Release -r win-x64 --self-contain
 - DMG non notariés ;
 - validation manuelle Dante Controller requise pour chaque nouvelle structure
   de preset importante.
+
+## Soutenir DCE
+
+Dante Config Editor reste entièrement gratuit et toutes ses fonctions sont
+disponibles sans contribution. Les moyens facultatifs de soutenir le projet
+sont décrits dans [docs/SUPPORT_DCE.md](docs/SUPPORT_DCE.md).
 
 ## Remerciements
 
