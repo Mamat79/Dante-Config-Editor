@@ -2302,7 +2302,14 @@ public partial class MainWindow : Window
 
         if (visualMode)
         {
-            RefreshEasyPatchWorkspace();
+            bool canReuseWorkspace =
+                ReferenceEquals(_easyPatchProject, _project)
+                && _easyPatchWorkspace is not null;
+            if (!canReuseWorkspace)
+            {
+                RefreshEasyPatchWorkspace();
+            }
+
             if (mode == PatchWorkspaceDisplayMode.Matrix)
             {
                 _easyPatchWorkspace?.ShowMatrixMode();
@@ -2509,7 +2516,7 @@ public partial class MainWindow : Window
             WorkspaceSection.Overview => OverviewNavigationButton,
             WorkspaceSection.Machines => MachinesNavigationButton,
             WorkspaceSection.Patch => PatchNavigationButton,
-            WorkspaceSection.Synoptic => SynopticNavigationButton,
+            WorkspaceSection.Synoptic => ImportExportNavigationButton,
             WorkspaceSection.DeviceLibrary => DeviceLibraryNavigationButton,
             WorkspaceSection.ImportExport => ImportExportNavigationButton,
             WorkspaceSection.Validation => ValidationNavigationButton,
@@ -2561,7 +2568,9 @@ public partial class MainWindow : Window
 
         SynchronizeApplicationSession();
         bool sameProject = ReferenceEquals(_easyPatchProject, _project);
-        bool startInAssignmentMode = _patchWorkspaceDisplayMode == PatchWorkspaceDisplayMode.Easy;
+        bool startInAssignmentMode = sameProject && _easyPatchWorkspace is not null
+            ? _easyPatchWorkspace.IsAssignmentModeSelected
+            : _patchWorkspaceDisplayMode == PatchWorkspaceDisplayMode.Easy;
         bool warnOnExistingPatch = !sameProject
             || _easyPatchWorkspace?.WarnOnExistingPatch != false;
         PatchMatrixOneToOneState? matrixOneToOneState = sameProject
@@ -2602,13 +2611,13 @@ public partial class MainWindow : Window
             _easyPatchProject = _project;
             _easyPatchWorkspace = workspace;
             EasyPatchHost.Content = workspace;
-            if (_patchWorkspaceDisplayMode == PatchWorkspaceDisplayMode.Matrix)
-            {
-                workspace.ShowMatrixMode();
-            }
-            else if (_patchWorkspaceDisplayMode == PatchWorkspaceDisplayMode.Easy)
+            if (startInAssignmentMode)
             {
                 workspace.ShowAssignmentMode();
+            }
+            else
+            {
+                workspace.ShowMatrixMode();
             }
         }
         catch (Exception exception)
@@ -3389,19 +3398,22 @@ public partial class MainWindow : Window
     private void ActionHistoryButton_Click(object sender, RoutedEventArgs e)
     {
         StringBuilder builder = new();
-        builder.AppendLine("HISTORIQUE DES ACTIONS");
-        builder.AppendLine("======================");
+        bool english = _language == UiLanguage.English;
+        builder.AppendLine(english ? "ACTION HISTORY" : "HISTORIQUE DES ACTIONS");
+        builder.AppendLine(english ? "==============" : "======================");
         builder.AppendLine();
 
         if (_logs.Count == 0)
         {
-            builder.AppendLine("Aucune action enregistrée dans cette session.");
+            builder.AppendLine(english
+                ? "No action has been recorded in this session."
+                : "Aucune action enregistrée dans cette session.");
         }
         else
         {
             foreach (string log in _logs)
             {
-                builder.AppendLine("- " + log);
+                builder.AppendLine("- " + LocalizeLiteral(log));
             }
         }
 

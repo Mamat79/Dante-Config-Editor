@@ -130,6 +130,8 @@ public partial class PatchWorkspaceView : UserControl
 
     public bool IsAssignmentModeSelected => AssignmentTab.IsSelected;
 
+    public bool IsMatrixModeSelected => MatrixTab.IsSelected;
+
     public void ShowMatrixMode()
     {
         MatrixTab.IsSelected = true;
@@ -269,6 +271,8 @@ public partial class PatchWorkspaceView : UserControl
         ResetPendingButton.Visibility = Visibility.Collapsed;
         CancelButton.Visibility = Visibility.Collapsed;
         ApplyButton.Visibility = Visibility.Collapsed;
+        PatchModeTabControl.Template = (ControlTemplate)FindResource(
+            "EmbeddedPatchModeTabControlTemplate");
 
         Grid.SetColumn(ApplySelectionDirectButton, 0);
         Grid.SetColumnSpan(ApplySelectionDirectButton, 2);

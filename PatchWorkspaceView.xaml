@@ -116,6 +116,16 @@
             <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource BorderLineBrush}" />
         </Style>
+        <ControlTemplate x:Key="EmbeddedPatchModeTabControlTemplate"
+                         TargetType="{x:Type TabControl}">
+            <Border Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="0">
+                <ContentPresenter Content="{TemplateBinding SelectedContent}"
+                                  ContentTemplate="{TemplateBinding SelectedContentTemplate}"
+                                  ContentStringFormat="{TemplateBinding SelectedContentStringFormat}" />
+            </Border>
+        </ControlTemplate>
         <Style TargetType="{x:Type TabItem}">
             <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}" />
             <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />

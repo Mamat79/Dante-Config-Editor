@@ -67,6 +67,14 @@ public sealed class PatchWorkspaceUiContractTests
             "workspace.RestoreMatrixOneToOneState(matrixOneToOneState)",
             mainWindowCode,
             StringComparison.Ordinal);
+        Assert.Contains(
+            "_easyPatchWorkspace.IsAssignmentModeSelected",
+            mainWindowCode,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "ReferenceEquals(_easyPatchProject, _project)",
+            mainWindowCode,
+            StringComparison.Ordinal);
     }
 
     [Fact]
@@ -88,18 +96,30 @@ public sealed class PatchWorkspaceUiContractTests
     }
 
     [Fact]
-    public void MainWindowUsesOnePatchWorkspaceWithFiveSynchronizedModes()
+    public void MainWindowUsesOnePatchWorkspaceWithThreeVisibleModes()
     {
         string xaml = File.ReadAllText(RepositoryFile("MainWindow.xaml"));
         string codeBehind = File.ReadAllText(RepositoryFile("MainWindow.xaml.cs"));
+        XDocument document = XDocument.Parse(xaml);
+        XNamespace xamlNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
 
         Assert.Contains("x:Name=\"ClassicPatchTab\" Header=\"Patch\"", xaml, StringComparison.Ordinal);
         Assert.DoesNotContain("x:Name=\"EasyPatchTab\"", xaml, StringComparison.Ordinal);
         Assert.Contains("x:Name=\"PatchMatrixModeButton\"", xaml, StringComparison.Ordinal);
         Assert.Contains("x:Name=\"PatchEasyModeButton\"", xaml, StringComparison.Ordinal);
         Assert.Contains("x:Name=\"PatchListModeButton\"", xaml, StringComparison.Ordinal);
-        Assert.Contains("x:Name=\"PatchPerDeviceModeButton\"", xaml, StringComparison.Ordinal);
-        Assert.Contains("x:Name=\"PatchPendingModeButton\"", xaml, StringComparison.Ordinal);
+        Assert.Equal(
+            "Collapsed",
+            NamedElement(document, xamlNamespace, "PatchPerDeviceModeButton")
+                .Attribute("Visibility")?.Value);
+        Assert.Equal(
+            "Collapsed",
+            NamedElement(document, xamlNamespace, "PatchPendingModeButton")
+                .Attribute("Visibility")?.Value);
+        Assert.Equal(
+            "Collapsed",
+            NamedElement(document, xamlNamespace, "OpenVisualPatchButton")
+                .Attribute("Visibility")?.Value);
         Assert.Contains("x:Name=\"PendingPatchGrid\"", xaml, StringComparison.Ordinal);
         Assert.Contains("x:Name=\"UnifiedPatchPendingCountTextBlock\"", xaml, StringComparison.Ordinal);
         Assert.Contains("x:Name=\"EasyPatchHost\"", xaml, StringComparison.Ordinal);
@@ -121,6 +141,12 @@ public sealed class PatchWorkspaceUiContractTests
         Assert.Contains("MatrixTab.IsSelected = true", codeBehind, StringComparison.Ordinal);
         Assert.Contains("startInAssignmentMode", codeBehind, StringComparison.Ordinal);
         Assert.Contains("IsAssignmentModeSelected", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("IsMatrixModeSelected", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("EmbeddedPatchModeTabControlTemplate", xaml, StringComparison.Ordinal);
+        Assert.Contains(
+            "PatchModeTabControl.Template = (ControlTemplate)FindResource",
+            codeBehind,
+            StringComparison.Ordinal);
         Assert.Contains("InlineChannelNameTextBox_LostKeyboardFocus", xaml, StringComparison.Ordinal);
         Assert.Equal(2, CountOccurrences(xaml, "PreviewMouseLeftButtonDown=\"InlineChannelNameTextBox_PreviewMouseLeftButtonDown\""));
         Assert.Contains("ChannelSeriesThumb_DragStarted", xaml, StringComparison.Ordinal);
@@ -252,6 +278,28 @@ public sealed class PatchWorkspaceUiContractTests
         Assert.DoesNotContain(
             host.Ancestors(),
             ancestor => string.Equals(ancestor.Name.LocalName, "ScrollViewer", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void SynopticHasOneVisibleEntryInsideImportExportAndHistoryIsBilingual()
+    {
+        string xaml = File.ReadAllText(RepositoryFile("MainWindow.xaml"));
+        string codeBehind = File.ReadAllText(RepositoryFile("MainWindow.xaml.cs"));
+        XDocument document = XDocument.Parse(xaml);
+        XNamespace xamlNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
+
+        Assert.Equal(
+            "Collapsed",
+            NamedElement(document, xamlNamespace, "SynopticNavigationButton")
+                .Attribute("Visibility")?.Value);
+        Assert.Contains(
+            "WorkspaceSection.Synoptic => ImportExportNavigationButton",
+            codeBehind,
+            StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"ExportsTab\" Header=\"Import / Export\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"SynopticTab\" Header=\"Synoptique\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("\"ACTION HISTORY\"", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("\"No action has been recorded in this session.\"", codeBehind, StringComparison.Ordinal);
     }
 
     [Fact]

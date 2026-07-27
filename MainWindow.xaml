@@ -727,6 +727,7 @@
                                          Tag="Synoptic"
                                          GroupName="ShellNavigation"
                                          Style="{StaticResource ShellNavigationRadioStyle}"
+                                         Visibility="Collapsed"
                                          Checked="NavigationButton_Checked" />
                             <RadioButton x:Name="DeviceLibraryNavigationButton"
                                          Content="Banque de machines"
@@ -1312,9 +1313,11 @@
                                         BorderThickness="1"
                                         CornerRadius="4"
                                         Padding="10,6"
+                                        Visibility="Collapsed"
                                         Margin="10,0,0,0">
                                     <TextBlock x:Name="UnifiedPatchPendingCountTextBlock"
                                                Text="0 modification en attente"
+                                               Visibility="Collapsed"
                                                TextWrapping="NoWrap"
                                                VerticalAlignment="Center"
                                                AutomationProperties.Name="Compteur des modifications Patch en attente" />
@@ -1352,6 +1355,7 @@
                                                      Tag="Device"
                                                      GroupName="UnifiedPatchModes"
                                                      Style="{StaticResource PatchModeButtonStyle}"
+                                                     Visibility="Collapsed"
                                                      Checked="PatchWorkspaceModeButton_Checked"
                                                      ToolTip="Filtre la liste Patch sur la machine actuellement sélectionnée."
                                                      AutomationProperties.Name="Mode Patch par machine" />
@@ -1360,6 +1364,7 @@
                                                      Tag="Pending"
                                                      GroupName="UnifiedPatchModes"
                                                      Style="{StaticResource PatchModeButtonStyle}"
+                                                     Visibility="Collapsed"
                                                      Checked="PatchWorkspaceModeButton_Checked"
                                                      ToolTip="Contrôle les lots préparés avant leur application atomique."
                                                      AutomationProperties.Name="Modifications Patch en attente" />
@@ -1412,6 +1417,7 @@
                                 <Button x:Name="OpenVisualPatchButton"
                                         Grid.Row="4"
                                         Content="Easy patch"
+                                        Visibility="Collapsed"
                                         Margin="0,12,0,0"
                                         Click="OpenVisualPatchButton_Click"
                                         ToolTip="Ouvre l'onglet Easy patch." />
