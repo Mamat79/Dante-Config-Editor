@@ -135,11 +135,13 @@ public partial class PatchWorkspaceView : UserControl
     public void ShowMatrixMode()
     {
         MatrixTab.IsSelected = true;
+        UpdateVisibleModePresentation();
     }
 
     public void ShowAssignmentMode()
     {
         AssignmentTab.IsSelected = true;
+        UpdateVisibleModePresentation();
     }
 
     public bool WarnOnExistingPatch =>
@@ -2310,14 +2312,7 @@ public partial class PatchWorkspaceView : UserControl
 
     private void ApplyLanguage()
     {
-        TitleTextBlock.Text = "Easy patch";
-        IntroTextBlock.Text = _embedded
-            ? L(
-                "Chaque clic, glissement, sélection ou plage modifie immédiatement le patch.",
-                "Every click, drag, selection or range immediately updates the patch.")
-            : L(
-                "Préparez les affectations puis validez-les dans la fiche machine.",
-                "Stage assignments, then return them to the device details.");
+        UpdateVisibleModePresentation();
         TxDeviceLabel.Content = L("Machine émettrice TX", "Transmitting device (Tx)");
         RxDeviceLabel.Content = L("Machine réceptrice RX", "Receiving device (Rx)");
         TxDeviceComboBox.ToolTip = L(
@@ -2373,7 +2368,7 @@ public partial class PatchWorkspaceView : UserControl
         PreviewSelectionButton.ToolTip = L(
             "Ajoute cette sélection au lot sans modifier immédiatement le XML.",
             "Adds this selection to the batch without immediately changing the XML.");
-        ApplySelectionDirectButton.Content = L("Appliquer", "Apply now");
+        ApplySelectionDirectButton.Content = L("Patcher la sélection", "Patch selection");
         ApplySelectionDirectButton.ToolTip = _embedded
             ? L(
                 "Applique immédiatement les TX sélectionnés aux RX sélectionnés.",
@@ -2401,7 +2396,7 @@ public partial class PatchWorkspaceView : UserControl
         PreviewRangeButton.ToolTip = L(
             "Ajoute la plage 1:1 au lot sans modifier immédiatement le XML.",
             "Adds the one-to-one range to the batch without immediately changing the XML.");
-        ApplyRangeDirectButton.Content = L("Appliquer", "Apply now");
+        ApplyRangeDirectButton.Content = L("Patch 1:1", "Patch 1:1");
         ApplyRangeDirectButton.ToolTip = _embedded
             ? L(
                 "Applique immédiatement cette plage de patchs 1:1.",
@@ -2482,6 +2477,36 @@ public partial class PatchWorkspaceView : UserControl
             _embedded
                 ? L("Appliquer un patch un pour un depuis le dernier point cliqué", "Apply a one-to-one patch from the last clicked point")
                 : L("Préparer un patch un pour un depuis le dernier point cliqué", "Stage a one-to-one patch from the last clicked point"));
+    }
+
+    private void UpdateVisibleModePresentation()
+    {
+        bool matrix = MatrixTab.IsSelected;
+        TitleTextBlock.Text = _embedded && matrix
+            ? L("Matrice de patch", "Patch matrix")
+            : "Easy patch";
+        IntroTextBlock.Text = _embedded
+            ? matrix
+                ? L(
+                    "Un clic ou un glissement modifie immédiatement le patch.",
+                    "A click or drag immediately updates the patch.")
+                : L(
+                    "Sélectionnez des RX et des TX, puis patchez la sélection ou une plage 1:1.",
+                    "Select Rx and Tx channels, then patch the selection or a one-to-one range.")
+            : L(
+                "Préparez les affectations puis validez-les dans la fiche machine.",
+                "Stage assignments, then return them to the device details.");
+
+        if (_embedded)
+        {
+            InfoTextBlock.Text = matrix
+                ? L(
+                    "Les points de la matrice sont appliqués immédiatement.",
+                    "Matrix points are applied immediately.")
+                : L(
+                    "Les commandes de sélection et de plage sont appliquées immédiatement.",
+                    "Selection and range commands are applied immediately.");
+        }
     }
 
     private string TranslateSwapError(string? french)

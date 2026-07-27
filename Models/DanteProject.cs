@@ -842,16 +842,18 @@ public sealed partial class DanteProject
         if (staticIpDevices.Length > 0)
         {
             string devices = string.Join(", ", staticIpDevices.Take(12).Select(FormatStaticIpDevice));
+            string englishDevices = devices;
             if (staticIpDevices.Length > 12)
             {
                 devices += $", +{staticIpDevices.Length - 12} autre(s)";
+                englishDevices += $", +{staticIpDevices.Length - 12} more";
             }
 
             warnings.Add(new DanteImportantWarning(
                 "Warning.StaticIp",
                 $"IP fixe détectée sur {staticIpDevices.Length} machine(s) : {devices}.",
                 staticIpDevices.Select(device => device.Name).ToArray(),
-                $"Static IP detected on {staticIpDevices.Length} device(s): {devices}."));
+                $"Static IP detected on {staticIpDevices.Length} device(s): {englishDevices}."));
         }
 
         AddMixedValueWarningDetails(

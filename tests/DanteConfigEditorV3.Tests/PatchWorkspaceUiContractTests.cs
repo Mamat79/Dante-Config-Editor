@@ -186,6 +186,10 @@ public sealed class PatchWorkspaceUiContractTests
         Assert.Contains("e.Canceled", codeBehind, StringComparison.Ordinal);
         Assert.Contains("x:Name=\"WarnOnExistingPatchCheckBox\"", xaml, StringComparison.Ordinal);
         Assert.Contains("IsChecked=\"True\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("Patcher la sélection", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("Patch selection", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("UpdateVisibleModePresentation", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("Matrice de patch", codeBehind, StringComparison.Ordinal);
         Assert.Contains("ApplyMatrixCellDirectly", codeBehind, StringComparison.Ordinal);
         Assert.Contains("ApplyPlanImmediately", codeBehind, StringComparison.Ordinal);
         Assert.Contains("BuildCommittedPreview", codeBehind, StringComparison.Ordinal);
@@ -300,6 +304,45 @@ public sealed class PatchWorkspaceUiContractTests
         Assert.Contains("x:Name=\"SynopticTab\" Header=\"Synoptique\"", xaml, StringComparison.Ordinal);
         Assert.Contains("\"ACTION HISTORY\"", codeBehind, StringComparison.Ordinal);
         Assert.Contains("\"No action has been recorded in this session.\"", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("BuildLocalizedSaveSummary", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("\"SAVE SUMMARY\"", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("\"IMPORTANT ITEMS TO CHECK\"", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("\"XML SAFETY GUARD\"", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("LocalizeLiteral(change.Action)", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("LocalizeLiteral(change.Details)", codeBehind, StringComparison.Ordinal);
+        string localization = File.ReadAllText(RepositoryFile("Services", "LocalizationService.cs"));
+        Assert.Contains(
+            "Add(map, \"Récupération automatique\", \"Automatic recovery\")",
+            localization,
+            StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void InspectorCanAlwaysBeReopenedAfterItIsHidden()
+    {
+        string xaml = File.ReadAllText(RepositoryFile("MainWindow.xaml"));
+        string codeBehind = File.ReadAllText(RepositoryFile("MainWindow.xaml.cs"));
+        XDocument document = XDocument.Parse(xaml);
+        XNamespace xamlNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
+
+        XElement reveal = NamedElement(document, xamlNamespace, "InspectorRevealButton");
+        XElement close = NamedElement(document, xamlNamespace, "InspectorCloseButton");
+
+        Assert.Equal("Collapsed", reveal.Attribute("Visibility")?.Value);
+        Assert.Equal("Afficher inspecteur", reveal.Attribute("ToolTip")?.Value);
+        Assert.Equal("Masquer", close.Attribute("Content")?.Value);
+        Assert.Contains(
+            "InspectorRevealButton.Visibility = _inspectorExpanded ? Visibility.Collapsed : Visibility.Visible",
+            codeBehind,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "InspectorSplitterColumn.Width = _inspectorExpanded ? new GridLength(5) : new GridLength(34)",
+            codeBehind,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "LocalizeLiteral(\"Afficher inspecteur\")",
+            codeBehind,
+            StringComparison.Ordinal);
     }
 
     [Fact]

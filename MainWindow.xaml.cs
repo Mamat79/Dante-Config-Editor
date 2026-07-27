@@ -668,7 +668,7 @@ public partial class MainWindow : Window
             }
         }
 
-        string summary = _project.BuildSaveSummary();
+        string summary = BuildLocalizedSaveSummary();
         MessageBoxResult confirm = MessageBox.Show(
             this,
             summary + Environment.NewLine + Environment.NewLine + T("Dialog.OriginalBackupMessage"),
@@ -1686,10 +1686,17 @@ public partial class MainWindow : Window
         InspectorColumn.Width = _inspectorExpanded
             ? new GridLength((double)FindResource("ShellInspectorExpandedWidth"))
             : new GridLength(0);
-        InspectorSplitterColumn.Width = _inspectorExpanded ? new GridLength(5) : new GridLength(0);
+        InspectorSplitterColumn.Width = _inspectorExpanded ? new GridLength(5) : new GridLength(34);
         InspectorBorder.Visibility = _inspectorExpanded ? Visibility.Visible : Visibility.Collapsed;
         InspectorSplitter.Visibility = _inspectorExpanded ? Visibility.Visible : Visibility.Collapsed;
+        InspectorRevealButton.Visibility = _inspectorExpanded ? Visibility.Collapsed : Visibility.Visible;
         InspectorToggleButton.Content = LocalizeLiteral(_inspectorExpanded ? "Masquer inspecteur" : "Afficher inspecteur");
+        InspectorToggleButton.ToolTip = InspectorToggleButton.Content;
+        InspectorRevealButton.ToolTip = LocalizeLiteral("Afficher inspecteur");
+        AutomationProperties.SetName(
+            InspectorRevealButton,
+            LocalizeLiteral("Afficher inspecteur"));
+        InspectorCloseButton.Content = LocalizeLiteral("Masquer");
     }
 
     private void UpdateResponsiveConfigurationLayout(double width, double height)
@@ -3392,7 +3399,93 @@ public partial class MainWindow : Window
 
     private void RefreshSummaryButton_Click(object sender, RoutedEventArgs e)
     {
-        SaveSummaryTextBox.Text = _project?.BuildSaveSummary() ?? T("Status.NoFileLoaded");
+        SaveSummaryTextBox.Text = BuildLocalizedSaveSummary();
+    }
+
+    private string BuildLocalizedSaveSummary()
+    {
+        if (_project is null)
+        {
+            return T("Status.NoFileLoaded");
+        }
+
+        if (_language != UiLanguage.English)
+        {
+            return _project.BuildSaveSummary();
+        }
+
+        DanteValidationResult validation = _project.Validate();
+        DanteValidationResult guard = _project.ValidateXmlChangeGuard();
+        IReadOnlyList<DanteImportantWarning> importantWarnings =
+            _project.BuildImportantWarningDetails();
+        DeviceChangeRow[] changes = _project.BuildDeviceChangeRows().ToArray();
+        string[] changedDevices = changes
+            .Select(change => change.DeviceName)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(name => name, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        StringBuilder builder = new();
+        builder.AppendLine("SAVE SUMMARY");
+        builder.AppendLine("============");
+        builder.AppendLine($"Original file: {_project.OriginalFilePath}");
+        builder.AppendLine($"Last saved file: {_project.LastSavedPath ?? "none"}");
+        builder.AppendLine();
+        builder.AppendLine("COUNTS");
+        builder.AppendLine("------");
+        builder.AppendLine($"Devices: {_project.Devices.Count}");
+        builder.AppendLine($"Tx channels: {_project.Devices.Sum(device => device.TxCount)}");
+        builder.AppendLine($"Rx channels: {_project.Devices.Sum(device => device.RxCount)}");
+        builder.AppendLine($"Active subscriptions: {_project.PatchMatrix.ActivePatchCount}");
+        builder.AppendLine();
+
+        if (importantWarnings.Count > 0)
+        {
+            builder.AppendLine("IMPORTANT ITEMS TO CHECK");
+            builder.AppendLine("------------------------");
+            foreach (DanteImportantWarning warning in importantWarnings)
+            {
+                builder.AppendLine("- " + warning.LocalizedMessage(english: true));
+            }
+
+            builder.AppendLine();
+        }
+
+        builder.AppendLine("VALIDATION");
+        builder.AppendLine("----------");
+        builder.AppendLine($"Blocking errors: {validation.Errors.Count}");
+        builder.AppendLine($"Warnings: {validation.Warnings.Count}");
+        builder.AppendLine($"Information items: {validation.Infos.Count}");
+        builder.AppendLine(validation.HasErrors
+            ? "Open the Validation center for the affected XML paths and suggested corrections."
+            : "No blocking validation error was detected.");
+        builder.AppendLine();
+        builder.AppendLine("XML SAFETY GUARD");
+        builder.AppendLine("----------------");
+        builder.AppendLine(guard.HasErrors
+            ? $"{guard.Errors.Count} forbidden XML change(s) detected. Saving is blocked."
+            : "No forbidden XML change detected.");
+        builder.AppendLine();
+        builder.AppendLine("CHANGES");
+        builder.AppendLine("-------");
+        if (changes.Length == 0)
+        {
+            builder.AppendLine("- No device or channel change since loading.");
+        }
+        else
+        {
+            builder.AppendLine(
+                $"- {changes.Length} field change(s) across {changedDevices.Length} device(s).");
+            builder.AppendLine(
+                "- Devices: "
+                + string.Join(", ", changedDevices.Take(12))
+                + (changedDevices.Length > 12
+                    ? $", +{changedDevices.Length - 12} more"
+                    : string.Empty));
+        }
+
+        return builder.ToString();
     }
 
     private void ActionHistoryButton_Click(object sender, RoutedEventArgs e)
@@ -4111,7 +4204,7 @@ public partial class MainWindow : Window
                 ? deviceNames.First(name => string.Equals(name, selectedPreferredMaster, StringComparison.OrdinalIgnoreCase))
                 : deviceNames.FirstOrDefault();
 
-            SaveSummaryTextBox.Text = _project.BuildSaveSummary();
+            SaveSummaryTextBox.Text = BuildLocalizedSaveSummary();
             RefreshGlobalSearchResults();
             RefreshHealthPage();
             RefreshSynopticWorkspace();
@@ -4667,7 +4760,10 @@ public partial class MainWindow : Window
         OverviewChangesListBox.ItemsSource = _project.Changes
             .TakeLast(12)
             .Reverse()
-            .Select(change => change.Display)
+            .Select(change =>
+                $"{change.Timestamp:HH:mm:ss} - "
+                + $"{LocalizeLiteral(change.Action)} - "
+                + LocalizeLiteral(change.Details))
             .ToArray();
         RecoveryAvailabilityTextBlock.Text = _language == UiLanguage.English
             ? "Automatic recovery is active for this project."

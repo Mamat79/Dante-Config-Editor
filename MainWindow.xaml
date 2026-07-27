@@ -2638,6 +2638,21 @@
                           ResizeBehavior="PreviousAndNext"
                           ShowsPreview="True" />
 
+            <Button x:Name="InspectorRevealButton"
+                    Grid.Column="3"
+                    Content="&lt;"
+                    Visibility="Collapsed"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    MinWidth="30"
+                    MinHeight="64"
+                    Padding="4,12"
+                    Style="{StaticResource SecondaryButtonStyle}"
+                    Click="InspectorToggleButton_Click"
+                    ToolTip="Afficher inspecteur"
+                    AutomationProperties.Name="Afficher inspecteur"
+                    AutomationProperties.HelpText="Rouvre l'inspecteur contextuel masqué." />
+
             <Border Grid.Column="4"
                     x:Name="InspectorBorder"
                     Background="{DynamicResource SurfaceBrush}"
@@ -2660,7 +2675,8 @@
                                        Foreground="{DynamicResource MutedTextBrush}"
                                        FontSize="12" />
                         </StackPanel>
-                        <Button Grid.Column="1"
+                        <Button x:Name="InspectorCloseButton"
+                                Grid.Column="1"
                                 Content="Masquer"
                                 Style="{StaticResource SecondaryButtonStyle}"
                                 Padding="8,4"
