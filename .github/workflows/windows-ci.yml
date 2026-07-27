@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - v3.6
+      - "2026.1"
       - "agent/**"
   pull_request:
     branches:
@@ -78,7 +78,7 @@ jobs:
       - name: Upload published application
         uses: actions/upload-artifact@v7
         with:
-          name: DanteConfigEditorV3-6-win-x64
+          name: DanteConfigEditor2026-1-Beta-win-x64
           path: .\artifacts\publish
           if-no-files-found: error
           retention-days: 14
@@ -86,9 +86,9 @@ jobs:
       - name: Upload Windows installer
         uses: actions/upload-artifact@v7
         with:
-          name: DCE-v3.6-Windows-Installer
+          name: DCE-2026.1-Beta-Windows-Installer
           path: |
-            .\dist\DanteConfigEditorV3_6_Installer.exe
-            .\dist\DanteConfigEditorV3_6_Installer.exe.sha256
+            .\dist\DanteConfigEditor2026_1_Beta_Installer.exe
+            .\dist\DanteConfigEditor2026_1_Beta_Installer.exe.sha256
           if-no-files-found: error
           retention-days: 14

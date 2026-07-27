@@ -581,7 +581,7 @@ public sealed class MachineBankV36Tests
     public void GithubBankCatalogUsesTheVersionedPublicRepositoryFolder()
     {
         Assert.Equal(
-            "https://github.com/Mamat79/DanteConfigEditorV3/tree/v3.6/machine-banks",
+            "https://github.com/Mamat79/DanteConfigEditorV3/tree/main/machine-banks",
             MachineBankDistributionService.GitHubBanksUrl);
     }
 

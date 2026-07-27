@@ -6,10 +6,10 @@
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <AssemblyName>DanteConfigEditor.Core</AssemblyName>
     <RootNamespace>DanteConfigEditor</RootNamespace>
-    <Version>3.6.1</Version>
-    <AssemblyVersion>3.6.1.0</AssemblyVersion>
-    <FileVersion>3.6.1.0</FileVersion>
-    <InformationalVersion>3.6.1</InformationalVersion>
+    <Version>2026.1.0-beta.1</Version>
+    <AssemblyVersion>2026.1.0.0</AssemblyVersion>
+    <FileVersion>2026.1.0.0</FileVersion>
+    <InformationalVersion>2026.1.0-beta.1</InformationalVersion>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
 

@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - v3.6
+      - "2026.1"
   workflow_dispatch:
 
 permissions:
@@ -71,19 +71,19 @@ jobs:
       - name: Upload Apple Silicon DMG
         uses: actions/upload-artifact@v7
         with:
-          name: DanteConfigEditorV3-6-macOS-AppleSilicon
+          name: DanteConfigEditor2026-1-Beta-macOS-AppleSilicon
           path: |
-            ./dist/macos/DanteConfigEditorV3_6_macOS_AppleSilicon.dmg
-            ./dist/macos/DanteConfigEditorV3_6_macOS_AppleSilicon.dmg.sha256
+            ./dist/macos/DanteConfigEditor2026_1_Beta_macOS_AppleSilicon.dmg
+            ./dist/macos/DanteConfigEditor2026_1_Beta_macOS_AppleSilicon.dmg.sha256
           if-no-files-found: error
           retention-days: 14
 
       - name: Upload Intel DMG
         uses: actions/upload-artifact@v7
         with:
-          name: DanteConfigEditorV3-6-macOS-Intel
+          name: DanteConfigEditor2026-1-Beta-macOS-Intel
           path: |
-            ./dist/macos/DanteConfigEditorV3_6_macOS_Intel.dmg
-            ./dist/macos/DanteConfigEditorV3_6_macOS_Intel.dmg.sha256
+            ./dist/macos/DanteConfigEditor2026_1_Beta_macOS_Intel.dmg
+            ./dist/macos/DanteConfigEditor2026_1_Beta_macOS_Intel.dmg.sha256
           if-no-files-found: error
           retention-days: 14

@@ -5,13 +5,13 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>fr</string>
     <key>CFBundleDisplayName</key>
-    <string>Dante Config Editor V3.6</string>
+    <string>Dante Config Editor 2026.1 Beta</string>
     <key>CFBundleExecutable</key>
     <string>DanteConfigEditorV3.Mac</string>
     <key>CFBundleIconFile</key>
     <string>DanteEdit</string>
     <key>CFBundleIdentifier</key>
-    <string>fr.mamat.danteconfigeditor.v36</string>
+    <string>fr.mamat.danteconfigeditor.y2026-1-beta</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleLocalizations</key>
@@ -20,13 +20,13 @@
         <string>en</string>
     </array>
     <key>CFBundleName</key>
-    <string>Dante Config Editor V3.6</string>
+    <string>Dante Config Editor 2026.1 Beta</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
-    <string>3.6.1</string>
+    <string>2026.1.0</string>
     <key>CFBundleVersion</key>
-    <string>3.6.1</string>
+    <string>2026.1.0.1</string>
     <key>LSApplicationCategoryType</key>
     <string>public.app-category.utilities</string>
     <key>LSMinimumSystemVersion</key>

@@ -1,6 +1,6 @@
 param(
     [string]$InstallerPath = "",
-    [string]$ExpectedVersion = "3.6",
+    [string]$ExpectedVersion = "2026.1.0-beta.1",
     [switch]$AllowCustomInstallLocation
 )
 
@@ -8,7 +8,7 @@ $ErrorActionPreference = "Stop"
 
 $root = Split-Path $PSScriptRoot -Parent
 if ([string]::IsNullOrWhiteSpace($InstallerPath)) {
-    $InstallerPath = Join-Path $root "dist\DanteConfigEditorV3_6_Installer.exe"
+    $InstallerPath = Join-Path $root "dist\DanteConfigEditor2026_1_Beta_Installer.exe"
 }
 
 $installer = (Resolve-Path -LiteralPath $InstallerPath -ErrorAction Stop).Path
@@ -19,15 +19,21 @@ if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administra
 }
 
 $targetRegistryPaths = @(
+    "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{C893F4F8-5ED3-4C2E-AAD8-024F9DCB4A1D}_is1",
+    "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{C893F4F8-5ED3-4C2E-AAD8-024F9DCB4A1D}_is1"
+)
+
+# La V3.6 reste la version stable installée en parallèle. Le test vérifie que
+# l'installation et la mise à niveau 2026.1 Beta ne modifient jamais son entrée.
+$stableRegistryPaths = @(
     "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{A11FA3C8-3461-46CA-AC61-6A14316E8DBB}_is1",
     "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{A11FA3C8-3461-46CA-AC61-6A14316E8DBB}_is1"
 )
-
-# V3.4.2 reste la version stable installée en parallèle. Le test vérifie que
-# l'installation et la mise à niveau V3.6 ne modifient jamais cette entrée.
-$stableRegistryPaths = @(
-    "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{76E68F80-5C89-4415-A090-370CA60EB3AD}_is1",
-    "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{76E68F80-5C89-4415-A090-370CA60EB3AD}_is1"
+$stableShortcutPaths = @(
+    (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::Programs)) "Dante Config Editor V3.6\DCE V3.6.lnk"),
+    (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonPrograms)) "Dante Config Editor V3.6\DCE V3.6.lnk"),
+    (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::DesktopDirectory)) "DCE V3.6.lnk"),
+    (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonDesktopDirectory)) "DCE V3.6.lnk")
 )
 
 function Get-InstallRecords {
@@ -51,7 +57,7 @@ function Get-StableInstallRecords {
 }
 
 function Get-StableSnapshot {
-    return @(
+    $records = @(
         Get-StableInstallRecords | ForEach-Object {
             $installLocation = [string]$_.InstallLocation
             $exePath = if ($installLocation) { Join-Path $installLocation "DanteConfigEditorV3.exe" } else { "" }
@@ -63,8 +69,17 @@ function Get-StableSnapshot {
             }
 
             "$($_.DisplayVersion)|$installLocation|$hash"
-        } | Sort-Object
+        }
     )
+    $shortcuts = @(
+        $stableShortcutPaths | ForEach-Object {
+            if (Test-Path -LiteralPath $_) {
+                "shortcut|$_|$((Get-FileHash -LiteralPath $_ -Algorithm SHA256).Hash)"
+            }
+        }
+    )
+
+    return @(($records + $shortcuts) | Sort-Object)
 }
 
 function Invoke-InstallerPass {
@@ -91,7 +106,7 @@ function Assert-StableInstallUnchanged {
 
     $actualSnapshot = @(Get-StableSnapshot)
     if (($actualSnapshot -join "`n") -ne ($ExpectedSnapshot -join "`n")) {
-        throw "$Step : l'installation stable V3.4.2 a été modifiée."
+        throw "$Step : l'installation stable V3.6 a été modifiée."
     }
 }
 
@@ -100,7 +115,7 @@ function Assert-InstalledState {
 
     $targetRecords = @(Get-TargetInstallRecords)
     if ($targetRecords.Count -ne 1) {
-        throw "$Step : une seule entrée V3.6 était attendue, trouvé $($targetRecords.Count)."
+        throw "$Step : une seule entrée 2026.1 Beta était attendue, trouvé $($targetRecords.Count)."
     }
 
     $record = $targetRecords[0]
@@ -136,28 +151,17 @@ function Assert-InstalledState {
         }
     }
 
-    $shortcut = Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonPrograms)) "Dante Config Editor V3.6\DCE V3.6.lnk"
+    $shortcut = Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonPrograms)) "Dante Config Editor 2026.1 Beta\DCE 2026.1 Beta.lnk"
     if (-not (Test-Path -LiteralPath $shortcut)) {
         throw "$Step : raccourci Menu Démarrer manquant : $shortcut"
     }
 
     $desktopShortcutCandidates = @(
-        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::DesktopDirectory)) "DCE V3.6.lnk"),
-        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonDesktopDirectory)) "DCE V3.6.lnk")
+        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::DesktopDirectory)) "DCE 2026.1 Beta.lnk"),
+        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonDesktopDirectory)) "DCE 2026.1 Beta.lnk")
     ) | Select-Object -Unique
     if (-not ($desktopShortcutCandidates | Where-Object { Test-Path -LiteralPath $_ })) {
         throw "$Step : raccourci Bureau manquant. Chemins vérifiés : $($desktopShortcutCandidates -join ', ')"
-    }
-
-    $legacyShortcutCandidates = @(
-        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::Programs)) "Dante Config Editor V3.5"),
-        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonPrograms)) "Dante Config Editor V3.5"),
-        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::DesktopDirectory)) "DCE V3.5.lnk"),
-        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonDesktopDirectory)) "DCE V3.5.lnk")
-    ) | Select-Object -Unique
-    $remainingLegacyShortcuts = @($legacyShortcutCandidates | Where-Object { Test-Path -LiteralPath $_ })
-    if ($remainingLegacyShortcuts.Count -gt 0) {
-        throw "$Step : ancien raccourci V3.5 encore présent : $($remainingLegacyShortcuts -join ', ')"
     }
 
     return $record
@@ -166,7 +170,7 @@ function Assert-InstalledState {
 $stableSnapshotBefore = @(Get-StableSnapshot)
 $targetInstallRecordsBefore = @(Get-TargetInstallRecords).Count
 
-Invoke-InstallerPass -Name "Installation V3.6"
+Invoke-InstallerPass -Name "Installation 2026.1 Beta"
 $firstRecord = Assert-InstalledState -Step "Après le premier passage"
 Assert-StableInstallUnchanged -Step "Après le premier passage" -ExpectedSnapshot $stableSnapshotBefore
 

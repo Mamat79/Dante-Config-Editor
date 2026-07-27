@@ -13,7 +13,7 @@ public sealed class DanteProjectTests
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
             .InformationalVersion ?? string.Empty;
 
-        Assert.StartsWith("3.6", version, StringComparison.Ordinal);
+        Assert.StartsWith("2026.1", version, StringComparison.Ordinal);
     }
 
     [Fact]

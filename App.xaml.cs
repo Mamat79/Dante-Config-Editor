@@ -53,7 +53,7 @@ public partial class App : System.Windows.Application
         WriteCrashLog(exception);
         MessageBox.Show(
             "Une erreur interne a été interceptée. L'application reste ouverte." + Environment.NewLine + Environment.NewLine + exception.Message,
-            "Erreur Dante Config Editor V3",
+            "Erreur Dante Config Editor 2026.1 Beta",
             MessageBoxButton.OK,
             MessageBoxImage.Error);
     }

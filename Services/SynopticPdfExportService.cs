@@ -136,7 +136,7 @@ internal static class SynopticPdfExportService
             ? $"{diagram.Devices.Count} devices shown - {diagram.Cables.Count} grouped cables - {diagram.HiddenDeviceCount} hidden - {diagram.SkippedPatchCount} subscriptions outside selection"
             : $"{diagram.Devices.Count} machines affichees - {diagram.Cables.Count} cables regroupes - {diagram.HiddenDeviceCount} masquee(s) - {diagram.SkippedPatchCount} patch(s) hors selection";
         DrawText(pdf, 34, diagram.Height - 30, 11, summary, "#526070", bold: false, diagram.Height);
-        DrawRightText(pdf, diagram.Width - 34, diagram.Height - 30, 10, "Dante Config Editor V3.6 - By Mamat et ses agents  -------[]--", "#718096", bold: false, diagram.Height);
+        DrawRightText(pdf, diagram.Width - 34, diagram.Height - 30, 10, "Dante Config Editor 2026.1 Beta - By Mamat et ses agents  -------[]--", "#718096", bold: false, diagram.Height);
         pdf.AppendLine("Q");
         return pdf.ToString();
     }

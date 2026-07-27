@@ -1301,7 +1301,7 @@ public partial class MainWindow : Window
         if (path is null) return;
         try
         {
-            ReportExportService.ExportPdf(path, "Dante Config Editor V3.6", _project.BuildReportText());
+            ReportExportService.ExportPdf(path, "Dante Config Editor 2026.1 Beta", _project.BuildReportText());
             SetStatus(LocalizationService.Text(_language, "Status.PdfExported"));
         }
         catch (Exception exception)
@@ -1399,7 +1399,7 @@ public partial class MainWindow : Window
         Border reminder = FindControl<Border>("SupportReminderBorder")!;
         try
         {
-            string version = GetType().Assembly.GetName().Version?.ToString(2) ?? "3.6";
+            string version = GetType().Assembly.GetName().Version?.ToString(2) ?? "2026.1";
             reminder.IsVisible = _supportReminderSettings
                 .RegisterSuccessfulLaunch(version)
                 .ShouldShow;
@@ -2096,7 +2096,7 @@ public partial class MainWindow : Window
         FindControl<TextBox>("SearchTextBox")!.Watermark = L("Machine ou canal", "Device or channel");
         ApplyDeviceFilterLanguage();
 
-        Title = L("Dante Config Editor V3.6 - macOS", "Dante Config Editor V3.6 - macOS");
+        Title = L("Dante Config Editor 2026.1 Beta - macOS", "Dante Config Editor 2026.1 Beta - macOS");
         FindControl<Button>("ThemeButton")!.Content = _darkTheme ? L("Thème clair", "Light theme") : L("Thème sombre", "Dark theme");
     }
 

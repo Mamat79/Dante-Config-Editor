@@ -1,21 +1,21 @@
-#define MyAppName "Dante Config Editor V3.6"
-#define MyAppVersion "3.6.1"
+#define MyAppName "Dante Config Editor 2026.1 Beta"
+#define MyAppVersion "2026.1.0-beta.1"
 #define MyAppPublisher "Mamat"
 #define MyAppExeName "DanteConfigEditorV3.exe"
-#define MyAppShortcutName "DCE V3.6"
+#define MyAppShortcutName "DCE 2026.1 Beta"
 #define SourceRoot ".."
 
 [Setup]
-AppId={{A11FA3C8-3461-46CA-AC61-6A14316E8DBB}
+AppId={{C893F4F8-5ED3-4C2E-AAD8-024F9DCB4A1D}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
-DefaultDirName={autopf}\Dante Config Editor V3.6
-DefaultGroupName=Dante Config Editor V3.6
+DefaultDirName={autopf}\Dante Config Editor 2026.1 Beta
+DefaultGroupName=Dante Config Editor 2026.1 Beta
 DisableProgramGroupPage=no
 AllowNoIcons=yes
 OutputDir={#SourceRoot}\dist
-OutputBaseFilename=DanteConfigEditorV3_6_Installer
+OutputBaseFilename=DanteConfigEditor2026_1_Beta_Installer
 SetupIconFile={#SourceRoot}\DanteEdit.ico
 Compression=lzma2
 SolidCompression=yes
@@ -23,12 +23,12 @@ WizardStyle=modern
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 PrivilegesRequired=admin
-; La mise à niveau nettoie uniquement les anciens raccourcis V3.5 du profil courant.
+; La Beta possède une identité distincte et ne modifie aucune installation V3.6.
 UsedUserAreasWarning=no
 UninstallDisplayIcon={app}\{#MyAppExeName}
-VersionInfoVersion=3.6.1
+VersionInfoVersion=2026.1.0.0
 VersionInfoCompany={#MyAppPublisher}
-VersionInfoDescription=Dante Config Editor V3.6 installer
+VersionInfoDescription=Dante Config Editor 2026.1 Beta installer
 VersionInfoProductName={#MyAppName}
 SetupLogging=yes
 CloseApplications=yes
@@ -66,10 +66,6 @@ Type: files; Name: "{app}\QuickStart_DanteConfigEditorV3.pdf"
 Type: files; Name: "{app}\Notice_DanteConfigEditorV3.pdf"
 Type: files; Name: "{group}\Quick start PDF.lnk"
 Type: files; Name: "{group}\Notice PDF.lnk"
-Type: filesandordirs; Name: "{commonprograms}\Dante Config Editor V3.5"
-Type: filesandordirs; Name: "{userprograms}\Dante Config Editor V3.5"
-Type: files; Name: "{commondesktop}\DCE V3.5.lnk"
-Type: files; Name: "{userdesktop}\DCE V3.5.lnk"
 
 [Icons]
 Name: "{group}\{code:GetShortcutAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"; IconFilename: "{app}\DanteEdit.ico"
@@ -85,7 +81,7 @@ Name: "{group}\Désinstaller {code:GetShortcutAppName}"; Filename: "{uninstallex
 Name: "{autodesktop}\{code:GetShortcutAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"; IconFilename: "{app}\DanteEdit.ico"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,Dante Config Editor V3.6}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,Dante Config Editor 2026.1 Beta}"; Flags: nowait postinstall skipifsilent
 Filename: "{app}\RELEASE_NOTES.md"; Description: "Ouvrir les notes de version"; Flags: postinstall shellexec unchecked skipifsilent; Check: IsFrenchLanguage
 Filename: "{app}\RELEASE_NOTES_EN.md"; Description: "Open the release notes"; Flags: postinstall shellexec unchecked skipifsilent; Check: IsEnglishLanguage
 Filename: "{app}\QuickStart_DanteConfigEditorV3_FR.pdf"; Description: "Ouvrir le démarrage rapide en français"; Flags: postinstall shellexec unchecked skipifsilent; Check: IsFrenchLanguage
@@ -133,7 +129,7 @@ end;
 function MachineBankSettingsPath(): String;
 begin
   Result := ExpandConstant(
-    '{localappdata}\DanteConfigEditorV3.2\machine-bank-location.txt');
+    '{localappdata}\DanteConfigEditor2026.1\machine-bank-location.txt');
 end;
 
 function DefaultMachineBankPath(): String;
@@ -210,11 +206,11 @@ function DetectExistingInstall(): Boolean;
 begin
   ExistingInstallDir := '';
   ExistingInstallVersion := '';
-  Result := QueryInstallValue('A11FA3C8-3461-46CA-AC61-6A14316E8DBB', 'InstallLocation', ExistingInstallDir);
+  Result := QueryInstallValue('C893F4F8-5ED3-4C2E-AAD8-024F9DCB4A1D', 'InstallLocation', ExistingInstallDir);
 
   if Result then
   begin
-    QueryInstallValue('A11FA3C8-3461-46CA-AC61-6A14316E8DBB', 'DisplayVersion', ExistingInstallVersion);
+    QueryInstallValue('C893F4F8-5ED3-4C2E-AAD8-024F9DCB4A1D', 'DisplayVersion', ExistingInstallVersion);
 
     if ExistingInstallVersion = '' then
     begin
