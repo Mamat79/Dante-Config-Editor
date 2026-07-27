@@ -20,8 +20,10 @@ ce dépôt ne constitue pas une validation d'import par Dante Controller.
 
 - **DCE Community Devices 3.6** : Yamaha QL1 (32 TX / 32 RX), Yamaha
   Rio1608-D2 (16 TX / 8 RX), Fohhn DI4.1000 (0 TX / 4 RX), Lake LM 44
-  (0 TX / 4 RX) et RME Digiface Dante (64 TX / 64 RX). Les labels sont
-  génériques et les cinq modèles incluent une image.
+  (0 TX / 4 RX), RME Digiface Dante (64 TX / 64 RX), Glensound Divine
+  (4 TX / 4 RX), Beatrice D8 (32 TX / 32 RX) et AOIP22 (2 TX / 2 RX), ainsi
+  qu'Allen & Heath SDante 64x64 (64 TX / 64 RX). Les labels sont génériques et
+  les neuf modèles incluent une image.
 
 Les identités matérielles, paramètres réseau et abonnements du projet source
 ont été retirés. Les images ont été fournies et autorisées à la publication par
@@ -41,7 +43,7 @@ validation matérielle ou d'un import confirmé dans Dante Controller.
 | Banque | Contenu | Téléchargement | SHA-256 |
 |---|---|---|---|
 | DCE Generic Roles 3.6 | Rôles génériques 8x8 et 32x32 | [Télécharger](DCE_Generic_Roles_3_6.dce-bank.zip) | `bd24239205a83cb9aec60938bf10d5eeab798385775e945cf5ec0051ee32d8df` |
-| DCE Community Devices 3.6 | Cinq modèles illustrés | [Télécharger](DCE_Community_Devices_3_6.dce-bank.zip) | `2913c2bf943de925932e8eac55c32032f09bf4fd7a2fb294b6fa12ca33b854c7` |
+| DCE Community Devices 3.6 | Neuf modèles illustrés | [Télécharger](DCE_Community_Devices_3_6.dce-bank.zip) | `9e11b024c9c201f32e3ccfdad64f648e51a77e75176be91aae5f699bc5f55158` |
 
 ### Partager une banque
 
@@ -81,8 +83,10 @@ repository is not proof of a successful Dante Controller import.
 
 - **DCE Community Devices 3.6**: Yamaha QL1 (32 Tx / 32 Rx), Yamaha
   Rio1608-D2 (16 Tx / 8 Rx), Fohhn DI4.1000 (0 Tx / 4 Rx), Lake LM 44
-  (0 Tx / 4 Rx), and RME Digiface Dante (64 Tx / 64 Rx). Labels are generic
-  and all five templates include an image.
+  (0 Tx / 4 Rx), RME Digiface Dante (64 Tx / 64 Rx), Glensound Divine
+  (4 Tx / 4 Rx), Beatrice D8 (32 Tx / 32 Rx), and AOIP22 (2 Tx / 2 Rx), and
+  Allen & Heath SDante 64x64 (64 Tx / 64 Rx). Labels are generic and all nine
+  templates include an image.
 
 Hardware identities, network settings and source-project subscriptions were
 removed. The images were supplied and approved for publication by the
@@ -101,7 +105,7 @@ physical hardware or through a confirmed Dante Controller import.
 | Bank | Contents | Download | SHA-256 |
 |---|---|---|---|
 | DCE Generic Roles 3.6 | Generic 8x8 and 32x32 roles | [Download](DCE_Generic_Roles_3_6.dce-bank.zip) | `bd24239205a83cb9aec60938bf10d5eeab798385775e945cf5ec0051ee32d8df` |
-| DCE Community Devices 3.6 | Five illustrated templates | [Download](DCE_Community_Devices_3_6.dce-bank.zip) | `2913c2bf943de925932e8eac55c32032f09bf4fd7a2fb294b6fa12ca33b854c7` |
+| DCE Community Devices 3.6 | Nine illustrated templates | [Download](DCE_Community_Devices_3_6.dce-bank.zip) | `9e11b024c9c201f32e3ccfdad64f648e51a77e75176be91aae5f699bc5f55158` |
 
 ### Share a bank
 

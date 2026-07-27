@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<device>
+        <captureInfo>
+            <device_name />
+            <interface_ipv4_addresses />
+            <device_samplerate />
+            <device_encoding />
+            <device_unicast_latency />
+            <rtp />
+            <clock />
+            <clock_priority />
+            <txchannel_names />
+            <txflows />
+            <rxchannel_names />
+            <rxchannel_subscriptions />
+            <rxflows />
+        </captureInfo>
+        
+        
+        
+        <manufacturer_id>476C656E736F756E</manufacturer_id>
+        <manufacturer_name>Glensound</manufacturer_name>
+        <model_id>0000000000000031</model_id>
+        <model_name>Divine</model_name>
+        <model_version>1.2.0</model_version>
+        <device_type>556C74696D6F3458</device_type>
+        <device_type_string>UltimoX4</device_type_string>
+        <friendly_name>MACHINE-TEMPLATE</friendly_name>
+        <preferred_master value="false" />
+        <samplerate>48000</samplerate>
+        <encoding>24</encoding>
+        <unicast_latency>2000</unicast_latency>
+        
+        <txchannel danteId="1" mediaType="audio">
+            <label>01</label>
+        </txchannel>
+        <txchannel danteId="2" mediaType="audio">
+            <label>02</label>
+        </txchannel>
+        <txchannel danteId="3" mediaType="audio">
+            <label>03</label>
+        </txchannel>
+        <txchannel danteId="4" mediaType="audio">
+            <label>04</label>
+        </txchannel>
+        <rxchannel danteId="1" mediaType="audio">
+            <name>RX 1</name>
+            
+            
+        </rxchannel>
+        <rxchannel danteId="2" mediaType="audio">
+            <name>RX 2</name>
+            
+            
+        </rxchannel>
+        <rxchannel danteId="3" mediaType="audio">
+            <name>RX 3</name>
+        </rxchannel>
+        <rxchannel danteId="4" mediaType="audio">
+            <name>RX 4</name>
+        </rxchannel>
+        <rtp>
+            <interop_mode>none</interop_mode>
+            <aes67_multicast_address_prefix>4014276608</aes67_multicast_address_prefix>
+        </rtp>
+        <clock>
+            <subdomain_name>_DFLT</subdomain_name>
+            <v1_unicast_delay_requests>false</v1_unicast_delay_requests>
+            <v2_unicast_delay_requests>false</v2_unicast_delay_requests>
+            <v1_enabled>true</v1_enabled>
+            <v2_enabled>false</v2_enabled>
+        </clock>
+        <clock_priority>
+            <preferred>false</preferred>
+            <follower_only>false</follower_only>
+        </clock_priority>
+    </device>

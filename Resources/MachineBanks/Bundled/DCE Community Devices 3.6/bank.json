@@ -2,12 +2,16 @@
   "formatVersion": 1,
   "bankId": "d63623f3-3727-435c-923f-458e3b2b9d9c",
   "createdUtc": "2026-07-25T23:40:08.5773679+02:00",
-  "updatedUtc": "2026-07-26T01:54:48.9181706+02:00",
+  "updatedUtc": "2026-07-27T06:50:57.6677087+00:00",
   "templateIds": [
     "55b2bc9e-01af-4b0f-b845-87851fefbcff",
     "3d074d68-f078-47d8-8ce2-260c4835da2d",
     "b5084be2-21aa-4044-b3e1-f91bb83f091e",
     "8eccc2e6-6a0d-4a13-85ee-06f85c51c54f",
-    "0bd30c10-f9ad-4ed1-b670-91a594ba3c1f"
+    "0bd30c10-f9ad-4ed1-b670-91a594ba3c1f",
+    "0a19e296-386f-4945-973b-e780af478ae5",
+    "13a56a24-53ae-4e7f-bf8a-aac82af4f43b",
+    "ac89177e-2679-4405-b9f8-eed79f86d187",
+    "13eba569-d1bd-4167-86ec-1dc03976d931"
   ]
 }

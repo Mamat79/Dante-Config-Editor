@@ -23,7 +23,7 @@ V3.6.1 fixes the V3.6 support screen on Windows and macOS. Dante Config Editor r
 - Search, filters, edit, duplicate, confirmed delete, ZIP import/export, and complete bank backup/restore.
 - Bilingual GitHub catalog and verified `*.dce-bank.zip` archive for downloading or sharing a complete bank.
 - Included `DCE Generic Roles 3.6` bank with generic 8x8 and 32x32 roles and no hardware identity, network data, or subscription.
-- Optional illustrated and sanitized `DCE Community Devices 3.6` bank with Yamaha QL1 and Rio1608-D2, Fohhn DI4.1000, Lake LM 44, and RME Digiface Dante.
+- Optional illustrated and sanitized `DCE Community Devices 3.6` bank with Yamaha QL1 and Rio1608-D2, Fohhn DI4.1000, Lake LM 44, RME Digiface Dante, Glensound Divine, Beatrice D8 and AOIP22, and Allen & Heath SDante 64x64.
 - Transactional insertion of an independent instance from a template.
 - Experimental minimal 3.0.0 new project, empty or seeded from a template.
 
@@ -42,6 +42,13 @@ V3.6.1 fixes the V3.6 support screen on Windows and macOS. Dante Config Editor r
 - 20 headless Avalonia/macOS tests passed.
 - Windows and macOS Release builds completed without warnings.
 - The NuGet audit command reported no vulnerable packages.
+
+## Documentation
+
+- Complete 26-page French and English guides with annotated screenshots.
+- Detailed workflows for profiles, direct and series renaming, Patch, Easy
+  Patch, FLIP, PATCH 1:1, merging a second XML file, device banks, label
+  import/export, synoptic generation, file review, and final saving.
 
 ## Distribution
 

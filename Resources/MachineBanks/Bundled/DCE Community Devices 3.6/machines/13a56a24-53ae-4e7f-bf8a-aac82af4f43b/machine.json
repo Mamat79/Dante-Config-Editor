@@ -1,0 +1,23 @@
+{
+  "formatVersion": 1,
+  "templateId": "13a56a24-53ae-4e7f-bf8a-aac82af4f43b",
+  "templateName": "Beatrice D8",
+  "manufacturer": "Glensound",
+  "model": "Beatrice D8",
+  "description": "Poste d'intercom Dante 32 TX / 32 RX, fourni comme rôle hors ligne assaini.",
+  "category": "Talk",
+  "tags": [
+    "intercom",
+    "talkback",
+    "Glensound"
+  ],
+  "txCount": 32,
+  "rxCount": 32,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "3.6.1",
+  "createdUtc": "2026-07-27T06:44:09.7263681+00:00",
+  "modifiedUtc": "2026-07-27T06:49:28.5897487+00:00",
+  "templateSha256": "BC537FA4EA70313B4DE29FA923CC17A07745BD2B55BC36C6B430DD8B7AF2FD18",
+  "imageFileName": "image.jpg"
+}

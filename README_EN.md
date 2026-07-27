@@ -58,7 +58,8 @@ identity, IP address, or subscription.
 
 The catalog and new installers also provide `DCE Community Devices 3.6`, an
 illustrated community bank containing Yamaha QL1 and Rio1608-D2, Fohhn
-DI4.1000, Lake LM 44, and RME Digiface Dante templates.
+DI4.1000, Lake LM 44, RME Digiface Dante, Glensound Divine, Beatrice D8 and
+AOIP22, and Allen & Heath SDante 64x64 templates.
 
 The Windows installer separately asks for the active bank folder and the
 folder used for included banks. `DCE Generic Roles 3.6` and

@@ -23,7 +23,7 @@ V3.6.1 corrige l'écran de soutien de la V3.6 sur Windows et macOS. Dante Config
 - Recherche, filtres, modification, duplication, suppression confirmée, import/export ZIP, sauvegarde et restauration complète.
 - Catalogue GitHub bilingue et archive `*.dce-bank.zip` vérifiée pour télécharger ou partager une banque complète.
 - Banque fournie `DCE Generic Roles 3.6` avec rôles génériques 8x8 et 32x32, sans identité matérielle, réseau ni abonnement.
-- Banque communautaire optionnelle `DCE Community Devices 3.6`, illustrée et assainie, avec Yamaha QL1 et Rio1608-D2, Fohhn DI4.1000, Lake LM 44 et RME Digiface Dante.
+- Banque communautaire optionnelle `DCE Community Devices 3.6`, illustrée et assainie, avec Yamaha QL1 et Rio1608-D2, Fohhn DI4.1000, Lake LM 44, RME Digiface Dante, Glensound Divine, Beatrice D8 et AOIP22, et Allen & Heath SDante 64x64.
 - Ajout transactionnel d'une instance indépendante depuis un modèle.
 - Nouveau projet minimal 3.0.0 expérimental, vide ou amorcé par un modèle.
 
@@ -42,6 +42,14 @@ V3.6.1 corrige l'écran de soutien de la V3.6 sur Windows et macOS. Dante Config
 - 20 tests Avalonia/macOS sans écran réussis.
 - Builds Windows et macOS Release sans warning.
 - Aucun package NuGet vulnérable signalé par la commande d'audit.
+
+## Documentation
+
+- Notices complètes française et anglaise de 26 pages avec captures annotées.
+- Procédures détaillées pour les profils, le renommage direct et en série,
+  Patch, Easy Patch, FLIP, PATCH 1:1, fusion d'un second XML, banque de
+  machines, import/export de labels, synoptique, contrôle du fichier et
+  sauvegarde finale.
 
 ## Distribution
 

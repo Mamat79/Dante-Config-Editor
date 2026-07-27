@@ -77,7 +77,8 @@ Le bouton `Banques GitHub` ouvre le [catalogue public des banques V3.6](machine-
 Le catalogue et les nouveaux installateurs proposent également
 `DCE Community Devices 3.6`, une banque communautaire illustrée contenant les
 modèles Yamaha QL1 et Rio1608-D2, Fohhn DI4.1000, Lake LM 44 et RME Digiface
-Dante.
+Dante, Glensound Divine, Beatrice D8 et AOIP22, ainsi qu'Allen & Heath SDante
+64x64.
 
 L'installateur Windows propose séparément le dossier de banque actif et le dossier où placer les banques fournies. Les banques `DCE Generic Roles 3.6` et `DCE Community Devices 3.6` sont sélectionnables indépendamment. L'assistant réutilise le chemin déjà configuré lors d'une mise à jour, ne touche jamais au contenu d'une banque existante et choisit un nouveau nom de dossier si une banque fournie est déjà présente.
 

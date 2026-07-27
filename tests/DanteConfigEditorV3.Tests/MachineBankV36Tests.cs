@@ -498,17 +498,47 @@ public sealed class MachineBankV36Tests
             .ToArray();
 
         Assert.Equal(
-            ["DI4.1000", "Digiface Dante", "LM 44 - 4 4RX", "QL1", "Rio1608-D2"],
+            [
+                "AOIP22",
+                "Beatrice D8",
+                "DI4.1000",
+                "Digiface Dante",
+                "Divine",
+                "LM 44 - 4 4RX",
+                "QL1",
+                "Rio1608-D2",
+                "SDante 64x64"
+            ],
             communityTemplates
             .Select(item => item.TemplateName)
             .ToArray());
         Assert.Equal(
-            [(0, 4), (64, 64), (0, 4), (32, 32), (16, 8)],
+            [
+                (2, 2),
+                (32, 32),
+                (0, 4),
+                (64, 64),
+                (4, 4),
+                (0, 4),
+                (32, 32),
+                (16, 8),
+                (64, 64)
+            ],
             communityTemplates
             .Select(item => (item.TxCount, item.RxCount))
             .ToArray());
         Assert.Equal(
-            ["Fohhn", "RME GmbH", "Lake", "Yamaha Corporation", "Yamaha Corporation"],
+            [
+                "Glensound",
+                "Glensound",
+                "Fohhn",
+                "RME GmbH",
+                "Glensound",
+                "Lake",
+                "Yamaha Corporation",
+                "Yamaha Corporation",
+                "Allen & Heath"
+            ],
             communityTemplates
             .Select(item => item.Manufacturer)
             .ToArray());

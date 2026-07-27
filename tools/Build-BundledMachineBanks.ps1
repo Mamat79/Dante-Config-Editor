@@ -12,6 +12,9 @@ $utf8 = [System.Text.UTF8Encoding]::new($false)
 $fixedDate = [DateTimeOffset]::Parse(
     "2026-07-26T00:00:00+00:00",
     [System.Globalization.CultureInfo]::InvariantCulture)
+$catalogDate = [DateTimeOffset]::Parse(
+    "2026-07-27T00:00:00+00:00",
+    [System.Globalization.CultureInfo]::InvariantCulture)
 
 function Assert-RepositoryPath {
     param(
@@ -238,6 +241,34 @@ function Assert-CommunityBank {
             rx = 64
             image = "image.jpg"
         }
+        "Divine" = @{
+            manufacturer = "Glensound"
+            model = "Divine"
+            tx = 4
+            rx = 4
+            image = "image.jpg"
+        }
+        "Beatrice D8" = @{
+            manufacturer = "Glensound"
+            model = "Beatrice D8"
+            tx = 32
+            rx = 32
+            image = "image.jpg"
+        }
+        "AOIP22" = @{
+            manufacturer = "Glensound"
+            model = "AOIP22"
+            tx = 2
+            rx = 2
+            image = "image.jpg"
+        }
+        "SDante 64x64" = @{
+            manufacturer = "Allen & Heath"
+            model = "SDante"
+            tx = 64
+            rx = 64
+            image = "image.jpg"
+        }
     }
     $forbiddenXmlElements = @(
         "instance_id",
@@ -404,7 +435,7 @@ $communityArchiveHash = (
 ).Hash.ToLowerInvariant()
 $catalog = [ordered]@{
     formatVersion = 1
-    updatedUtc = $fixedDate
+    updatedUtc = $catalogDate
     banks = @(
         [ordered]@{
             id = "dce-generic-roles-3.6"
@@ -423,8 +454,8 @@ $catalog = [ordered]@{
             sha256 = $communityArchiveHash
             minimumDceVersion = "3.6"
             language = "fr-en"
-            descriptionFr = "Cinq modèles illustrés : Yamaha QL1 et Rio1608-D2, Fohhn DI4.1000, Lake LM 44 et RME Digiface Dante, sans identité matérielle, réseau ni abonnement."
-            descriptionEn = "Five illustrated templates: Yamaha QL1 and Rio1608-D2, Fohhn DI4.1000, Lake LM 44 and RME Digiface Dante, without hardware identity, network settings or subscriptions."
+            descriptionFr = "Neuf modèles illustrés : Yamaha QL1 et Rio1608-D2, Fohhn DI4.1000, Lake LM 44, RME Digiface Dante, Glensound Divine, Beatrice D8 et AOIP22, et Allen & Heath SDante 64x64, sans identité matérielle, réseau ni abonnement."
+            descriptionEn = "Nine illustrated templates: Yamaha QL1 and Rio1608-D2, Fohhn DI4.1000, Lake LM 44, RME Digiface Dante, Glensound Divine, Beatrice D8 and AOIP22, and Allen & Heath SDante 64x64, without hardware identity, network settings or subscriptions."
         }
     )
 }

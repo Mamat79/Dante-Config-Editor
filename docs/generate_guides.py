@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+from io import BytesIO
 from pathlib import Path
 
+from PIL import Image as PillowImage
+from PIL import ImageDraw, ImageFont
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.pagesizes import A4
@@ -10,6 +13,7 @@ from reportlab.lib.units import mm
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import (
+    Image as ReportLabImage,
     KeepTogether,
     PageBreak,
     Paragraph,
@@ -235,6 +239,103 @@ def feature_band(items: list[tuple[str, str]]) -> Table:
         )
     )
     return table
+
+
+def screenshot(
+    language: str,
+    name: str,
+    caption: str,
+    crop: tuple[int, int, int, int] | None = None,
+    markers: list[tuple[float, float, str]] | None = None,
+    width: float = 170,
+    maximum_height: float = 112,
+) -> list:
+    """Ajoute une capture recadrée sans déformer l'interface."""
+    source = ROOT / "media" / "v3.5" / language.lower() / f"{name}.png"
+    with PillowImage.open(source) as opened:
+        image = opened.convert("RGB")
+        if crop is not None:
+            image = image.crop(crop)
+
+        if markers:
+            draw = ImageDraw.Draw(image)
+            radius = max(17, round(min(image.width, image.height) * 0.035))
+            try:
+                font = ImageFont.truetype(r"C:\Windows\Fonts\segoeuib.ttf", radius)
+            except OSError:
+                font = ImageFont.load_default()
+
+            for x_ratio, y_ratio, label in markers:
+                x = round(image.width * x_ratio)
+                y = round(image.height * y_ratio)
+                draw.ellipse(
+                    (x - radius, y - radius, x + radius, y + radius),
+                    fill=(22, 119, 210),
+                    outline=(255, 255, 255),
+                    width=max(2, radius // 8),
+                )
+                bounds = draw.textbbox((0, 0), label, font=font)
+                text_width = bounds[2] - bounds[0]
+                text_height = bounds[3] - bounds[1]
+                draw.text(
+                    (x - text_width / 2, y - text_height / 2 - bounds[1]),
+                    label,
+                    font=font,
+                    fill=(255, 255, 255),
+                )
+
+        stream = BytesIO()
+        image.save(stream, format="JPEG", quality=88, optimize=True)
+        stream.seek(0)
+        ratio = image.height / image.width
+
+    draw_width = width * mm
+    draw_height = draw_width * ratio
+    max_height = maximum_height * mm
+    if draw_height > max_height:
+        scale = max_height / draw_height
+        draw_width *= scale
+        draw_height = max_height
+
+    figure = ReportLabImage(stream, width=draw_width, height=draw_height)
+    frame = Table([[figure]], colWidths=[draw_width + 2 * mm])
+    frame.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, -1), colors.white),
+                ("BOX", (0, 0), (-1, -1), 0.7, LINE),
+                ("LEFTPADDING", (0, 0), (-1, -1), 1 * mm),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 1 * mm),
+                ("TOPPADDING", (0, 0), (-1, -1), 1 * mm),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 1 * mm),
+                ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+            ]
+        )
+    )
+    return [frame, Spacer(1, 1.5 * mm), para(caption, "caption")]
+
+
+def keyboard_table(language: str) -> Table:
+    if language == "FR":
+        rows = [
+            ["Entrée", "Valider le nom sans quitter la cellule courante."],
+            ["Tab", "Valider puis ouvrir le canal suivant."],
+            ["Maj + Tab", "Valider puis ouvrir le canal précédent."],
+            ["Échap", "Annuler l'édition ou la recopie en cours."],
+            ["Ctrl / Maj", "Étendre une sélection de canaux dans Easy patch."],
+            ["Molette", "Faire défiler ; dans la grille et le synoptique, utiliser les commandes de zoom prévues."],
+        ]
+        return data_table(["Touche", "Action"], rows, [38, 132])
+
+    rows = [
+        ["Enter", "Validate the name without leaving the current cell."],
+        ["Tab", "Validate and open the next channel."],
+        ["Shift + Tab", "Validate and open the previous channel."],
+        ["Escape", "Cancel the current edit or fill operation."],
+        ["Ctrl / Shift", "Extend a channel selection in Easy patch."],
+        ["Mouse wheel", "Scroll; use the dedicated zoom controls in the matrix and synoptic."],
+    ]
+    return data_table(["Key", "Action"], rows, [38, 132])
 
 
 def cover_page(language: str) -> list:
@@ -643,7 +744,7 @@ def full_guide(language: str) -> None:
                 "Une image PNG, JPEG ou WebP facultative est copiée dans le dossier du modèle ; aucun chemin externe fragile n'est conservé.",
                 "La banque se trouve par défaut dans Documents/Dante Config Editor/Machine Bank. Son emplacement peut être choisi, ouvert, copié ou placé dans un dossier synchronisé.",
                 "Exporter la banque crée une archive vérifiée *.dce-bank.zip. Importer une banque exige un dossier neuf ou vide et ne remplace jamais l'existant.",
-                "Banques GitHub ouvre le catalogue public V3.6. DCE Generic Roles 3.6 fournit deux rôles d'essai 8x8 et 32x32. DCE Community Devices 3.6 fournit cinq modèles illustrés assainis : Yamaha QL1 et Rio1608-D2, Fohhn DI4.1000, Lake LM 44 et RME Digiface Dante. Ces banques ne contiennent ni identité matérielle, ni donnée réseau, ni abonnement.",
+                "Banques GitHub ouvre le catalogue public V3.6. DCE Generic Roles 3.6 fournit deux rôles d'essai 8x8 et 32x32. DCE Community Devices 3.6 fournit neuf modèles illustrés assainis : Yamaha QL1 et Rio1608-D2, Fohhn DI4.1000, Lake LM 44, RME Digiface Dante, Glensound Divine, Beatrice D8 et AOIP22, et Allen & Heath SDante 64x64. Ces banques ne contiennent ni identité matérielle, ni donnée réseau, ni abonnement.",
                 "L'administration permet recherche, filtres, modification, duplication, suppression confirmée et import/export d'un modèle ZIP.",
             ]),
             para("Ajouter un modèle au projet", "h2"),
@@ -687,6 +788,14 @@ def full_guide(language: str) -> None:
                 ("Cibler", "Filtres, sélection multiple et verrouillage définissent précisément les machines touchées."),
                 ("Vérifier", "Avant / après permet de relire les changements avant la sauvegarde."),
             ]),
+            Spacer(1, 3 * mm),
+            *screenshot(
+                language,
+                "configuration",
+                "Vue Configuration : listes rapides et actions globales à gauche, machine et canaux au centre, tableau général en bas.",
+                crop=(225, 25, 1905, 735),
+                maximum_height=102,
+            ),
         ]
         visual_device = [
             para("Modifier une machine sans changer de page", "h1"),
@@ -696,29 +805,295 @@ def full_guide(language: str) -> None:
                 ("Audio", "Latence, sample rate et bits par échantillon."),
                 ("Réseau", "IP principale en automatique ou fixe, sans toucher aux interfaces secondaires."),
             ]),
+            Spacer(1, 3 * mm),
+            *screenshot(
+                language,
+                "configuration",
+                "<b>1</b> paramètres de la machine ; <b>2</b> canal TX/RX choisi ; <b>3</b> renommage par plage.",
+                crop=(695, 35, 1905, 490),
+                markers=[(0.16, 0.22, "1"), (0.62, 0.22, "2"), (0.67, 0.75, "3")],
+                maximum_height=86,
+            ),
             *bullets([
                 "Les onglets RX puis TX permettent de renommer les canaux individuellement.",
                 "Patch RX permet de contrôler ou déconnecter les subscriptions reçues par la machine.",
                 "Appliquer valide l'ensemble en une seule opération groupée ; Annuler ne modifie pas le XML.",
             ]),
         ]
+        profiles_detailed = [
+            para("Profils rapides et actions globales", "h1"),
+            para("Une action globale s'applique uniquement à la cible affichée : toutes les machines non verrouillées, la sélection non verrouillée ou le filtre courant. Vérifiez toujours la cible avant de confirmer."),
+            *screenshot(
+                language,
+                "configuration",
+                "<b>1</b> listes rapides ; <b>2</b> onglets Réseau/audio, IP, Profils et Horloge ; <b>3</b> cible des actions et verrouillage.",
+                crop=(230, 35, 705, 575),
+                markers=[(0.22, 0.10, "1"), (0.45, 0.40, "2"), (0.55, 0.94, "3")],
+                width=104,
+                maximum_height=118,
+            ),
+            para("Utiliser un profil", "h2"),
+            *bullets([
+                "Ouvrez Actions globales > Profils, choisissez le profil, puis cliquez sur Appliquer le profil.",
+                "La prévisualisation compare l'état actuel et l'état visé pour chaque machine réellement concernée.",
+                "Les profils règlent sample rate, bits, latence et IP automatique ; les deux derniers règlent aussi Redondant ou Daisychain.",
+                "Une machine verrouillée est toujours exclue. Annuler action restaure l'état précédent en une seule opération.",
+            ]),
+            callout("Un profil ne vérifie pas les capacités physiques du matériel. Contrôlez les fréquences, latences et modes réellement supportés.", PALE_RED),
+        ]
+        renaming_detailed = [
+            para("Renommer rapidement les RX et les TX", "h1"),
+            para("Le renommage direct fonctionne dans Configuration, Détail machine, Patch et Easy patch. Pour un TX, DCE met également à jour toutes les subscriptions reconnues qui utilisent ce nom."),
+            *screenshot(
+                language,
+                "configuration",
+                "<b>1</b> choisir RX ou TX et le canal ; <b>2</b> saisir le nom ; <b>3</b> choisir la plage ; <b>4</b> définir le préfixe et le numéro de départ.",
+                crop=(1310, 70, 1905, 410),
+                markers=[(0.12, 0.13, "1"), (0.17, 0.36, "2"), (0.12, 0.72, "3"), (0.65, 0.91, "4")],
+                width=155,
+                maximum_height=90,
+            ),
+            para("Raccourcis pendant l'édition", "h2"),
+            keyboard_table(language),
+        ]
+        series_detailed = [
+            para("Prolonger une série comme dans un tableur", "h1"),
+            para("La poignée de recopie apparaît uniquement lorsque le dernier caractère du label appartient à un nombre final. Tirez-la jusqu'au dernier canal souhaité ; un aperçu montre la série avant le relâchement."),
+            data_table(
+                ["Nom de départ", "Poignée", "Résultat"],
+                [
+                    ["Mic 4", "Visible", "Mic 5, Mic 6, Mic 7..."],
+                    ["Mic 04", "Visible", "Mic 05, Mic 06, Mic 07..."],
+                    ["Micro HF 12", "Visible", "Micro HF 13, Micro HF 14..."],
+                    ["Mic", "Masquée", "Aucune série numérique détectée"],
+                    ["Mic 4 principal", "Masquée", "Le nom ne se termine pas par un nombre"],
+                ],
+                [48, 34, 88],
+            ),
+            Spacer(1, 3 * mm),
+            *bullets([
+                "Le texte placé avant le nombre est conservé exactement.",
+                "Le nombre peut comporter plusieurs chiffres et les zéros initiaux sont préservés.",
+                "La recopie fonctionne dans les listes RX/TX et dans la grille Easy patch.",
+                "Échap annule l'aperçu. Aucun label n'est modifié tant que la poignée n'a pas été déposée sur une cible valide.",
+                "Une seule opération Annuler action restaure toute la série.",
+            ]),
+            callout("<b>Important :</b> le nombre final est un suffixe de label. DCE ne renumérote jamais les Dante Id techniques.", PALE_GREEN),
+        ]
         visual_patch = [
-            para("Deux façons de travailler sur le patch", "h1"),
-            para("Patch reste l'éditeur tabulaire précis. Easy patch ajoute une sélection visuelle, les plages et une application immédiate."),
+            para("Patch : lire et corriger précisément une subscription", "h1"),
+            para("Chaque ligne représente un RX et sa source TX. Patch est la vue la plus précise pour filtrer, vérifier une source locale ou externe, remplacer une subscription ou la supprimer."),
+            *screenshot(
+                language,
+                "patch",
+                "<b>1</b> recherche et état ; <b>2</b> source TX à appliquer ; <b>3</b> mode Simple/Expert ; <b>4</b> résultat RX vers TX.",
+                crop=(475, 35, 1905, 310),
+                markers=[(0.16, 0.18, "1"), (0.52, 0.18, "2"), (0.81, 0.18, "3"), (0.56, 0.70, "4")],
+                maximum_height=75,
+            ),
             feature_band([
-                ("Patch", "Filtrer les TX/RX, rechercher une source, appliquer ou retirer une subscription."),
-                ("Easy patch", "RX à gauche, TX à droite, sélection multiple, plages et application immédiate."),
-                ("Contrôle", "Alerte activée par défaut avant le remplacement d'un RX déjà patché."),
+                ("Simple", "Affiche RX device/Id/canal, TX device/Id/canal et l'état."),
+                ("Expert", "Ajoute source brute, source résolue, type, actif, modifié et source complète."),
+                ("Local", "La source « . » désigne la machine RX elle-même et reste préservée."),
+            ]),
+            Spacer(1, 2 * mm),
+            *bullets([
+                "Filtre récepteur RX et filtre émetteur TX réduisent le tableau sans modifier le XML.",
+                "Sélectionnez une ligne RX, choisissez la machine TX et son canal, puis Appliquer.",
+                "Supprimer déconnecte uniquement la ligne RX sélectionnée.",
+                "Un patch vers une machine absente peut être normal dans un preset partiel : l'alerte doit être comprise avant remplacement.",
+                "Le renommage direct des colonnes RX et TX accepte Entrée, Tab, Maj+Tab et la recopie en série.",
+            ]),
+        ]
+        easy_patch_detailed = [
+            para("Easy patch : travailler visuellement et immédiatement", "h1"),
+            para("Easy patch affiche toujours les RX de la machine réceptrice à gauche et les TX de la machine émettrice à droite. Les flèches et menus passent rapidement d'une machine à l'autre."),
+            *screenshot(
+                language,
+                "easy-patch",
+                "<b>1</b> machine RX ; <b>2</b> FLIP échange seulement les rôles RX/TX affichés ; <b>3</b> machine TX ; <b>4</b> grille de patch.",
+                crop=(240, 115, 1905, 735),
+                markers=[(0.10, 0.08, "1"), (0.50, 0.08, "2"), (0.78, 0.08, "3"), (0.23, 0.52, "4")],
+                maximum_height=105,
+            ),
+            callout("<b>FLIP ne retourne aucun patch.</b> Il échange uniquement les deux machines sélectionnées afin d'observer ou de créer les liaisons dans l'autre sens.", PALE_GREEN),
+        ]
+        easy_patch_workflows = [
+            para("Easy patch : clic, glissement, plage et PATCH 1:1", "h1"),
+            data_table(
+                ["Geste", "Résultat"],
+                [
+                    ["Cliquer sur une case", "Applique immédiatement ce TX à ce RX."],
+                    ["Glisser horizontalement", "Un TX de départ progresse sur plusieurs colonnes d'une même ligne."],
+                    ["Glisser verticalement", "Une source TX alimente plusieurs RX successifs."],
+                    ["Glisser en diagonale", "Crée une série un-à-un TX1>RX1, TX2>RX2, etc."],
+                    ["Sélection RX/TX", "Même quantité : appariement 1:1. Un TX : distribution vers plusieurs RX."],
+                    ["PATCH 1:1", "Cliquer le premier croisement, choisir le nombre, puis appliquer la série."],
+                ],
+                [52, 118],
+            ),
+            Spacer(1, 3 * mm),
+            *bullets([
+                "Chaque clic ou glissement modifie immédiatement le projet ; il n'existe plus de lot de prévisualisation à valider.",
+                "M'avertir si le RX est déjà patché est activé par défaut. Décochez cette option uniquement si vous acceptez les remplacements sans confirmation.",
+                "Une sélection avec plusieurs TX et plusieurs RX doit contenir le même nombre de canaux.",
+                "Plusieurs TX vers un seul RX ou deux sélections multiples de tailles différentes sont refusés.",
+                "Les labels RX et TX sont éditables directement. Tab, Maj+Tab, Échap et la poignée de série restent disponibles.",
+                "La molette et les boutons -, 100 %, + et Ajuster contrôlent le zoom de la matrice.",
+                "Annuler action restaure la dernière opération immédiate.",
+            ]),
+        ]
+        merge_detailed = [
+            para("Ajouter un autre XML au projet ouvert", "h1"),
+            para("Cette commande fusionne des machines déjà décrites dans un second preset. Elle est différente d'un ajout depuis la banque : le second XML conserve sa structure de machine et ses patchs internes compatibles."),
+            data_table(
+                ["Étape", "Ce que fait DCE"],
+                [
+                    ["1. Ouvrir le projet principal", "Ce XML reste la base de la session et de la sauvegarde."],
+                    ["2. Ajouter XML au projet", "DCE charge et valide le second fichier sans modifier son original."],
+                    ["3. Vérifier le format", "Version de preset et namespace doivent être identiques."],
+                    ["4. Gérer les doublons", "Seuls les noms déjà utilisés sont proposés : ignorer, suffixe automatique personnalisé ou noms manuels."],
+                    ["5. Adapter les références", "Les subscriptions importées suivent les machines du second XML qui ont été renommées."],
+                    ["6. Contrôler", "Le résultat indique machines ajoutées, renommées et doublons ignorés."],
+                ],
+                [50, 120],
+            ),
+            Spacer(1, 3 * mm),
+            callout("Les machines dont le nom ne crée aucun conflit sont toujours ajoutées. Le suffixe automatique est normalisé sans parenthèses.", PALE_GREEN),
+            *bullets([
+                "Un XML invalide, une version différente ou un namespace différent bloque toute la fusion.",
+                "Un nom final déjà utilisé bloque l'opération au lieu de produire un doublon ambigu.",
+                "La fusion est annulable. Utilisez ensuite Santé du fichier et Avant / après avant Enregistrer sous.",
+            ]),
+        ]
+        bank_concept_page = [
+            para("Comprendre la banque de machines", "h1"),
+            callout("Une banque contient des <b>modèles réutilisables de rôles hors ligne</b>. Ce n'est ni un inventaire du réseau réel, ni un catalogue d'identités Dante prêtes à être déployées."),
+            data_table(
+                ["Action", "Source", "Résultat"],
+                [
+                    ["Dupliquer", "Machine du projet courant", "Nouvelle machine indépendante dans le même projet."],
+                    ["Enregistrer dans la banque", "Machine du projet courant", "Modèle assaini, versionné et réutilisable."],
+                    ["Ajouter depuis la banque", "Modèle de banque", "Nouvelle instance indépendante dans le projet ouvert."],
+                    ["Ajouter XML au projet", "Second preset XML", "Machines compatibles et leurs références ajoutées au projet courant."],
+                    ["Nouveau projet", "Structure minimale et banque", "XML 3.0.0 expérimental à valider impérativement."],
+                ],
+                [43, 51, 76],
+            ),
+            Spacer(1, 3 * mm),
+            para("Ce qui est retiré d'un modèle", "h2"),
+            *bullets([
+                "instance_id, device_id et autres identités matérielles de l'instance source ;",
+                "adresses et interfaces réseau du projet source ;",
+                "subscriptions, patchs et flows liés aux autres machines ;",
+                "Preferred Master et valeurs spécifiques qui n'ont pas été explicitement choisies.",
+            ]),
+            para("Ce qui peut rester", "h2"),
+            *bullets([
+                "fabricant, modèle, catégorie, description, tags et image ;",
+                "structure compatible du rôle et nombre de canaux TX/RX ;",
+                "labels TX/RX génériques modifiables avant insertion.",
+            ]),
+        ]
+        bank_workflow_page = [
+            para("Créer, partager et réutiliser une banque", "h1"),
+            data_table(
+                ["Besoin", "Procédure"],
+                [
+                    ["Créer un modèle", "Sélectionner la machine > Enregistrer dans la banque > remplacer les labels propres au projet par des labels génériques > renseigner les métadonnées > Enregistrer."],
+                    ["Ajouter une image", "Choisir PNG, JPEG ou WebP. L'image est copiée dans le dossier du modèle ; le fichier original peut ensuite être déplacé."],
+                    ["Changer de banque", "Banque de machines > Changer de banque. Un dossier local, partagé ou synchronisé peut être utilisé."],
+                    ["Partager toute la banque", "Exporter la banque crée une archive *.dce-bank.zip vérifiée."],
+                    ["Installer une banque", "Importer une banque puis choisir un dossier neuf ou vide. DCE ne remplace jamais silencieusement une banque existante."],
+                    ["Ajouter au projet", "Sélectionner le modèle > Ajouter au projet > choisir un nom unique et les labels > confirmer."],
+                ],
+                [48, 122],
+            ),
+            Spacer(1, 3 * mm),
+            *bullets([
+                "Modifier une machine ajoutée ne modifie jamais son modèle de banque.",
+                "Modifier le modèle ne change jamais les instances déjà ajoutées aux projets.",
+                "La version, l'empreinte, le namespace, le nombre de canaux et la version de preset sont vérifiés avant insertion.",
+                "Les banques GitHub fournies sont assainies et peuvent être installées séparément ; une banque personnelle n'est jamais remplacée.",
+            ]),
+            callout("Après ajout ou création de projet, réouvrez le XML, vérifiez Santé du fichier puis importez une copie dans Dante Controller. Les rôles génériques sans identité matérielle restent expérimentaux.", PALE_RED),
+        ]
+        visual_labels = [
+            para("Import / Export de labels", "h1"),
+            para("L'onglet Labels centralise les échanges génériques, DMT, Allen & Heath et Yamaha. Les formats natifs sont créés depuis les modèles inclus ; DCE ne demande pas de choisir un fichier modèle externe."),
+            *screenshot(
+                language,
+                "labels",
+                "Import à gauche, export à droite. Le bouton DMT ouvre le projet dLive MIDI Tools associé.",
+                crop=(540, 360, 1585, 535),
+                maximum_height=55,
+            ),
+            *bullets([
+                "Import : choisir le fichier, vérifier le rapport détecté, associer les listes aux machines, puis appliquer uniquement les changements valides.",
+                "Export : choisir RX/TX, machines, plage, format et adaptation éventuelle des noms, puis donner le nom du nouveau fichier.",
+                "DMT utilise XLSX/ODS ou JSON/CSV ; dLive et Avantis utilisent leur CSV natif ; CL/QL utilisent le ZIP natif complet.",
+                "Un second import identique n'active pas Appliquer : les labels correspondent déjà.",
+            ]),
+        ]
+        visual_synoptic = [
+            para("Construire et exporter le synoptique", "h1"),
+            *screenshot(
+                language,
+                "synoptic",
+                "<b>1</b> emplacement ; <b>2</b> ordre et visibilité ; <b>3</b> aperçu zoomable ; <b>4</b> reset et exports SVG/PDF.",
+                crop=(240, 80, 1905, 815),
+                markers=[(0.15, 0.15, "1"), (0.14, 0.45, "2"), (0.62, 0.42, "3"), (0.75, 0.94, "4")],
+                maximum_height=105,
+            ),
+            *bullets([
+                "Sélectionnez une ou plusieurs machines, saisissez ou choisissez un emplacement, puis Affecter.",
+                "À emplacement identique, le plus petit numéro d'ordre place la machine plus haut.",
+                "Décochez Voir pour masquer une machine sans la supprimer du projet.",
+                "Dans l'éditeur visuel, déplacez une machine à la souris ; les câbles suivent. Reset reconstruit une disposition automatique propre.",
+                "Les patchs consécutifs sont regroupés sur un câble libellé par plage. Une liaison dans les deux sens utilise une seule ligne avec une flèche à chaque extrémité.",
+                "Le zoom, Ajuster et la fenêtre d'aperçu séparée facilitent les grands projets.",
+                "SVG et PDF sont des exports de présentation. Emplacements et positions sont conservés à côté du projet et ne modifient jamais le XML Dante.",
             ]),
         ]
         visual_health = [
             para("Contrôler avant d'enregistrer", "h1"),
-            para("Les deux dernières pages servent à comprendre les anomalies, produire les rapports et vérifier que seules les modifications attendues seront conservées."),
+            para("Santé du fichier sépare les erreurs bloquantes, les avertissements et les informations. Lisez la ligne complète : elle précise la catégorie, la machine, le canal et la cause."),
+            *screenshot(
+                language,
+                "health",
+                "Exemple anonymisé : formats audio mélangés, mode réseau mixte, IP fixe, patch local et RX libre.",
+                crop=(225, 0, 1905, 285),
+                maximum_height=52,
+            ),
             feature_band([
                 ("Santé du fichier", "Erreurs, warnings, formats audio mélangés, IP fixes et patchs locaux."),
                 ("Sécurité et journal", "Résumé avant sauvegarde, compatibilité XML, rapports, historique et notices."),
                 ("Atomic Bomb", "Onglet séparé, catégories configurables et trois confirmations obligatoires."),
             ]),
+            Spacer(1, 3 * mm),
+            *bullets([
+                "Une erreur bloque la sauvegarde ; un warning exige une vérification mais peut décrire une situation volontaire.",
+                "Points à vérifier > Voir les machines applique un filtre pour retrouver rapidement les appareils concernés.",
+                "Modifiées uniquement puis Avant / après permettent de relire précisément le périmètre des changements.",
+                "Sécurité et journal regroupe validation, compatibilité, historique, comparaison XML, rapports et accès aux notices.",
+            ]),
+        ]
+        visual_atomic = [
+            para("Atomic Bomb : préparer un exercice, jamais un réseau réel", "h1"),
+            *screenshot(
+                language,
+                "atomic-bomb",
+                "Décochez les catégories à préserver. Trois confirmations sont exigées avant de modifier la copie en mémoire.",
+                crop=(600, 155, 1535, 690),
+                maximum_height=100,
+            ),
+            *bullets([
+                "Les catégories couvrent noms, labels, patchs, réseau, Preferred Master, latences, sample rates, bits et IP principales.",
+                "Les identifiants techniques, namespaces, DNS, passerelles et interfaces secondaires restent protégés.",
+                "Toute l'opération tient dans une seule étape Annuler action.",
+                "Le XML source n'est jamais écrasé. Utilisez Enregistrer sous pour produire le fichier d'exercice.",
+            ]),
+            callout("Atomic Bomb ne communique avec aucun appareil. Le fichier d'exercice doit malgré tout être contrôlé dans Dante Controller avant d'être remis aux stagiaires.", PALE_RED),
         ]
     else:
         page1 = [
@@ -947,7 +1322,7 @@ def full_guide(language: str) -> None:
                 "An optional PNG, JPEG, or WebP image is copied into the model folder; no fragile external path is kept.",
                 "The default bank is Documents/Dante Config Editor/Machine Bank. You may choose, open, copy, or place it in a synchronized folder.",
                 "Export bank creates a verified *.dce-bank.zip archive. Import bank requires a new or empty folder and never replaces existing data.",
-                "GitHub banks opens the public V3.6 catalog. DCE Generic Roles 3.6 provides generic 8x8 and 32x32 test roles. DCE Community Devices 3.6 provides five sanitized illustrated templates: Yamaha QL1 and Rio1608-D2, Fohhn DI4.1000, Lake LM 44, and RME Digiface Dante. These banks contain no hardware identity, network data, or subscription.",
+                "GitHub banks opens the public V3.6 catalog. DCE Generic Roles 3.6 provides generic 8x8 and 32x32 test roles. DCE Community Devices 3.6 provides nine sanitized illustrated templates: Yamaha QL1 and Rio1608-D2, Fohhn DI4.1000, Lake LM 44, RME Digiface Dante, Glensound Divine, Beatrice D8 and AOIP22, and Allen & Heath SDante 64x64. These banks contain no hardware identity, network data, or subscription.",
                 "Administration supports search, filters, edit, duplicate, confirmed delete, and model ZIP import/export.",
             ]),
             para("Add a template to the project", "h2"),
@@ -991,6 +1366,14 @@ def full_guide(language: str) -> None:
                 ("Target safely", "Filters, multiple selection, and locks define exactly which devices are affected."),
                 ("Review", "Before / after lets you inspect every change before saving."),
             ]),
+            Spacer(1, 3 * mm),
+            *screenshot(
+                language,
+                "configuration",
+                "Configuration view: quick lists and global actions on the left, device and channels in the center, complete device table at the bottom.",
+                crop=(225, 25, 1905, 735),
+                maximum_height=102,
+            ),
         ]
         visual_device = [
             para("Edit a device without leaving the workflow", "h1"),
@@ -1000,29 +1383,295 @@ def full_guide(language: str) -> None:
                 ("Audio", "Latency, sample rate, and bits per sample."),
                 ("Network", "Automatic or static primary IP without changing secondary interfaces."),
             ]),
+            Spacer(1, 3 * mm),
+            *screenshot(
+                language,
+                "configuration",
+                "<b>1</b> device settings; <b>2</b> selected Tx/Rx channel; <b>3</b> range rename.",
+                crop=(695, 35, 1905, 490),
+                markers=[(0.16, 0.22, "1"), (0.62, 0.22, "2"), (0.67, 0.75, "3")],
+                maximum_height=86,
+            ),
             *bullets([
                 "The RX then TX tabs rename individual channels.",
                 "Rx patch reviews or disconnects subscriptions received by the device.",
                 "Apply validates the complete edit as one grouped operation; Cancel leaves the XML unchanged.",
             ]),
         ]
+        profiles_detailed = [
+            para("Quick profiles and global actions", "h1"),
+            para("A global action affects only the displayed target: all unlocked devices, the unlocked selection, or the current filter. Always review the target before confirming."),
+            *screenshot(
+                language,
+                "configuration",
+                "<b>1</b> quick lists; <b>2</b> Network/audio, IP, Profiles, and Clock tabs; <b>3</b> target and locking controls.",
+                crop=(230, 35, 705, 575),
+                markers=[(0.22, 0.10, "1"), (0.45, 0.40, "2"), (0.55, 0.94, "3")],
+                width=104,
+                maximum_height=118,
+            ),
+            para("Apply a profile", "h2"),
+            *bullets([
+                "Open Global actions > Profiles, choose a profile, then select Apply profile.",
+                "The preview compares the current and target states for every device that will actually be affected.",
+                "Profiles set sample rate, bit depth, latency, and automatic IP; the last two also set Redundant or Daisy-chain.",
+                "A locked device is always excluded. Undo restores the previous state as one operation.",
+            ]),
+            callout("A profile cannot verify physical hardware capabilities. Check the supported rates, latencies, and network modes.", PALE_RED),
+        ]
+        renaming_detailed = [
+            para("Rename Rx and Tx channels quickly", "h1"),
+            para("Direct rename works in Configuration, Device details, Patch, and Easy patch. For a Tx channel, DCE also updates every recognized subscription that uses the old name."),
+            *screenshot(
+                language,
+                "configuration",
+                "<b>1</b> choose Rx or Tx and a channel; <b>2</b> enter the name; <b>3</b> choose the range; <b>4</b> set prefix and starting number.",
+                crop=(1310, 70, 1905, 410),
+                markers=[(0.12, 0.13, "1"), (0.17, 0.36, "2"), (0.12, 0.72, "3"), (0.65, 0.91, "4")],
+                width=155,
+                maximum_height=90,
+            ),
+            para("Editing shortcuts", "h2"),
+            keyboard_table(language),
+        ]
+        series_detailed = [
+            para("Extend a numbered series like a spreadsheet", "h1"),
+            para("The fill handle appears only when the final characters form a number at the end of the label. Drag it to the last required channel; a preview displays the resulting series before release."),
+            data_table(
+                ["Starting name", "Handle", "Result"],
+                [
+                    ["Mic 4", "Visible", "Mic 5, Mic 6, Mic 7..."],
+                    ["Mic 04", "Visible", "Mic 05, Mic 06, Mic 07..."],
+                    ["Wireless 12", "Visible", "Wireless 13, Wireless 14..."],
+                    ["Mic", "Hidden", "No trailing number found"],
+                    ["Mic 4 main", "Hidden", "The name does not end with a number"],
+                ],
+                [48, 34, 88],
+            ),
+            Spacer(1, 3 * mm),
+            *bullets([
+                "All text before the final number is preserved exactly.",
+                "The number may contain several digits and leading zeroes are retained.",
+                "Fill works in Rx/Tx lists and in the Easy patch matrix.",
+                "Escape cancels the preview. No label changes until the handle is dropped on a valid target.",
+                "One Undo operation restores the complete series.",
+            ]),
+            callout("<b>Important:</b> the trailing number belongs to the label. DCE never renumbers technical Dante IDs.", PALE_GREEN),
+        ]
         visual_patch = [
-            para("Two patching workflows", "h1"),
-            para("Patch remains the precise tabular editor. Easy patch adds visual selection, ranges, and immediate apply."),
+            para("Patch: inspect and correct a subscription precisely", "h1"),
+            para("Every row represents one Rx channel and its Tx source. Patch is the most precise view for filtering, reviewing local or external sources, replacing a subscription, or removing it."),
+            *screenshot(
+                language,
+                "patch",
+                "<b>1</b> search and state; <b>2</b> Tx source to apply; <b>3</b> Simple/Expert mode; <b>4</b> Rx-to-Tx result.",
+                crop=(475, 35, 1905, 310),
+                markers=[(0.16, 0.18, "1"), (0.52, 0.18, "2"), (0.81, 0.18, "3"), (0.56, 0.70, "4")],
+                maximum_height=75,
+            ),
             feature_band([
-                ("Patch", "Filter TX/RX devices, find a source, and apply or remove a subscription."),
-                ("Easy patch", "RX on the left, TX on the right, multiple selection, ranges, and immediate apply."),
-                ("Control", "Warning enabled by default before replacing an already-patched Rx channel."),
+                ("Simple", "Shows Rx device/ID/channel, Tx device/ID/channel, and state."),
+                ("Expert", "Adds raw source, resolved source, type, active, modified, and complete source."),
+                ("Local", "The “.” source means the Rx device itself and is preserved."),
+            ]),
+            Spacer(1, 2 * mm),
+            *bullets([
+                "Rx receiver and Tx transmitter filters reduce the table without changing XML.",
+                "Select an Rx row, choose its Tx device and channel, then select Apply.",
+                "Remove disconnects only the selected Rx row.",
+                "A source device missing from a partial preset may be intentional: understand the warning before replacing it.",
+                "Direct Rx and Tx column rename supports Enter, Tab, Shift+Tab, and series fill.",
+            ]),
+        ]
+        easy_patch_detailed = [
+            para("Easy patch: visual and immediate patching", "h1"),
+            para("Easy patch always shows Rx channels for the receiving device on the left and Tx channels for the transmitting device on the right. Menus and arrows move quickly between devices."),
+            *screenshot(
+                language,
+                "easy-patch",
+                "<b>1</b> Rx device; <b>2</b> FLIP exchanges only the displayed Rx/Tx roles; <b>3</b> Tx device; <b>4</b> patch matrix.",
+                crop=(240, 115, 1905, 735),
+                markers=[(0.10, 0.08, "1"), (0.50, 0.08, "2"), (0.78, 0.08, "3"), (0.23, 0.52, "4")],
+                maximum_height=105,
+            ),
+            callout("<b>FLIP does not reverse subscriptions.</b> It only exchanges the two selected devices so you can inspect or create subscriptions in the opposite direction.", PALE_GREEN),
+        ]
+        easy_patch_workflows = [
+            para("Easy patch: click, drag, range, and PATCH 1:1", "h1"),
+            data_table(
+                ["Gesture", "Result"],
+                [
+                    ["Click one cell", "Immediately applies that Tx source to that Rx channel."],
+                    ["Drag horizontally", "Advances from the starting Tx across columns on one Rx row."],
+                    ["Drag vertically", "Feeds several consecutive Rx channels from one Tx source."],
+                    ["Drag diagonally", "Creates Tx1>Rx1, Tx2>Rx2, and so on."],
+                    ["Rx/Tx selection", "Equal counts: one-to-one. One Tx: distribution to several Rx channels."],
+                    ["PATCH 1:1", "Click the first intersection, select the count, then apply the series."],
+                ],
+                [52, 118],
+            ),
+            Spacer(1, 3 * mm),
+            *bullets([
+                "Every click or drag changes the project immediately; there is no preview batch waiting to be applied.",
+                "Warn me when the Rx channel is already patched is enabled by default. Clear it only when you accept replacement without confirmation.",
+                "A selection containing several Tx and Rx channels must contain equal counts.",
+                "Several Tx channels into one Rx or unequal multiple selections are rejected.",
+                "Rx and Tx labels are directly editable. Tab, Shift+Tab, Escape, and the series handle remain available.",
+                "The wheel and -, 100%, +, and Fit controls adjust matrix zoom.",
+                "Undo restores the last immediate operation.",
+            ]),
+        ]
+        merge_detailed = [
+            para("Add another XML file to the open project", "h1"),
+            para("This command merges devices already described by a second preset. It differs from adding from the bank: the second XML retains its compatible device structure and internal subscriptions."),
+            data_table(
+                ["Step", "What DCE does"],
+                [
+                    ["1. Open the main project", "This XML remains the session and save baseline."],
+                    ["2. Add XML to project", "DCE loads and validates the second file without modifying its original."],
+                    ["3. Verify format", "Preset version and namespace must match."],
+                    ["4. Resolve duplicates", "Only used names are offered: skip, custom automatic suffix, or manual names."],
+                    ["5. Adapt references", "Imported subscriptions follow renamed devices from the second XML."],
+                    ["6. Review", "The result reports added, renamed, and skipped duplicate devices."],
+                ],
+                [50, 120],
+            ),
+            Spacer(1, 3 * mm),
+            callout("Devices whose names do not conflict are always added. The automatic suffix is normalized without parentheses.", PALE_GREEN),
+            *bullets([
+                "Invalid XML, a different preset version, or a different namespace blocks the complete merge.",
+                "A final name that is already used blocks the operation instead of producing an ambiguous duplicate.",
+                "The merge can be undone. Review File health and Before / after before Save as.",
+            ]),
+        ]
+        bank_concept_page = [
+            para("Understand the device bank", "h1"),
+            callout("A bank contains <b>reusable offline role templates</b>. It is not a live network inventory and does not contain deployable Dante hardware identities."),
+            data_table(
+                ["Action", "Source", "Result"],
+                [
+                    ["Duplicate", "Device in the open project", "Independent new device in the same project."],
+                    ["Save to device bank", "Device in the open project", "Sanitized, versioned, reusable template."],
+                    ["Add from device bank", "Bank template", "Independent new instance in the open project."],
+                    ["Add XML to project", "Second XML preset", "Compatible devices and references added to the open project."],
+                    ["New project", "Minimal structure and bank", "Experimental 3.0.0 XML that requires validation."],
+                ],
+                [43, 51, 76],
+            ),
+            Spacer(1, 3 * mm),
+            para("Removed from a template", "h2"),
+            *bullets([
+                "instance_id, device_id, and other hardware identities from the source instance;",
+                "network addresses and interfaces from the source project;",
+                "subscriptions, patches, and flows tied to other devices;",
+                "Preferred Master and project-specific values not explicitly selected.",
+            ]),
+            para("Retained when appropriate", "h2"),
+            *bullets([
+                "manufacturer, model, category, description, tags, and image;",
+                "compatible role structure and Tx/Rx channel counts;",
+                "generic Tx/Rx labels that remain editable before insertion.",
+            ]),
+        ]
+        bank_workflow_page = [
+            para("Create, share, and reuse a device bank", "h1"),
+            data_table(
+                ["Need", "Procedure"],
+                [
+                    ["Create a template", "Select the device > Save to device bank > replace project-specific labels with generic labels > enter metadata > Save."],
+                    ["Add an image", "Choose PNG, JPEG, or WebP. The image is copied into the template folder, so the source file can later be moved."],
+                    ["Change bank", "Device bank > Change bank. You may use a local, shared, or synchronized folder."],
+                    ["Share the bank", "Export bank creates a verified *.dce-bank.zip archive."],
+                    ["Install a bank", "Import bank and choose a new or empty folder. DCE never silently replaces an existing bank."],
+                    ["Add to project", "Select the template > Add to project > choose a unique name and labels > confirm."],
+                ],
+                [48, 122],
+            ),
+            Spacer(1, 3 * mm),
+            *bullets([
+                "Editing an inserted device never changes its bank template.",
+                "Editing the template never changes devices already inserted into projects.",
+                "Version, checksum, namespace, channel counts, and preset version are checked before insertion.",
+                "Bundled GitHub banks are sanitized and installed separately; a personal bank is never replaced.",
+            ]),
+            callout("After insertion or project creation, reopen the XML, review File health, and import a copy into Dante Controller. Generic roles without hardware identity remain experimental.", PALE_RED),
+        ]
+        visual_labels = [
+            para("Label Import / Export", "h1"),
+            para("The Labels tab centralizes generic, DMT, Allen & Heath, and Yamaha exchange. Native files are created from bundled templates; DCE does not ask for an external template file."),
+            *screenshot(
+                language,
+                "labels",
+                "Import is on the left and export on the right. The DMT button opens the associated dLive MIDI Tools project.",
+                crop=(540, 360, 1585, 535),
+                maximum_height=55,
+            ),
+            *bullets([
+                "Import: choose the file, review the detection report, associate source lists with devices, and apply only valid changes.",
+                "Export: choose Rx/Tx, devices, range, format, and any required name adaptation, then provide the new output name.",
+                "DMT uses XLSX/ODS or JSON/CSV; dLive and Avantis use their native CSV; CL/QL use the complete native ZIP.",
+                "A second identical import does not enable Apply because labels already match.",
+            ]),
+        ]
+        visual_synoptic = [
+            para("Build and export a synoptic", "h1"),
+            *screenshot(
+                language,
+                "synoptic",
+                "<b>1</b> location; <b>2</b> order and visibility; <b>3</b> zoomable preview; <b>4</b> reset and SVG/PDF exports.",
+                crop=(240, 80, 1905, 815),
+                markers=[(0.15, 0.15, "1"), (0.14, 0.45, "2"), (0.62, 0.42, "3"), (0.75, 0.94, "4")],
+                maximum_height=105,
+            ),
+            *bullets([
+                "Select one or more devices, enter or choose a location, then select Assign.",
+                "Within one location, the smallest order number places the device higher.",
+                "Clear Show to hide a device without removing it from the project.",
+                "In the visual editor, drag a device; cables follow. Reset rebuilds a clean automatic layout.",
+                "Consecutive subscriptions are grouped on one range-labelled cable. A link in both directions uses one line with an arrow at each end.",
+                "Zoom, Fit, and the separate preview window help with large projects.",
+                "SVG and PDF are presentation exports. Locations and positions are stored next to the project and never modify Dante XML.",
             ]),
         ]
         visual_health = [
             para("Review before saving", "h1"),
-            para("The final two pages explain anomalies, produce reports, and help verify that only the intended changes will be kept."),
+            para("File health separates blocking errors, warnings, and information. Read the complete row: it identifies the category, device, channel, and cause."),
+            *screenshot(
+                language,
+                "health",
+                "Anonymized example: mixed audio formats, mixed network mode, static IP, local subscription, and free Rx.",
+                crop=(225, 0, 1905, 285),
+                maximum_height=52,
+            ),
             feature_band([
                 ("File health", "Errors, warnings, mixed audio formats, static IPs, and local subscriptions."),
                 ("Safety and log", "Pre-save summary, XML compatibility, reports, history, and user guides."),
                 ("Atomic Bomb", "Separate tab, configurable categories, and three required confirmations."),
             ]),
+            Spacer(1, 3 * mm),
+            *bullets([
+                "An error blocks saving; a warning requires review but may describe an intentional condition.",
+                "Items to check > Show devices applies a filter to find affected devices quickly.",
+                "Modified only followed by Before / after reviews the exact scope of the changes.",
+                "Safety and log combines validation, compatibility, history, XML comparison, reports, and user guides.",
+            ]),
+        ]
+        visual_atomic = [
+            para("Atomic Bomb: prepare an exercise, never a live network", "h1"),
+            *screenshot(
+                language,
+                "atomic-bomb",
+                "Clear categories that must be preserved. Three confirmations are required before changing the in-memory copy.",
+                crop=(600, 155, 1535, 690),
+                maximum_height=100,
+            ),
+            *bullets([
+                "Categories cover names, labels, subscriptions, network modes, Preferred Master, latencies, sample rates, bit depth, and primary IP.",
+                "Technical identifiers, namespaces, DNS, gateways, and secondary interfaces remain protected.",
+                "The complete operation is one Undo step.",
+                "The source XML is never overwritten. Use Save as to create the exercise file.",
+            ]),
+            callout("Atomic Bomb does not communicate with any device. The exercise file must still be reviewed in Dante Controller before distribution to trainees.", PALE_RED),
         ]
 
     story: list = []
@@ -1033,12 +1682,23 @@ def full_guide(language: str) -> None:
         visual_overview,
         page2,
         visual_device,
+        profiles_detailed,
         page3,
+        renaming_detailed,
+        series_detailed,
         visual_patch,
+        easy_patch_detailed,
+        easy_patch_workflows,
         page4,
+        merge_detailed,
+        visual_labels,
         label_page,
+        bank_concept_page,
+        bank_workflow_page,
         bank_page,
+        visual_synoptic,
         visual_health,
+        visual_atomic,
         page5,
     ]
     for index, page in enumerate(pages):

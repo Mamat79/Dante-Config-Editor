@@ -9,6 +9,13 @@
   navigateurs sur ordinateur.
 - La documentation de soutien GitHub explique le scan du QR sur téléphone.
 - Aucun paiement ni aucune donnée financière ne transitent par DCE.
+- Les notices complètes française et anglaise passent à 26 pages avec captures
+  annotées et procédures détaillées pour Configuration, profils, renommage,
+  Patch, Easy Patch, fusion XML, banque de machines, labels, synoptique, santé
+  du fichier et Atomic Bomb.
+- La banque communautaire V3.6 intègre quatre modèles assainis supplémentaires :
+  Glensound Divine, Beatrice D8 et AOIP22, ainsi qu'Allen & Heath SDante 64x64.
+  La V3.6.1 est remplacée sans changement de numéro.
 
 ## 2026-07-25 - Version 3.6 en développement
 
@@ -28,7 +35,7 @@
 - Les notices FR/EN décrivent l'application immédiate d'Easy Patch et l'alerte optionnelle des RX déjà patchés.
 - Les banques complètes utilisent désormais explicitement le format d'échange `*.dce-bank.zip`, avec catalogue GitHub, archive générique 8x8/32x32 vérifiée et accès direct depuis Windows/macOS.
 - L'installateur Windows permet de choisir le dossier de banque actif et celui des banques fournies, sans écraser une banque existante.
-- Les modèles Yamaha QL1 et Rio1608-D2, Fohhn DI4.1000, Lake LM 44 et RME Digiface Dante sont distribués dans une banque communautaire assainie, proposée séparément par l'installateur Windows et incluse dans les DMG macOS.
+- Les modèles Yamaha QL1 et Rio1608-D2, Fohhn DI4.1000, Lake LM 44, RME Digiface Dante, Glensound Divine, Beatrice D8 et AOIP22, et Allen & Heath SDante 64x64 sont distribués dans une banque communautaire assainie, proposée séparément par l'installateur Windows et incluse dans les DMG macOS.
 - La comparaison XML et ses résultats suivent maintenant la langue active sur Windows et macOS ; les libellés anglais TX/RX ont également été harmonisés.
 - Ajout d'une page bilingue `Soutenir DCE` dans `Sécurité et journal`, sans paiement intégré.
 - Ajout d'un rappel local facultatif après 20 lancements, reportable ou désactivable définitivement, sans télémétrie ni connexion au démarrage.
