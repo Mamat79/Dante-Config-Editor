@@ -23,7 +23,7 @@ public sealed partial class DanteProject
     {
         ArgumentNullException.ThrowIfNull(state);
 
-        Document = new XDocument(state.Document);
+        ReplaceCurrentDocument(new XDocument(state.Document));
         MachineRoleIdentityService.PairEquivalentDocuments(state.Document, Document);
         OriginalFilePath = state.OriginalFilePath;
         LastSavedPath = state.LastSavedPath;
@@ -45,8 +45,7 @@ public sealed partial class DanteProject
             return null;
         }
 
-        return Devices.FirstOrDefault(device =>
-            string.Equals(device.StableIdentity, stableIdentity, StringComparison.Ordinal));
+        return _devicesByStableIdentity.GetValueOrDefault(stableIdentity);
     }
 
     public sealed class DanteProjectState

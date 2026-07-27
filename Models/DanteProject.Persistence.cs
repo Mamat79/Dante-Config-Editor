@@ -109,6 +109,7 @@ public sealed partial class DanteProject
         MachineRoleIdentityService.PairEquivalentDocuments(Document, _originalDocument);
         _originalCompatibilityProfile = DanteXmlCompatibilityService.CaptureProfile(_originalDocument);
         _authorizedDeviceAdditions.Clear();
+        InvalidateValidationCaches();
         RegisterChange("Sauvegarde", $"Fichier sauvegardé sous {fullDestinationPath}");
         IsModified = false;
         _undoSnapshots.Clear();

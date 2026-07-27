@@ -175,6 +175,14 @@ public static class DanteXmlChangeGuardService
         DanteValidationResult result,
         IReadOnlyList<DanteAuthorizedDeviceAddition> authorizedDeviceAdditions)
     {
+        // Le cas courant ne modifie qu'une petite partie du preset. Écarter
+        // immédiatement un sous-arbre strictement identique évite de recréer
+        // tableaux, chemins et empreintes pour tous ses descendants.
+        if (XNode.DeepEquals(original, current))
+        {
+            return;
+        }
+
         if (!string.Equals(original.Name.LocalName, current.Name.LocalName, StringComparison.Ordinal))
         {
             AddChangeIssue(result, path, $"Balise modifiée : <{original.Name.LocalName}> -> <{current.Name.LocalName}>.");

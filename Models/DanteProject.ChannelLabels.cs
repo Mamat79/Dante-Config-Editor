@@ -1,3 +1,5 @@
+using DanteConfigEditor.Services;
+
 namespace DanteConfigEditor.Models;
 
 public sealed partial class DanteProject
@@ -76,7 +78,9 @@ public sealed partial class DanteProject
                 if (txRenames.Count > 0)
                 {
                     // Une seule passe évite les cascades lors d'une permutation A <-> B.
-                    UpdateSubscriptionsForRenamedTxChannels(device.Name, txRenames);
+                    UpdateSubscriptionsForRenamedTxChannels(
+                        MachineRoleIdentityService.ReadVisibleName(device.Element),
+                        txRenames);
                 }
             }
 

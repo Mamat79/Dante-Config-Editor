@@ -82,8 +82,22 @@ public sealed partial class DanteProject
     private readonly Dictionary<XElement, bool> _modifiedRxElements = [];
     private readonly List<ChangeRecord> _changes = [];
     private readonly Stack<UndoSnapshot> _undoSnapshots = [];
+    private readonly Dictionary<string, DanteDevice> _devicesByName =
+        new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, DanteDevice> _devicesByStableIdentity =
+        new(StringComparer.Ordinal);
+    private readonly Dictionary<string, Dictionary<int, DanteChannel>> _rxChannelsByDeviceIdentity =
+        new(StringComparer.Ordinal);
+    private readonly Dictionary<string, TxChannelLookup> _txChannelsByDeviceIdentity =
+        new(StringComparer.Ordinal);
+    private readonly Dictionary<XElement, Dictionary<string, string>> _pendingTxChannelRenames = [];
     private XDocument _originalDocument;
     private DanteXmlCompatibilityProfile _originalCompatibilityProfile;
+    private long _documentRevision;
+    private long _cachedGuardRevision = -1;
+    private long _cachedValidationRevision = -1;
+    private DanteValidationResult? _cachedGuardResult;
+    private DanteValidationResult? _cachedValidationResult;
     private int _batchDepth;
     private bool _reloadPending;
 
@@ -91,6 +105,7 @@ public sealed partial class DanteProject
     {
         OriginalFilePath = originalFilePath;
         Document = document;
+        Document.Changed += Document_Changed;
         _originalDocument = new XDocument(originalDocument ?? document);
         MachineRoleIdentityService.PairEquivalentDocuments(_originalDocument, Document);
         _originalCompatibilityProfile = DanteXmlCompatibilityService.CaptureProfile(_originalDocument);
@@ -228,11 +243,7 @@ public sealed partial class DanteProject
             return null;
         }
 
-        return Devices.FirstOrDefault(device =>
-            string.Equals(
-                MachineRoleIdentityService.ReadVisibleName(device.Element),
-                name,
-                StringComparison.OrdinalIgnoreCase));
+        return _devicesByName.GetValueOrDefault(name);
     }
 
     public void ApplyBatch(Action<DanteProject> mutation)
@@ -248,9 +259,13 @@ public sealed partial class DanteProject
         finally
         {
             _batchDepth--;
-            if (_batchDepth == 0 && _reloadPending)
+            if (_batchDepth == 0)
             {
-                ReloadModel();
+                FlushPendingTxChannelRenames();
+                if (_reloadPending)
+                {
+                    ReloadModel();
+                }
             }
         }
     }
@@ -264,12 +279,18 @@ public sealed partial class DanteProject
 
         string cleanNewName = DanteNameRules.EnsureValidDeviceName(newName);
 
-        if (Devices.Any(device => string.Equals(device.Name, cleanNewName, StringComparison.OrdinalIgnoreCase) && !string.Equals(device.Name, oldName, StringComparison.OrdinalIgnoreCase)))
+        DanteDevice device = FindDevice(oldName) ?? throw new InvalidOperationException("Device introuvable.");
+        if (Devices.Any(candidate =>
+                !ReferenceEquals(candidate, device)
+                && string.Equals(
+                    MachineRoleIdentityService.ReadVisibleName(candidate.Element),
+                    cleanNewName,
+                    StringComparison.OrdinalIgnoreCase)))
         {
             throw new InvalidOperationException("Un autre device porte déjà ce nom.");
         }
 
-        DanteDevice device = FindDevice(oldName) ?? throw new InvalidOperationException("Device introuvable.");
+        string currentName = MachineRoleIdentityService.ReadVisibleName(device.Element);
         if (device.Element.Child("name") is not null)
         {
             SetElementValue(device.Element, "name", cleanNewName);
@@ -288,6 +309,8 @@ public sealed partial class DanteProject
             }
         }
 
+        _devicesByName.Remove(currentName);
+        _devicesByName[cleanNewName] = device;
         RegisterChange("Nom device", $"{oldName} -> {cleanNewName}");
     }
 
@@ -499,7 +522,9 @@ public sealed partial class DanteProject
         {
             // Mise à jour groupée après le renommage : cela évite les effets
             // de cascade si un nouveau nom ressemble à un ancien nom.
-            UpdateSubscriptionsForRenamedTxChannels(device.Name, txRenames);
+            UpdateSubscriptionsForRenamedTxChannels(
+                MachineRoleIdentityService.ReadVisibleName(device.Element),
+                txRenames);
         }
 
         RegisterChange("Renommage série", $"{deviceName} {channelKind}: canaux {startChannelIndex}-{endChannelIndex}, {cleanPrefix} depuis {firstNumber}");
@@ -553,7 +578,9 @@ public sealed partial class DanteProject
 
         if (channelKind == DanteChannelKind.Tx)
         {
-            UpdateSubscriptionsForRenamedTxChannels(device.Name, txRenames);
+            UpdateSubscriptionsForRenamedTxChannels(
+                MachineRoleIdentityService.ReadVisibleName(device.Element),
+                txRenames);
         }
 
         RegisterChange(
@@ -597,7 +624,9 @@ public sealed partial class DanteProject
         }
 
         DanteDevice txDevice = FindDevice(txDeviceName) ?? throw new InvalidOperationException("Le device émetteur n'existe pas dans ce fichier.");
-        if (!string.IsNullOrWhiteSpace(txChannelName) && txDevice.TxChannels.Count > 0 && !ChannelExists(txDevice.TxChannels, txChannelName))
+        if (!string.IsNullOrWhiteSpace(txChannelName)
+            && txDevice.TxChannels.Count > 0
+            && !TxChannelExists(txDevice, txChannelName))
         {
             throw new InvalidOperationException("Le canal TX sélectionné n'existe pas sur le device émetteur.");
         }
@@ -676,19 +705,25 @@ public sealed partial class DanteProject
 
     public DanteValidationResult Validate()
     {
+        if (_cachedValidationResult is not null
+            && _cachedValidationRevision == _documentRevision)
+        {
+            return CloneValidationResult(_cachedValidationResult);
+        }
+
         // Validation volontairement prudente : erreurs bloquantes pour les cas
         // structurels, avertissements pour les patchs non résolus.
         DanteValidationResult result = new();
         if (Document.Root is null)
         {
             result.AddError(DanteIssueCategory.XmlCompatibility, "Le document XML ne contient pas de racine.");
-            return result;
+            return CacheValidationResult(result);
         }
 
         if (Devices.Count == 0)
         {
             result.AddError(DanteIssueCategory.XmlCompatibility, "Aucun device Dante n'a été détecté.");
-            return result;
+            return CacheValidationResult(result);
         }
 
         result.Merge(DanteProjectIntegrityValidator.Validate(Document));
@@ -775,7 +810,7 @@ public sealed partial class DanteProject
             }
         }
 
-        return result;
+        return CacheValidationResult(result);
     }
 
     public IReadOnlyList<string> BuildImportantWarnings()
@@ -916,10 +951,19 @@ public sealed partial class DanteProject
 
     public DanteValidationResult ValidateXmlChangeGuard()
     {
-        return DanteXmlChangeGuardService.ValidateChanges(
+        if (_cachedGuardResult is not null
+            && _cachedGuardRevision == _documentRevision)
+        {
+            return CloneValidationResult(_cachedGuardResult);
+        }
+
+        DanteValidationResult result = DanteXmlChangeGuardService.ValidateChanges(
             _originalDocument,
             Document,
             BuildGuardAuthorizations());
+        _cachedGuardResult = CloneValidationResult(result);
+        _cachedGuardRevision = _documentRevision;
+        return result;
     }
 
     private void AddAudioFormatIssues(DanteValidationResult result)
@@ -960,7 +1004,7 @@ public sealed partial class DanteProject
     {
         // Restauration utilisée par Annuler action et par les erreurs pendant
         // une action utilisateur.
-        Document = new XDocument(snapshot.Document);
+        ReplaceCurrentDocument(new XDocument(snapshot.Document));
         MachineRoleIdentityService.PairEquivalentDocuments(snapshot.Document, Document);
         IsModified = snapshot.WasModified;
 
@@ -1237,18 +1281,90 @@ public sealed partial class DanteProject
         // Après chaque modification XML, les objets de lecture sont reconstruits
         // pour refléter les nouvelles valeurs.
         Devices = Document.Root.Children("device").Select(device => new DanteDevice(device)).ToList();
+        RebuildModelIndexes();
         PatchMatrix = new DantePatchMatrix(BuildSubscriptions());
+        _pendingTxChannelRenames.Clear();
         _reloadPending = false;
+    }
+
+    private void ReplaceCurrentDocument(XDocument document)
+    {
+        ArgumentNullException.ThrowIfNull(document);
+        Document.Changed -= Document_Changed;
+        Document = document;
+        Document.Changed += Document_Changed;
+        _documentRevision++;
+        InvalidateValidationCaches();
+    }
+
+    private void Document_Changed(object? sender, XObjectChangeEventArgs e)
+    {
+        _documentRevision++;
+        InvalidateValidationCaches();
+    }
+
+    private void InvalidateValidationCaches()
+    {
+        _cachedGuardResult = null;
+        _cachedValidationResult = null;
+        _cachedGuardRevision = -1;
+        _cachedValidationRevision = -1;
+    }
+
+    private DanteValidationResult CacheValidationResult(
+        DanteValidationResult result)
+    {
+        _cachedValidationResult = CloneValidationResult(result);
+        _cachedValidationRevision = _documentRevision;
+        return result;
+    }
+
+    private static DanteValidationResult CloneValidationResult(
+        DanteValidationResult source)
+    {
+        DanteValidationResult clone = new();
+        foreach (DanteValidationIssue issue in source.Issues)
+        {
+            clone.AddIssue(
+                issue.Severity,
+                issue.Category,
+                issue.Message,
+                issue.DeviceName,
+                issue.ChannelName,
+                issue.DanteId);
+        }
+
+        return clone;
+    }
+
+    private void RebuildModelIndexes()
+    {
+        _devicesByName.Clear();
+        _devicesByStableIdentity.Clear();
+        _rxChannelsByDeviceIdentity.Clear();
+        _txChannelsByDeviceIdentity.Clear();
+
+        foreach (DanteDevice device in Devices)
+        {
+            if (!string.IsNullOrWhiteSpace(device.Name))
+            {
+                // En cas de doublon invalide, on conserve le premier device,
+                // comme le faisait historiquement FindDevice.
+                _devicesByName.TryAdd(device.Name, device);
+            }
+
+            _devicesByStableIdentity.TryAdd(device.StableIdentity, device);
+            _rxChannelsByDeviceIdentity[device.StableIdentity] = device.RxChannels
+                .GroupBy(channel => channel.Index)
+                .ToDictionary(group => group.Key, group => group.First());
+            _txChannelsByDeviceIdentity[device.StableIdentity] =
+                TxChannelLookup.Create(device.TxChannels);
+        }
     }
 
     private IReadOnlyList<DanteSubscription> BuildSubscriptions()
     {
         List<DanteSubscription> subscriptions = [];
-        Dictionary<string, DanteDevice> devicesByName = Devices
-            .Where(device => !string.IsNullOrWhiteSpace(device.Name))
-            .GroupBy(device => device.Name, StringComparer.OrdinalIgnoreCase)
-            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
-
         foreach (DanteDevice rxDevice in Devices)
         {
             foreach (DanteChannel rxChannel in rxDevice.RxChannels)
@@ -1273,12 +1389,14 @@ public sealed partial class DanteProject
                 else if (!string.IsNullOrWhiteSpace(rawTxDeviceName))
                 {
                     bool isLocal = string.Equals(rawTxDeviceName, ".", StringComparison.Ordinal);
-                    if (!devicesByName.TryGetValue(resolvedTxDeviceName, out DanteDevice? txDevice))
+                    if (!_devicesByName.TryGetValue(resolvedTxDeviceName, out DanteDevice? txDevice))
                     {
                         status = "Warning - device TX absent du preset";
                         kind = DanteSubscriptionKind.ExternalMissingDevice;
                     }
-                    else if (!string.IsNullOrWhiteSpace(txChannelName) && txDevice.TxChannels.Count > 0 && !ChannelExists(txDevice.TxChannels, txChannelName))
+                    else if (!string.IsNullOrWhiteSpace(txChannelName)
+                        && txDevice.TxChannels.Count > 0
+                        && !TxChannelExists(txDevice, txChannelName))
                     {
                         status = "Warning - canal TX absent";
                         kind = DanteSubscriptionKind.MissingChannel;
@@ -1296,7 +1414,7 @@ public sealed partial class DanteProject
 
                     if (txDevice is not null)
                     {
-                        txDanteId = FindReferencedChannel(txDevice.TxChannels, txChannelName)?.DanteId;
+                        txDanteId = FindReferencedTxChannel(txDevice, txChannelName)?.DanteId;
                     }
                 }
 
@@ -1323,20 +1441,37 @@ public sealed partial class DanteProject
     private XElement FindRxElement(string rxDeviceName, int rxIndex)
     {
         DanteDevice rxDevice = FindDevice(rxDeviceName) ?? throw new InvalidOperationException("Le device récepteur n'existe pas dans ce fichier.");
-        DanteChannel? channel = rxDevice.RxChannels.FirstOrDefault(rx => rx.Index == rxIndex);
+        DanteChannel? channel =
+            _rxChannelsByDeviceIdentity.TryGetValue(
+                rxDevice.StableIdentity,
+                out Dictionary<int, DanteChannel>? channels)
+            && channels.TryGetValue(rxIndex, out DanteChannel? indexedChannel)
+                ? indexedChannel
+                : rxDevice.RxChannels.FirstOrDefault(rx => rx.Index == rxIndex);
         return channel?.Element ?? throw new InvalidOperationException("Le canal RX sélectionné est introuvable.");
     }
 
-    private static bool ChannelExists(IEnumerable<DanteChannel> channels, string channelName)
+    private bool TxChannelExists(DanteDevice device, string channelName)
     {
-        return channels.Any(channel =>
-            string.Equals(channel.DisplayName, channelName, StringComparison.OrdinalIgnoreCase)
-            || string.Equals(channel.Index.ToString(), channelName, StringComparison.OrdinalIgnoreCase));
+        return _txChannelsByDeviceIdentity.TryGetValue(
+                device.StableIdentity,
+                out TxChannelLookup? lookup)
+            ? lookup.Contains(channelName)
+            : device.TxChannels.Any(channel =>
+                string.Equals(channel.DisplayName, channelName, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(channel.Index.ToString(), channelName, StringComparison.OrdinalIgnoreCase));
     }
 
-    private static DanteChannel? FindReferencedChannel(IEnumerable<DanteChannel> channels, string channelName)
+    private DanteChannel? FindReferencedTxChannel(DanteDevice device, string channelName)
     {
-        DanteChannel[] matches = channels
+        if (_txChannelsByDeviceIdentity.TryGetValue(
+                device.StableIdentity,
+                out TxChannelLookup? lookup))
+        {
+            return lookup.FindUnique(channelName);
+        }
+
+        DanteChannel[] matches = device.TxChannels
             .Where(channel =>
                 string.Equals(channel.DisplayName, channelName, StringComparison.OrdinalIgnoreCase)
                 || string.Equals(channel.Index.ToString(), channelName, StringComparison.OrdinalIgnoreCase))
@@ -1566,7 +1701,9 @@ public sealed partial class DanteProject
             index++;
         }
 
-        UpdateSubscriptionsForRenamedTxChannels(device.Name, txRenames);
+        UpdateSubscriptionsForRenamedTxChannels(
+            MachineRoleIdentityService.ReadVisibleName(device.Element),
+            txRenames);
 
         index = 1;
         foreach (DanteChannel channel in device.RxChannels)
@@ -1596,7 +1733,7 @@ public sealed partial class DanteProject
                 continue;
             }
 
-            renamedByOldName.TryAdd(cleanOldName, cleanNewName);
+            renamedByOldName[cleanOldName] = cleanNewName;
         }
 
         if (renamedByOldName.Count == 0)
@@ -1604,31 +1741,142 @@ public sealed partial class DanteProject
             return;
         }
 
+        DanteDevice? txDevice = FindDevice(txDeviceName);
+        if (_batchDepth > 0 && txDevice is not null)
+        {
+            if (!_pendingTxChannelRenames.TryGetValue(
+                    txDevice.Element,
+                    out Dictionary<string, string>? pending))
+            {
+                pending = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                _pendingTxChannelRenames[txDevice.Element] = pending;
+            }
+
+            foreach ((string oldName, string newName) in renamedByOldName)
+            {
+                pending[oldName] = newName;
+            }
+
+            return;
+        }
+
+        ApplyTxChannelRenames(txDevice?.Element, txDeviceName, renamedByOldName);
+    }
+
+    private void FlushPendingTxChannelRenames()
+    {
+        if (_pendingTxChannelRenames.Count == 0)
+        {
+            return;
+        }
+
+        foreach ((XElement deviceElement, Dictionary<string, string> renames) in
+                 _pendingTxChannelRenames)
+        {
+            ApplyTxChannelRenames(
+                deviceElement,
+                MachineRoleIdentityService.ReadVisibleName(deviceElement),
+                renames);
+        }
+
+        _pendingTxChannelRenames.Clear();
+    }
+
+    private void ApplyTxChannelRenames(
+        XElement? txDeviceElement,
+        string fallbackTxDeviceName,
+        IReadOnlyDictionary<string, string> renamedByOldName)
+    {
+        string txDeviceName = txDeviceElement is null
+            ? fallbackTxDeviceName
+            : MachineRoleIdentityService.ReadVisibleName(txDeviceElement);
+
         foreach (XElement rxChannel in Document.Root!.Children("device").SelectMany(deviceElement => deviceElement.Children("rxchannel")))
         {
             string rxDeviceName = rxChannel.Parent.ChildValue("name");
-            bool sameDevice = rxChannel.Elements()
-                .Where(element => SubscriptionDeviceElementNames.Contains(element.Name.LocalName))
-                .Any(element =>
+            bool sameDevice = false;
+            foreach (XElement element in rxChannel.Elements())
+            {
+                if (!SubscriptionDeviceElementNames.Contains(element.Name.LocalName))
                 {
-                    string subscribedDevice = element.Value.Trim();
-                    return string.Equals(subscribedDevice, txDeviceName, StringComparison.OrdinalIgnoreCase)
-                        || (string.Equals(subscribedDevice, ".", StringComparison.Ordinal) && string.Equals(rxDeviceName, txDeviceName, StringComparison.OrdinalIgnoreCase));
-                });
+                    continue;
+                }
+
+                string subscribedDevice = element.Value.Trim();
+                sameDevice = string.Equals(
+                        subscribedDevice,
+                        txDeviceName,
+                        StringComparison.OrdinalIgnoreCase)
+                    || (string.Equals(subscribedDevice, ".", StringComparison.Ordinal)
+                        && string.Equals(
+                            rxDeviceName,
+                            txDeviceName,
+                            StringComparison.OrdinalIgnoreCase));
+                if (sameDevice)
+                {
+                    break;
+                }
+            }
 
             if (!sameDevice)
             {
                 continue;
             }
 
-            foreach (XElement subscribedChannel in rxChannel.Elements().Where(element => SubscriptionChannelElementNames.Contains(element.Name.LocalName)))
+            foreach (XElement subscribedChannel in rxChannel.Elements())
             {
+                if (!SubscriptionChannelElementNames.Contains(
+                        subscribedChannel.Name.LocalName))
+                {
+                    continue;
+                }
+
                 if (renamedByOldName.TryGetValue(subscribedChannel.Value.Trim(), out string? newChannelName))
                 {
                     subscribedChannel.Value = newChannelName;
                     _modifiedRxElements[rxChannel] = true;
                 }
             }
+        }
+    }
+
+    private sealed class TxChannelLookup
+    {
+        private readonly Dictionary<string, DanteChannel> _channels =
+            new(StringComparer.OrdinalIgnoreCase);
+        private readonly HashSet<string> _ambiguous =
+            new(StringComparer.OrdinalIgnoreCase);
+
+        public static TxChannelLookup Create(IEnumerable<DanteChannel> channels)
+        {
+            TxChannelLookup lookup = new();
+            foreach (DanteChannel channel in channels)
+            {
+                lookup.Add(channel.DisplayName, channel);
+                lookup.Add(channel.Index.ToString(), channel);
+            }
+
+            return lookup;
+        }
+
+        public bool Contains(string name) => _channels.ContainsKey(name);
+
+        public DanteChannel? FindUnique(string name) =>
+            _ambiguous.Contains(name) ? null : _channels.GetValueOrDefault(name);
+
+        private void Add(string name, DanteChannel channel)
+        {
+            if (_channels.TryGetValue(name, out DanteChannel? existing))
+            {
+                if (!ReferenceEquals(existing, channel))
+                {
+                    _ambiguous.Add(name);
+                }
+
+                return;
+            }
+
+            _channels[name] = channel;
         }
     }
 

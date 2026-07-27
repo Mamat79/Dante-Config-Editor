@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\DanteConfigEditor.Core\DanteConfigEditor.Core.csproj" />
+    <ProjectReference Include="..\..\src\DanteConfigEditor.Application\DanteConfigEditor.Application.csproj" />
+    <ProjectReference Include="..\..\src\DanteConfigEditor.Infrastructure\DanteConfigEditor.Infrastructure.csproj" />
     <Compile Include="..\..\tests\TestSupport\SyntheticPresetFactory.cs" Link="TestSupport\SyntheticPresetFactory.cs" />
   </ItemGroup>
 </Project>

@@ -1,7 +1,14 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json;
+using DanteConfigEditor.Application.Validation;
+using DanteConfigEditor.DanteXml.Profiles;
+using DanteConfigEditor.Domain.Projects;
+using DanteConfigEditor.Domain.Validation;
+using DanteConfigEditor.Domain.Workspace;
+using DanteConfigEditor.Infrastructure.Projects;
 using DanteConfigEditor.Models;
+using DanteConfigEditor.Services;
 using DanteConfigEditorV3.TestSupport;
 
 const int RunsPerSize = 3;
@@ -35,7 +42,12 @@ try
     {
         Console.WriteLine(
             $"{row.Devices,3} devices | load {row.LoadMedianMs,8:0.000} ms | edit {row.EditMedianMs,8:0.000} ms | " +
-            $"guard {row.GuardMedianMs,8:0.000} ms | save {row.SaveMedianMs,8:0.000} ms | edit alloc {row.EditMedianAllocatedMiB,8:0.000} MiB");
+            $"patch {row.PatchMedianMs,8:0.000} ms | validation {row.ValidationMedianMs,8:0.000} ms | " +
+            $"guard {row.GuardMedianMs,8:0.000} ms | save {row.SaveMedianMs,8:0.000} ms");
+        Console.WriteLine(
+            $"            matrix {row.PatchWorkspaceMedianMs,8:0.000} ms | synoptic {row.SynopticMedianMs,8:0.000} ms | " +
+            $".dceproj save {row.DceSaveMedianMs,8:0.000} ms | open {row.DceOpenMedianMs,8:0.000} ms | " +
+            $"edit alloc {row.EditMedianAllocatedMiB,8:0.000} MiB");
     }
 }
 finally
@@ -57,14 +69,23 @@ void WarmUp(string directory)
     string path = Path.Combine(directory, "warmup.xml");
     SyntheticPresetFactory.Create(path, 1, txPerDevice: 1, rxPerDevice: 1);
     DanteProject project = DanteProject.Load(path);
-    project.SetLatency("DEVICE-001", "2000");
-    _ = project.ValidateXmlChangeGuard();
+    // Plusieurs mutations forcent les chemins de validation à dépasser le
+    // seuil du JIT tiered avant les mesures. Sans cela, le cache 2026.1 peut
+    // artificiellement retarder cette optimisation jusqu'au scénario 50.
+    for (int iteration = 0; iteration < 16; iteration++)
+    {
+        project.SetLatency(
+            "DEVICE-001",
+            iteration % 2 == 0 ? "2000" : "1000");
+        _ = project.Validate();
+    }
 }
 
 BenchmarkRun RunScenario(string template, string directory, int devices, int run)
 {
     string source = Path.Combine(directory, $"synthetic-{devices}-run-{run}.xml");
     string destination = Path.Combine(directory, $"synthetic-{devices}-run-{run}-saved.xml");
+    string packageDestination = Path.Combine(directory, $"synthetic-{devices}-run-{run}.dceproj");
     File.Copy(template, source, overwrite: true);
 
     DanteProject? project = null;
@@ -94,8 +115,57 @@ BenchmarkRun RunScenario(string template, string directory, int devices, int run
         });
         return project.Changes.Count;
     });
+    string rxDeviceName = $"DEVICE-{devices:D3}";
+    Measurement patch = Measure(() =>
+    {
+        project!.ApplyBatch(batch =>
+        {
+            for (int channel = 1; channel <= 64; channel++)
+            {
+                batch.ApplyPatch(
+                    rxDeviceName,
+                    channel,
+                    "DEVICE-001-EDITED",
+                    $"EDIT-TX-{channel:D2}");
+            }
+        });
+        return project.PatchMatrix.ActivePatchCount;
+    });
+    Measurement validation = Measure(() =>
+    {
+        DanteXmlProfileDescriptor profile = new DanteXmlProfileDetector().Detect(project!);
+        return new ProjectValidationService().Validate(project!, profile).Issues.Count;
+    });
+    Measurement patchWorkspace = Measure(() =>
+    {
+        PatchWorkspaceSession session = new(project!.PatchMatrix.Subscriptions);
+        return session.PendingCount;
+    });
+    Measurement synoptic = Measure(() =>
+    {
+        SynopticLayoutDocument layout = SynopticExportService.Synchronize(project!, new SynopticLayoutDocument());
+        for (int index = 0; index < layout.Devices.Count; index++)
+        {
+            layout.Devices[index].Location = $"Zone-{index / 10:D2}";
+        }
+
+        SynopticDiagram diagram = SynopticExportService.BuildDiagram(project!, layout);
+        return diagram.Cables.Count;
+    });
     Measurement guard = Measure(() => project!.ValidateXmlChangeGuard().HasErrors);
     Measurement save = Measure(() => project!.SaveAs(destination));
+    ProjectValidationState validationState = new ProjectValidationService().Validate(
+        project!,
+        new DanteXmlProfileDetector().Detect(project!));
+    DceProjectPackageService packageService = new();
+    DceProjectWriteRequest packageRequest = new(
+        project!,
+        CreateWorkspace(project!),
+        [],
+        validationState,
+        "2026.1-benchmark");
+    Measurement dceSave = Measure(() => packageService.Save(packageRequest, packageDestination));
+    Measurement dceOpen = Measure(() => packageService.Open(packageDestination).OpenedXml.Project.Devices.Count);
 
     return new BenchmarkRun(
         devices,
@@ -105,12 +175,54 @@ BenchmarkRun RunScenario(string template, string directory, int devices, int run
         load.AllocatedMiB,
         edit.Milliseconds,
         edit.AllocatedMiB,
+        patch.Milliseconds,
+        patch.AllocatedMiB,
+        validation.Milliseconds,
+        validation.AllocatedMiB,
+        patchWorkspace.Milliseconds,
+        patchWorkspace.AllocatedMiB,
+        synoptic.Milliseconds,
+        synoptic.AllocatedMiB,
         guard.Milliseconds,
         guard.AllocatedMiB,
         (bool)guard.Value,
         save.Milliseconds,
         save.AllocatedMiB,
+        dceSave.Milliseconds,
+        dceSave.AllocatedMiB,
+        dceOpen.Milliseconds,
+        dceOpen.AllocatedMiB,
         save.WorkingSetMiB);
+}
+
+ProjectWorkspaceData CreateWorkspace(DanteProject project)
+{
+    DateTimeOffset now = DateTimeOffset.UtcNow;
+    return new ProjectWorkspaceData(
+        new ProjectMetadata(
+            project.PresetName,
+            "Synthetic performance benchmark",
+            now,
+            now,
+            "2026.1-benchmark"),
+        new ProjectViewSettings(
+            "patch",
+            false,
+            false,
+            320,
+            new Dictionary<string, string>(),
+            new Dictionary<string, double>()),
+        project.Devices
+            .Select((device, index) => new SynopticNodeLayout(
+                device.StableIdentity,
+                120 + (index % 10) * 260,
+                80 + (index / 10) * 120,
+                false,
+                index,
+                $"Zone-{index / 10:D2}"))
+            .ToArray(),
+        [],
+        []);
 }
 
 Measurement Measure(Func<object> operation)
@@ -143,10 +255,22 @@ BenchmarkResult BuildResult(string measuredPhase, string measuredCommit, IReadOn
             Median(group.Select(run => run.LoadAllocatedMiB)),
             Median(group.Select(run => run.EditMs)),
             Median(group.Select(run => run.EditAllocatedMiB)),
+            Median(group.Select(run => run.PatchMs)),
+            Median(group.Select(run => run.PatchAllocatedMiB)),
+            Median(group.Select(run => run.ValidationMs)),
+            Median(group.Select(run => run.ValidationAllocatedMiB)),
+            Median(group.Select(run => run.PatchWorkspaceMs)),
+            Median(group.Select(run => run.PatchWorkspaceAllocatedMiB)),
+            Median(group.Select(run => run.SynopticMs)),
+            Median(group.Select(run => run.SynopticAllocatedMiB)),
             Median(group.Select(run => run.GuardMs)),
             Median(group.Select(run => run.GuardAllocatedMiB)),
             Median(group.Select(run => run.SaveMs)),
             Median(group.Select(run => run.SaveAllocatedMiB)),
+            Median(group.Select(run => run.DceSaveMs)),
+            Median(group.Select(run => run.DceSaveAllocatedMiB)),
+            Median(group.Select(run => run.DceOpenMs)),
+            Median(group.Select(run => run.DceOpenAllocatedMiB)),
             Median(group.Select(run => run.FinalWorkingSetMiB)),
             group.Any(run => run.GuardHasErrors)))
         .ToArray();
@@ -159,7 +283,12 @@ BenchmarkResult BuildResult(string measuredPhase, string measuredCommit, IReadOn
         measuredCommit,
         DateTime.UtcNow.ToString("yyyy-MM-dd"),
         new BenchmarkEnvironment(Environment.OSVersion.VersionString, Environment.Version.ToString(), version, "Release"),
-        new BenchmarkScenario(RunsPerSize, "median", 64, 64, "grouped device details edit"),
+        new BenchmarkScenario(
+            RunsPerSize,
+            "median",
+            64,
+            64,
+            "grouped device details edit, 64-subscription patch, validation, matrix session, synoptic and .dceproj"),
         summaries,
         runs);
 }
@@ -181,11 +310,23 @@ internal sealed record BenchmarkRun(
     double LoadAllocatedMiB,
     double EditMs,
     double EditAllocatedMiB,
+    double PatchMs,
+    double PatchAllocatedMiB,
+    double ValidationMs,
+    double ValidationAllocatedMiB,
+    double PatchWorkspaceMs,
+    double PatchWorkspaceAllocatedMiB,
+    double SynopticMs,
+    double SynopticAllocatedMiB,
     double GuardMs,
     double GuardAllocatedMiB,
     bool GuardHasErrors,
     double SaveMs,
     double SaveAllocatedMiB,
+    double DceSaveMs,
+    double DceSaveAllocatedMiB,
+    double DceOpenMs,
+    double DceOpenAllocatedMiB,
     double FinalWorkingSetMiB);
 internal sealed record BenchmarkSummary(
     int Devices,
@@ -194,10 +335,22 @@ internal sealed record BenchmarkSummary(
     double LoadMedianAllocatedMiB,
     double EditMedianMs,
     double EditMedianAllocatedMiB,
+    double PatchMedianMs,
+    double PatchMedianAllocatedMiB,
+    double ValidationMedianMs,
+    double ValidationMedianAllocatedMiB,
+    double PatchWorkspaceMedianMs,
+    double PatchWorkspaceMedianAllocatedMiB,
+    double SynopticMedianMs,
+    double SynopticMedianAllocatedMiB,
     double GuardMedianMs,
     double GuardMedianAllocatedMiB,
     double SaveMedianMs,
     double SaveMedianAllocatedMiB,
+    double DceSaveMedianMs,
+    double DceSaveMedianAllocatedMiB,
+    double DceOpenMedianMs,
+    double DceOpenMedianAllocatedMiB,
     double FinalWorkingSetMedianMiB,
     bool GuardHasErrors);
 internal sealed record BenchmarkResult(
