@@ -33,6 +33,7 @@ public partial class MainWindow : Window
     private readonly ObservableCollection<string> _logs = [];
     private readonly ObservableCollection<GlobalSearchResult> _searchResults = [];
     private readonly ObservableCollection<DanteValidationIssue> _healthIssues = [];
+    private readonly ObservableCollection<PendingPatchRow> _pendingPatchRows = [];
     private readonly HashSet<string> _lockedDeviceNames = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _warningDeviceNames = new(StringComparer.OrdinalIgnoreCase);
     private readonly DispatcherTimer _recoveryTimer;
@@ -117,6 +118,7 @@ public partial class MainWindow : Window
     private DanteProject? _easyPatchProject;
     private PatchWorkspaceView? _easyPatchWorkspace;
     private UnifiedPatchSession? _unifiedPatchSession;
+    private PatchWorkspaceDisplayMode _patchWorkspaceDisplayMode = PatchWorkspaceDisplayMode.Matrix;
     private UiLanguage _language = UiLanguage.French;
     private bool _editModeEnabled;
 
@@ -183,6 +185,22 @@ public partial class MainWindow : Window
             return Display;
         }
     }
+
+    private enum PatchWorkspaceDisplayMode
+    {
+        Matrix,
+        Easy,
+        List,
+        Device,
+        Pending
+    }
+
+    private sealed record PendingPatchRow(
+        string RxDeviceName,
+        int RxDanteId,
+        string OriginalSource,
+        string DesiredSource,
+        string ActionLabel);
 
     private sealed record GlobalSearchResult(
         string Kind,
@@ -272,6 +290,7 @@ public partial class MainWindow : Window
         GlobalSearchListBox.ItemsSource = _searchResults;
         HealthIssuesGrid.ItemsSource = _healthIssues;
         SynopticDeviceGrid.ItemsSource = _synopticRows;
+        PendingPatchGrid.ItemsSource = _pendingPatchRows;
         GlobalDaisychainRadioButton.IsChecked = true;
         DaisychainRadioButton.IsChecked = true;
         SetTheme(useLightTheme: false);
@@ -2241,8 +2260,88 @@ public partial class MainWindow : Window
             return;
         }
 
-        EasyPatchTab.IsSelected = true;
-        RefreshEasyPatchWorkspace();
+        PatchMatrixModeButton.IsChecked = true;
+        ShowPatchWorkspaceMode(PatchWorkspaceDisplayMode.Matrix);
+    }
+
+    private void PatchWorkspaceModeButton_Checked(object sender, RoutedEventArgs e)
+    {
+        if (sender is not RadioButton { Tag: string modeName }
+            || !Enum.TryParse(modeName, ignoreCase: false, out PatchWorkspaceDisplayMode mode))
+        {
+            return;
+        }
+
+        ShowPatchWorkspaceMode(mode);
+    }
+
+    private void ShowPatchWorkspaceMode(PatchWorkspaceDisplayMode mode)
+    {
+        _patchWorkspaceDisplayMode = mode;
+        if (MainTabs is null
+            || ClassicPatchWorkspacePanel is null
+            || EasyPatchHost is null
+            || PendingPatchWorkspacePanel is null)
+        {
+            return;
+        }
+
+        MainTabs.SelectedItem = ClassicPatchTab;
+        bool visualMode = mode is PatchWorkspaceDisplayMode.Matrix or PatchWorkspaceDisplayMode.Easy;
+        ClassicPatchWorkspacePanel.Visibility = mode is PatchWorkspaceDisplayMode.List or PatchWorkspaceDisplayMode.Device
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+        EasyPatchHost.Visibility = visualMode ? Visibility.Visible : Visibility.Collapsed;
+        PendingPatchWorkspacePanel.Visibility = mode == PatchWorkspaceDisplayMode.Pending
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+
+        if (visualMode)
+        {
+            RefreshEasyPatchWorkspace();
+            if (mode == PatchWorkspaceDisplayMode.Matrix)
+            {
+                _easyPatchWorkspace?.ShowMatrixMode();
+            }
+            else
+            {
+                _easyPatchWorkspace?.ShowAssignmentMode();
+            }
+        }
+        else if (mode == PatchWorkspaceDisplayMode.Device)
+        {
+            ApplyCurrentDevicePatchFilter();
+        }
+
+        if (_projectSession.HasProject)
+        {
+            _projectSession.SetFilter("patch.workspace.mode", mode.ToString());
+        }
+
+        RefreshPendingPatchWorkspace();
+    }
+
+    private void ApplyCurrentDevicePatchFilter()
+    {
+        if (_project is null || DeviceComboBox.SelectedItem is not string deviceName)
+        {
+            return;
+        }
+
+        DanteDevice? device = _project.FindDevice(deviceName);
+        if (device is null)
+        {
+            return;
+        }
+
+        ReceiverDeviceList.SelectedItem = device.RxCount > 0 ? device.Name : AllReceiversItem;
+        SenderDeviceList.SelectedItem = device.TxCount > 0 ? device.Name : AllSendersItem;
+        if (device.TxCount > 0)
+        {
+            SourceDeviceComboBox.SelectedItem = device.Name;
+        }
+
+        RefreshPatchRows();
     }
 
     private void MainTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -2252,7 +2351,9 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (EasyPatchTab is not null && EasyPatchTab.IsSelected)
+        if (ClassicPatchTab is not null
+            && ClassicPatchTab.IsSelected
+            && _patchWorkspaceDisplayMode is PatchWorkspaceDisplayMode.Matrix or PatchWorkspaceDisplayMode.Easy)
         {
             RefreshEasyPatchWorkspace();
         }
@@ -2262,7 +2363,7 @@ public partial class MainWindow : Window
             TabItem item when ReferenceEquals(item, HomeTab) => WorkspaceSection.Home,
             TabItem item when ReferenceEquals(item, OverviewTab) => WorkspaceSection.Overview,
             TabItem item when ReferenceEquals(item, ConfigurationTab) => WorkspaceSection.Machines,
-            TabItem item when ReferenceEquals(item, ClassicPatchTab) || ReferenceEquals(item, EasyPatchTab) => WorkspaceSection.Patch,
+            TabItem item when ReferenceEquals(item, ClassicPatchTab) => WorkspaceSection.Patch,
             TabItem item when ReferenceEquals(item, DeviceLibraryShellTab) => WorkspaceSection.DeviceLibrary,
             TabItem item when ReferenceEquals(item, ExportsTab) && ReferenceEquals(ExportsInnerTabs.SelectedItem, SynopticTab) => WorkspaceSection.Synoptic,
             TabItem item when ReferenceEquals(item, ExportsTab) => WorkspaceSection.ImportExport,
@@ -2419,7 +2520,7 @@ public partial class MainWindow : Window
 
     private void RefreshEasyPatchWorkspace()
     {
-        if (EasyPatchHost is null || EasyPatchTab is null)
+        if (EasyPatchHost is null)
         {
             return;
         }
@@ -2435,7 +2536,9 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (!EasyPatchTab.IsSelected && _easyPatchWorkspace is null)
+        bool visualMode = _patchWorkspaceDisplayMode is PatchWorkspaceDisplayMode.Matrix
+            or PatchWorkspaceDisplayMode.Easy;
+        if (!visualMode && _easyPatchWorkspace is null)
         {
             return;
         }
@@ -2454,8 +2557,7 @@ public partial class MainWindow : Window
 
         SynchronizeApplicationSession();
         bool sameProject = ReferenceEquals(_easyPatchProject, _project);
-        bool startInAssignmentMode = sameProject
-            && _easyPatchWorkspace?.IsAssignmentModeSelected == true;
+        bool startInAssignmentMode = _patchWorkspaceDisplayMode == PatchWorkspaceDisplayMode.Easy;
         bool warnOnExistingPatch = !sameProject
             || _easyPatchWorkspace?.WarnOnExistingPatch != false;
         PatchMatrixOneToOneState? matrixOneToOneState = sameProject
@@ -2496,6 +2598,14 @@ public partial class MainWindow : Window
             _easyPatchProject = _project;
             _easyPatchWorkspace = workspace;
             EasyPatchHost.Content = workspace;
+            if (_patchWorkspaceDisplayMode == PatchWorkspaceDisplayMode.Matrix)
+            {
+                workspace.ShowMatrixMode();
+            }
+            else if (_patchWorkspaceDisplayMode == PatchWorkspaceDisplayMode.Easy)
+            {
+                workspace.ShowAssignmentMode();
+            }
         }
         catch (Exception exception)
         {
@@ -2591,6 +2701,109 @@ public partial class MainWindow : Window
             Margin = new Thickness(20),
             TextWrapping = TextWrapping.Wrap
         };
+    }
+
+    private void RefreshPendingPatchWorkspace()
+    {
+        if (PendingPatchGrid is null)
+        {
+            return;
+        }
+
+        _pendingPatchRows.Clear();
+        IReadOnlyList<PendingPatchChange> changes =
+            _unifiedPatchSession?.PendingChanges ?? [];
+        foreach (PendingPatchChange change in changes)
+        {
+            _pendingPatchRows.Add(new PendingPatchRow(
+                change.RxDeviceName,
+                change.RxDanteId,
+                FormatPendingPatchSource(
+                    change.OriginalTxDeviceName,
+                    change.OriginalTxChannelName),
+                FormatPendingPatchSource(
+                    change.DesiredTxDeviceName,
+                    change.DesiredTxChannelName),
+                change.IsRemoval
+                    ? (_language == UiLanguage.English ? "Disconnect" : "Déconnecter")
+                    : change.IsCreation
+                        ? (_language == UiLanguage.English ? "Connect" : "Connecter")
+                        : (_language == UiLanguage.English ? "Replace" : "Remplacer")));
+        }
+
+        int pendingCount = changes.Count;
+        UnifiedPatchPendingCountTextBlock.Text = _language == UiLanguage.English
+            ? $"{pendingCount} pending change{(pendingCount == 1 ? string.Empty : "s")}"
+            : $"{pendingCount} modification{(pendingCount == 1 ? string.Empty : "s")} en attente";
+        PendingPatchSummaryTextBlock.Text = pendingCount == 0
+            ? (_language == UiLanguage.English
+                ? "No patch batch is waiting. Direct clicks are already applied."
+                : "Aucun lot Patch en attente. Les clics directs sont déjà appliqués.")
+            : (_language == UiLanguage.English
+                ? $"{pendingCount} change(s) will be applied as one undoable transaction."
+                : $"{pendingCount} modification(s) seront appliquées dans une transaction annulable.");
+        ApplyPendingPatchButton.IsEnabled = pendingCount > 0;
+        DiscardPendingPatchButton.IsEnabled = pendingCount > 0;
+
+        string[] warnings = _unifiedPatchSession?.RebaseWarnings.ToArray() ?? [];
+        PatchRebaseWarningsTextBlock.Text = string.Join(Environment.NewLine, warnings);
+        PatchRebaseWarningsTextBlock.Visibility = warnings.Length == 0
+            ? Visibility.Collapsed
+            : Visibility.Visible;
+    }
+
+    private string FormatPendingPatchSource(string? deviceName, string? channelName)
+    {
+        return string.IsNullOrWhiteSpace(deviceName)
+            ? (_language == UiLanguage.English ? "Disconnected" : "Déconnecté")
+            : $"{deviceName} / {channelName}";
+    }
+
+    private void ApplyPendingPatchButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (!EnsureProjectLoaded()
+            || !EnsureEditMode()
+            || _unifiedPatchSession?.HasChanges != true)
+        {
+            return;
+        }
+
+        int changeCount = _unifiedPatchSession.PendingCount;
+        try
+        {
+            _unifiedPatchSession.Commit(_projectSession);
+            string message = _language == UiLanguage.English
+                ? $"{changeCount} patch change(s) applied."
+                : $"{changeCount} modification(s) de Patch appliquée(s).";
+            AddLog(message);
+            RefreshAll();
+            ScheduleRecoverySnapshot();
+            SetStatus(message);
+        }
+        catch (Exception exception)
+        {
+            RefreshAll();
+            ShowError(
+                _language == UiLanguage.English
+                    ? "Unable to apply the patch batch"
+                    : "Application du lot Patch impossible",
+                exception);
+        }
+    }
+
+    private void DiscardPendingPatchButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_unifiedPatchSession?.HasChanges != true)
+        {
+            return;
+        }
+
+        _unifiedPatchSession.Reset();
+        RefreshPendingPatchWorkspace();
+        RefreshEasyPatchWorkspace();
+        SetStatus(_language == UiLanguage.English
+            ? "Pending patch batch discarded."
+            : "Lot Patch en attente annulé.");
     }
 
     private void PatchGrid_PreparingCellForEdit(object sender, DataGridPreparingCellForEditEventArgs e)
@@ -3662,7 +3875,7 @@ public partial class MainWindow : Window
                 _projectSession.Close();
             }
 
-            _unifiedPatchSession = null;
+            ReplaceUnifiedPatchSession(null);
             return;
         }
 
@@ -3670,19 +3883,57 @@ public partial class MainWindow : Window
             || !ReferenceEquals(_projectSession.Project, _project))
         {
             _projectSession.OpenProject(_project);
-            _unifiedPatchSession = new UnifiedPatchSession(_project);
+            ReplaceUnifiedPatchSession(new UnifiedPatchSession(_project));
             return;
         }
 
-        _unifiedPatchSession ??= new UnifiedPatchSession(_project);
-        if (!_unifiedPatchSession.IsCurrent(_project))
+        if (_unifiedPatchSession is null)
         {
-            PatchRebaseResult rebase = _unifiedPatchSession.Rebase(_project);
+            ReplaceUnifiedPatchSession(new UnifiedPatchSession(_project));
+        }
+
+        UnifiedPatchSession session = _unifiedPatchSession
+            ?? throw new InvalidOperationException("La session Patch n'a pas pu être créée.");
+        if (!session.IsCurrent(_project))
+        {
+            PatchRebaseResult rebase = session.Rebase(_project);
             foreach (string warning in rebase.Warnings)
             {
                 AddLog(warning);
             }
         }
+    }
+
+    private void ReplaceUnifiedPatchSession(UnifiedPatchSession? session)
+    {
+        if (ReferenceEquals(_unifiedPatchSession, session))
+        {
+            return;
+        }
+
+        if (_unifiedPatchSession is not null)
+        {
+            _unifiedPatchSession.Changed -= UnifiedPatchSession_Changed;
+        }
+
+        _unifiedPatchSession = session;
+        if (_unifiedPatchSession is not null)
+        {
+            _unifiedPatchSession.Changed += UnifiedPatchSession_Changed;
+        }
+    }
+
+    private void UnifiedPatchSession_Changed(
+        object? sender,
+        UnifiedPatchSessionChangedEventArgs e)
+    {
+        if (!Dispatcher.CheckAccess())
+        {
+            Dispatcher.BeginInvoke(new Action(RefreshPendingPatchWorkspace));
+            return;
+        }
+
+        RefreshPendingPatchWorkspace();
     }
 
     private void RefreshAll()
@@ -3718,6 +3969,7 @@ public partial class MainWindow : Window
                 UpdateGlobalSearchHint(T("Search.NoFileLoaded"));
                 _patchRows.Clear();
                 _healthIssues.Clear();
+                RefreshPendingPatchWorkspace();
                 RefreshSynopticWorkspace();
                 RefreshEasyPatchWorkspace();
                 RefreshShellOverview();
@@ -3823,6 +4075,7 @@ public partial class MainWindow : Window
             RefreshSynopticWorkspace();
             RefreshShellOverview();
             RefreshInspector();
+            RefreshPendingPatchWorkspace();
             UpdateCommandState();
         }
         finally
@@ -3836,6 +4089,7 @@ public partial class MainWindow : Window
         RefreshPatchRows();
         ApplyPatchViewMode();
         RefreshEasyPatchWorkspace();
+        RefreshPendingPatchWorkspace();
         UpdateCommandState();
     }
 
@@ -4578,6 +4832,7 @@ public partial class MainWindow : Window
         TranslateDependencyObject(this, []);
         UpdateConfigurationEditorsToggleText();
         ApplyDataGridColumnHeaders();
+        RefreshPendingPatchWorkspace();
         RefreshGlobalSearchResults();
         UpdateCommandState();
     }
@@ -4632,7 +4887,14 @@ public partial class MainWindow : Window
 
     private void ApplyDataGridColumnHeaders()
     {
-        foreach (DataGrid dataGrid in new[] { DeviceGrid, PatchGrid, HealthIssuesGrid, SynopticDeviceGrid })
+        foreach (DataGrid dataGrid in new[]
+                 {
+                     DeviceGrid,
+                     PatchGrid,
+                     PendingPatchGrid,
+                     HealthIssuesGrid,
+                     SynopticDeviceGrid
+                 })
         {
             foreach (DataGridColumn column in dataGrid.Columns)
             {

@@ -27,7 +27,7 @@ travail afin de ne pas surcharger la barre supérieure.
 | Projet | accueil, fichiers récents et récupération |
 | Vue d'ensemble | indicateurs du projet et dernières modifications |
 | Machines | vue Configuration V3.6 conservée |
-| Patch | vue Patch V3.6 conservée pendant l'unification |
+| Patch | espace unifié Matrice, Easy patch, liste, machine et lots en attente |
 | Synoptique | module Synoptique existant |
 | Banque de machines | accès et migration sûre de la banque |
 | Import / Export | outils d'échange existants |
@@ -60,17 +60,14 @@ et 200 %.
 - `Ctrl+F` : ouvrir la navigation si nécessaire et placer le focus dans la
   recherche ;
 - `Ctrl+Z` : annuler lorsque le contexte actif l'autorise.
-
-Le bouton Rétablir est présent dans le shell, mais reste désactivé tant que la
-fenêtre historique n'est pas entièrement reliée à la nouvelle
-`ProjectSession`.
+- `Ctrl+Y` ou `Ctrl+Maj+Z` : rétablir une commande 2026.1 annulée.
 
 ## Vérifications réalisées
 
 Le 27 juillet 2026 :
 
 - compilation Windows Release sans avertissement ;
-- `338/338` tests Windows réussis ;
+- `343/343` tests Windows réussis ;
 - contrôle visuel réel de l'exécutable à environ `1266 x 813` et en fenêtre
   maximisée ;
 - ouverture de la fixture anonymisée `representative-preset.xml` ;
@@ -78,6 +75,10 @@ Le 27 juillet 2026 :
 - vérification en thèmes sombre et clair ;
 - vérification en français et en anglais ;
 - vérification du repli automatique de l'inspecteur ;
+- vérification des cinq modes de l'espace Patch ;
+- vérification d'un clic direct, puis Annuler et Rétablir ;
+- vérification d'une ligne RX visible à faible hauteur avec la bannière de
+  soutien affichée ;
 - `20/20` tests macOS sans écran réussis et compilation macOS sans
   avertissement.
 
@@ -87,4 +88,3 @@ Non vérifié dans ce lot :
 - contraste élevé ;
 - Narrator, NVDA et VoiceOver ;
 - rendu 2026.1 sur un Mac physique.
-

@@ -88,16 +88,25 @@ public sealed class PatchWorkspaceUiContractTests
     }
 
     [Fact]
-    public void MainWindowKeepsPatchAndAddsEmbeddedEasyPatchTab()
+    public void MainWindowUsesOnePatchWorkspaceWithFiveSynchronizedModes()
     {
         string xaml = File.ReadAllText(RepositoryFile("MainWindow.xaml"));
         string codeBehind = File.ReadAllText(RepositoryFile("MainWindow.xaml.cs"));
 
         Assert.Contains("x:Name=\"ClassicPatchTab\" Header=\"Patch\"", xaml, StringComparison.Ordinal);
-        Assert.Contains("x:Name=\"EasyPatchTab\"", xaml, StringComparison.Ordinal);
-        Assert.Contains("Header=\"Easy patch\"", xaml, StringComparison.Ordinal);
+        Assert.DoesNotContain("x:Name=\"EasyPatchTab\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"PatchMatrixModeButton\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"PatchEasyModeButton\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"PatchListModeButton\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"PatchPerDeviceModeButton\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"PatchPendingModeButton\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"PendingPatchGrid\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"UnifiedPatchPendingCountTextBlock\"", xaml, StringComparison.Ordinal);
         Assert.Contains("x:Name=\"EasyPatchHost\"", xaml, StringComparison.Ordinal);
         Assert.Contains("embedded: true", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("sharedSession: _unifiedPatchSession", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("ShowPatchWorkspaceMode", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("RefreshPendingPatchWorkspace", codeBehind, StringComparison.Ordinal);
         Assert.Contains("EasyPatchWorkspace_DirectApplyRequested", codeBehind, StringComparison.Ordinal);
         Assert.DoesNotContain("EasyPatchWorkspace_ApplyRequested", codeBehind, StringComparison.Ordinal);
     }
@@ -119,6 +128,12 @@ public sealed class PatchWorkspaceUiContractTests
         Assert.Contains("MatrixTxHeader_Click", codeBehind, StringComparison.Ordinal);
         Assert.Contains("MinHeight=\"230\"", xaml, StringComparison.Ordinal);
         Assert.Contains("ColumnHeaderHeight=\"132\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("SizeChanged=\"PatchWorkspaceView_SizeChanged\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("MatrixGrid.ColumnHeaderHeight = ActualHeight switch", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("MatrixGrid.MinHeight = ActualHeight < 620 ? 156 : 230", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("IntroTextBlock.Visibility = compact", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("WorkspaceHeaderBorder.Padding = compact", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("WorkspaceFooterBorder.Padding = compact", codeBehind, StringComparison.Ordinal);
         Assert.Contains("Content = source.Display", codeBehind, StringComparison.Ordinal);
         Assert.Contains("LayoutTransform = new RotateTransform(-90)", codeBehind, StringComparison.Ordinal);
         Assert.Contains("MatrixSeriesThumb_DragStarted", codeBehind, StringComparison.Ordinal);

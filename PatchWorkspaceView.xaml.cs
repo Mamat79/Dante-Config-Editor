@@ -130,6 +130,16 @@ public partial class PatchWorkspaceView : UserControl
 
     public bool IsAssignmentModeSelected => AssignmentTab.IsSelected;
 
+    public void ShowMatrixMode()
+    {
+        MatrixTab.IsSelected = true;
+    }
+
+    public void ShowAssignmentMode()
+    {
+        AssignmentTab.IsSelected = true;
+    }
+
     public bool WarnOnExistingPatch =>
         WarnOnExistingPatchCheckBox.IsChecked != false;
 
@@ -144,6 +154,37 @@ public partial class PatchWorkspaceView : UserControl
     public event EventHandler? CancelRequested;
 
     public event EventHandler<InlineChannelNavigationRequestEventArgs>? InlineChannelNavigationRequested;
+
+    private void PatchWorkspaceView_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        // À 1366 x 768, une hauteur fixe de 132 px masque les premières
+        // lignes RX. Les grands écrans gardent les labels TX complets, tandis
+        // que les fenêtres compactes conservent au moins une ligne exploitable.
+        if (MatrixGrid is null)
+        {
+            return;
+        }
+
+        bool compact = ActualHeight < 600;
+        IntroTextBlock.Visibility = compact ? Visibility.Collapsed : Visibility.Visible;
+        MatrixOneToOneHintTextBlock.Visibility = compact
+            ? Visibility.Collapsed
+            : Visibility.Visible;
+        TitleTextBlock.FontSize = compact ? 16 : 20;
+        WorkspaceHeaderBorder.Padding = compact
+            ? new Thickness(16, 6, 16, 6)
+            : new Thickness(16, 12, 16, 12);
+        WorkspaceFooterBorder.Padding = compact
+            ? new Thickness(16, 5, 16, 5)
+            : new Thickness(16, 10, 16, 10);
+        MatrixGrid.ColumnHeaderHeight = ActualHeight switch
+        {
+            < 560 => 86,
+            < 680 => 106,
+            _ => 132
+        };
+        MatrixGrid.MinHeight = ActualHeight < 620 ? 156 : 230;
+    }
 
     public void FocusChannelEditor(DanteChannelKind kind, int danteId, bool matrix)
     {

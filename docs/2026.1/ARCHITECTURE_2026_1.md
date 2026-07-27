@@ -174,16 +174,19 @@ Réalisé :
 - shell Windows en quatre zones, accueil, vue d'ensemble et inspecteur
   contextuel ;
 - repli adaptatif des panneaux secondaires sans masquer les réglages Machines ;
+- session Patch unique reposant sur les identités stables et les Dante Id ;
+- cinq représentations Patch dans un seul espace Windows ;
+- transactions Patch atomiques reliées à Annuler et Rétablir ;
+- rebase explicite des changements préparés après renommage ;
 - tests d'architecture et de profils.
 
 À poursuivre :
 
 - branchement progressif de toutes les vues sur la session ;
 - remplacement progressif des snapshots par des deltas ciblés ;
-- branchement progressif des vues Windows sur la session ;
-- moteur Patch unique ;
+- migration des renommages historiques vers le dispatcher de commandes ;
 - Centre de validation et navigation par cible ;
 - réduction progressive du Core historique.
 
 L'organisation visuelle et les contrôles réellement effectués sont détaillés
-dans `WINDOWS_WORKSPACE_SHELL.md`.
+dans `WINDOWS_WORKSPACE_SHELL.md` et `UNIFIED_PATCH_WORKSPACE.md`.

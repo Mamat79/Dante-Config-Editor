@@ -5,6 +5,7 @@
              xmlns:converters="clr-namespace:DanteConfigEditor.Converters"
              xmlns:automation="clr-namespace:System.Windows.Automation;assembly=PresentationCore"
              MinWidth="900"
+             SizeChanged="PatchWorkspaceView_SizeChanged"
              ToolTipService.InitialShowDelay="500"
              ToolTipService.ShowDuration="12000">
     <UserControl.Resources>
@@ -204,7 +205,8 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Border Background="{DynamicResource SurfaceBrush}"
+        <Border x:Name="WorkspaceHeaderBorder"
+                Background="{DynamicResource SurfaceBrush}"
                 BorderBrush="{DynamicResource BorderLineBrush}"
                 BorderThickness="0,0,0,1"
                 Padding="16,12">
@@ -809,7 +811,8 @@
             </TabItem>
         </TabControl>
 
-        <Border Grid.Row="3"
+        <Border x:Name="WorkspaceFooterBorder"
+                Grid.Row="3"
                 Background="{DynamicResource SurfaceBrush}"
                 BorderBrush="{DynamicResource BorderLineBrush}"
                 BorderThickness="0,1,0,0"

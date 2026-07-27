@@ -305,6 +305,55 @@
             <Setter Property="Margin" Value="0,6,12,6" />
         </Style>
 
+        <Style x:Key="PatchModeButtonStyle" TargetType="{x:Type RadioButton}">
+            <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderLineBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="12,7" />
+            <Setter Property="Margin" Value="0,0,6,0" />
+            <Setter Property="MinHeight" Value="34" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <Border x:Name="ModeBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="ModeBorder"
+                                        Property="Background"
+                                        Value="{DynamicResource AccentBrush}" />
+                                <Setter TargetName="ModeBorder"
+                                        Property="BorderBrush"
+                                        Value="{DynamicResource AccentDarkBrush}" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="ModeBorder"
+                                        Property="BorderBrush"
+                                        Value="{DynamicResource TextBrush}" />
+                                <Setter TargetName="ModeBorder"
+                                        Property="BorderThickness"
+                                        Value="2" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.45" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style TargetType="{x:Type TabControl}">
             <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource BorderLineBrush}" />
@@ -1243,7 +1292,85 @@
                 </TabItem>
 
                 <TabItem x:Name="ClassicPatchTab" Header="Patch">
-                    <Grid Margin="0,12,0,0">
+                    <Grid Margin="0,8,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Border Background="{DynamicResource SurfaceBrush}"
+                                BorderBrush="{DynamicResource BorderLineBrush}"
+                                BorderThickness="1"
+                                CornerRadius="6"
+                                Padding="10"
+                                Margin="0,0,0,10">
+                            <DockPanel LastChildFill="True">
+                                <Border DockPanel.Dock="Right"
+                                        Background="{DynamicResource SurfaceAltBrush}"
+                                        BorderBrush="{DynamicResource BorderLineBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="4"
+                                        Padding="10,6"
+                                        Margin="10,0,0,0">
+                                    <TextBlock x:Name="UnifiedPatchPendingCountTextBlock"
+                                               Text="0 modification en attente"
+                                               TextWrapping="NoWrap"
+                                               VerticalAlignment="Center"
+                                               AutomationProperties.Name="Compteur des modifications Patch en attente" />
+                                </Border>
+                                <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                              VerticalScrollBarVisibility="Disabled">
+                                    <StackPanel Orientation="Horizontal">
+                                        <RadioButton x:Name="PatchMatrixModeButton"
+                                                     Content="Matrice"
+                                                     Tag="Matrix"
+                                                     GroupName="UnifiedPatchModes"
+                                                     Style="{StaticResource PatchModeButtonStyle}"
+                                                     IsChecked="True"
+                                                     Checked="PatchWorkspaceModeButton_Checked"
+                                                     ToolTip="Affiche la matrice RX/TX. Un clic applique directement le patch."
+                                                     AutomationProperties.Name="Mode Matrice du Patch" />
+                                        <RadioButton x:Name="PatchEasyModeButton"
+                                                     Content="Easy patch"
+                                                     Tag="Easy"
+                                                     GroupName="UnifiedPatchModes"
+                                                     Style="{StaticResource PatchModeButtonStyle}"
+                                                     Checked="PatchWorkspaceModeButton_Checked"
+                                                     ToolTip="Affecte des sélections et des plages RX/TX dans le même moteur de Patch."
+                                                     AutomationProperties.Name="Mode Easy Patch" />
+                                        <RadioButton x:Name="PatchListModeButton"
+                                                     Content="Liste RX vers TX"
+                                                     Tag="List"
+                                                     GroupName="UnifiedPatchModes"
+                                                     Style="{StaticResource PatchModeButtonStyle}"
+                                                     Checked="PatchWorkspaceModeButton_Checked"
+                                                     ToolTip="Affiche chaque RX et sa source TX courante."
+                                                     AutomationProperties.Name="Mode Liste RX vers TX" />
+                                        <RadioButton x:Name="PatchPerDeviceModeButton"
+                                                     Content="Par machine"
+                                                     Tag="Device"
+                                                     GroupName="UnifiedPatchModes"
+                                                     Style="{StaticResource PatchModeButtonStyle}"
+                                                     Checked="PatchWorkspaceModeButton_Checked"
+                                                     ToolTip="Filtre la liste Patch sur la machine actuellement sélectionnée."
+                                                     AutomationProperties.Name="Mode Patch par machine" />
+                                        <RadioButton x:Name="PatchPendingModeButton"
+                                                     Content="Modifications en attente"
+                                                     Tag="Pending"
+                                                     GroupName="UnifiedPatchModes"
+                                                     Style="{StaticResource PatchModeButtonStyle}"
+                                                     Checked="PatchWorkspaceModeButton_Checked"
+                                                     ToolTip="Contrôle les lots préparés avant leur application atomique."
+                                                     AutomationProperties.Name="Modifications Patch en attente" />
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </DockPanel>
+                        </Border>
+
+                        <Grid Grid.Row="1">
+                            <Grid x:Name="ClassicPatchWorkspacePanel"
+                                  Margin="0,2,0,0"
+                                  Visibility="Collapsed">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="245" />
                             <ColumnDefinition Width="*" />
@@ -1485,20 +1612,97 @@
                                        VerticalAlignment="Center"
                                        Foreground="{DynamicResource MutedTextBrush}" />
                         </Grid>
-                    </Grid>
-                </TabItem>
+                            </Grid>
 
-                <TabItem x:Name="EasyPatchTab"
-                         Header="Easy patch">
-                    <ContentControl x:Name="EasyPatchHost" Margin="0,8,0,0">
-                        <Border Background="{DynamicResource SurfaceBrush}"
-                                BorderBrush="{DynamicResource BorderLineBrush}"
-                                BorderThickness="1"
-                                Padding="20">
-                            <TextBlock Text="Chargez un XML pour utiliser Easy patch."
-                                       Foreground="{DynamicResource MutedTextBrush}" />
-                        </Border>
-                    </ContentControl>
+                            <ContentControl x:Name="EasyPatchHost">
+                                <Border Background="{DynamicResource SurfaceBrush}"
+                                        BorderBrush="{DynamicResource BorderLineBrush}"
+                                        BorderThickness="1"
+                                        Padding="20">
+                                    <TextBlock Text="Chargez un XML pour utiliser Easy patch."
+                                               Foreground="{DynamicResource MutedTextBrush}" />
+                                </Border>
+                            </ContentControl>
+
+                            <Grid x:Name="PendingPatchWorkspacePanel"
+                                  Visibility="Collapsed">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Border Background="{DynamicResource SurfaceAltBrush}"
+                                        BorderBrush="{DynamicResource BorderLineBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="6"
+                                        Padding="14"
+                                        Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <TextBlock Text="Modifications Patch en attente"
+                                                   FontSize="18"
+                                                   FontWeight="SemiBold" />
+                                        <TextBlock x:Name="PendingPatchHelpTextBlock"
+                                                   Text="Les clics directs sont appliqués immédiatement. Cette liste contient seulement les lots explicitement préparés."
+                                                   Margin="0,5,0,0"
+                                                   Foreground="{DynamicResource MutedTextBrush}" />
+                                        <TextBlock x:Name="PatchRebaseWarningsTextBlock"
+                                                   Margin="0,6,0,0"
+                                                   Foreground="#F59E0B"
+                                                   Visibility="Collapsed" />
+                                    </StackPanel>
+                                </Border>
+
+                                <DataGrid x:Name="PendingPatchGrid"
+                                          Grid.Row="1"
+                                          IsReadOnly="True"
+                                          AutoGenerateColumns="False"
+                                          EnableRowVirtualization="True"
+                                          EnableColumnVirtualization="True"
+                                          AutomationProperties.Name="Liste des modifications Patch en attente">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="RX device"
+                                                            Binding="{Binding RxDeviceName}"
+                                                            Width="1.3*" />
+                                        <DataGridTextColumn Header="RX Dante Id"
+                                                            Binding="{Binding RxDanteId}"
+                                                            Width="0.7*" />
+                                        <DataGridTextColumn Header="Source actuelle"
+                                                            Binding="{Binding OriginalSource}"
+                                                            Width="1.6*" />
+                                        <DataGridTextColumn Header="Source demandée"
+                                                            Binding="{Binding DesiredSource}"
+                                                            Width="1.6*" />
+                                        <DataGridTextColumn Header="Action"
+                                                            Binding="{Binding ActionLabel}"
+                                                            Width="0.9*" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <Grid Grid.Row="2" Margin="0,10,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="PendingPatchSummaryTextBlock"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource MutedTextBrush}" />
+                                    <StackPanel Grid.Column="1"
+                                                Orientation="Horizontal">
+                                        <Button x:Name="DiscardPendingPatchButton"
+                                                Content="Annuler le lot"
+                                                Style="{StaticResource SecondaryButtonStyle}"
+                                                Click="DiscardPendingPatchButton_Click"
+                                                ToolTip="Supprime uniquement les modifications Patch encore en attente." />
+                                        <Button x:Name="ApplyPendingPatchButton"
+                                                Content="Appliquer le lot"
+                                                Click="ApplyPendingPatchButton_Click"
+                                                ToolTip="Applique toutes les modifications en attente en une transaction annulable." />
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
                 </TabItem>
 
                 <TabItem x:Name="ExportsTab" Header="Import / Export">
