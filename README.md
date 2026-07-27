@@ -31,7 +31,7 @@ La V3.6 est développée et testée dans la branche `v3.6`, à partir de la V3.5
 - journaux techniques accessibles depuis l'application ;
 - 272 tests Core/Windows et 20 tests Mac sans écran.
 
-La duplication et la banque ne fabriquent pas un appareil Dante réel. Elles créent des rôles de preset génériques dépourvus de `instance_id` et `device_id`. Aucun import V3.6 n'ayant encore été effectué dans Dante Controller, la compatibilité terrain n'est pas présentée comme garantie.
+La duplication et la banque ne fabriquent pas un appareil Dante réel. Elles créent des rôles de preset génériques dépourvus de `instance_id` et `device_id`. **La V3.6 a été testée avec succès dans Dante Controller par le mainteneur sur des XML modifiés par DCE.** Cette validation confirme le fonctionnement du parcours testé ; elle ne dispense pas de conserver l'original et de contrôler chaque nouveau type de preset ou de matériel avant une utilisation en production.
 
 ## Origine et développement assisté
 

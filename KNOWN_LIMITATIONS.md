@@ -39,7 +39,7 @@
 ## Duplication, banque et nouveau projet
 
 - DCE duplique des rôles génériques de preset, pas des appareils physiques. `instance_id` et `device_id` sont retirés au lieu d'être copiés ou inventés.
-- Les rôles génériques observés dans Dante Preset Creator utilisent cette absence d'identité matérielle, mais aucun import V3.6 réel dans Dante Controller n'a encore confirmé tous les scénarios DCE.
+- Le mainteneur a confirmé un import réel réussi de XML V3.6 modifiés par DCE dans Dante Controller. Cette validation couvre le parcours effectivement essayé, pas toutes les structures XML, versions de Dante Controller ou extensions constructeur possibles.
 - Réseau, subscriptions, flows, Preferred Master et réglages sensibles sont exclus d'une duplication ou insertion par défaut. Leur conservation doit être choisie explicitement.
 - Un modèle de banque doit provenir de la même version de preset et d'un namespace compatible avec le projet cible. Les conversions entre formats Dante ne sont pas inventées.
 - Les images de modèles sont limitées à PNG, JPEG ou WebP et à 10 MiB. Elles servent uniquement à l'interface et ne sont jamais écrites dans le XML Dante.

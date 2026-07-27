@@ -60,7 +60,7 @@ V3.6.1 fixes the V3.6 support screen on Windows and macOS. Dante Config Editor r
 
 ## Limitations
 
-- No V3.6 output has yet been imported into Dante Controller: automated tests and structural comparisons are not a field guarantee.
+- The maintainer has successfully imported and tested V3.6 XML output in Dante Controller after editing it with DCE. The exact Dante Controller version and anonymized scenario details still need to be recorded in the compatibility matrix.
 - A generic preset role is not a physical Dante device identity.
 - Complete project creation remains experimental.
 - The Windows installer is not Authenticode signed.

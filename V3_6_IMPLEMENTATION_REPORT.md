@@ -21,7 +21,11 @@ Trois niveaux de preuve sont distingués :
 2. comparaison structurelle et sémantique sur des copies de XML ;
 3. import réel dans une version identifiée de Dante Controller.
 
-Le niveau 3 n'a pas été exécuté.
+Au moment de la rédaction initiale de ce rapport, le niveau 3 n'avait pas été
+exécuté. Mise à jour du 27 juillet 2026 : le mainteneur confirme avoir importé
+et testé avec succès dans Dante Controller des XML modifiés par la V3.6. La
+version exacte de Dante Controller et le détail anonymisé des scénarios restent
+à reporter dans la matrice de compatibilité.
 
 ## 2. Problèmes trouvés
 
@@ -190,11 +194,14 @@ Benchmark médian final, trois passages, 64 TX et 64 RX par machine :
 
 ## 13. Test réel dans Dante Controller
 
-**Aucun test réel n'a été effectué.**
+**Mise à jour postérieure au rapport : un test réel réussi a été confirmé par
+le mainteneur.**
 
-Il n'est donc pas affirmé que la duplication, l'insertion depuis la banque ou le
-nouveau projet sont garantis importables. La procédure exacte est dans
-`MANUAL_DANTE_CONTROLLER_TESTS.md`.
+Des XML modifiés par la V3.6 ont été importés avec succès dans Dante Controller.
+Cette preuve remplace l'ancienne mention « aucun test réel ». Les scénarios
+précis, notamment duplication, insertion depuis la banque et nouveau projet,
+doivent néanmoins être consignés séparément lorsqu'ils sont testés. La
+procédure de relevé reste dans `MANUAL_DANTE_CONTROLLER_TESTS.md`.
 
 ## 14. Vérifications structurelles seulement
 

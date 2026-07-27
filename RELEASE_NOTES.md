@@ -61,7 +61,7 @@ V3.6.1 corrige l'écran de soutien de la V3.6 sur Windows et macOS. Dante Config
 
 ## Limites
 
-- Aucun fichier V3.6 n'a encore été importé réellement dans Dante Controller : les tests automatisés et comparaisons structurelles ne constituent pas une garantie terrain.
+- La V3.6 a été importée et testée avec succès dans Dante Controller par le mainteneur sur des XML modifiés par DCE. La version exacte de Dante Controller et le détail anonymisé des scénarios restent à consigner dans la matrice de compatibilité.
 - Un rôle générique de preset n'est pas l'identité d'un appareil Dante physique.
 - La création d'un projet complet reste expérimentale.
 - L'installateur Windows n'est pas signé Authenticode.
