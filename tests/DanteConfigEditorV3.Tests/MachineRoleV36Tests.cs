@@ -63,6 +63,7 @@ public sealed class MachineRoleV36Tests
         using TestWorkspace workspace = new("representative-preset.xml");
         XDocument sourceDocument = XDocument.Load(workspace.SourcePath, LoadOptions.PreserveWhitespace);
         XElement firstDevice = sourceDocument.Root!.Elements().First(element => element.Name.LocalName == "device");
+        firstDevice.AddFirst(new XElement(firstDevice.Name.Namespace + "device_id", "SHOULD-NOT-BE-COPIED"));
         firstDevice.Add(new XElement(firstDevice.Name.Namespace + "vendor_extension",
             new XAttribute("mode", "preserve"),
             new XElement(firstDevice.Name.Namespace + "opaque", "42")));
@@ -78,6 +79,7 @@ public sealed class MachineRoleV36Tests
 
         XElement clone = FindDeviceElement(project.Document, "DEVICE-A-GENERIC");
         Assert.Null(Child(clone, "instance_id"));
+        Assert.Null(Child(clone, "device_id"));
         Assert.Null(Child(clone, "default_name"));
         Assert.Empty(Children(clone, "interface"));
         Assert.NotNull(Child(clone, "vendor_extension"));

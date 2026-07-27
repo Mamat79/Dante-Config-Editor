@@ -156,6 +156,7 @@ internal static class MachineRoleInstantiationService
         // Preset Creator officiel omet lui aussi instance_id pour un device
         // personnalisé, au lieu d'inventer un EUI-64 susceptible de collision.
         device.Child("instance_id")?.Remove();
+        device.Child("device_id")?.Remove();
         device.Child("default_name")?.Remove();
     }
 
