@@ -71,6 +71,8 @@ public sealed class SynopticExportTests
             item.SourceDevice == "DEVICE-001" && item.TargetDevice == "DEVICE-002");
         Assert.Single(cable.Labels);
         Assert.Equal("TX 1-32 → RX 1-32  (32 can.)", cable.Labels[0]);
+        Assert.Equal(32, cable.Subscriptions.Count);
+        Assert.StartsWith("synoptic-link:", cable.StableId, StringComparison.Ordinal);
         Assert.Equal(2, diagram.Locations.Count);
         AssertOrthogonal(cable.RoutePoints);
         Assert.True(diagram.LegendX > diagram.Locations.Max(location => location.X + location.Width));
@@ -102,6 +104,44 @@ public sealed class SynopticExportTests
         Assert.Contains("marker-end=", svg, StringComparison.Ordinal);
         Assert.Contains("data-arrow=\"start\"", svg, StringComparison.Ordinal);
         Assert.Contains("data-arrow=\"end\"", svg, StringComparison.Ordinal);
+        Assert.Contains(cable.Subscriptions, item =>
+            item.SourceDevice == "DEVICE-001"
+            && item.TargetDevice == "DEVICE-002");
+        Assert.Contains(cable.Subscriptions, item =>
+            item.SourceDevice == "DEVICE-002"
+            && item.TargetDevice == "DEVICE-001");
+    }
+
+    [Fact]
+    public void PatchSubscriptionAndSynopticCableShareOneStableSelection()
+    {
+        using TestDirectory directory = new();
+        string source = directory.PathFor("selection.xml");
+        SyntheticPresetFactory.Create(source, deviceCount: 3, txPerDevice: 4, rxPerDevice: 4);
+        DanteProject project = DanteProject.Load(source);
+        SynopticLayoutDocument layout = SynopticExportService.LoadOrCreate(
+            project,
+            directory.PathFor("layout"));
+        SynopticDiagram diagram = SynopticExportService.BuildDiagram(project, layout);
+        DanteSubscription subscription = project.PatchMatrix.Subscriptions.First(item =>
+            item.IsActive
+            && !item.IsLocalSubscription
+            && !item.IsWarning);
+
+        SynopticCable? cable = SynopticSelectionService.FindCable(
+            diagram,
+            subscription);
+
+        Assert.NotNull(cable);
+        Assert.Contains(cable!.Subscriptions, item =>
+            item.RxDanteId == subscription.RxDanteId
+            && item.TargetDevice == subscription.RxDevice);
+        Assert.Same(
+            cable,
+            SynopticSelectionService.FindCable(
+                diagram,
+                subscription.RxDevice,
+                subscription.RxDanteId));
     }
 
     [Fact]

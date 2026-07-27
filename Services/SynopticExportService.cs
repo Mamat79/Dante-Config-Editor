@@ -253,7 +253,8 @@ public static class SynopticExportService
                 nodesByName[group.Key.Target],
                 locationIndexByDevice[group.Key.Source],
                 locationIndexByDevice[group.Key.Target],
-                BuildCableLabels(devicesByName[group.Key.Source], group, english)))
+                BuildCableLabels(devicesByName[group.Key.Source], group, english),
+                BuildCableSubscriptions(group)))
             .ToArray();
 
         Dictionary<int, string[]> corridorBundles = drafts
@@ -322,11 +323,16 @@ public static class SynopticExportService
                     .Concat(reverseDraft!.Labels.Select(item => $"{reverseDraft.Source.Name} → {reverseDraft.Target.Name}: {item}"))
                     .ToArray()
                 : draft.Labels;
+            IReadOnlyList<SynopticCableSubscription> subscriptions = bidirectional
+                ? draft.Subscriptions.Concat(reverseDraft!.Subscriptions).ToArray()
+                : draft.Subscriptions;
             cables.Add(new SynopticCable(
+                BuildCableStableId(draft, bidirectional),
                 draft.Source.Name,
                 draft.Target.Name,
                 Palette[bundleColorIndices[bundleKey] % Palette.Length],
                 labels,
+                subscriptions,
                 start.X,
                 start.Y,
                 end.X,
@@ -584,6 +590,38 @@ public static class SynopticExportService
         }
 
         return ranges.Select(range => FormatRange(range, english)).ToArray();
+    }
+
+    private static IReadOnlyList<SynopticCableSubscription> BuildCableSubscriptions(
+        IEnumerable<DanteSubscription> subscriptions)
+    {
+        return subscriptions
+            .OrderBy(subscription => subscription.RxDanteId)
+            .Select(subscription => new SynopticCableSubscription(
+                subscription.ResolvedTxDeviceName,
+                subscription.TxDanteId,
+                subscription.TxChannelName,
+                subscription.RxDevice,
+                subscription.RxDanteId,
+                subscription.RxChannelName,
+                subscription.Kind,
+                subscription.Status))
+            .ToArray();
+    }
+
+    private static string BuildCableStableId(CableDraft draft, bool bidirectional)
+    {
+        if (!bidirectional)
+        {
+            return $"synoptic-link:{draft.Source.Identity}>{draft.Target.Identity}";
+        }
+
+        return string.Compare(
+                draft.Source.Identity,
+                draft.Target.Identity,
+                StringComparison.OrdinalIgnoreCase) <= 0
+            ? $"synoptic-link:{draft.Source.Identity}<>{draft.Target.Identity}"
+            : $"synoptic-link:{draft.Target.Identity}<>{draft.Source.Identity}";
     }
 
     private static string FormatRange(CableRange range, bool english)
@@ -990,7 +1028,8 @@ public static class SynopticExportService
         SynopticDeviceNode Target,
         int SourceLocationIndex,
         int TargetLocationIndex,
-        IReadOnlyList<string> Labels);
+        IReadOnlyList<string> Labels,
+        IReadOnlyList<SynopticCableSubscription> Subscriptions);
 
     private sealed class CableRange(int? txStart, int? txEnd, string txName, int rxStart, int rxEnd, int count)
     {

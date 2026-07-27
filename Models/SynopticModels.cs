@@ -61,10 +61,12 @@ public sealed record SynopticDeviceNode(
     double Height);
 
 public sealed record SynopticCable(
+    string StableId,
     string SourceDevice,
     string TargetDevice,
     string Color,
     IReadOnlyList<string> Labels,
+    IReadOnlyList<SynopticCableSubscription> Subscriptions,
     double StartX,
     double StartY,
     double EndX,
@@ -73,6 +75,24 @@ public sealed record SynopticCable(
     double LabelY,
     IReadOnlyList<SynopticRoutePoint> RoutePoints,
     bool IsLoopback,
-    bool IsBidirectional);
+    bool IsBidirectional)
+{
+    public bool HasError => Subscriptions.Any(subscription =>
+        subscription.Kind == DanteSubscriptionKind.Conflict);
+
+    public bool HasWarning => Subscriptions.Any(subscription =>
+        subscription.Kind is DanteSubscriptionKind.ExternalMissingDevice
+            or DanteSubscriptionKind.MissingChannel);
+}
+
+public sealed record SynopticCableSubscription(
+    string SourceDevice,
+    int? TxDanteId,
+    string TxChannelName,
+    string TargetDevice,
+    int RxDanteId,
+    string RxChannelName,
+    DanteSubscriptionKind Kind,
+    string Status);
 
 public sealed record SynopticRoutePoint(double X, double Y);

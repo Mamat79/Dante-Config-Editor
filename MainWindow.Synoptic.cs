@@ -8,6 +8,8 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using DanteConfigEditor.Application.Navigation;
+using DanteConfigEditor.Domain.Projects;
 using DanteConfigEditor.Models;
 using DanteConfigEditor.Services;
 using Microsoft.Win32;
@@ -23,7 +25,18 @@ public partial class MainWindow
     private Border? _draggedSynopticCard;
     private string? _draggedSynopticIdentity;
     private Point _synopticDragOffset;
+    private Point _synopticDragStart;
+    private bool _synopticDeviceMoved;
     private SynopticPreviewWindow? _synopticPreviewWindow;
+    private SynopticDiagram? _currentSynopticDiagram;
+    private string? _selectedSynopticDeviceIdentity;
+    private string? _selectedSynopticCableStableId;
+    private bool _synchronizingSynopticSelection;
+    private bool _refreshingSynopticLocationFilter;
+    private bool _synopticPanActive;
+    private Point _synopticPanStart;
+    private double _synopticPanHorizontalOffset;
+    private double _synopticPanVerticalOffset;
 
     private void RefreshSynopticWorkspace(bool persistCurrentRows = true)
     {
@@ -32,9 +45,14 @@ public partial class MainWindow
             _synopticRows.Clear();
             _synopticLayout = null;
             _synopticLayoutPath = null;
+            _currentSynopticDiagram = null;
+            _selectedSynopticDeviceIdentity = null;
+            _selectedSynopticCableStableId = null;
             SynopticCanvas.Children.Clear();
             SynopticLocationComboBox.ItemsSource = null;
             SynopticLocationComboBox.Text = string.Empty;
+            SynopticLocationFilterComboBox.ItemsSource = null;
+            SynopticSelectionPanel.Visibility = Visibility.Collapsed;
             SynopticSummaryTextBlock.Text = T("Status.NoFileLoaded");
             UpdateSynopticCommandState(false);
             return;
@@ -107,6 +125,62 @@ public partial class MainWindow
         }
     }
 
+    private SynopticLayoutDocument BuildSynopticLayoutForCurrentFilter()
+    {
+        if (_synopticLayout is null)
+        {
+            return new SynopticLayoutDocument();
+        }
+
+        string? locationFilter = SelectedSynopticLocationFilter();
+        if (locationFilter is null)
+        {
+            return _synopticLayout;
+        }
+
+        // Le filtre est une préférence d'affichage temporaire. On clone les
+        // placements pour ne jamais convertir un filtre en masquage persistant.
+        return new SynopticLayoutDocument
+        {
+            SchemaVersion = _synopticLayout.SchemaVersion,
+            Devices = _synopticLayout.Devices
+                .Select(placement => new SynopticDevicePlacement
+                {
+                    DeviceIdentity = placement.DeviceIdentity,
+                    DeviceName = placement.DeviceName,
+                    Location = placement.Location,
+                    IsVisible = placement.IsVisible
+                        && string.Equals(
+                            placement.Location.Trim(),
+                            locationFilter,
+                            StringComparison.OrdinalIgnoreCase),
+                    Order = placement.Order,
+                    ManualX = placement.ManualX,
+                    ManualY = placement.ManualY
+                })
+                .ToList()
+        };
+    }
+
+    private string? SelectedSynopticLocationFilter()
+    {
+        string? selected = SynopticLocationFilterComboBox.SelectedItem as string;
+        return string.IsNullOrWhiteSpace(selected)
+            || string.Equals(
+                selected,
+                SynopticAllLocationsLabel(),
+                StringComparison.OrdinalIgnoreCase)
+            ? null
+            : selected;
+    }
+
+    private string SynopticAllLocationsLabel()
+    {
+        return _language == UiLanguage.English
+            ? "All locations"
+            : "Tous les emplacements";
+    }
+
     private void RenderSynopticPreview()
     {
         SynopticCanvas.Children.Clear();
@@ -115,7 +189,11 @@ public partial class MainWindow
             return;
         }
 
-        SynopticDiagram diagram = SynopticExportService.BuildDiagram(_project, _synopticLayout, _language == UiLanguage.English);
+        SynopticDiagram diagram = SynopticExportService.BuildDiagram(
+            _project,
+            BuildSynopticLayoutForCurrentFilter(),
+            _language == UiLanguage.English);
+        _currentSynopticDiagram = diagram;
         _synopticPreviewNodes.Clear();
         foreach (SynopticDeviceNode node in diagram.Devices)
         {
@@ -164,11 +242,21 @@ public partial class MainWindow
         {
             System.Windows.Shapes.Path underlay = BuildPreviewCablePath(cable, Brushes.White, 8, showArrow: false);
             underlay.Tag = cable;
+            underlay.Cursor = Cursors.Hand;
+            underlay.ToolTip = SynopticCableToolTip(cable);
+            underlay.MouseLeftButtonDown += SynopticCable_MouseLeftButtonDown;
             Panel.SetZIndex(underlay, 1);
             SynopticCanvas.Children.Add(underlay);
 
-            System.Windows.Shapes.Path path = BuildPreviewCablePath(cable, BrushFromHex(cable.Color), 3.5, showArrow: true);
+            System.Windows.Shapes.Path path = BuildPreviewCablePath(
+                cable,
+                BrushFromHex(SynopticCableDisplayColor(cable)),
+                3.5,
+                showArrow: true);
             path.Tag = cable;
+            path.Cursor = Cursors.Hand;
+            path.ToolTip = SynopticCableToolTip(cable);
+            path.MouseLeftButtonDown += SynopticCable_MouseLeftButtonDown;
             Panel.SetZIndex(path, 2);
             SynopticCanvas.Children.Add(path);
         }
@@ -180,8 +268,20 @@ public partial class MainWindow
                 Width = node.Width,
                 Height = node.Height,
                 Background = Brushes.White,
-                BorderBrush = BrushFromHex(node.Color),
-                BorderThickness = new Thickness(2),
+                BorderBrush = BrushFromHex(
+                    string.Equals(
+                        node.Identity,
+                        _selectedSynopticDeviceIdentity,
+                        StringComparison.OrdinalIgnoreCase)
+                        ? "#F59E0B"
+                        : node.Color),
+                BorderThickness = new Thickness(
+                    string.Equals(
+                        node.Identity,
+                        _selectedSynopticDeviceIdentity,
+                        StringComparison.OrdinalIgnoreCase)
+                        ? 4
+                        : 2),
                 CornerRadius = new CornerRadius(6),
                 Padding = new Thickness(16, 10, 10, 8),
                 Child = new StackPanel
@@ -231,6 +331,10 @@ public partial class MainWindow
                         VerticalAlignment = VerticalAlignment.Center
                     }
                 };
+                badge.Tag = cable;
+                badge.Cursor = Cursors.Hand;
+                badge.ToolTip = SynopticCableToolTip(cable);
+                badge.MouseLeftButtonDown += SynopticCable_MouseLeftButtonDown;
                 Canvas.SetLeft(badge, Math.Max(4, cable.LabelX - 9));
                 Canvas.SetTop(badge, Math.Max(4, cable.LabelY - 9));
                 Panel.SetZIndex(badge, 5);
@@ -239,6 +343,8 @@ public partial class MainWindow
         }
 
         RenderSynopticLegend(diagram);
+        UpdateSynopticSelectionVisuals();
+        RefreshSynopticSelectionPanel();
 
         SynopticSummaryTextBlock.Text = _language == UiLanguage.English
             ? $"{diagram.Devices.Count} devices - {diagram.Cables.Count} grouped cables - {diagram.HiddenDeviceCount} hidden"
@@ -388,18 +494,397 @@ public partial class MainWindow
                     Width = itemWidth,
                     Height = rowHeight - 6,
                     Background = BrushFromHex("#F8FAFC"),
-                    BorderBrush = BrushFromHex(cable.Color),
+                    BorderBrush = BrushFromHex(SynopticCableDisplayColor(cable)),
                     BorderThickness = new Thickness(5, 1, 1, 1),
                     CornerRadius = new CornerRadius(5),
                     Padding = new Thickness(10, 7, 8, 6),
-                    Child = content
+                    Child = content,
+                    Tag = cable,
+                    Cursor = Cursors.Hand,
+                    ToolTip = SynopticCableToolTip(cable)
                 };
+                item.MouseLeftButtonDown += SynopticCable_MouseLeftButtonDown;
                 Canvas.SetLeft(item, legendX + 12 + column * (itemWidth + gap));
                 Canvas.SetTop(item, y);
                 Panel.SetZIndex(item, 6);
                 SynopticCanvas.Children.Add(item);
             }
             y += rowHeight;
+        }
+    }
+
+    private static string SynopticCableDisplayColor(SynopticCable cable)
+    {
+        return cable.HasError
+            ? "#DC2626"
+            : cable.HasWarning
+                ? "#D97706"
+                : cable.Color;
+    }
+
+    private string SynopticCableToolTip(SynopticCable cable)
+    {
+        string arrow = cable.IsBidirectional ? "↔" : "→";
+        string count = _language == UiLanguage.English
+            ? $"{cable.Subscriptions.Count} subscription(s)"
+            : $"{cable.Subscriptions.Count} abonnement(s)";
+        return $"{cable.SourceDevice} {arrow} {cable.TargetDevice}\n{count}\n"
+            + string.Join(Environment.NewLine, cable.Labels);
+    }
+
+    private void SynopticCable_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is FrameworkElement { Tag: SynopticCable cable })
+        {
+            SelectSynopticCable(cable, updateProjectSelection: true);
+            e.Handled = true;
+        }
+    }
+
+    private void SelectSynopticCable(
+        SynopticCable cable,
+        bool updateProjectSelection)
+    {
+        _selectedSynopticCableStableId = cable.StableId;
+        _selectedSynopticDeviceIdentity = null;
+        if (updateProjectSelection && _projectSession.HasProject)
+        {
+            string arrow = cable.IsBidirectional ? "↔" : "→";
+            _projectSession.SetSelection(new ProjectSelection(
+            [
+                new ProjectEntityReference(
+                    ProjectEntityKind.SynopticLink,
+                    cable.StableId,
+                    $"{cable.SourceDevice} {arrow} {cable.TargetDevice}")
+            ]));
+        }
+
+        UpdateSynopticSelectionVisuals();
+        RefreshSynopticSelectionPanel();
+    }
+
+    private void SelectSynopticDevice(
+        string identity,
+        bool synchronizeGrid,
+        bool updateProjectSelection)
+    {
+        SynopticDeviceRow? row = _synopticRows.FirstOrDefault(item =>
+            string.Equals(
+                item.DeviceIdentity,
+                identity,
+                StringComparison.OrdinalIgnoreCase));
+        if (row is null)
+        {
+            return;
+        }
+
+        _selectedSynopticDeviceIdentity = identity;
+        _selectedSynopticCableStableId = null;
+        if (synchronizeGrid)
+        {
+            _synchronizingSynopticSelection = true;
+            try
+            {
+                SynopticDeviceGrid.SelectedItems.Clear();
+                SynopticDeviceGrid.SelectedItem = row;
+                SynopticDeviceGrid.ScrollIntoView(row);
+            }
+            finally
+            {
+                _synchronizingSynopticSelection = false;
+            }
+        }
+
+        if (updateProjectSelection && _projectSession.HasProject)
+        {
+            _projectSession.SetSelection(new ProjectSelection(
+            [
+                new ProjectEntityReference(
+                    ProjectEntityKind.Device,
+                    row.DeviceIdentity,
+                    row.DeviceName)
+            ]));
+        }
+
+        UpdateSynopticSelectionVisuals();
+        RefreshSynopticSelectionPanel();
+    }
+
+    private void SynopticDeviceGrid_SelectionChanged(
+        object sender,
+        SelectionChangedEventArgs e)
+    {
+        if (_refreshingUi
+            || _synchronizingSynopticSelection
+            || SynopticDeviceGrid.SelectedItem is not SynopticDeviceRow selected)
+        {
+            return;
+        }
+
+        _selectedSynopticDeviceIdentity = selected.DeviceIdentity;
+        _selectedSynopticCableStableId = null;
+        if (_projectSession.HasProject)
+        {
+            ProjectEntityReference[] references = SynopticDeviceGrid.SelectedItems
+                .OfType<SynopticDeviceRow>()
+                .Select(row => new ProjectEntityReference(
+                    ProjectEntityKind.Device,
+                    row.DeviceIdentity,
+                    row.DeviceName))
+                .ToArray();
+            _projectSession.SetSelection(new ProjectSelection(references));
+        }
+
+        UpdateSynopticSelectionVisuals();
+        RefreshSynopticSelectionPanel();
+    }
+
+    private void UpdateSynopticSelectionVisuals()
+    {
+        foreach (System.Windows.Shapes.Path path in
+                 SynopticCanvas.Children.OfType<System.Windows.Shapes.Path>())
+        {
+            if (path.Tag is not SynopticCable cable)
+            {
+                continue;
+            }
+
+            bool selected = string.Equals(
+                cable.StableId,
+                _selectedSynopticCableStableId,
+                StringComparison.OrdinalIgnoreCase);
+            if (path.Fill is null)
+            {
+                path.Stroke = Brushes.White;
+                path.StrokeThickness = selected ? 11 : 8;
+                continue;
+            }
+
+            Brush stroke = BrushFromHex(
+                selected ? "#7C3AED" : SynopticCableDisplayColor(cable));
+            path.Stroke = stroke;
+            path.Fill = stroke;
+            path.StrokeThickness = selected ? 6 : 3.5;
+            path.Opacity = selected ? 1 : 0.92;
+        }
+
+        foreach (Border card in SynopticCanvas.Children.OfType<Border>()
+                     .Where(border => border.Tag is string))
+        {
+            string identity = (string)card.Tag;
+            if (!_synopticPreviewNodes.TryGetValue(
+                    identity,
+                    out SynopticDeviceNode? node))
+            {
+                continue;
+            }
+
+            bool selected = string.Equals(
+                identity,
+                _selectedSynopticDeviceIdentity,
+                StringComparison.OrdinalIgnoreCase);
+            card.BorderBrush = BrushFromHex(selected ? "#F59E0B" : node.Color);
+            card.BorderThickness = new Thickness(selected ? 4 : 2);
+        }
+    }
+
+    private void RefreshSynopticSelectionPanel()
+    {
+        SynopticCable? cable = FindSelectedSynopticCable();
+        if (cable is not null)
+        {
+            int errors = cable.Subscriptions.Count(item =>
+                item.Kind == DanteSubscriptionKind.Conflict);
+            int warnings = cable.Subscriptions.Count(item =>
+                item.Kind is DanteSubscriptionKind.ExternalMissingDevice
+                    or DanteSubscriptionKind.MissingChannel);
+            string arrow = cable.IsBidirectional ? "↔" : "→";
+            SynopticSelectionTitleTextBlock.Text = _language == UiLanguage.English
+                ? "Selected link"
+                : "Liaison sélectionnée";
+            SynopticSelectionSubtitleTextBlock.Text =
+                $"{cable.SourceDevice} {arrow} {cable.TargetDevice} · "
+                + (_language == UiLanguage.English
+                    ? $"{cable.Subscriptions.Count} subscription(s)"
+                    : $"{cable.Subscriptions.Count} abonnement(s)");
+            string details = string.Join("  |  ", cable.Labels);
+            if (errors > 0 || warnings > 0)
+            {
+                details += Environment.NewLine + (_language == UiLanguage.English
+                    ? $"{errors} error(s), {warnings} warning(s)"
+                    : $"{errors} erreur(s), {warnings} avertissement(s)");
+            }
+            SynopticSelectionDetailsTextBlock.Text = details;
+            SynopticSelectionActionButton.Content = _language == UiLanguage.English
+                ? "Open in Patch"
+                : "Ouvrir dans Patch";
+            SynopticSelectionPanel.Visibility = Visibility.Visible;
+            return;
+        }
+
+        SynopticDeviceRow? device = _synopticRows.FirstOrDefault(row =>
+            string.Equals(
+                row.DeviceIdentity,
+                _selectedSynopticDeviceIdentity,
+                StringComparison.OrdinalIgnoreCase));
+        if (device is not null)
+        {
+            SynopticSelectionTitleTextBlock.Text = _language == UiLanguage.English
+                ? "Selected device"
+                : "Machine sélectionnée";
+            SynopticSelectionSubtitleTextBlock.Text = device.DeviceName;
+            SynopticSelectionDetailsTextBlock.Text = _language == UiLanguage.English
+                ? $"Location: {BlankSynopticValue(device.Location)} · TX {device.TxCount} · RX {device.RxCount}"
+                : $"Emplacement : {BlankSynopticValue(device.Location)} · TX {device.TxCount} · RX {device.RxCount}";
+            SynopticSelectionActionButton.Content = _language == UiLanguage.English
+                ? "Open device"
+                : "Ouvrir la machine";
+            SynopticSelectionPanel.Visibility = Visibility.Visible;
+            return;
+        }
+
+        SynopticSelectionPanel.Visibility = Visibility.Collapsed;
+    }
+
+    private SynopticCable? FindSelectedSynopticCable()
+    {
+        if (string.IsNullOrWhiteSpace(_selectedSynopticCableStableId))
+        {
+            return null;
+        }
+
+        SynopticCable? cable = _currentSynopticDiagram?.Cables.FirstOrDefault(item =>
+            string.Equals(
+                item.StableId,
+                _selectedSynopticCableStableId,
+                StringComparison.OrdinalIgnoreCase));
+        if (cable is not null || _project is null || _synopticLayout is null)
+        {
+            return cable;
+        }
+
+        SynopticDiagram completeDiagram = SynopticExportService.BuildDiagram(
+            _project,
+            _synopticLayout,
+            _language == UiLanguage.English);
+        return completeDiagram.Cables.FirstOrDefault(item =>
+            string.Equals(
+                item.StableId,
+                _selectedSynopticCableStableId,
+                StringComparison.OrdinalIgnoreCase));
+    }
+
+    private void SelectSynopticCableForSubscription(
+        DanteSubscription subscription)
+    {
+        if (_project is null)
+        {
+            return;
+        }
+
+        if (_synopticLayout is null)
+        {
+            _synopticLayout = SynopticExportService.LoadOrCreate(_project);
+            _synopticLayoutPath = SynopticExportService.ResolveLayoutPath(_project);
+        }
+
+        SynopticDiagram completeDiagram = SynopticExportService.BuildDiagram(
+            _project,
+            _synopticLayout,
+            _language == UiLanguage.English);
+        SynopticCable? cable = SynopticSelectionService.FindCable(
+            completeDiagram,
+            subscription);
+        _selectedSynopticDeviceIdentity = null;
+        _selectedSynopticCableStableId = cable?.StableId;
+        if (_projectSession.HasProject)
+        {
+            DanteDevice? receiver = _project.FindDevice(
+                subscription.RxDevice);
+            string stableReceiver =
+                receiver?.StableIdentity ?? subscription.RxDevice;
+            _projectSession.SetSelection(new ProjectSelection(
+            [
+                new ProjectEntityReference(
+                    ProjectEntityKind.Subscription,
+                    $"subscription:{stableReceiver}:{subscription.RxDanteId}",
+                    subscription.Display,
+                    stableReceiver)
+            ]));
+        }
+
+        UpdateSynopticSelectionVisuals();
+        RefreshSynopticSelectionPanel();
+    }
+
+    private static string BlankSynopticValue(string value)
+    {
+        return string.IsNullOrWhiteSpace(value) ? "—" : value;
+    }
+
+    private void SynopticSelectionActionButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        SynopticCable? cable = FindSelectedSynopticCable();
+        if (cable is not null)
+        {
+            OpenSynopticCableInPatch(cable);
+            return;
+        }
+
+        SynopticDeviceRow? row = _synopticRows.FirstOrDefault(item =>
+            string.Equals(
+                item.DeviceIdentity,
+                _selectedSynopticDeviceIdentity,
+                StringComparison.OrdinalIgnoreCase));
+        if (row is null)
+        {
+            return;
+        }
+
+        _workspaceNavigation.NavigateTo(WorkspaceSection.Machines);
+        DeviceComboBox.SelectedItem = row.DeviceName;
+    }
+
+    private void OpenSynopticCableInPatch(SynopticCable cable)
+    {
+        SynopticCableSubscription? first = cable.Subscriptions.FirstOrDefault();
+        if (first is null)
+        {
+            return;
+        }
+
+        _workspaceNavigation.NavigateTo(WorkspaceSection.Patch);
+        PatchListModeButton.IsChecked = true;
+        ShowPatchWorkspaceMode(PatchWorkspaceDisplayMode.List);
+        SenderDeviceList.SelectedItem = SenderDeviceList.Items
+            .OfType<string>()
+            .FirstOrDefault(item => string.Equals(
+                item,
+                first.SourceDevice,
+                StringComparison.OrdinalIgnoreCase))
+            ?? AllSendersItem;
+        ReceiverDeviceList.SelectedItem = ReceiverDeviceList.Items
+            .OfType<string>()
+            .FirstOrDefault(item => string.Equals(
+                item,
+                first.TargetDevice,
+                StringComparison.OrdinalIgnoreCase))
+            ?? AllReceiversItem;
+        RefreshPatchRows();
+
+        DanteSubscription? subscription = _patchRows.FirstOrDefault(item =>
+            item.RxDanteId == first.RxDanteId
+            && string.Equals(
+                item.RxDevice,
+                first.TargetDevice,
+                StringComparison.OrdinalIgnoreCase));
+        if (subscription is not null)
+        {
+            PatchGrid.SelectedItem = subscription;
+            PatchGrid.ScrollIntoView(subscription);
+            PatchGrid.Focus();
         }
     }
 
@@ -430,7 +915,13 @@ public partial class MainWindow
         _draggedSynopticCard = card;
         _draggedSynopticIdentity = identity;
         Point pointer = e.GetPosition(SynopticCanvas);
+        _synopticDragStart = pointer;
+        _synopticDeviceMoved = false;
         _synopticDragOffset = new Point(pointer.X - node.X, pointer.Y - node.Y);
+        SelectSynopticDevice(
+            identity,
+            synchronizeGrid: true,
+            updateProjectSelection: true);
         card.CaptureMouse();
         e.Handled = true;
     }
@@ -447,6 +938,12 @@ public partial class MainWindow
         }
 
         Point pointer = e.GetPosition(SynopticCanvas);
+        if (!_synopticDeviceMoved
+            && (Math.Abs(pointer.X - _synopticDragStart.X) > 3
+                || Math.Abs(pointer.Y - _synopticDragStart.Y) > 3))
+        {
+            _synopticDeviceMoved = true;
+        }
         double x = Math.Max(4, pointer.X - _synopticDragOffset.X);
         double y = Math.Max(74, pointer.Y - _synopticDragOffset.Y);
         Canvas.SetLeft(_draggedSynopticCard, x);
@@ -475,7 +972,16 @@ public partial class MainWindow
         _draggedSynopticCard.ReleaseMouseCapture();
         _draggedSynopticCard = null;
         _draggedSynopticIdentity = null;
-        SaveAndRefreshSynoptic();
+        if (_synopticDeviceMoved)
+        {
+            SaveAndRefreshSynoptic();
+        }
+        else
+        {
+            UpdateSynopticSelectionVisuals();
+            RefreshSynopticSelectionPanel();
+        }
+        _synopticDeviceMoved = false;
         e.Handled = true;
     }
 
@@ -523,6 +1029,7 @@ public partial class MainWindow
     private void RefreshSynopticLocationChoices()
     {
         string currentText = SynopticLocationComboBox.Text;
+        string? currentFilter = SelectedSynopticLocationFilter();
         string[] locations = _synopticRows
             .Select(row => row.Location.Trim())
             .Where(location => !string.IsNullOrWhiteSpace(location))
@@ -531,6 +1038,37 @@ public partial class MainWindow
             .ToArray();
         SynopticLocationComboBox.ItemsSource = locations;
         SynopticLocationComboBox.Text = currentText;
+
+        _refreshingSynopticLocationFilter = true;
+        try
+        {
+            string allLocations = SynopticAllLocationsLabel();
+            string[] filters = [allLocations, .. locations];
+            SynopticLocationFilterComboBox.ItemsSource = filters;
+            SynopticLocationFilterComboBox.SelectedItem = currentFilter is null
+                ? allLocations
+                : filters.FirstOrDefault(item => string.Equals(
+                    item,
+                    currentFilter,
+                    StringComparison.OrdinalIgnoreCase))
+                    ?? allLocations;
+        }
+        finally
+        {
+            _refreshingSynopticLocationFilter = false;
+        }
+    }
+
+    private void SynopticLocationFilterComboBox_SelectionChanged(
+        object sender,
+        SelectionChangedEventArgs e)
+    {
+        if (_refreshingSynopticLocationFilter || _refreshingUi)
+        {
+            return;
+        }
+
+        RenderSynopticPreview();
     }
 
     private void ShowAllSynopticDevicesButton_Click(object sender, RoutedEventArgs e)
@@ -643,6 +1181,59 @@ public partial class MainWindow
         e.Handled = true;
     }
 
+    private void SynopticScrollViewer_PreviewMouseDown(
+        object sender,
+        MouseButtonEventArgs e)
+    {
+        bool startPan = e.ChangedButton == MouseButton.Middle
+            || (e.ChangedButton == MouseButton.Left
+                && Keyboard.IsKeyDown(Key.Space));
+        if (!startPan)
+        {
+            return;
+        }
+
+        _synopticPanActive = true;
+        _synopticPanStart = e.GetPosition(SynopticScrollViewer);
+        _synopticPanHorizontalOffset = SynopticScrollViewer.HorizontalOffset;
+        _synopticPanVerticalOffset = SynopticScrollViewer.VerticalOffset;
+        SynopticScrollViewer.Cursor = Cursors.ScrollAll;
+        SynopticScrollViewer.CaptureMouse();
+        e.Handled = true;
+    }
+
+    private void SynopticScrollViewer_PreviewMouseMove(
+        object sender,
+        MouseEventArgs e)
+    {
+        if (!_synopticPanActive)
+        {
+            return;
+        }
+
+        Point current = e.GetPosition(SynopticScrollViewer);
+        SynopticScrollViewer.ScrollToHorizontalOffset(
+            _synopticPanHorizontalOffset + _synopticPanStart.X - current.X);
+        SynopticScrollViewer.ScrollToVerticalOffset(
+            _synopticPanVerticalOffset + _synopticPanStart.Y - current.Y);
+        e.Handled = true;
+    }
+
+    private void SynopticScrollViewer_PreviewMouseUp(
+        object sender,
+        MouseButtonEventArgs e)
+    {
+        if (!_synopticPanActive)
+        {
+            return;
+        }
+
+        _synopticPanActive = false;
+        SynopticScrollViewer.ReleaseMouseCapture();
+        SynopticScrollViewer.Cursor = Cursors.Arrow;
+        e.Handled = true;
+    }
+
     private void SetSynopticZoomPreservingCenter(double requestedValue)
     {
         double horizontalRatio = SynopticScrollViewer.ExtentWidth <= 0
@@ -678,6 +1269,34 @@ public partial class MainWindow
             SynopticZoomSlider.Minimum,
             1);
         SynopticScrollViewer.ScrollToHome();
+    }
+
+    private void CenterSynopticSelectionButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        double x = SynopticCanvas.Width / 2;
+        double y = SynopticCanvas.Height / 2;
+
+        if (!string.IsNullOrWhiteSpace(_selectedSynopticDeviceIdentity)
+            && _synopticPreviewNodes.TryGetValue(
+                _selectedSynopticDeviceIdentity,
+                out SynopticDeviceNode? node))
+        {
+            x = node.X + node.Width / 2;
+            y = node.Y + node.Height / 2;
+        }
+        else if (FindSelectedSynopticCable() is SynopticCable cable)
+        {
+            x = cable.LabelX;
+            y = cable.LabelY;
+        }
+
+        double scale = SynopticZoomSlider.Value;
+        SynopticScrollViewer.ScrollToHorizontalOffset(
+            x * scale - SynopticScrollViewer.ViewportWidth / 2);
+        SynopticScrollViewer.ScrollToVerticalOffset(
+            y * scale - SynopticScrollViewer.ViewportHeight / 2);
     }
 
     private void OpenSynopticPreviewWindowButton_Click(object sender, RoutedEventArgs e)
@@ -800,6 +1419,7 @@ public partial class MainWindow
     {
         SynopticDeviceGrid.IsEnabled = enabled;
         SynopticLocationComboBox.IsEnabled = enabled;
+        SynopticLocationFilterComboBox.IsEnabled = enabled;
         ApplySynopticLocationButton.IsEnabled = enabled;
         ShowAllSynopticDevicesButton.IsEnabled = enabled;
         HideSelectedSynopticDevicesButton.IsEnabled = enabled;
@@ -809,6 +1429,8 @@ public partial class MainWindow
         ExportSynopticButton.IsEnabled = enabled;
         ExportSynopticPdfButton.IsEnabled = enabled;
         OpenSynopticPreviewWindowButton.IsEnabled = enabled;
+        CenterSynopticSelectionButton.IsEnabled = enabled;
+        SynopticSelectionActionButton.IsEnabled = enabled;
     }
 
     private static string FriendlyLine(SynopticDeviceNode node)

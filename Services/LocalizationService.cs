@@ -773,6 +773,14 @@ public static class LocalizationService
         Add(map, "Revenir à la taille réelle", "Return to actual size");
         Add(map, "Ajuster", "Fit");
         Add(map, "Afficher tout le synoptique", "Fit the entire synoptic");
+        Add(map, "Centrer", "Center");
+        Add(map, "Centre la machine ou la liaison sélectionnée.", "Centers the selected device or link.");
+        Add(map, "Tous les emplacements", "All locations");
+        Add(map, "Filtre l’aperçu sans masquer durablement les machines et sans modifier le XML.", "Filters the preview without permanently hiding devices or changing the XML.");
+        Add(map, "Sélection du synoptique", "Synoptic selection");
+        Add(map, "Ouvrir dans Patch", "Open in Patch");
+        Add(map, "Ouvrir la machine", "Open device");
+        Add(map, "Ouvre la machine ou la première subscription de cette liaison dans la vue correspondante.", "Opens the device or the first subscription in this link in the corresponding view.");
         Add(map, "Disposition automatique", "Automatic layout");
         Add(map, "Efface les positions manuelles et recalcule le synoptique.", "Clears manual positions and recalculates the synoptic.");
         Add(map, "Affecter", "Assign");

@@ -43,6 +43,7 @@
   <ItemGroup>
     <!-- Windows et macOS consomment désormais le même assemblage métier. -->
     <ProjectReference Include="src\DanteConfigEditor.Core\DanteConfigEditor.Core.csproj" />
+    <ProjectReference Include="src\DanteConfigEditor.Domain\DanteConfigEditor.Domain.csproj" />
     <ProjectReference Include="src\DanteConfigEditor.Application\DanteConfigEditor.Application.csproj" />
     <ProjectReference Include="src\DanteConfigEditor.Infrastructure\DanteConfigEditor.Infrastructure.csproj" />
   </ItemGroup>

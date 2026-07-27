@@ -2187,6 +2187,8 @@ public partial class MainWindow : Window
             SelectSourceChannel(subscription.TxChannelName);
         }
 
+        SelectSynopticCableForSubscription(subscription);
+
         if (subscription.IsExternalMissingDevice)
         {
             SetStatus(T("Dialog.ExternalPatchStatus"));
@@ -2631,9 +2633,23 @@ public partial class MainWindow : Window
             return;
         }
 
-        RunUnifiedPatchAction(
+        if (RunUnifiedPatchAction(
             Tf("Action.VisualPatchesApplied", e.Edits.Count),
-            e.Edits);
+            e.Edits))
+        {
+            PatchEditRequest firstEdit = e.Edits[0];
+            DanteSubscription? subscription = _project?.PatchMatrix.Subscriptions
+                .FirstOrDefault(item =>
+                    item.RxDanteId == firstEdit.RxDanteId
+                    && string.Equals(
+                        item.RxDevice,
+                        firstEdit.RxDeviceName,
+                        StringComparison.OrdinalIgnoreCase));
+            if (subscription is not null)
+            {
+                SelectSynopticCableForSubscription(subscription);
+            }
+        }
     }
 
     private bool RunUnifiedPatchAction(

@@ -58,6 +58,47 @@ public sealed class ExportWorkspaceUiContractTests
         }
     }
 
+    [Fact]
+    public void WindowsSynopticExposesSelectionFilteringAndPatchNavigation()
+    {
+        string xaml = File.ReadAllText(RepositoryFile("MainWindow.xaml"));
+        string codeBehind = File.ReadAllText(
+            RepositoryFile("MainWindow.Synoptic.cs"));
+
+        Assert.Contains(
+            "x:Name=\"SynopticLocationFilterComboBox\"",
+            xaml,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "x:Name=\"SynopticSelectionPanel\"",
+            xaml,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "x:Name=\"SynopticSelectionActionButton\"",
+            xaml,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "PreviewMouseDown=\"SynopticScrollViewer_PreviewMouseDown\"",
+            xaml,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "CenterSynopticSelectionButton_Click",
+            xaml,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "SelectSynopticCableForSubscription",
+            codeBehind,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "ProjectEntityKind.SynopticLink",
+            codeBehind,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "OpenSynopticCableInPatch",
+            codeBehind,
+            StringComparison.Ordinal);
+    }
+
     private static XElement NamedElement(XDocument document, XNamespace xamlNamespace, string name)
     {
         return document.Descendants()

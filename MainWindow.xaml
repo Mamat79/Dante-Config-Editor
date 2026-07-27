@@ -1923,6 +1923,7 @@
                                           CanUserDeleteRows="False"
                                           SelectionMode="Extended"
                                           SelectionUnit="FullRow"
+                                          SelectionChanged="SynopticDeviceGrid_SelectionChanged"
                                           CellEditEnding="SynopticDeviceGrid_CellEditEnding">
                                     <DataGrid.Columns>
                                         <DataGridTemplateColumn Header="Voir" Width="52">
@@ -1952,12 +1953,13 @@
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
                                     <Border Background="{DynamicResource SurfaceBrush}"
                                             BorderBrush="{DynamicResource BorderLineBrush}"
                                             BorderThickness="0,0,0,1"
                                             Padding="8,6">
-                                        <StackPanel Orientation="Horizontal">
+                                        <WrapPanel VerticalAlignment="Center">
                                             <TextBlock Text="Zoom" VerticalAlignment="Center" Margin="0,0,8,0" />
                                             <Button Content="−" Width="34" Click="ZoomOutSynopticButton_Click" ToolTip="Zoom arrière" />
                                             <Slider x:Name="SynopticZoomSlider"
@@ -1972,6 +1974,18 @@
                                             <TextBlock x:Name="SynopticZoomTextBlock" Text="100 %" Width="58" TextAlignment="Center" VerticalAlignment="Center" />
                                             <Button Content="100 %" Margin="5,0,0,0" Click="ResetSynopticZoomButton_Click" ToolTip="Revenir à la taille réelle" />
                                             <Button Content="Ajuster" Margin="5,0,0,0" Click="FitSynopticZoomButton_Click" ToolTip="Afficher tout le synoptique" />
+                                            <Button x:Name="CenterSynopticSelectionButton"
+                                                    Content="Centrer"
+                                                    Margin="5,0,0,0"
+                                                    Click="CenterSynopticSelectionButton_Click"
+                                                    ToolTip="Centre la machine ou la liaison sélectionnée." />
+                                            <TextBlock Text="Emplacement"
+                                                       VerticalAlignment="Center"
+                                                       Margin="14,0,6,0" />
+                                            <ComboBox x:Name="SynopticLocationFilterComboBox"
+                                                      Width="155"
+                                                      SelectionChanged="SynopticLocationFilterComboBox_SelectionChanged"
+                                                      ToolTip="Filtre l’aperçu sans masquer durablement les machines et sans modifier le XML." />
                                             <Button x:Name="OpenSynopticPreviewWindowButton"
                                                     Content="↗"
                                                     Width="36"
@@ -1979,18 +1993,56 @@
                                                     ToolTip="Ouvrir l’aperçu dans une fenêtre séparée"
                                                     AutomationProperties.Name="Ouvrir l’aperçu du synoptique dans une fenêtre séparée"
                                                     Click="OpenSynopticPreviewWindowButton_Click" />
-                                        </StackPanel>
+                                        </WrapPanel>
                                     </Border>
                                     <ScrollViewer x:Name="SynopticScrollViewer"
                                                   Grid.Row="1"
                                                   HorizontalScrollBarVisibility="Auto"
                                                   VerticalScrollBarVisibility="Auto"
-                                                  PreviewMouseWheel="SynopticScrollViewer_PreviewMouseWheel">
+                                                  PreviewMouseWheel="SynopticScrollViewer_PreviewMouseWheel"
+                                                  PreviewMouseDown="SynopticScrollViewer_PreviewMouseDown"
+                                                  PreviewMouseMove="SynopticScrollViewer_PreviewMouseMove"
+                                                  PreviewMouseUp="SynopticScrollViewer_PreviewMouseUp">
                                         <Canvas x:Name="SynopticCanvas"
                                                 Width="900"
                                                 Height="560"
                                                 Background="#F7F9FC" />
                                     </ScrollViewer>
+                                    <Border x:Name="SynopticSelectionPanel"
+                                            Grid.Row="2"
+                                            Visibility="Collapsed"
+                                            Background="{DynamicResource SurfaceBrush}"
+                                            BorderBrush="{DynamicResource BorderLineBrush}"
+                                            BorderThickness="0,1,0,0"
+                                            Padding="12,9">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel>
+                                                <TextBlock x:Name="SynopticSelectionTitleTextBlock"
+                                                           FontWeight="SemiBold"
+                                                           Text="Sélection du synoptique" />
+                                                <TextBlock x:Name="SynopticSelectionSubtitleTextBlock"
+                                                           Margin="0,3,0,0"
+                                                           Foreground="{DynamicResource MutedTextBrush}"
+                                                           TextWrapping="Wrap" />
+                                                <TextBlock x:Name="SynopticSelectionDetailsTextBlock"
+                                                           Margin="0,5,0,0"
+                                                           Foreground="{DynamicResource MutedTextBrush}"
+                                                           TextWrapping="Wrap"
+                                                           MaxHeight="78" />
+                                            </StackPanel>
+                                            <Button x:Name="SynopticSelectionActionButton"
+                                                    Grid.Column="1"
+                                                    Content="Ouvrir dans Patch"
+                                                    Margin="12,0,0,0"
+                                                    VerticalAlignment="Center"
+                                                    Click="SynopticSelectionActionButton_Click"
+                                                    ToolTip="Ouvre la machine ou la première subscription de cette liaison dans la vue correspondante." />
+                                        </Grid>
+                                    </Border>
                                 </Grid>
                             </Border>
                         </Grid>

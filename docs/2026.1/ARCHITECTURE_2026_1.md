@@ -178,6 +178,8 @@ Réalisé :
 - cinq représentations Patch dans un seul espace Windows ;
 - transactions Patch atomiques reliées à Annuler et Rétablir ;
 - rebase explicite des changements préparés après renommage ;
+- synoptique Windows sélectionnable relié aux subscriptions Patch par
+  identités stables, avec filtre visuel, navigation et inspecteur de liaison ;
 - tests d'architecture et de profils.
 
 À poursuivre :
@@ -189,4 +191,5 @@ Réalisé :
 - réduction progressive du Core historique.
 
 L'organisation visuelle et les contrôles réellement effectués sont détaillés
-dans `WINDOWS_WORKSPACE_SHELL.md` et `UNIFIED_PATCH_WORKSPACE.md`.
+dans `WINDOWS_WORKSPACE_SHELL.md`, `UNIFIED_PATCH_WORKSPACE.md` et
+`INTERACTIVE_SYNOPTIC.md`.
