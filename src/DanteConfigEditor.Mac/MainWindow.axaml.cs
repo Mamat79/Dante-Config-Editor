@@ -12,6 +12,7 @@ using Avalonia.Platform.Storage;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using DanteConfigEditor.Models;
+using DanteConfigEditor.Infrastructure.Migration;
 using DanteConfigEditor.Services;
 
 namespace DanteConfigEditor.Mac;
@@ -58,6 +59,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
+        MigrateV36Settings();
         _language = LanguageSettingsService.Load();
         _darkTheme = LoadThemePreference();
         _recoveryTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(750) };
@@ -70,6 +72,23 @@ public partial class MainWindow : Window
         ApplyTheme();
         RefreshAll();
         SessionRecoveryService.CleanupOld(TimeSpan.FromDays(14));
+    }
+
+    private static void MigrateV36Settings()
+    {
+        try
+        {
+            _ = V36SettingsMigrationService.CreateDefault().Migrate();
+        }
+        catch (Exception ex) when (ex is IOException
+                                   or UnauthorizedAccessException
+                                   or InvalidDataException)
+        {
+            DiagnosticLogService.Default.Write(
+                "Migration",
+                "V3.6 settings could not be copied to the 2026.1 profile.",
+                ex);
+        }
     }
 
     private T? FindControl<T>(string name) where T : Control => ControlExtensions.FindControl<T>(this, name);

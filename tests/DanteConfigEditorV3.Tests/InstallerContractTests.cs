@@ -143,10 +143,15 @@ public sealed class InstallerContractTests
     }
 
     [Fact]
-    public void V34KeepsTheV32LocalApplicationDataFolderForUpgradeContinuity()
+    public void V2026UsesAnIsolatedProfileAndKeepsTheV36MigrationSource()
     {
-        Assert.Equal("DanteConfigEditorV3.2", ApplicationStoragePaths.RootFolderName);
-        Assert.DoesNotContain("DanteConfigEditorV3\\Recovery", ApplicationStoragePaths.Resolve("Recovery"), StringComparison.OrdinalIgnoreCase);
+        Assert.Equal("DanteConfigEditor2026.1", ApplicationStoragePaths.RootFolderName);
+        Assert.Equal(
+            "DanteConfigEditorV3.2",
+            ApplicationStoragePaths.LegacyV36RootFolderName);
+        Assert.NotEqual(
+            ApplicationStoragePaths.RootPath,
+            ApplicationStoragePaths.LegacyV36RootPath);
     }
 
     [Fact]

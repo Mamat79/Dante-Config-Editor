@@ -11,6 +11,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using DanteConfigEditor.Infrastructure.Migration;
 using DanteConfigEditor.Models;
 using DanteConfigEditor.Services;
 using Microsoft.Win32;
@@ -240,6 +241,7 @@ public partial class MainWindow : Window
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
         // Initialisation des sources de données utilisées par les contrôles.
+        MigrateV36Settings();
         _language = LanguageSettingsService.Load();
         ConfigurationEditorsGrid.Visibility = InterfaceSettingsService.LoadConfigurationEditorsExpanded()
             ? Visibility.Visible
@@ -268,6 +270,23 @@ public partial class MainWindow : Window
         RefreshAll();
         UpdateResponsiveConfigurationLayout(ActualWidth, ActualHeight);
         InitializeSupportReminder();
+    }
+
+    private static void MigrateV36Settings()
+    {
+        try
+        {
+            _ = V36SettingsMigrationService.CreateDefault().Migrate();
+        }
+        catch (Exception ex) when (ex is IOException
+                                   or UnauthorizedAccessException
+                                   or InvalidDataException)
+        {
+            DiagnosticLogService.Default.Write(
+                "Migration",
+                "La copie des réglages V3.6 vers 2026.1 a échoué.",
+                ex);
+        }
     }
 
     private void OpenButton_Click(object sender, RoutedEventArgs e)

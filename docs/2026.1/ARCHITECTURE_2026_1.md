@@ -163,13 +163,14 @@ Réalisé :
   et images ;
 - contrôle des chemins internes, tailles et empreintes du paquet ;
 - sauvegarde atomique du projet DCE avec backup de la destination ;
+- profil local 2026.1 séparé et migration V3.6 non destructive, sauvegardée,
+  vérifiée et idempotente ;
 - tests d'architecture et de profils.
 
 À poursuivre :
 
 - branchement progressif de toutes les vues sur la session ;
 - remplacement progressif des snapshots par des deltas ciblés ;
-- migration non destructive des paramètres V3.6 ;
 - récupération des projets DCE ;
 - branchement progressif des vues Windows sur la session ;
 - moteur Patch unique ;

@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DanteConfigEditor.Core\DanteConfigEditor.Core.csproj" />
+    <ProjectReference Include="..\DanteConfigEditor.Infrastructure\DanteConfigEditor.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
