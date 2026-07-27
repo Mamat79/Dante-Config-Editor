@@ -92,6 +92,28 @@ Une erreur avant le remplacement laisse la destination précédente intacte. La
 sauvegarde de l'ancienne destination est placée dans
 `DanteConfigEditor_Backups`.
 
+## Récupération automatique
+
+Les récupérations de projets DCE sont stockées dans le profil local 2026.1,
+séparément du projet et de la V3.6. Chaque état est un véritable `.dceproj`
+validé.
+
+La mise à jour suit un système à pointeur :
+
+1. écrire un nouveau paquet de récupération sous un nom unique ;
+2. le rouvrir et vérifier ses empreintes ;
+3. écrire les métadonnées de récupération dans un temporaire ;
+4. remplacer atomiquement le pointeur vers la dernière récupération ;
+5. supprimer l'ancien paquet uniquement après ce remplacement.
+
+Un échec avant l'étape 4 conserve donc l'ancien pointeur et son paquet. Les
+métadonnées mémorisent aussi l'empreinte, la taille et la date de la source. DCE
+peut signaler qu'elle a changé depuis la récupération.
+
+Les noms lus depuis les métadonnées sont bornés au dossier de récupération. Un
+paquet absent, corrompu ou dont l'empreinte ne correspond pas produit une erreur
+explicite au lieu d'une restauration partielle.
+
 ## Fidélité XML
 
 Le XML contenu est sérialisé depuis le document original modifié par mutations
@@ -116,4 +138,3 @@ mineure. Une migration doit toujours :
 - conserver une sauvegarde ;
 - fournir un rapport ;
 - ne jamais masquer une donnée non comprise.
-
