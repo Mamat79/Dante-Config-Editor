@@ -23,6 +23,10 @@ Audinate. It only works on offline files.
 - searchable and exportable Validation Center;
 - XML profiles that can restrict an unknown structure or open it read-only;
 - format-2 device bank and verified copy-based V3.6 migration;
+- global view of personal and bundled banks, deduplicated to `43` unique
+  templates, with bundled templates protected as read-only;
+- shared device selection across Machines, Patch, Easy Patch, and the
+  inspector, preserved when switching views;
 - isolated 2026.1 local profile.
 
 ## XML fidelity
@@ -53,7 +57,7 @@ For the synthetic 200-device preset with 64 TX and 64 RX per device:
 
 ## Automated validation
 
-- 392 Core/Windows tests passed;
+- 395 Core/Windows tests passed;
 - 22 headless Avalonia/macOS tests passed;
 - Windows Release build completed without warnings;
 - synthetic corpus saved and semantically compared without loss.

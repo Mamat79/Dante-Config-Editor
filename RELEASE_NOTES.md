@@ -24,6 +24,10 @@ travaille uniquement sur des fichiers hors ligne.
 - profils XML capables de limiter une structure inconnue ou de l’ouvrir en
   lecture seule ;
 - banque format 2 et migration V3.6 par copie vérifiée ;
+- vue globale des banques personnelle et fournies, avec déduplication de
+  `43` modèles uniques et protection en lecture seule des modèles fournis ;
+- sélection de machine partagée entre Machines, Patch, Easy Patch et
+  l'inspecteur, conservée lors des changements de vue ;
 - profil local 2026.1 isolé.
 
 ## Fidélité XML
@@ -54,7 +58,7 @@ Sur le preset synthétique de 200 machines avec 64 TX et 64 RX chacune :
 
 ## Validation automatisée
 
-- 392 tests Core/Windows réussis ;
+- 395 tests Core/Windows réussis ;
 - 22 tests Avalonia/macOS sans écran réussis ;
 - build Windows Release sans warning ;
 - corpus synthétique sauvegardé et comparé sémantiquement sans perte.
