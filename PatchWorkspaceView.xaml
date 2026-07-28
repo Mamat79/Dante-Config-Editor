@@ -225,21 +225,29 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <StackPanel>
-                    <TextBlock x:Name="TitleTextBlock"
-                               Text="Easy patch"
-                               FontSize="20"
-                               FontWeight="SemiBold" />
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <WrapPanel>
+                        <TextBlock x:Name="TitleTextBlock"
+                                   Text="Easy patch"
+                                   FontSize="20"
+                                   FontWeight="SemiBold"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,18,0" />
+                        <CheckBox x:Name="WarnOnExistingPatchCheckBox"
+                                  IsChecked="True"
+                                  Content="M'avertir si le RX est déjà patché"
+                                  ToolTip="Coché : demande confirmation avant de remplacer la source actuelle d'un RX." />
+                    </WrapPanel>
                     <TextBlock x:Name="IntroTextBlock"
+                               Grid.Row="1"
                                Text="Chaque action modifie immédiatement le patch."
                                Foreground="{DynamicResource MutedTextBrush}"
                                Margin="0,4,0,0" />
-                    <CheckBox x:Name="WarnOnExistingPatchCheckBox"
-                              Margin="0,7,0,0"
-                              IsChecked="True"
-                              Content="M'avertir si le RX est déjà patché"
-                              ToolTip="Coché : demande confirmation avant de remplacer la source actuelle d'un RX." />
-                </StackPanel>
+                </Grid>
                 <TextBlock x:Name="PendingHeaderTextBlock"
                            Grid.Column="1"
                            VerticalAlignment="Center"
@@ -247,7 +255,9 @@
             </Grid>
         </Border>
 
-        <Grid Grid.Row="1" Margin="16,10,16,8">
+        <Grid x:Name="DeviceSelectorGrid"
+              Grid.Row="1"
+              Margin="16,10,16,8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="164" />
@@ -334,7 +344,10 @@
             </StackPanel>
         </Grid>
 
-        <TabControl x:Name="PatchModeTabControl" Grid.Row="2" Margin="16,0,16,10">
+        <TabControl x:Name="PatchModeTabControl"
+                    Grid.Row="2"
+                    Margin="16,0,16,10"
+                    SelectionChanged="PatchModeTabControl_SelectionChanged">
             <TabItem x:Name="AssignmentTab" Header="Sélection et plage">
                 <Grid Margin="12">
                     <Grid.ColumnDefinitions>
@@ -687,19 +700,47 @@
                 <Grid Margin="12">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <Grid Margin="0,0,0,8">
+                    <Grid Margin="0,0,0,6">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock x:Name="MatrixHintTextBlock"
-                                   Margin="0,0,12,0"
-                                   Text="RX en lignes, TX en colonnes. Un clic ou un glissement applique immédiatement le patch."
-                                   Foreground="{DynamicResource MutedTextBrush}" />
+                        <StackPanel Orientation="Horizontal"
+                                    VerticalAlignment="Center"
+                                    Margin="0,0,12,0">
+                            <TextBlock x:Name="MatrixOneToOneHeadingTextBlock"
+                                       Text="Patch 1:1"
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,8,0" />
+                            <TextBlock x:Name="MatrixOneToOneHintTextBlock"
+                                       Text="Cliquez sur le premier point de patch dans la grille."
+                                       Foreground="{DynamicResource MutedTextBrush}"
+                                       VerticalAlignment="Center" />
+                            <TextBlock x:Name="MatrixHintTextBlock"
+                                       Visibility="Collapsed"
+                                       Text="RX en lignes, TX en colonnes. Un clic ou un glissement applique immédiatement le patch." />
+                        </StackPanel>
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <TextBlock x:Name="MatrixOneToOneCountLabel"
+                                       Text="Nombre"
+                                       Foreground="{DynamicResource MutedTextBrush}"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,5,0" />
+                            <TextBox x:Name="MatrixOneToOneCountTextBox"
+                                     Width="52"
+                                     Text="1"
+                                     VerticalContentAlignment="Center"
+                                     TextChanged="MatrixOneToOneCountTextBox_TextChanged" />
+                            <Button x:Name="MatrixOneToOneButton"
+                                    Content="PATCH 1:1"
+                                    Margin="6,0,12,0"
+                                    Padding="10,5"
+                                    ToolTip="Cliquez d'abord sur le premier point TX/RX de la grille, choisissez le nombre, puis appliquez la série 1:1."
+                                    automation:AutomationProperties.Name="Appliquer un patch un pour un depuis le dernier point cliqué"
+                                    Click="MatrixOneToOneButton_Click" />
                             <Button x:Name="MatrixZoomOutButton"
                                     Content="−"
                                     Width="34"
@@ -735,45 +776,8 @@
                                        VerticalAlignment="Center" />
                         </StackPanel>
                     </Grid>
-                    <Border Grid.Row="1"
-                            Background="{DynamicResource SurfaceAltBrush}"
-                            BorderBrush="{DynamicResource BorderLineBrush}"
-                            BorderThickness="1"
-                            Padding="8,6"
-                            Margin="0,0,0,8">
-                        <DockPanel LastChildFill="True">
-                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-                                <TextBlock x:Name="MatrixOneToOneCountLabel"
-                                           Text="Nombre"
-                                           Foreground="{DynamicResource MutedTextBrush}"
-                                           VerticalAlignment="Center"
-                                           Margin="10,0,5,0" />
-                                <TextBox x:Name="MatrixOneToOneCountTextBox"
-                                         Width="56"
-                                         Text="1"
-                                         VerticalContentAlignment="Center"
-                                         TextChanged="MatrixOneToOneCountTextBox_TextChanged" />
-                                <Button x:Name="MatrixOneToOneButton"
-                                        Content="PATCH 1:1"
-                                        Margin="8,0,0,0"
-                                        Padding="12,6"
-                                        ToolTip="Cliquez d'abord sur le premier point TX/RX de la grille, choisissez le nombre, puis préparez la série 1:1."
-                                        automation:AutomationProperties.Name="Préparer un patch un pour un depuis le dernier point cliqué"
-                                        Click="MatrixOneToOneButton_Click" />
-                            </StackPanel>
-                            <StackPanel VerticalAlignment="Center">
-                                <TextBlock x:Name="MatrixOneToOneHeadingTextBlock"
-                                           Text="Patch 1:1 depuis la grille"
-                                           FontWeight="SemiBold" />
-                                <TextBlock x:Name="MatrixOneToOneHintTextBlock"
-                                           Text="Cliquez sur le premier point de patch dans la grille."
-                                           Foreground="{DynamicResource MutedTextBrush}"
-                                           Margin="0,2,12,0" />
-                            </StackPanel>
-                        </DockPanel>
-                    </Border>
                     <DataGrid x:Name="MatrixGrid"
-                              Grid.Row="2"
+                              Grid.Row="1"
                               RowHeight="26"
                               MinHeight="230"
                               ColumnHeaderHeight="132"

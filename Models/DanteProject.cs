@@ -317,6 +317,18 @@ public sealed partial class DanteProject
     public void SetNetworkMode(string deviceName, bool redundant)
     {
         DanteDevice device = FindDevice(deviceName) ?? throw new InvalidOperationException("Device introuvable.");
+        if (!device.SupportsNetworkMode)
+        {
+            // Sans balise <redundancy>, le rôle est déjà non redondant. Un
+            // retour en daisychain ne nécessite donc aucune écriture XML.
+            if (!redundant)
+            {
+                return;
+            }
+
+            throw UnsupportedTechnicalSetting(device, "la redondance", "redundancy");
+        }
+
         SetBooleanElementAttribute(device.Element, "redundancy", "value", redundant, afterElementName: "friendly_name");
         RegisterChange("Mode réseau", $"{deviceName} -> {(redundant ? "redondant" : "daisychain")}");
     }
@@ -325,7 +337,7 @@ public sealed partial class DanteProject
     {
         ValidateLatency(latency);
         DanteDevice device = FindDevice(deviceName) ?? throw new InvalidOperationException("Device introuvable.");
-        SetElementValue(device.Element, "unicast_latency", latency);
+        SetExistingTechnicalElementValue(device, "unicast_latency", latency, "la latence");
         RegisterChange("Latence", $"{deviceName} -> {DanteLatencyFormatter.FormatLatencyWithXmlValue(latency)}");
     }
 
@@ -333,7 +345,7 @@ public sealed partial class DanteProject
     {
         string cleanSamplerate = ValidateSamplerate(samplerate);
         DanteDevice device = FindDevice(deviceName) ?? throw new InvalidOperationException("Device introuvable.");
-        SetElementValue(device.Element, "samplerate", cleanSamplerate);
+        SetExistingTechnicalElementValue(device, "samplerate", cleanSamplerate, "la fréquence d'échantillonnage");
         RegisterChange("Sample rate", $"{deviceName} -> {FormatSamplerateForDisplay(cleanSamplerate)}");
     }
 
@@ -341,7 +353,7 @@ public sealed partial class DanteProject
     {
         string cleanEncoding = ValidateEncoding(encoding);
         DanteDevice device = FindDevice(deviceName) ?? throw new InvalidOperationException("Device introuvable.");
-        SetElementValue(device.Element, "encoding", cleanEncoding);
+        SetExistingTechnicalElementValue(device, "encoding", cleanEncoding, "l'encodage");
         RegisterChange("Bits par échantillon", $"{deviceName} -> {FormatEncodingForDisplay(cleanEncoding)}");
     }
 
@@ -372,12 +384,22 @@ public sealed partial class DanteProject
     public bool SupportsIpConfiguration(string deviceName)
     {
         DanteDevice device = FindDevice(deviceName) ?? throw new InvalidOperationException("Device introuvable.");
-        return DeviceSupportsIpConfiguration(device);
+        return device.SupportsIpConfiguration;
     }
 
     public void SetPreferredMaster(string deviceName, bool preferredMaster)
     {
         DanteDevice device = FindDevice(deviceName) ?? throw new InvalidOperationException("Device introuvable.");
+        if (!device.SupportsPreferredMaster)
+        {
+            if (!preferredMaster)
+            {
+                return;
+            }
+
+            throw UnsupportedTechnicalSetting(device, "Preferred Master", "preferred_master");
+        }
+
         SetBooleanElementAttribute(device.Element, "preferred_master", "value", preferredMaster, afterElementName: "redundancy");
         RegisterChange("Preferred master", $"{deviceName} -> {preferredMaster}");
     }
@@ -1508,6 +1530,32 @@ public sealed partial class DanteProject
         }
     }
 
+    private static void SetExistingTechnicalElementValue(
+        DanteDevice device,
+        string elementName,
+        string value,
+        string settingDisplayName)
+    {
+        XElement? element = device.Element.Child(elementName);
+        if (element is null)
+        {
+            throw UnsupportedTechnicalSetting(device, settingDisplayName, elementName);
+        }
+
+        element.Value = value;
+    }
+
+    private static InvalidOperationException UnsupportedTechnicalSetting(
+        DanteDevice device,
+        string settingDisplayName,
+        string elementName)
+    {
+        return new InvalidOperationException(
+            $"La machine « {device.Name} » ne fournit pas le paramètre {settingDisplayName} "
+            + $"dans ce preset Dante (balise <{elementName}> absente). "
+            + "La modification est refusée pour ne pas créer une structure XML non prise en charge.");
+    }
+
     private static bool SetDeviceIpAddressesDynamic(DanteDevice device)
     {
         XElement? ipv4Address = DanteIpConfiguration.FindPrimaryIpv4Address(device.Element);
@@ -1555,7 +1603,8 @@ public sealed partial class DanteProject
 
     private static void SetDeviceIpAddressStatic(DanteDevice device, string address, string netmask, string gateway)
     {
-        XElement ipv4Address = DanteIpConfiguration.FindOrCreatePrimaryIpv4Address(device.Element);
+        XElement ipv4Address = DanteIpConfiguration.FindPrimaryIpv4Address(device.Element)
+            ?? throw UnsupportedTechnicalSetting(device, "IPv4", "ipv4_address");
         ipv4Address.SetAttributeValue("mode", "static");
         SetIpField(ipv4Address, IpAddressAttributeNames, "address", address);
         SetIpField(ipv4Address, IpNetmaskAttributeNames, "netmask", netmask);
@@ -1564,7 +1613,7 @@ public sealed partial class DanteProject
 
     private static bool DeviceSupportsIpConfiguration(DanteDevice device)
     {
-        return DanteIpConfiguration.FindPrimaryInterface(device.Element) is not null;
+        return device.SupportsIpConfiguration;
     }
 
     private static bool DeviceHasStaticIpConfiguration(DanteDevice device)
@@ -1636,21 +1685,11 @@ public sealed partial class DanteProject
         XElement? element = parent.Child(elementName);
         if (element is null)
         {
-            element = new XElement(parent.ChildName(elementName), new XAttribute(attributeName, value.ToString().ToLowerInvariant()));
-            XElement? previous = parent.Child(afterElementName);
-            if (previous is null)
-            {
-                parent.Add(element);
-            }
-            else
-            {
-                previous.AddAfterSelf(element);
-            }
+            throw new InvalidOperationException(
+                $"La balise technique <{elementName}> est absente du preset Dante et ne peut pas être créée automatiquement.");
         }
-        else
-        {
-            element.SetAttributeValue(attributeName, value.ToString().ToLowerInvariant());
-        }
+
+        element.SetAttributeValue(attributeName, value.ToString().ToLowerInvariant());
     }
 
     private static void SetSubscriptionElements(XElement rxElement, string txDeviceName, string txChannelName)

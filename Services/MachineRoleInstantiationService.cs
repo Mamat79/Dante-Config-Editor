@@ -63,10 +63,10 @@ internal static class MachineRoleInstantiationService
 
         if (!options.PreserveDeviceSettings)
         {
-            SetElementValue(clone, "samplerate", "48000");
-            SetElementValue(clone, "encoding", "24");
-            SetElementValue(clone, "unicast_latency", "1000");
-            clone.Child("redundancy")?.Remove();
+            SetExistingElementValue(clone, "samplerate", "48000");
+            SetExistingElementValue(clone, "encoding", "24");
+            SetExistingElementValue(clone, "unicast_latency", "1000");
+            clone.Child("redundancy")?.SetAttributeValue("value", "false");
         }
 
         if (!options.PreservePreferredMaster)
@@ -291,6 +291,15 @@ internal static class MachineRoleInstantiationService
             parent.Add(new XElement(parent.ChildName(localName), value));
         }
         else
+        {
+            element.Value = value;
+        }
+    }
+
+    private static void SetExistingElementValue(XElement parent, string localName, string value)
+    {
+        XElement? element = parent.Child(localName);
+        if (element is not null)
         {
             element.Value = value;
         }

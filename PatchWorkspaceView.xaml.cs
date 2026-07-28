@@ -160,6 +160,50 @@ public partial class PatchWorkspaceView : UserControl
 
     public string? SelectedRxDeviceName => RxDeviceComboBox.SelectedItem as string;
 
+    public bool FocusDevice(string deviceName)
+    {
+        DanteDevice? device = _project.FindDevice(deviceName);
+        if (device is null)
+        {
+            return false;
+        }
+
+        string? txDeviceName = device.TxCount > 0
+            ? FindDeviceName(TxDeviceComboBox.Items.OfType<string>(), device.Name)
+            : null;
+        string? rxDeviceName = device.RxCount > 0
+            ? FindDeviceName(RxDeviceComboBox.Items.OfType<string>(), device.Name)
+            : null;
+        if (txDeviceName is null && rxDeviceName is null)
+        {
+            return false;
+        }
+
+        bool wasInitializing = _initializing;
+        _initializing = true;
+        try
+        {
+            if (txDeviceName is not null)
+            {
+                TxDeviceComboBox.SelectedItem = txDeviceName;
+            }
+
+            if (rxDeviceName is not null && !_lockRxDeviceSelection)
+            {
+                RxDeviceComboBox.SelectedItem = rxDeviceName;
+            }
+        }
+        finally
+        {
+            _initializing = wasInitializing;
+        }
+
+        RefreshSourceChannelsAndMatrixColumns();
+        RefreshTargetRows();
+        UpdateDeviceNavigationState();
+        return true;
+    }
+
     public event EventHandler? ApplyRequested;
 
     public event EventHandler<DirectPatchRequestEventArgs>? DirectApplyRequested;
@@ -172,6 +216,11 @@ public partial class PatchWorkspaceView : UserControl
 
     private void PatchWorkspaceView_SizeChanged(object sender, SizeChangedEventArgs e)
     {
+        UpdateResponsiveLayout();
+    }
+
+    private void UpdateResponsiveLayout()
+    {
         // À 1366 x 768, une hauteur fixe de 132 px masque les premières
         // lignes RX. Les grands écrans gardent les labels TX complets, tandis
         // que les fenêtres compactes conservent au moins une ligne exploitable.
@@ -181,14 +230,38 @@ public partial class PatchWorkspaceView : UserControl
         }
 
         bool compact = ActualHeight < 600;
-        IntroTextBlock.Visibility = compact ? Visibility.Collapsed : Visibility.Visible;
-        MatrixOneToOneHintTextBlock.Visibility = compact
+        bool compactMatrix = _embedded && MatrixTab.IsSelected;
+        IntroTextBlock.Visibility = compact || compactMatrix
             ? Visibility.Collapsed
             : Visibility.Visible;
-        TitleTextBlock.FontSize = compact ? 16 : 20;
-        WorkspaceHeaderBorder.Padding = compact
+        RxDeviceLabel.Visibility = Visibility.Visible;
+        TxDeviceLabel.Visibility = Visibility.Visible;
+        RxDeviceLabel.Content = compactMatrix
+            ? "RX"
+            : L("Machine réceptrice RX", "Receiving device (Rx)");
+        TxDeviceLabel.Content = compactMatrix
+            ? "TX"
+            : L("Machine émettrice TX", "Transmitting device (Tx)");
+        RxDeviceLabel.Padding = compactMatrix
+            ? new Thickness(0, 0, 0, 2)
+            : new Thickness(0, 8, 0, 4);
+        TxDeviceLabel.Padding = RxDeviceLabel.Padding;
+        RxDeviceLabel.FontWeight = compactMatrix ? FontWeights.SemiBold : FontWeights.Normal;
+        TxDeviceLabel.FontWeight = RxDeviceLabel.FontWeight;
+        MatrixOneToOneHintTextBlock.Visibility = ActualWidth < 1080
+            ? Visibility.Collapsed
+            : Visibility.Visible;
+        TitleTextBlock.FontSize = compact || compactMatrix ? 16 : 20;
+        WorkspaceHeaderBorder.Padding = compact || compactMatrix
             ? new Thickness(16, 6, 16, 6)
             : new Thickness(16, 12, 16, 12);
+        DeviceSelectorGrid.Margin = compactMatrix
+            ? new Thickness(16, 5, 16, 5)
+            : new Thickness(16, 10, 16, 8);
+        SwapDeviceSelectionButton.Margin = compactMatrix
+            ? new Thickness(8, 0, 8, 0)
+            : new Thickness(8, 22, 8, 0);
+        SwapDeviceSelectionButton.Height = compactMatrix ? 34 : 42;
         WorkspaceFooterBorder.Padding = compact
             ? new Thickness(16, 5, 16, 5)
             : new Thickness(16, 10, 16, 10);
@@ -199,6 +272,16 @@ public partial class PatchWorkspaceView : UserControl
             _ => 132
         };
         MatrixGrid.MinHeight = ActualHeight < 620 ? 156 : 230;
+    }
+
+    private void PatchModeTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!ReferenceEquals(e.OriginalSource, PatchModeTabControl))
+        {
+            return;
+        }
+
+        UpdateVisibleModePresentation();
     }
 
     public void FocusChannelEditor(DanteChannelKind kind, int danteId, bool matrix)
@@ -2531,6 +2614,8 @@ public partial class PatchWorkspaceView : UserControl
                     "Les commandes de sélection et de plage sont appliquées immédiatement.",
                     "Selection and range commands are applied immediately.");
         }
+
+        UpdateResponsiveLayout();
     }
 
     private string TranslateSwapError(string? french)

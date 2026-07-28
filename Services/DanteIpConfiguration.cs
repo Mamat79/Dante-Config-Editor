@@ -26,18 +26,4 @@ internal static class DanteIpConfiguration
             ?? primaryInterface?.DescendantsNamed("ipv4_address").FirstOrDefault();
     }
 
-    public static XElement FindOrCreatePrimaryIpv4Address(XElement deviceElement)
-    {
-        XElement? existing = FindPrimaryIpv4Address(deviceElement);
-        if (existing is not null)
-        {
-            return existing;
-        }
-
-        XElement primaryInterface = FindPrimaryInterface(deviceElement)
-            ?? throw new InvalidOperationException($"La machine {deviceElement.ChildValue("name")} ne contient pas de balise <interface> IPv4 modifiable.");
-        XElement ipv4Address = new(primaryInterface.ChildName("ipv4_address"));
-        primaryInterface.Add(ipv4Address);
-        return ipv4Address;
-    }
 }

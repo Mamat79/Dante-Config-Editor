@@ -64,6 +64,17 @@
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <StackPanel>
+                <Border x:Name="CapabilityNoticeBorder"
+                        Visibility="Collapsed"
+                        Background="{DynamicResource DialogSurfaceBrush}"
+                        BorderBrush="{DynamicResource DialogBorderBrush}"
+                        BorderThickness="1"
+                        Padding="10,8"
+                        Margin="0,0,0,10">
+                    <TextBlock x:Name="CapabilityNoticeTextBlock"
+                               Foreground="{DynamicResource DialogMutedBrush}"
+                               TextWrapping="Wrap" />
+                </Border>
                 <GroupBox Header="Identité et formats">
                     <Grid Margin="8">
                         <Grid.ColumnDefinitions>

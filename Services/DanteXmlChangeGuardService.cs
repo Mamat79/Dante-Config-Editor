@@ -8,6 +8,17 @@ internal sealed record DanteAuthorizedDeviceAddition(
 
 public static class DanteXmlChangeGuardService
 {
+    private static readonly HashSet<string> TechnicalElementPathsThatMustPreexist =
+        new(StringComparer.OrdinalIgnoreCase)
+        {
+            "/preset/device/redundancy",
+            "/preset/device/preferred_master",
+            "/preset/device/samplerate",
+            "/preset/device/encoding",
+            "/preset/device/unicast_latency",
+            "/preset/device/interface/ipv4_address"
+        };
+
     private static readonly HashSet<string> AllowedPaths = new(StringComparer.OrdinalIgnoreCase)
     {
         "/preset/name",
@@ -368,8 +379,30 @@ public static class DanteXmlChangeGuardService
 
         for (int index = fallbackPairs; index < unmatchedCurrent.Count; index++)
         {
-            AddChangeIssue(result, path, $"Balise ajoutée : <{unmatchedCurrent[index].Name.LocalName}>.");
+            AddElementAdditionIssue(
+                result,
+                path,
+                $"Balise ajoutée : <{unmatchedCurrent[index].Name.LocalName}>.");
         }
+    }
+
+    private static void AddElementAdditionIssue(
+        DanteValidationResult result,
+        string rawPath,
+        string detail)
+    {
+        string path = NormalizePath(rawPath);
+        if (TechnicalElementPathsThatMustPreexist.Contains(path))
+        {
+            result.AddError(
+                DanteIssueCategory.SaveSafety,
+                "Modification technique interdite : "
+                + $"{ToUserPath(path)} : {detail} "
+                + "Cette balise n'existait pas dans le rôle Dante d'origine et ne peut pas être inventée.");
+            return;
+        }
+
+        AddChangeIssue(result, path, detail);
     }
 
     private static XElement? FindMatchingChild(XElement original, IReadOnlyList<XElement> candidates)

@@ -6,45 +6,81 @@ public sealed partial class DanteProject
 {
     public void SetAllNetworkModes(bool redundant)
     {
-        foreach (DanteDevice device in Devices)
+        DanteDevice[] supportedDevices = Devices.Where(device => device.SupportsNetworkMode).ToArray();
+        foreach (DanteDevice device in supportedDevices)
         {
             SetBooleanElementAttribute(device.Element, "redundancy", "value", redundant, afterElementName: "friendly_name");
         }
 
-        RegisterChange("Mode réseau global", redundant ? "Tous redondants" : "Tous en daisychain");
+        if (supportedDevices.Length == 0)
+        {
+            throw new InvalidOperationException("Aucune machine du preset n'expose le paramètre de redondance.");
+        }
+
+        RegisterChange(
+            "Mode réseau global",
+            $"{supportedDevices.Length} machine(s) -> {(redundant ? "redondant" : "daisychain")}, "
+            + $"{Devices.Count - supportedDevices.Length} ignorée(s) sans balise <redundancy>");
     }
 
     public void SetAllLatencies(string latency)
     {
         ValidateLatency(latency);
-        foreach (DanteDevice device in Devices)
+        DanteDevice[] supportedDevices = Devices.Where(device => device.SupportsLatency).ToArray();
+        foreach (DanteDevice device in supportedDevices)
         {
-            SetElementValue(device.Element, "unicast_latency", latency);
+            SetExistingTechnicalElementValue(device, "unicast_latency", latency, "la latence");
         }
 
-        RegisterChange("Latence globale", $"Tous -> {DanteLatencyFormatter.FormatLatencyWithXmlValue(latency)}");
+        if (supportedDevices.Length == 0)
+        {
+            throw new InvalidOperationException("Aucune machine du preset n'expose le paramètre de latence.");
+        }
+
+        RegisterChange(
+            "Latence globale",
+            $"{supportedDevices.Length} machine(s) -> {DanteLatencyFormatter.FormatLatencyWithXmlValue(latency)}, "
+            + $"{Devices.Count - supportedDevices.Length} ignorée(s)");
     }
 
     public void SetAllSamplerates(string samplerate)
     {
         string cleanSamplerate = ValidateSamplerate(samplerate);
-        foreach (DanteDevice device in Devices)
+        DanteDevice[] supportedDevices = Devices.Where(device => device.SupportsSampleRate).ToArray();
+        foreach (DanteDevice device in supportedDevices)
         {
-            SetElementValue(device.Element, "samplerate", cleanSamplerate);
+            SetExistingTechnicalElementValue(device, "samplerate", cleanSamplerate, "la fréquence d'échantillonnage");
         }
 
-        RegisterChange("Sample rate globale", $"Tous -> {FormatSamplerateForDisplay(cleanSamplerate)}");
+        if (supportedDevices.Length == 0)
+        {
+            throw new InvalidOperationException("Aucune machine du preset n'expose le paramètre de fréquence d'échantillonnage.");
+        }
+
+        RegisterChange(
+            "Sample rate globale",
+            $"{supportedDevices.Length} machine(s) -> {FormatSamplerateForDisplay(cleanSamplerate)}, "
+            + $"{Devices.Count - supportedDevices.Length} ignorée(s)");
     }
 
     public void SetAllEncodings(string encoding)
     {
         string cleanEncoding = ValidateEncoding(encoding);
-        foreach (DanteDevice device in Devices)
+        DanteDevice[] supportedDevices = Devices.Where(device => device.SupportsEncoding).ToArray();
+        foreach (DanteDevice device in supportedDevices)
         {
-            SetElementValue(device.Element, "encoding", cleanEncoding);
+            SetExistingTechnicalElementValue(device, "encoding", cleanEncoding, "l'encodage");
         }
 
-        RegisterChange("Bits par échantillon globaux", $"Tous -> {FormatEncodingForDisplay(cleanEncoding)}");
+        if (supportedDevices.Length == 0)
+        {
+            throw new InvalidOperationException("Aucune machine du preset n'expose le paramètre d'encodage.");
+        }
+
+        RegisterChange(
+            "Bits par échantillon globaux",
+            $"{supportedDevices.Length} machine(s) -> {FormatEncodingForDisplay(cleanEncoding)}, "
+            + $"{Devices.Count - supportedDevices.Length} ignorée(s)");
     }
 
     public int SetAllIpAddressesDynamic()
@@ -109,8 +145,13 @@ public sealed partial class DanteProject
     {
         DanteDevice selected = FindDevice(deviceName)
             ?? throw new InvalidOperationException("La machine choisie est introuvable.");
+        if (!selected.SupportsPreferredMaster)
+        {
+            throw UnsupportedTechnicalSetting(selected, "Preferred Master", "preferred_master");
+        }
 
-        foreach (DanteDevice device in Devices)
+        DanteDevice[] supportedDevices = Devices.Where(device => device.SupportsPreferredMaster).ToArray();
+        foreach (DanteDevice device in supportedDevices)
         {
             SetBooleanElementAttribute(
                 device.Element,
@@ -120,7 +161,9 @@ public sealed partial class DanteProject
                 afterElementName: "redundancy");
         }
 
-        RegisterChange("Preferred master exclusif", $"{selected.Name} est le seul Preferred Master");
+        RegisterChange(
+            "Preferred master exclusif",
+            $"{selected.Name} est le seul Preferred Master parmi {supportedDevices.Length} machine(s) compatible(s)");
     }
 
     public int ApplyDeviceProfile(IEnumerable<string> deviceNames, DeviceProfile profile)
@@ -142,25 +185,30 @@ public sealed partial class DanteProject
         foreach (DanteDevice device in targets)
         {
             bool changed = false;
-            if (!string.Equals(device.Samplerate, samplerate, StringComparison.OrdinalIgnoreCase))
+            if (device.SupportsSampleRate
+                && !string.Equals(device.Samplerate, samplerate, StringComparison.OrdinalIgnoreCase))
             {
-                SetElementValue(device.Element, "samplerate", samplerate);
+                SetExistingTechnicalElementValue(device, "samplerate", samplerate, "la fréquence d'échantillonnage");
                 changed = true;
             }
 
-            if (!string.Equals(device.Encoding, encoding, StringComparison.OrdinalIgnoreCase))
+            if (device.SupportsEncoding
+                && !string.Equals(device.Encoding, encoding, StringComparison.OrdinalIgnoreCase))
             {
-                SetElementValue(device.Element, "encoding", encoding);
+                SetExistingTechnicalElementValue(device, "encoding", encoding, "l'encodage");
                 changed = true;
             }
 
-            if (!string.Equals(device.Latency, profile.Latency, StringComparison.OrdinalIgnoreCase))
+            if (device.SupportsLatency
+                && !string.Equals(device.Latency, profile.Latency, StringComparison.OrdinalIgnoreCase))
             {
-                SetElementValue(device.Element, "unicast_latency", profile.Latency);
+                SetExistingTechnicalElementValue(device, "unicast_latency", profile.Latency, "la latence");
                 changed = true;
             }
 
-            if (profile.IsRedundant.HasValue && device.IsRedundant != profile.IsRedundant.Value)
+            if (profile.IsRedundant.HasValue
+                && device.SupportsNetworkMode
+                && device.IsRedundant != profile.IsRedundant.Value)
             {
                 SetBooleanElementAttribute(device.Element, "redundancy", "value", profile.IsRedundant.Value, afterElementName: "friendly_name");
                 changed = true;

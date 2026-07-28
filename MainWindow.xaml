@@ -821,9 +821,9 @@
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="NavigationColumn" Width="216" MinWidth="0" />
-                <ColumnDefinition x:Name="NavigationSplitterColumn" Width="34" />
+                <ColumnDefinition x:Name="NavigationSplitterColumn" Width="44" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition x:Name="InspectorSplitterColumn" Width="34" />
+                <ColumnDefinition x:Name="InspectorSplitterColumn" Width="44" />
                 <ColumnDefinition x:Name="InspectorColumn" Width="292" MinWidth="0" />
             </Grid.ColumnDefinitions>
 
@@ -1006,9 +1006,11 @@
                     Visibility="Visible"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Width="30"
-                    MinHeight="64"
-                    Padding="4,12"
+                    Width="40"
+                    MinHeight="82"
+                    Padding="6,16"
+                    FontSize="18"
+                    FontWeight="Bold"
                     Panel.ZIndex="2"
                     Style="{StaticResource SecondaryButtonStyle}"
                     Click="NavigationToggleButton_Click"
@@ -1026,9 +1028,9 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition x:Name="ConfigurationEditorsRow" Height="5*" />
+                                <RowDefinition x:Name="ConfigurationEditorsRow" Height="8*" />
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="2*" />
+                                <RowDefinition Height="1.5*" />
                             </Grid.RowDefinitions>
 
                             <Border Grid.Row="0"
@@ -1100,6 +1102,7 @@
                                              <RowDefinition Height="Auto" />
                                              <RowDefinition Height="Auto" />
                                              <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
@@ -1191,6 +1194,13 @@
                                                      ToolTip="Crée un modèle réutilisable et partageable à partir de cette machine."
                                                      Click="SaveDeviceToBankButton_Click" />
                                          </UniformGrid>
+                                         <TextBlock x:Name="DeviceCapabilityHintTextBlock"
+                                                    Grid.Row="6"
+                                                    Grid.ColumnSpan="2"
+                                                    Visibility="Collapsed"
+                                                    Margin="0,6,0,0"
+                                                    Foreground="{DynamicResource WarningBrush}"
+                                                    FontSize="11" />
                                      </Grid>
                                  </GroupBox>
 
@@ -1260,7 +1270,7 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
                                     <GroupBox Header="Actions globales"
-                                              Height="390">
+                                              VerticalAlignment="Stretch">
                                         <Grid>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="*" />
@@ -1269,9 +1279,7 @@
                                             <TabControl Background="{DynamicResource SurfaceBrush}"
                                                         BorderBrush="{DynamicResource BorderLineBrush}"
                                                         Foreground="{DynamicResource TextBrush}">
-                                            <TabItem Header="Réseau / audio">
-                                                <ScrollViewer VerticalScrollBarVisibility="Auto"
-                                                              HorizontalScrollBarVisibility="Disabled">
+                                            <TabItem Header="Réseau / audio" Padding="6,4">
                                                 <Grid Margin="0,8,0,0">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*" />
@@ -1301,10 +1309,9 @@
                                                         <Button x:Name="ApplyAllEncodingButton" Content="Appliquer les bits à tous" Click="ApplyAllEncodingButton_Click" ToolTip="Applique les bits par échantillon à la cible choisie." />
                                                     </StackPanel>
                                                 </Grid>
-                                                </ScrollViewer>
                                             </TabItem>
 
-                                            <TabItem Header="IP">
+                                            <TabItem Header="IP" Padding="6,4">
                                                 <Grid Margin="0,8,0,0">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*" />
@@ -1343,7 +1350,7 @@
                                                 </Grid>
                                             </TabItem>
 
-                                            <TabItem Header="Profils">
+                                            <TabItem Header="Profils" Padding="6,4">
                                                 <StackPanel Margin="0,8,0,0">
                                                     <Label Content="Profil rapide" />
                                                     <ComboBox x:Name="QuickProfileComboBox" />
@@ -1355,7 +1362,7 @@
                                                 </StackPanel>
                                             </TabItem>
 
-                                            <TabItem Header="Horloge">
+                                            <TabItem Header="Horloge" Padding="6,4">
                                                 <StackPanel Margin="0,8,0,0">
                                                     <Label Content="Preferred Master à conserver" />
                                                     <ComboBox x:Name="ExclusivePreferredMasterComboBox"
@@ -1369,8 +1376,8 @@
                                             </TabItem>
                                             </TabControl>
                                             <Border Grid.Row="1"
-                                                    Margin="0,8,0,0"
-                                                    Padding="8"
+                                                    Margin="0,4,0,0"
+                                                    Padding="5,3"
                                                     Background="{DynamicResource SurfaceAltBrush}"
                                                     BorderBrush="{DynamicResource BorderLineBrush}"
                                                     BorderThickness="1"
@@ -1389,6 +1396,7 @@
                                                               Grid.Column="1"
                                                               SelectedIndex="0"
                                                               MinWidth="120"
+                                                              MinHeight="28"
                                                               Margin="0,0,8,0"
                                                               ToolTip="Choisissez l'information de contrôle à afficher.">
                                                         <ComboBoxItem Content="Redondants" Tag="redundant" />
@@ -1401,9 +1409,10 @@
                                                     </ComboBox>
                                                     <Button Grid.Column="2"
                                                             Content="Afficher"
-                                                            Style="{StaticResource SecondaryButtonStyle}"
+                                                            MinHeight="28"
+                                                            Padding="9,4"
                                                             Margin="0"
-                                                            Padding="10,4"
+                                                            Style="{StaticResource SecondaryButtonStyle}"
                                                             Click="ShowQuickListButton_Click"
                                                             ToolTip="Affiche la liste de contrôle sélectionnée." />
                                                 </Grid>
@@ -1529,7 +1538,9 @@
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <CheckBox IsChecked="{Binding PreferredMaster, Mode=OneWay}"
+                                                          IsEnabled="{Binding SupportsPreferredMaster}"
                                                           HorizontalAlignment="Center"
+                                                          ToolTip="{Binding PreferredMasterToolTip}"
                                                           Click="DevicePreferredMasterCheckBox_Click" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -3081,9 +3092,11 @@
                     Visibility="Visible"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Width="30"
-                    MinHeight="64"
-                    Padding="4,12"
+                    Width="40"
+                    MinHeight="82"
+                    Padding="6,16"
+                    FontSize="18"
+                    FontWeight="Bold"
                     Panel.ZIndex="2"
                     Style="{StaticResource SecondaryButtonStyle}"
                     Click="InspectorToggleButton_Click"

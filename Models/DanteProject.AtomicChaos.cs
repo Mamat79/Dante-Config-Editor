@@ -96,29 +96,29 @@ public sealed partial class DanteProject
                 SetElementValue(plan.Device.Element, "name", plan.NewName);
                 SetElementValue(plan.Device.Element, "friendly_name", plan.NewName);
             }
-            if (options.NetworkMode)
+            if (options.NetworkMode && plan.Device.SupportsNetworkMode)
             {
                 SetBooleanElementAttribute(plan.Device.Element, "redundancy", "value", redundant, afterElementName: "friendly_name");
                 redundantDeviceCount += redundant ? 1 : 0;
             }
-            if (options.PreferredMaster)
+            if (options.PreferredMaster && plan.Device.SupportsPreferredMaster)
             {
                 SetBooleanElementAttribute(plan.Device.Element, "preferred_master", "value", preferredMaster, afterElementName: "redundancy");
                 preferredMasterCount += preferredMaster ? 1 : 0;
             }
-            if (options.Latency)
+            if (options.Latency && plan.Device.SupportsLatency)
             {
-                SetElementValue(plan.Device.Element, "unicast_latency", latency);
+                SetExistingTechnicalElementValue(plan.Device, "unicast_latency", latency, "la latence");
                 appliedLatencies.Add(latency);
             }
-            if (options.SampleRate)
+            if (options.SampleRate && plan.Device.SupportsSampleRate)
             {
-                SetElementValue(plan.Device.Element, "samplerate", samplerate);
+                SetExistingTechnicalElementValue(plan.Device, "samplerate", samplerate, "la fréquence d'échantillonnage");
                 appliedSamplerates.Add(samplerate);
             }
-            if (options.Encoding)
+            if (options.Encoding && plan.Device.SupportsEncoding)
             {
-                SetElementValue(plan.Device.Element, "encoding", encoding);
+                SetExistingTechnicalElementValue(plan.Device, "encoding", encoding, "l'encodage");
                 appliedEncodings.Add(encoding);
             }
 
@@ -294,7 +294,8 @@ public sealed partial class DanteProject
 
     private static void SetAtomicStaticIp(DanteDevice device, string address)
     {
-        XElement ipv4Address = DanteIpConfiguration.FindOrCreatePrimaryIpv4Address(device.Element);
+        XElement ipv4Address = DanteIpConfiguration.FindPrimaryIpv4Address(device.Element)
+            ?? throw UnsupportedTechnicalSetting(device, "IPv4", "ipv4_address");
         ipv4Address.SetAttributeValue("mode", "static");
         SetIpField(ipv4Address, IpAddressAttributeNames, "address", address);
         SetIpField(ipv4Address, IpNetmaskAttributeNames, "netmask", "255.255.255.0");

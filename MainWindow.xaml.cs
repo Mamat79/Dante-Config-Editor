@@ -234,11 +234,18 @@ public partial class MainWindow : Window
 
     private sealed class DeviceRow
     {
-        public DeviceRow(DanteDevice device, bool isLocked, bool isModified)
+        public DeviceRow(DanteDevice device, bool isLocked, bool isModified, bool english)
         {
             Device = device;
             IsLocked = isLocked;
             IsModified = isModified;
+            PreferredMasterToolTip = device.SupportsPreferredMaster
+                ? english
+                    ? "Enable or disable Preferred Master for this device."
+                    : "Active ou désactive Preferred Master pour cette machine."
+                : english
+                    ? "Unavailable: this Dante role does not expose the preferred_master setting."
+                    : "Indisponible : ce rôle Dante n'expose pas le paramètre preferred_master.";
         }
 
         public DanteDevice Device { get; }
@@ -262,6 +269,10 @@ public partial class MainWindow : Window
         public string IpModeDisplay => Device.IpModeDisplay;
 
         public bool PreferredMaster => Device.PreferredMaster;
+
+        public bool SupportsPreferredMaster => Device.SupportsPreferredMaster;
+
+        public string PreferredMasterToolTip { get; }
 
         public int TxCount => Device.TxCount;
 
@@ -813,11 +824,12 @@ public partial class MainWindow : Window
         string latency = SelectedLatencyXmlValue(LatencyComboBox);
         bool preferredMaster = PreferredMasterCheckBox.IsChecked == true;
 
-        bool latencyChanged = !string.Equals(device.Latency, latency, StringComparison.OrdinalIgnoreCase);
+        bool latencyChanged = device.SupportsLatency
+            && !string.Equals(device.Latency, latency, StringComparison.OrdinalIgnoreCase);
         bool hasChanges = !string.Equals(device.Name, newName, StringComparison.Ordinal)
-            || device.IsRedundant != isRedundant
+            || device.SupportsNetworkMode && device.IsRedundant != isRedundant
             || latencyChanged
-            || device.PreferredMaster != preferredMaster;
+            || device.SupportsPreferredMaster && device.PreferredMaster != preferredMaster;
 
         if (!hasChanges)
         {
@@ -875,17 +887,20 @@ public partial class MainWindow : Window
             currentName = newName;
         }
 
-        if (originalDevice.IsRedundant != isRedundant)
+        if (originalDevice.SupportsNetworkMode
+            && originalDevice.IsRedundant != isRedundant)
         {
             _project.SetNetworkMode(currentName, isRedundant);
         }
 
-        if (!string.Equals(originalDevice.Latency, latency, StringComparison.OrdinalIgnoreCase))
+        if (originalDevice.SupportsLatency
+            && !string.Equals(originalDevice.Latency, latency, StringComparison.OrdinalIgnoreCase))
         {
             _project.SetLatency(currentName, latency);
         }
 
-        if (originalDevice.PreferredMaster != preferredMaster)
+        if (originalDevice.SupportsPreferredMaster
+            && originalDevice.PreferredMaster != preferredMaster)
         {
             _project.SetPreferredMaster(currentName, preferredMaster);
         }
@@ -1195,11 +1210,20 @@ public partial class MainWindow : Window
 
         bool redundant = GlobalRedundantRadioButton.IsChecked == true;
         string targetLabel = redundant ? "Redondant" : "Daisychain";
+        DanteDevice[] supportedDevices = target.Devices
+            .Where(device => device.SupportsNetworkMode)
+            .ToArray();
+        if (!EnsureSupportedTarget(supportedDevices, target, "le mode redondant", "redundancy mode"))
+        {
+            return;
+        }
+
+        int skipped = target.Devices.Length - supportedDevices.Length;
         RunProjectAction(
-            T("Action.AllNetworkModesApplied"),
+            CapabilityActionStatus(T("Action.AllNetworkModesApplied"), supportedDevices.Length, skipped),
             () => _project!.ApplyBatch(project =>
             {
-                foreach (DanteDevice device in target.Devices)
+                foreach (DanteDevice device in supportedDevices)
                 {
                     project.SetNetworkMode(device.Name, redundant);
                 }
@@ -1210,8 +1234,11 @@ public partial class MainWindow : Window
                 target.Devices.Select(device => (
                     Device: device,
                     Before: device.NetworkMode,
-                    After: targetLabel,
-                    Changed: device.IsRedundant != redundant))) + Environment.NewLine + T("Dialog.Continue"));
+                    After: device.SupportsNetworkMode ? targetLabel : CapabilityUnavailableText(),
+                    Changed: device.SupportsNetworkMode && device.IsRedundant != redundant)))
+                + CapabilitySkipNotice(skipped)
+                + Environment.NewLine
+                + T("Dialog.Continue"));
     }
 
     private void ApplyAllLatencyButton_Click(object sender, RoutedEventArgs e)
@@ -1224,11 +1251,20 @@ public partial class MainWindow : Window
 
         string latency = SelectedLatencyXmlValue(GlobalLatencyComboBox);
         string latencyDisplay = DanteLatencyFormatter.FormatLatencyDisplay(latency);
+        DanteDevice[] supportedDevices = target.Devices
+            .Where(device => device.SupportsLatency)
+            .ToArray();
+        if (!EnsureSupportedTarget(supportedDevices, target, "la latence unicast", "unicast latency"))
+        {
+            return;
+        }
+
+        int skipped = target.Devices.Length - supportedDevices.Length;
         RunProjectAction(
-            T("Action.AllLatenciesApplied"),
+            CapabilityActionStatus(T("Action.AllLatenciesApplied"), supportedDevices.Length, skipped),
             () => _project!.ApplyBatch(project =>
             {
-                foreach (DanteDevice device in target.Devices)
+                foreach (DanteDevice device in supportedDevices)
                 {
                     project.SetLatency(device.Name, latency);
                 }
@@ -1239,8 +1275,10 @@ public partial class MainWindow : Window
                 target.Devices.Select(device => (
                     Device: device,
                     Before: device.LatencyDisplay,
-                    After: latencyDisplay,
-                    Changed: !string.Equals(device.Latency, latency, StringComparison.OrdinalIgnoreCase))))
+                    After: device.SupportsLatency ? latencyDisplay : CapabilityUnavailableText(),
+                    Changed: device.SupportsLatency
+                        && !string.Equals(device.Latency, latency, StringComparison.OrdinalIgnoreCase))))
+                + CapabilitySkipNotice(skipped)
                 + Environment.NewLine
                 + T("Dialog.LatencyWarningContinue"));
     }
@@ -1255,11 +1293,20 @@ public partial class MainWindow : Window
 
         string samplerate = SelectedSampleRateXmlValue(GlobalSampleRateComboBox);
         string samplerateDisplay = GlobalSampleRateComboBox.Text;
+        DanteDevice[] supportedDevices = target.Devices
+            .Where(device => device.SupportsSampleRate)
+            .ToArray();
+        if (!EnsureSupportedTarget(supportedDevices, target, "la fréquence d'échantillonnage", "sample rate"))
+        {
+            return;
+        }
+
+        int skipped = target.Devices.Length - supportedDevices.Length;
         RunProjectAction(
-            T("Action.AllSampleRatesApplied"),
+            CapabilityActionStatus(T("Action.AllSampleRatesApplied"), supportedDevices.Length, skipped),
             () => _project!.ApplyBatch(project =>
             {
-                foreach (DanteDevice device in target.Devices)
+                foreach (DanteDevice device in supportedDevices)
                 {
                     project.SetSamplerate(device.Name, samplerate);
                 }
@@ -1270,8 +1317,10 @@ public partial class MainWindow : Window
                 target.Devices.Select(device => (
                     Device: device,
                     Before: device.SampleRateDisplay,
-                    After: samplerateDisplay,
-                    Changed: !string.Equals(device.Samplerate, samplerate, StringComparison.OrdinalIgnoreCase))))
+                    After: device.SupportsSampleRate ? samplerateDisplay : CapabilityUnavailableText(),
+                    Changed: device.SupportsSampleRate
+                        && !string.Equals(device.Samplerate, samplerate, StringComparison.OrdinalIgnoreCase))))
+                + CapabilitySkipNotice(skipped)
                 + Environment.NewLine
                 + T("Dialog.AudioFormatWarningContinue"));
     }
@@ -1286,11 +1335,20 @@ public partial class MainWindow : Window
 
         string encoding = SelectedEncodingXmlValue(GlobalEncodingComboBox);
         string encodingDisplay = GlobalEncodingComboBox.Text;
+        DanteDevice[] supportedDevices = target.Devices
+            .Where(device => device.SupportsEncoding)
+            .ToArray();
+        if (!EnsureSupportedTarget(supportedDevices, target, "l'encodage", "encoding"))
+        {
+            return;
+        }
+
+        int skipped = target.Devices.Length - supportedDevices.Length;
         RunProjectAction(
-            T("Action.AllEncodingsApplied"),
+            CapabilityActionStatus(T("Action.AllEncodingsApplied"), supportedDevices.Length, skipped),
             () => _project!.ApplyBatch(project =>
             {
-                foreach (DanteDevice device in target.Devices)
+                foreach (DanteDevice device in supportedDevices)
                 {
                     project.SetEncoding(device.Name, encoding);
                 }
@@ -1301,8 +1359,10 @@ public partial class MainWindow : Window
                 target.Devices.Select(device => (
                     Device: device,
                     Before: device.EncodingDisplay,
-                    After: encodingDisplay,
-                    Changed: !string.Equals(device.Encoding, encoding, StringComparison.OrdinalIgnoreCase))))
+                    After: device.SupportsEncoding ? encodingDisplay : CapabilityUnavailableText(),
+                    Changed: device.SupportsEncoding
+                        && !string.Equals(device.Encoding, encoding, StringComparison.OrdinalIgnoreCase))))
+                + CapabilitySkipNotice(skipped)
                 + Environment.NewLine
                 + T("Dialog.AudioFormatWarningContinue"));
     }
@@ -1368,10 +1428,15 @@ public partial class MainWindow : Window
 
     private static bool DeviceDiffersFromProfile(DanteDevice device, DeviceProfile profile)
     {
-        return !string.Equals(device.Samplerate, profile.Samplerate, StringComparison.OrdinalIgnoreCase)
-            || !string.Equals(device.Encoding, profile.Encoding, StringComparison.OrdinalIgnoreCase)
-            || !string.Equals(device.Latency, profile.Latency, StringComparison.OrdinalIgnoreCase)
-            || profile.IsRedundant.HasValue && device.IsRedundant != profile.IsRedundant.Value
+        return device.SupportsSampleRate
+                && !string.Equals(device.Samplerate, profile.Samplerate, StringComparison.OrdinalIgnoreCase)
+            || device.SupportsEncoding
+                && !string.Equals(device.Encoding, profile.Encoding, StringComparison.OrdinalIgnoreCase)
+            || device.SupportsLatency
+                && !string.Equals(device.Latency, profile.Latency, StringComparison.OrdinalIgnoreCase)
+            || profile.IsRedundant.HasValue
+                && device.SupportsNetworkMode
+                && device.IsRedundant != profile.IsRedundant.Value
             || profile.SetIpAutomatic && device.UsesStaticIp;
     }
 
@@ -1382,14 +1447,24 @@ public partial class MainWindow : Window
 
     private static string BuildTargetProfileState(DanteDevice device, DeviceProfile profile)
     {
-        string samplerate = int.TryParse(profile.Samplerate, out int samplerateValue)
-            ? $"{samplerateValue / 1000m:0.#} kHz"
-            : profile.Samplerate;
-        string networkMode = profile.IsRedundant.HasValue
+        string samplerate = device.SupportsSampleRate
+            ? int.TryParse(profile.Samplerate, out int samplerateValue)
+                ? $"{samplerateValue / 1000m:0.#} kHz"
+                : profile.Samplerate
+            : device.SampleRateDisplay;
+        string encoding = device.SupportsEncoding
+            ? $"{profile.Encoding} bit"
+            : device.EncodingDisplay;
+        string latency = device.SupportsLatency
+            ? DanteLatencyFormatter.FormatLatencyDisplay(profile.Latency)
+            : device.LatencyDisplay;
+        string networkMode = profile.IsRedundant.HasValue && device.SupportsNetworkMode
             ? profile.IsRedundant.Value ? "Redondant" : "Daisychain"
             : device.NetworkMode;
-        string ipMode = profile.SetIpAutomatic ? "Auto" : device.IpModeDisplay;
-        return $"{samplerate} / {profile.Encoding} bit / {DanteLatencyFormatter.FormatLatencyDisplay(profile.Latency)} / {networkMode} / {ipMode}";
+        string ipMode = profile.SetIpAutomatic && device.SupportsIpConfiguration
+            ? "Auto"
+            : device.IpModeDisplay;
+        return $"{samplerate} / {encoding} / {latency} / {networkMode} / {ipMode}";
     }
 
     private void ApplyAllIpAutoButton_Click(object sender, RoutedEventArgs e)
@@ -1712,7 +1787,7 @@ public partial class MainWindow : Window
         NavigationColumn.Width = _navigationExpanded
             ? new GridLength((double)FindResource("ShellNavigationExpandedWidth"))
             : new GridLength(0);
-        NavigationSplitterColumn.Width = new GridLength(34);
+        NavigationSplitterColumn.Width = new GridLength(44);
         NavigationBorder.Visibility = _navigationExpanded ? Visibility.Visible : Visibility.Collapsed;
         NavigationPanel.Visibility = _navigationExpanded ? Visibility.Visible : Visibility.Collapsed;
         NavigationSplitter.Visibility = _navigationExpanded ? Visibility.Visible : Visibility.Collapsed;
@@ -1744,7 +1819,7 @@ public partial class MainWindow : Window
         InspectorColumn.Width = _inspectorExpanded
             ? new GridLength((double)FindResource("ShellInspectorExpandedWidth"))
             : new GridLength(0);
-        InspectorSplitterColumn.Width = new GridLength(34);
+        InspectorSplitterColumn.Width = new GridLength(44);
         InspectorBorder.Visibility = _inspectorExpanded ? Visibility.Visible : Visibility.Collapsed;
         InspectorSplitter.Visibility = _inspectorExpanded ? Visibility.Visible : Visibility.Collapsed;
         InspectorRevealButton.Visibility = Visibility.Visible;
@@ -1770,7 +1845,7 @@ public partial class MainWindow : Window
         bool collapsed = ConfigurationEditorsGrid.Visibility == Visibility.Collapsed;
         ConfigurationEditorsRow.Height = collapsed
             ? GridLength.Auto
-            : new GridLength(5, GridUnitType.Star);
+            : new GridLength(8, GridUnitType.Star);
         SettingsPanelsMenuItem.IsChecked = !collapsed;
         string action = collapsed ? "Afficher les réglages" : "Masquer les réglages";
         string helpText = collapsed
@@ -2106,9 +2181,18 @@ public partial class MainWindow : Window
         }
 
         _workspaceNavigation.NavigateTo(WorkspaceSection.Patch);
-        SenderDeviceList.SelectedItem = AllSendersItem;
-        ReceiverDeviceList.SelectedItem = device.Name;
+        PatchMatrixModeButton.IsChecked = true;
+        SenderDeviceList.SelectedItem = device.TxCount > 0 ? device.Name : AllSendersItem;
+        ReceiverDeviceList.SelectedItem = device.RxCount > 0 ? device.Name : AllReceiversItem;
+        if (device.TxCount > 0)
+        {
+            SourceDeviceComboBox.SelectedItem = device.Name;
+        }
+
         RefreshPatchRows();
+        ShowPatchWorkspaceMode(PatchWorkspaceDisplayMode.Matrix);
+        _easyPatchWorkspace?.FocusDevice(device.Name);
+        SynchronizeSelectedDeviceContext(device.Name, synchronizeGrid: true);
     }
 
     private void DeviceLockCheckBox_Click(object sender, RoutedEventArgs e)
@@ -2224,32 +2308,37 @@ public partial class MainWindow : Window
             currentName = result.DeviceName;
         }
 
-        if (originalDevice.IsRedundant != result.IsRedundant)
+        if (originalDevice.SupportsNetworkMode
+            && originalDevice.IsRedundant != result.IsRedundant)
         {
             _project.SetNetworkMode(currentName, result.IsRedundant);
         }
 
-        if (!string.Equals(originalDevice.Latency, result.Latency, StringComparison.OrdinalIgnoreCase))
+        if (originalDevice.SupportsLatency
+            && !string.Equals(originalDevice.Latency, result.Latency, StringComparison.OrdinalIgnoreCase))
         {
             _project.SetLatency(currentName, result.Latency);
         }
 
-        if (!string.Equals(originalDevice.Samplerate, result.Samplerate, StringComparison.OrdinalIgnoreCase))
+        if (originalDevice.SupportsSampleRate
+            && !string.Equals(originalDevice.Samplerate, result.Samplerate, StringComparison.OrdinalIgnoreCase))
         {
             _project.SetSamplerate(currentName, result.Samplerate);
         }
 
-        if (!string.Equals(originalDevice.Encoding, result.Encoding, StringComparison.OrdinalIgnoreCase))
+        if (originalDevice.SupportsEncoding
+            && !string.Equals(originalDevice.Encoding, result.Encoding, StringComparison.OrdinalIgnoreCase))
         {
             _project.SetEncoding(currentName, result.Encoding);
         }
 
-        if (originalDevice.PreferredMaster != result.PreferredMaster)
+        if (originalDevice.SupportsPreferredMaster
+            && originalDevice.PreferredMaster != result.PreferredMaster)
         {
             _project.SetPreferredMaster(currentName, result.PreferredMaster);
         }
 
-        if (result.UsesStaticIp)
+        if (originalDevice.SupportsIpConfiguration && result.UsesStaticIp)
         {
             if (!originalDevice.UsesStaticIp
                 || !string.Equals(originalDevice.StaticIpAddress, result.StaticIpAddress, StringComparison.OrdinalIgnoreCase)
@@ -2259,7 +2348,7 @@ public partial class MainWindow : Window
                 _project.SetIpAddressStatic(currentName, result.StaticIpAddress, result.StaticIpNetmask, result.StaticIpGateway);
             }
         }
-        else if (originalDevice.UsesStaticIp)
+        else if (originalDevice.SupportsIpConfiguration && originalDevice.UsesStaticIp)
         {
             _project.SetIpAddressDynamic(currentName);
         }
@@ -4390,7 +4479,8 @@ public partial class MainWindow : Window
                 _deviceRows.Add(new DeviceRow(
                     device,
                     _lockedDeviceNames.Contains(device.Name),
-                    modifiedDeviceNames.Contains(device.Name)));
+                    modifiedDeviceNames.Contains(device.Name),
+                    _language == UiLanguage.English));
             }
 
             DeviceGrid.SelectedItems.Clear();
@@ -4427,14 +4517,18 @@ public partial class MainWindow : Window
             ReceiverDeviceList.SelectedItem = deviceNames.Contains(selectedReceiverFilter) ? selectedReceiverFilter : AllReceiversItem;
             SourceDeviceComboBox.ItemsSource = deviceNames;
             SourceDeviceComboBox.SelectedItem = deviceNames.Contains(selectedSourceDevice) ? selectedSourceDevice : deviceNames.FirstOrDefault();
+            string[] preferredMasterDeviceNames = devices
+                .Where(device => device.SupportsPreferredMaster)
+                .Select(device => device.Name)
+                .ToArray();
             string selectedPreferredMaster = ExclusivePreferredMasterComboBox.SelectedItem as string
-                ?? devices.FirstOrDefault(device => device.PreferredMaster)?.Name
-                ?? deviceNames.FirstOrDefault()
+                ?? devices.FirstOrDefault(device => device.SupportsPreferredMaster && device.PreferredMaster)?.Name
+                ?? preferredMasterDeviceNames.FirstOrDefault()
                 ?? string.Empty;
-            ExclusivePreferredMasterComboBox.ItemsSource = deviceNames;
-            ExclusivePreferredMasterComboBox.SelectedItem = deviceNames.Contains(selectedPreferredMaster, StringComparer.OrdinalIgnoreCase)
-                ? deviceNames.First(name => string.Equals(name, selectedPreferredMaster, StringComparison.OrdinalIgnoreCase))
-                : deviceNames.FirstOrDefault();
+            ExclusivePreferredMasterComboBox.ItemsSource = preferredMasterDeviceNames;
+            ExclusivePreferredMasterComboBox.SelectedItem = preferredMasterDeviceNames.Contains(selectedPreferredMaster, StringComparer.OrdinalIgnoreCase)
+                ? preferredMasterDeviceNames.First(name => string.Equals(name, selectedPreferredMaster, StringComparison.OrdinalIgnoreCase))
+                : preferredMasterDeviceNames.FirstOrDefault();
 
             SaveSummaryTextBox.Text = BuildLocalizedSaveSummary();
             RefreshGlobalSearchResults();
@@ -4599,6 +4693,51 @@ public partial class MainWindow : Window
         builder.AppendLine($"- {materializedRows.Count(row => row.Changed)} machine(s) modifiée(s)");
         builder.AppendLine($"- {materializedRows.Count(row => !row.Changed)} machine(s) inchangée(s) ou ignorée(s)");
         return builder.ToString();
+    }
+
+    private bool EnsureSupportedTarget(
+        IReadOnlyCollection<DanteDevice> supportedDevices,
+        TargetDeviceSet target,
+        string frenchSetting,
+        string englishSetting)
+    {
+        if (supportedDevices.Count > 0)
+        {
+            return true;
+        }
+
+        ShowError(
+            T("Dialog.ActionImpossibleTitle"),
+            _language == UiLanguage.English
+                ? $"None of the {target.Devices.Length} target device(s) exposes {englishSetting} in this Dante preset. No XML element was added."
+                : $"Aucune des {target.Devices.Length} machine(s) ciblée(s) n'expose {frenchSetting} dans ce preset Dante. Aucune balise XML n'a été ajoutée.");
+        return false;
+    }
+
+    private string CapabilityActionStatus(string action, int appliedCount, int skippedCount)
+    {
+        return _language == UiLanguage.English
+            ? $"{action} {appliedCount} device(s) updated; {skippedCount} unsupported device(s) skipped."
+            : $"{action} {appliedCount} machine(s) modifiée(s) ; {skippedCount} machine(s) non compatible(s) ignorée(s).";
+    }
+
+    private string CapabilitySkipNotice(int skippedCount)
+    {
+        if (skippedCount == 0)
+        {
+            return string.Empty;
+        }
+
+        return Environment.NewLine + (_language == UiLanguage.English
+            ? $"{skippedCount} unsupported device(s) will be left strictly unchanged."
+            : $"{skippedCount} machine(s) sans ce paramètre resteront strictement inchangée(s).");
+    }
+
+    private string CapabilityUnavailableText()
+    {
+        return _language == UiLanguage.English
+            ? "unsupported - unchanged"
+            : "non pris en charge - inchangé";
     }
 
     private static bool TryBuildIpAddress(string prefix, int host, out string address, out string error)
@@ -5186,7 +5325,90 @@ public partial class MainWindow : Window
         DaisychainRadioButton.IsChecked = !device.IsRedundant;
         SelectLatency(LatencyComboBox, device.Latency);
         PreferredMasterCheckBox.IsChecked = device.PreferredMaster;
+        UpdateSelectedDeviceCapabilityState(device);
         RefreshChannelSelector();
+    }
+
+    private void UpdateSelectedDeviceCapabilityState(DanteDevice device)
+    {
+        RedundantRadioButton.IsEnabled = device.SupportsNetworkMode;
+        DaisychainRadioButton.IsEnabled = device.SupportsNetworkMode;
+        LatencyComboBox.IsEnabled = device.SupportsLatency;
+        PreferredMasterCheckBox.IsEnabled = device.SupportsPreferredMaster;
+
+        string networkHelp = CapabilityHelp(
+            device,
+            device.SupportsNetworkMode,
+            "le mode redondant",
+            "redundancy mode",
+            "redundancy");
+        RedundantRadioButton.ToolTip = networkHelp;
+        DaisychainRadioButton.ToolTip = networkHelp;
+        LatencyComboBox.ToolTip = CapabilityHelp(
+            device,
+            device.SupportsLatency,
+            "la latence unicast",
+            "unicast latency",
+            "unicast_latency");
+        PreferredMasterCheckBox.ToolTip = CapabilityHelp(
+            device,
+            device.SupportsPreferredMaster,
+            "Preferred Master",
+            "Preferred Master",
+            "preferred_master");
+
+        foreach (Control control in new Control[]
+                 {
+                     RedundantRadioButton,
+                     DaisychainRadioButton,
+                     LatencyComboBox,
+                     PreferredMasterCheckBox
+                 })
+        {
+            ToolTipService.SetShowOnDisabled(control, true);
+        }
+
+        List<string> unavailable = [];
+        if (!device.SupportsNetworkMode)
+        {
+            unavailable.Add(_language == UiLanguage.English ? "redundancy mode" : "mode redondant");
+        }
+        if (!device.SupportsLatency)
+        {
+            unavailable.Add(_language == UiLanguage.English ? "unicast latency" : "latence unicast");
+        }
+        if (!device.SupportsPreferredMaster)
+        {
+            unavailable.Add("Preferred Master");
+        }
+
+        DeviceCapabilityHintTextBlock.Visibility = unavailable.Count == 0
+            ? Visibility.Collapsed
+            : Visibility.Visible;
+        DeviceCapabilityHintTextBlock.Text = unavailable.Count == 0
+            ? string.Empty
+            : _language == UiLanguage.English
+                ? $"Unavailable for this Dante role: {string.Join(", ", unavailable)}. DCE preserves the XML and does not create missing technical tags."
+                : $"Non pris en charge par ce rôle Dante : {string.Join(", ", unavailable)}. DCE préserve le XML et ne crée pas les balises techniques absentes.";
+    }
+
+    private string CapabilityHelp(
+        DanteDevice device,
+        bool supported,
+        string frenchSetting,
+        string englishSetting,
+        string xmlElement)
+    {
+        if (supported)
+        {
+            return _language == UiLanguage.English
+                ? $"{englishSetting} is available for {device.Name}."
+                : $"{frenchSetting} est disponible pour {device.Name}.";
+        }
+
+        return _language == UiLanguage.English
+            ? $"Unavailable for {device.Name}: this Dante role does not expose the <{xmlElement}> setting. DCE will not create it."
+            : $"Indisponible pour {device.Name} : ce rôle Dante n'expose pas la balise <{xmlElement}>. DCE ne la créera pas.";
     }
 
     private void RefreshRecentFiles()
@@ -5405,6 +5627,7 @@ public partial class MainWindow : Window
         }
 
         DanteXmlCapabilities capabilities = _projectSession.Profile.Capabilities;
+        IReadOnlyList<DanteDevice> projectDevices = _project!.Devices;
         bool canEditChannels =
             capabilities.CanEditTxLabels || capabilities.CanEditRxLabels;
         MergeXmlButton.IsEnabled = capabilities.CanCreateDevices;
@@ -5423,20 +5646,120 @@ public partial class MainWindow : Window
         BatchRenameButton.IsEnabled = canEditChannels;
         ImportChannelLabelsButton.IsEnabled = canEditChannels;
         ExportChannelLabelsButton.IsEnabled = true;
-        ApplyAllNetworkButton.IsEnabled = capabilities.CanEditNetwork;
-        ApplyAllIpAutoButton.IsEnabled = capabilities.CanEditNetwork;
-        ApplyAllIpStaticButton.IsEnabled = capabilities.CanEditNetwork;
-        ApplyAllLatencyButton.IsEnabled = capabilities.CanEditAudioFormat;
-        ApplyAllSampleRateButton.IsEnabled = capabilities.CanEditAudioFormat;
-        ApplyAllEncodingButton.IsEnabled = capabilities.CanEditAudioFormat;
+        bool hasNetworkMode = projectDevices.Any(device => device.SupportsNetworkMode);
+        bool hasIp = projectDevices.Any(device => device.SupportsIpConfiguration);
+        bool hasLatency = projectDevices.Any(device => device.SupportsLatency);
+        bool hasSampleRate = projectDevices.Any(device => device.SupportsSampleRate);
+        bool hasEncoding = projectDevices.Any(device => device.SupportsEncoding);
+        bool hasPreferredMaster = projectDevices.Any(device => device.SupportsPreferredMaster);
+        ApplyAllNetworkButton.IsEnabled = capabilities.CanEditNetwork && hasNetworkMode;
+        GlobalRedundantRadioButton.IsEnabled = ApplyAllNetworkButton.IsEnabled;
+        GlobalDaisychainRadioButton.IsEnabled = ApplyAllNetworkButton.IsEnabled;
+        ApplyAllIpAutoButton.IsEnabled = capabilities.CanEditNetwork && hasIp;
+        ApplyAllIpStaticButton.IsEnabled = capabilities.CanEditNetwork && hasIp;
+        ApplyAllLatencyButton.IsEnabled = capabilities.CanEditAudioFormat && hasLatency;
+        GlobalLatencyComboBox.IsEnabled = ApplyAllLatencyButton.IsEnabled;
+        ApplyAllSampleRateButton.IsEnabled = capabilities.CanEditAudioFormat && hasSampleRate;
+        GlobalSampleRateComboBox.IsEnabled = ApplyAllSampleRateButton.IsEnabled;
+        ApplyAllEncodingButton.IsEnabled = capabilities.CanEditAudioFormat && hasEncoding;
+        GlobalEncodingComboBox.IsEnabled = ApplyAllEncodingButton.IsEnabled;
         ApplyQuickProfileButton.IsEnabled =
             capabilities.CanEditAudioFormat || capabilities.CanEditNetwork;
         ResetAllChannelsButton.IsEnabled = canEditChannels;
         ApplyPatchButton.IsEnabled = capabilities.CanEditPatch;
         RemovePatchButton.IsEnabled = capabilities.CanEditPatch;
         ApplyExclusivePreferredMasterButton.IsEnabled =
-            capabilities.CanEditAudioFormat;
+            capabilities.CanEditAudioFormat && hasPreferredMaster;
+        ExclusivePreferredMasterComboBox.IsEnabled =
+            ApplyExclusivePreferredMasterButton.IsEnabled;
+        ApplyCapabilityToolTips(
+            hasNetworkMode,
+            hasIp,
+            hasLatency,
+            hasSampleRate,
+            hasEncoding,
+            hasPreferredMaster);
         UpdateAtomicControlPanelState();
+    }
+
+    private void ApplyCapabilityToolTips(
+        bool hasNetworkMode,
+        bool hasIp,
+        bool hasLatency,
+        bool hasSampleRate,
+        bool hasEncoding,
+        bool hasPreferredMaster)
+    {
+        string networkHelp = GlobalCapabilityHelp(
+            hasNetworkMode,
+            "le mode redondant",
+            "redundancy mode",
+            "redundancy");
+        SetCapabilityToolTip(
+            networkHelp,
+            ApplyAllNetworkButton,
+            GlobalRedundantRadioButton,
+            GlobalDaisychainRadioButton);
+        string ipHelp = GlobalCapabilityHelp(
+            hasIp,
+            "la configuration IPv4",
+            "IPv4 configuration",
+            "ipv4_address");
+        SetCapabilityToolTip(ipHelp, ApplyAllIpAutoButton, ApplyAllIpStaticButton);
+        string latencyHelp = GlobalCapabilityHelp(
+            hasLatency,
+            "la latence unicast",
+            "unicast latency",
+            "unicast_latency");
+        SetCapabilityToolTip(latencyHelp, ApplyAllLatencyButton, GlobalLatencyComboBox);
+        string sampleRateHelp = GlobalCapabilityHelp(
+            hasSampleRate,
+            "la fréquence d'échantillonnage",
+            "sample rate",
+            "samplerate");
+        SetCapabilityToolTip(sampleRateHelp, ApplyAllSampleRateButton, GlobalSampleRateComboBox);
+        string encodingHelp = GlobalCapabilityHelp(
+            hasEncoding,
+            "l'encodage",
+            "encoding",
+            "encoding");
+        SetCapabilityToolTip(encodingHelp, ApplyAllEncodingButton, GlobalEncodingComboBox);
+        string preferredMasterHelp = GlobalCapabilityHelp(
+            hasPreferredMaster,
+            "Preferred Master",
+            "Preferred Master",
+            "preferred_master");
+        SetCapabilityToolTip(
+            preferredMasterHelp,
+            ApplyExclusivePreferredMasterButton,
+            ExclusivePreferredMasterComboBox);
+    }
+
+    private static void SetCapabilityToolTip(string help, params Control[] controls)
+    {
+        foreach (Control control in controls)
+        {
+            control.ToolTip = help;
+            ToolTipService.SetShowOnDisabled(control, true);
+        }
+    }
+
+    private string GlobalCapabilityHelp(
+        bool available,
+        string frenchSetting,
+        string englishSetting,
+        string xmlElement)
+    {
+        if (available)
+        {
+            return _language == UiLanguage.English
+                ? $"Applies {englishSetting} only to target devices that expose this setting."
+                : $"Applique {frenchSetting} uniquement aux machines de la cible qui exposent ce paramètre.";
+        }
+
+        return _language == UiLanguage.English
+            ? $"Unavailable: no device in this preset exposes <{xmlElement}>. DCE will not create it."
+            : $"Indisponible : aucune machine de ce preset n'expose <{xmlElement}>. DCE ne créera pas cette balise.";
     }
 
     private IEnumerable<Control> EditableControls()

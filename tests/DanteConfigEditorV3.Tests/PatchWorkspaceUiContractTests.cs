@@ -155,6 +155,15 @@ public sealed class PatchWorkspaceUiContractTests
             "candidate.Device.StableIdentity",
             ExtractMethod(mainWindowCode, "private void SynchronizeSelectedDeviceContext"),
             StringComparison.Ordinal);
+        Assert.Contains("public bool FocusDevice(string deviceName)", workspaceCode, StringComparison.Ordinal);
+        Assert.Contains(
+            "_easyPatchWorkspace?.FocusDevice(device.Name)",
+            ExtractMethod(mainWindowCode, "private void InspectorOpenPatchButton_Click"),
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "PatchMatrixModeButton.IsChecked = true",
+            ExtractMethod(mainWindowCode, "private void InspectorOpenPatchButton_Click"),
+            StringComparison.Ordinal);
     }
 
     [Fact]
@@ -162,6 +171,8 @@ public sealed class PatchWorkspaceUiContractTests
     {
         string xaml = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml"));
         string codeBehind = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml.cs"));
+        XDocument document = XDocument.Parse(xaml);
+        XNamespace xamlNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
 
         Assert.Contains("PatchModeTabControl.Items.Insert(0, MatrixTab)", codeBehind, StringComparison.Ordinal);
         Assert.Contains("MatrixTab.IsSelected = true", codeBehind, StringComparison.Ordinal);
@@ -186,6 +197,11 @@ public sealed class PatchWorkspaceUiContractTests
         Assert.Contains("IntroTextBlock.Visibility = compact", codeBehind, StringComparison.Ordinal);
         Assert.Contains("WorkspaceHeaderBorder.Padding = compact", codeBehind, StringComparison.Ordinal);
         Assert.Contains("WorkspaceFooterBorder.Padding = compact", codeBehind, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"DeviceSelectorGrid\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("compactMatrix = _embedded && MatrixTab.IsSelected", codeBehind, StringComparison.Ordinal);
+        Assert.Equal(
+            "1",
+            NamedElement(document, xamlNamespace, "MatrixGrid").Attribute("Grid.Row")?.Value);
         Assert.Contains("Content = source.Display", codeBehind, StringComparison.Ordinal);
         Assert.Contains("LayoutTransform = new RotateTransform(-90)", codeBehind, StringComparison.Ordinal);
         Assert.Contains("MatrixSeriesThumb_DragStarted", codeBehind, StringComparison.Ordinal);
@@ -283,6 +299,8 @@ public sealed class PatchWorkspaceUiContractTests
         XElement editors = NamedElement(document, xamlNamespace, "ConfigurationEditorsGrid");
         XElement globalActions = editors.Descendants().Single(element =>
             element.Name.LocalName == "GroupBox" && element.Attribute("Header")?.Value == "Actions globales");
+        XElement networkAudioTab = globalActions.Descendants().Single(element =>
+            element.Name.LocalName == "TabItem" && element.Attribute("Header")?.Value == "Réseau / audio");
         XElement quickListLabel = globalActions.Descendants().Single(element =>
             element.Name.LocalName == "TextBlock" && element.Attribute("Text")?.Value == "Liste rapide");
         XElement quickLists = quickListLabel.Parent
@@ -295,6 +313,11 @@ public sealed class PatchWorkspaceUiContractTests
         Assert.Contains(quickLists.Ancestors(), element => ReferenceEquals(element, globalActions));
         Assert.Equal("1", quickLists.Parent?.Attribute("Grid.Row")?.Value);
         Assert.Null(globalActions.Attribute("Grid.Row"));
+        Assert.Null(globalActions.Attribute("Height"));
+        Assert.Equal("Stretch", globalActions.Attribute("VerticalAlignment")?.Value);
+        Assert.DoesNotContain(
+            networkAudioTab.Descendants(),
+            element => element.Name.LocalName == "ScrollViewer");
         Assert.Equal("1", device.Attribute("Grid.Column")?.Value);
         Assert.Equal("2", channels.Attribute("Grid.Column")?.Value);
         _ = NamedElement(document, xamlNamespace, "QuickListComboBox");
@@ -379,9 +402,11 @@ public sealed class PatchWorkspaceUiContractTests
             codeBehind,
             StringComparison.Ordinal);
         Assert.Contains(
-            "InspectorSplitterColumn.Width = new GridLength(34)",
+            "InspectorSplitterColumn.Width = new GridLength(44)",
             codeBehind,
             StringComparison.Ordinal);
+        Assert.Equal("40", reveal.Attribute("Width")?.Value);
+        Assert.Equal("82", reveal.Attribute("MinHeight")?.Value);
         Assert.Contains(
             "SetInspectorExpanded(true)",
             codeBehind,
@@ -422,9 +447,11 @@ public sealed class PatchWorkspaceUiContractTests
             codeBehind,
             StringComparison.Ordinal);
         Assert.Contains(
-            "NavigationSplitterColumn.Width = new GridLength(34)",
+            "NavigationSplitterColumn.Width = new GridLength(44)",
             codeBehind,
             StringComparison.Ordinal);
+        Assert.Equal("40", navigationReveal.Attribute("Width")?.Value);
+        Assert.Equal("82", navigationReveal.Attribute("MinHeight")?.Value);
         Assert.Contains(
             "ToggleConfigurationEditorsButton.Content = collapsed ? \"\\u25BC\" : \"\\u25B2\"",
             codeBehind,
@@ -438,7 +465,7 @@ public sealed class PatchWorkspaceUiContractTests
             codeBehind,
             StringComparison.Ordinal);
         Assert.Contains(
-            "new GridLength(5, GridUnitType.Star)",
+            "new GridLength(8, GridUnitType.Star)",
             codeBehind,
             StringComparison.Ordinal);
         Assert.Contains("SetNavigationExpanded(true)", codeBehind, StringComparison.Ordinal);

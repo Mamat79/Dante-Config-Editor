@@ -78,6 +78,22 @@ public sealed class DanteDevice
 
     public bool PreferredMaster { get; }
 
+    // Une balise déjà présente est la seule preuve fiable que ce rôle Dante
+    // expose le paramètre. Son absence ne doit jamais être compensée par une
+    // structure XML inventée par l'application.
+    public bool SupportsNetworkMode => Element.Child("redundancy") is not null;
+
+    public bool SupportsPreferredMaster => Element.Child("preferred_master") is not null;
+
+    public bool SupportsLatency => Element.Child("unicast_latency") is not null;
+
+    public bool SupportsSampleRate => Element.Child("samplerate") is not null;
+
+    public bool SupportsEncoding => Element.Child("encoding") is not null;
+
+    public bool SupportsIpConfiguration =>
+        DanteIpConfiguration.FindPrimaryIpv4Address(Element) is not null;
+
     public bool UsesStaticIp { get; }
 
     public string StaticIpAddress { get; }

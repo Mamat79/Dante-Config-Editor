@@ -10,6 +10,7 @@ public partial class DeviceDetailsWindow : Window
 {
     private readonly UiLanguage _language;
     private readonly DanteProject _project;
+    private readonly DanteDevice _device;
     private readonly bool _useLightTheme;
     private readonly ObservableCollection<DeviceChannelEditItem> _txChannels;
     private readonly ObservableCollection<DeviceChannelEditItem> _rxChannels;
@@ -52,6 +53,7 @@ public partial class DeviceDetailsWindow : Window
         DialogThemeService.Apply(this, useLightTheme);
         _language = language;
         _project = project ?? throw new ArgumentNullException(nameof(project));
+        _device = device ?? throw new ArgumentNullException(nameof(device));
         _useLightTheme = useLightTheme;
         OriginalDeviceName = device.Name;
         Title = L("Détail machine", "Device details");
@@ -73,6 +75,7 @@ public partial class DeviceDetailsWindow : Window
         IpAddressTextBox.Text = device.StaticIpAddress;
         IpNetmaskTextBox.Text = string.IsNullOrWhiteSpace(device.StaticIpNetmask) ? "255.255.255.0" : device.StaticIpNetmask;
         IpGatewayTextBox.Text = string.IsNullOrWhiteSpace(device.StaticIpGateway) ? "0.0.0.0" : device.StaticIpGateway;
+        ConfigureCapabilityControls();
         UpdateIpStaticFieldsState();
 
         _txChannels = new ObservableCollection<DeviceChannelEditItem>(
@@ -245,10 +248,109 @@ public partial class DeviceDetailsWindow : Window
 
     private void UpdateIpStaticFieldsState()
     {
-        bool useStaticIp = IpStaticRadioButton.IsChecked == true;
+        bool useStaticIp = _device.SupportsIpConfiguration
+            && IpStaticRadioButton.IsChecked == true;
         IpAddressTextBox.IsEnabled = useStaticIp;
         IpNetmaskTextBox.IsEnabled = useStaticIp;
         IpGatewayTextBox.IsEnabled = useStaticIp;
+    }
+
+    private void ConfigureCapabilityControls()
+    {
+        SetCapabilityState(
+            [RedundantRadioButton, DaisychainRadioButton],
+            _device.SupportsNetworkMode,
+            "le mode redondant",
+            "redundancy mode",
+            "redundancy");
+        SetCapabilityState(
+            [PreferredMasterCheckBox],
+            _device.SupportsPreferredMaster,
+            "Preferred Master",
+            "Preferred Master",
+            "preferred_master");
+        SetCapabilityState(
+            [LatencyComboBox],
+            _device.SupportsLatency,
+            "la latence unicast",
+            "unicast latency",
+            "unicast_latency");
+        SetCapabilityState(
+            [SampleRateComboBox],
+            _device.SupportsSampleRate,
+            "la fréquence d'échantillonnage",
+            "sample rate",
+            "samplerate");
+        SetCapabilityState(
+            [EncodingComboBox],
+            _device.SupportsEncoding,
+            "l'encodage",
+            "encoding",
+            "encoding");
+        SetCapabilityState(
+            [IpAutoRadioButton, IpStaticRadioButton],
+            _device.SupportsIpConfiguration,
+            "la configuration IPv4",
+            "IPv4 configuration",
+            "ipv4_address");
+
+        List<string> unavailable = [];
+        if (!_device.SupportsNetworkMode)
+        {
+            unavailable.Add(L("mode redondant", "redundancy mode"));
+        }
+        if (!_device.SupportsPreferredMaster)
+        {
+            unavailable.Add("Preferred Master");
+        }
+        if (!_device.SupportsLatency)
+        {
+            unavailable.Add(L("latence unicast", "unicast latency"));
+        }
+        if (!_device.SupportsSampleRate)
+        {
+            unavailable.Add(L("fréquence d'échantillonnage", "sample rate"));
+        }
+        if (!_device.SupportsEncoding)
+        {
+            unavailable.Add(L("encodage", "encoding"));
+        }
+        if (!_device.SupportsIpConfiguration)
+        {
+            unavailable.Add(L("configuration IPv4", "IPv4 configuration"));
+        }
+
+        CapabilityNoticeBorder.Visibility = unavailable.Count == 0
+            ? Visibility.Collapsed
+            : Visibility.Visible;
+        CapabilityNoticeTextBlock.Text = unavailable.Count == 0
+            ? string.Empty
+            : L(
+                $"Non pris en charge par ce rôle Dante : {string.Join(", ", unavailable)}. Ces champs sont désactivés et DCE ne créera aucune balise technique absente.",
+                $"Unavailable for this Dante role: {string.Join(", ", unavailable)}. These fields are disabled and DCE will not create missing technical tags.");
+    }
+
+    private void SetCapabilityState(
+        IEnumerable<Control> controls,
+        bool supported,
+        string frenchSetting,
+        string englishSetting,
+        string xmlElement)
+    {
+        string help = supported
+            ? L(
+                $"{frenchSetting} est disponible pour {_device.Name}.",
+                $"{englishSetting} is available for {_device.Name}.")
+            : L(
+                $"Indisponible pour {_device.Name} : ce rôle Dante n'expose pas la balise <{xmlElement}>. DCE ne la créera pas.",
+                $"Unavailable for {_device.Name}: this Dante role does not expose <{xmlElement}>. DCE will not create it.");
+
+        foreach (Control control in controls)
+        {
+            control.IsEnabled = supported;
+            control.ToolTip = help;
+            ToolTipService.SetShowOnDisabled(control, true);
+        }
     }
 
     private static void SelectOption(ComboBox comboBox, IEnumerable<DeviceOption> options, string value)
