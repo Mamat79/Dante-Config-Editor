@@ -100,12 +100,15 @@ Résultats locaux finaux du 29 juillet 2026 :
 | Corpus XML local en lecture seule | 3 tests, 11 fichiers, 0 modification |
 | Build Windows Release | 0 warning, 0 erreur, 5,434 s |
 | Build macOS Release | 0 warning, 0 erreur, 1,367 s |
-| Installateur Windows autonome | réussi, 74 213 616 octets |
-| SHA-256 installateur | `d77a05821100b39d11e76173c10dc9da73044609a60f2aae09a5a480d3bc7d2e` |
+| Installateur Windows GitHub | réussi, 74 220 239 octets |
+| SHA-256 installateur | `5cc6fcc8eebe77a37af0edc8d15ba63e6da892a19ddbd564563405dd727c6aac` |
 
-Les workflows Windows et macOS sont rejoués sur le commit publié. Les sommes
-propres aux artefacts GitHub restent fournies dans leurs fichiers `.sha256` ;
-elles ne sont pas supposées identiques à celles d'une construction locale.
+GitHub Actions au commit `e54b363` :
+
+- [Windows CI, exécution 30407812954](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30407812954) :
+  succès, 409 tests et installateur produit ;
+- [macOS CI, exécution 30407812941](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30407812941) :
+  succès, 409 tests Core, 22 tests Avalonia et deux DMG produits.
 
 ## Performances
 
@@ -130,10 +133,13 @@ du preset ; leurs mesures présentent davantage de variabilité.
 
 | Paquet | Taille | SHA-256 |
 |---|---:|---|
-| Installateur Windows local testé | 74 213 616 octets | `d77a05821100b39d11e76173c10dc9da73044609a60f2aae09a5a480d3bc7d2e` |
+| Installateur Windows GitHub installé | 74 220 239 octets | `5cc6fcc8eebe77a37af0edc8d15ba63e6da892a19ddbd564563405dd727c6aac` |
+| DMG Apple Silicon CI | 63 445 544 octets | `01bb2a05bd1e136ee1726fec2727c6342ca69b3b8246728df98a4038f3ef6a7a` |
+| DMG Intel CI | 65 251 577 octets | `863a21eba92e6ce7d603c4c540a5d20a798abfda56cb624862ebc6a1a121ea76` |
 
-Les deux DMG et l'installateur construit par CI sont publiés avec leurs propres
-fichiers `.sha256` dans la prérelease `v2026.1`.
+Les trois paquets et leurs sommes sont publiés dans la prérelease `v2026.1`.
+Les huit fichiers remplacés ont été retéléchargés depuis leur URL publique et
+comparés à leurs sources : huit correspondances SHA-256 sur huit.
 
 L'installateur Windows local a été exécuté en mise à niveau. Le contrôle
 confirme :

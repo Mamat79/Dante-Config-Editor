@@ -29,12 +29,12 @@ Résultats locaux depuis une restauration propre :
 - quatre PDF rendus et contrôlés : 56 pages, sans chevauchement, texte tronqué
   ni caractère d'encodage incorrect.
 
-Installateur local réellement installé :
+Installateur GitHub réellement téléchargé puis installé :
 
 - fichier : `DanteConfigEditor2026_1_Beta_Installer.exe` ;
-- taille : `74 213 616` octets ;
+- taille : `74 220 239` octets ;
 - SHA-256 :
-  `D77A05821100B39D11E76173C10DC9DA73044609A60F2AAE09A5A480D3BC7D2E` ;
+  `5CC6FCC8EEBE77A37AF0EDC8D15BA63E6DA892A19DDBD564563405DD727C6AAC` ;
 - installation silencieuse réussie avec le code `0` dans
   `C:\Program Files\Dante Config Editor 2026.1 Beta` ;
 - raccourcis Bureau et menu Démarrer présents ;
@@ -46,6 +46,22 @@ Installateur local réellement installé :
   1 587 873 octets, aucune entrée ajoutée ou retirée, empreinte d'inventaire
   SHA-256 identique
   `3b64b07d2cb8ee379e8beaec5df56d13b00707a4a2c89ad674423b7778db313e`.
+
+GitHub Actions au commit `e54b363` :
+
+- [Windows CI, exécution 30407812954](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30407812954) :
+  succès, 409 tests et installateur produit ;
+- [macOS CI, exécution 30407812941](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30407812941) :
+  succès, 409 tests Core, 22 tests Avalonia et deux DMG produits ;
+- DMG Apple Silicon : `63 445 544` octets, SHA-256
+  `01bb2a05bd1e136ee1726fec2727c6342ca69b3b8246728df98a4038f3ef6a7a` ;
+- DMG Intel : `65 251 577` octets, SHA-256
+  `863a21eba92e6ce7d603c4c540a5d20a798abfda56cb624862ebc6a1a121ea76`.
+
+Les huit fichiers remplacés dans la prérelease `v2026.1` ont été retéléchargés
+depuis leur URL publique puis comparés à leurs sources : huit correspondances
+SHA-256 sur huit. Les vidéos, sous-titres, Quick Start et banques déjà publiés
+sont restés inchangés.
 
 ## Validation de maintenance 2026.1 Beta du 2026-07-28
 
