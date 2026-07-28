@@ -2,6 +2,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -15,8 +16,11 @@ namespace DanteConfigEditor.ScreenshotTool;
 
 internal static class Program
 {
-    private const int CaptureWidth = 1920;
-    private const int CaptureHeight = 1024;
+    private const int DefaultCaptureWidth = 1920;
+    private const int DefaultCaptureHeight = 1024;
+    private static int _captureWidth = DefaultCaptureWidth;
+    private static int _captureHeight = DefaultCaptureHeight;
+    private static bool _captureDarkTheme;
 
     [STAThread]
     private static int Main(string[] args)
@@ -25,6 +29,23 @@ internal static class Program
         string outputRoot = args.Length > 0
             ? Path.GetFullPath(args[0])
             : Path.Combine(repositoryRoot, "docs", "media", "2026.1");
+        using LocalProfileFileSnapshot profileSnapshot = new(
+            ApplicationStoragePaths.RootPath,
+            "language.txt",
+            "theme.txt",
+            "recent-files.txt",
+            "support-reminder.json");
+        if (args.Length > 2
+            && int.TryParse(args[1], out int requestedWidth)
+            && int.TryParse(args[2], out int requestedHeight)
+            && requestedWidth >= 1120
+            && requestedHeight >= 720)
+        {
+            _captureWidth = requestedWidth;
+            _captureHeight = requestedHeight;
+        }
+        _captureDarkTheme = args.Length > 3
+            && string.Equals(args[3], "dark", StringComparison.OrdinalIgnoreCase);
         string fixture = Path.Combine(
             repositoryRoot,
             "tests",
@@ -78,14 +99,16 @@ internal static class Program
         {
             WindowStartupLocation = WindowStartupLocation.Manual,
             WindowState = WindowState.Normal,
-            Width = CaptureWidth,
-            Height = CaptureHeight,
+            Width = _captureWidth,
+            Height = _captureHeight,
             Left = -10000,
             Top = 0,
             ShowInTaskbar = false
         };
 
         window.Show();
+        PumpDispatcher();
+        ((ToggleButton)window.FindName("ThemeToggleButton")).IsChecked = !_captureDarkTheme;
         PumpDispatcher();
         SetLanguage(window, language);
         window.LoadProjectFromPath(fixturePath);
@@ -137,7 +160,7 @@ internal static class Program
     {
         MachineBankWindow window = new(
             language,
-            useLightTheme: false,
+            useLightTheme: !_captureDarkTheme,
             usedDeviceNames: Array.Empty<string>(),
             canAddToProject: true)
         {
@@ -165,7 +188,7 @@ internal static class Program
 
     private static void CaptureNewProject(UiLanguage language, string outputDirectory)
     {
-        NewProjectWindow window = new(language, useLightTheme: false)
+        NewProjectWindow window = new(language, useLightTheme: !_captureDarkTheme)
         {
             WindowStartupLocation = WindowStartupLocation.Manual,
             Width = 920,
@@ -205,7 +228,7 @@ internal static class Program
 
     private static void CaptureSupport(UiLanguage language, string outputDirectory)
     {
-        SupportDceWindow window = new(language, useLightTheme: false)
+        SupportDceWindow window = new(language, useLightTheme: !_captureDarkTheme)
         {
             WindowStartupLocation = WindowStartupLocation.Manual,
             Width = 920,
@@ -382,6 +405,40 @@ internal static class Program
         {
             SessionRecoveryService.Delete(Path);
             File.Delete(Path);
+        }
+    }
+
+    private sealed class LocalProfileFileSnapshot : IDisposable
+    {
+        private readonly Dictionary<string, byte[]?> _originalFiles;
+
+        public LocalProfileFileSnapshot(string rootPath, params string[] fileNames)
+        {
+            _originalFiles = fileNames
+                .Select(fileName => Path.Combine(rootPath, fileName))
+                .ToDictionary(
+                path => path,
+                path => File.Exists(path) ? File.ReadAllBytes(path) : null,
+                StringComparer.OrdinalIgnoreCase);
+        }
+
+        public void Dispose()
+        {
+            foreach ((string path, byte[]? content) in _originalFiles)
+            {
+                if (content is null)
+                {
+                    if (File.Exists(path))
+                    {
+                        File.Delete(path);
+                    }
+
+                    continue;
+                }
+
+                Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+                File.WriteAllBytes(path, content);
+            }
         }
     }
 }

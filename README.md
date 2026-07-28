@@ -125,8 +125,8 @@ personnelle. Une mise à jour ne remplace jamais cette dernière.
   la dernière langue choisis ;
 - menu supérieur standard pour retrouver rapidement les commandes Fichier,
   Édition, Machines, Affichage, Outils et Aide ;
-- outil de formation Atomic Bomb entièrement hors ligne, avec clé verticale
-  tournant à droite, ouverture automatique du capot, puis ARM, LOCK et FIRE.
+- outil de formation Atomic Bomb entièrement hors ligne, avec clé de sécurité,
+  ouverture automatique du capot, puis ARM, LOCK et FIRE.
 
 ## Import et export de labels
 

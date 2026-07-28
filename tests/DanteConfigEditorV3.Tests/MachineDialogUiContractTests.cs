@@ -124,7 +124,7 @@ public sealed class MachineDialogUiContractTests
     }
 
     [Fact]
-    public void MachineBankActionsUseTwoResponsiveRows()
+    public void MachineBankActionsShareOneResponsiveWrapPanel()
     {
         XDocument document = XDocument.Parse(
             File.ReadAllText(RepositoryFile("MachineBankWindow.xaml")));
@@ -132,9 +132,14 @@ public sealed class MachineDialogUiContractTests
 
         XElement templateActions = NamedElement(document, xamlNamespace, "TemplateActionsPanel");
         XElement bankActions = NamedElement(document, xamlNamespace, "BankActionsPanel");
+        XElement? responsiveActions = templateActions.Parent;
 
         Assert.Null(templateActions.Attribute("Grid.Row"));
-        Assert.Equal("1", bankActions.Attribute("Grid.Row")?.Value);
+        Assert.Null(bankActions.Attribute("Grid.Row"));
+        Assert.NotNull(responsiveActions);
+        Assert.Equal("WrapPanel", responsiveActions.Name.LocalName);
+        Assert.Same(responsiveActions, bankActions.Parent);
+        Assert.Equal("4", responsiveActions.Attribute("Grid.Row")?.Value);
     }
 
     [Fact]

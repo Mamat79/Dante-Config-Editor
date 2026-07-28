@@ -27,13 +27,18 @@ Audinate. It only works on offline files.
   templates, with bundled templates protected as read-only;
 - shared device selection across Machines, Patch, Easy Patch, and the
   inspector, preserved when switching views;
+- direct access to the global 43-template view from Devices, with no redundant
+  bank selector and a compact quick-list bar integrated below global actions;
+- a larger Device bank window automatically constrained to the available work
+  area;
+- device settings opened at startup and collapsible through a centered arrow
+  that remains accessible in both states;
 - standard application menu on Windows and macOS with direct access to files,
   devices, views, tools, and guides;
 - light theme on first launch, followed by restoration of the last selected
   theme and language;
-- integrated Atomic Bomb page with a vertical key that turns right,
-  automatically opens the cover, then enables ARM, LOCK, and FIRE, with no
-  additional confirmation dialog;
+- integrated Atomic Bomb page with a safety key that automatically opens the
+  cover, then enables ARM, LOCK, and FIRE;
 - isolated 2026.1 local profile.
 
 ## XML fidelity

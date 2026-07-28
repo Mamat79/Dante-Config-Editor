@@ -40,11 +40,19 @@ Toutes les dates utilisent le calendrier ISO. Les versions antérieures à
   l'inspecteur contextuel rétractable ;
 - thème clair au premier lancement, puis conservation du dernier thème et de
   la dernière langue choisis sur Windows et macOS ;
-- intégration de la page Atomic Bomb au shell et remplacement des trois
-  dialogues par une séquence visuelle : clé verticale tournée à droite,
-  ouverture automatique du capot, ARM, LOCK, FIRE ;
+- intégration de la page Atomic Bomb au shell avec une séquence visuelle :
+  clé de sécurité, ouverture automatique du capot, ARM, LOCK, FIRE ;
 - la banque personnelle et les deux banques fournies sont visibles ensemble
   dans une liste dédupliquée de 43 modèles, avec filtre par banque et origine ;
+- la page Machines ouvre directement cette vue globale depuis ses deux boutons,
+  sans sélecteur de source redondant, et regroupe la liste rapide dans une barre
+  compacte sous les actions globales ;
+- la fenêtre Banque s'ouvre en grand format et s'ajuste automatiquement à la
+  surface de travail disponible ;
+- retrait du dépôt des vidéos et captures V3.3/V3.5, des archives publiques
+  V3.6 non cataloguées et de l'ancienne description de Release V3.4 ;
+- la flèche de repli des réglages Machines est centrée sur leur séparation et
+  reste accessible après le repli ;
 - les modèles fournis sont protégés en lecture seule mais restent exportables,
   ajoutables au projet et duplicables dans la banque personnelle ;
 - l'inspecteur de droite suit désormais la dernière machine choisie dans

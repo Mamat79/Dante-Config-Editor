@@ -281,16 +281,28 @@ public sealed class PatchWorkspaceUiContractTests
         XNamespace xamlNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
 
         XElement editors = NamedElement(document, xamlNamespace, "ConfigurationEditorsGrid");
-        XElement quickLists = editors.Descendants().Single(element =>
-            element.Name.LocalName == "GroupBox" && element.Attribute("Header")?.Value == "Listes rapides");
+        XElement globalActions = editors.Descendants().Single(element =>
+            element.Name.LocalName == "GroupBox" && element.Attribute("Header")?.Value == "Actions globales");
+        XElement quickListLabel = globalActions.Descendants().Single(element =>
+            element.Name.LocalName == "TextBlock" && element.Attribute("Text")?.Value == "Liste rapide");
+        XElement quickLists = quickListLabel.Parent
+            ?? throw new InvalidOperationException("Barre de liste rapide introuvable.");
         XElement device = editors.Descendants().Single(element =>
             element.Name.LocalName == "GroupBox" && element.Attribute("Header")?.Value == "Machine sélectionnée");
         XElement channels = editors.Descendants().Single(element =>
             element.Name.LocalName == "GroupBox" && element.Attribute("Header")?.Value == "Canaux de la machine");
 
-        Assert.Equal("0", quickLists.Parent?.Attribute("Grid.Column")?.Value);
+        Assert.Contains(quickLists.Ancestors(), element => ReferenceEquals(element, globalActions));
+        Assert.Equal("1", quickLists.Parent?.Attribute("Grid.Row")?.Value);
+        Assert.Null(globalActions.Attribute("Grid.Row"));
         Assert.Equal("1", device.Attribute("Grid.Column")?.Value);
         Assert.Equal("2", channels.Attribute("Grid.Column")?.Value);
+        _ = NamedElement(document, xamlNamespace, "QuickListComboBox");
+        Assert.Contains(
+            quickLists.Descendants(),
+            element =>
+                element.Name.LocalName == "Button"
+                && element.Attribute("Click")?.Value == "ShowQuickListButton_Click");
         Assert.Contains(editors.Elements(), element =>
             element.Name.LocalName == "Border"
             && element.Attribute("Grid.Column")?.Value == "1"
@@ -390,12 +402,21 @@ public sealed class PatchWorkspaceUiContractTests
             NamedElement(document, xamlNamespace, "NavigationToggleButton");
         XElement settingsToggle =
             NamedElement(document, xamlNamespace, "ToggleConfigurationEditorsButton");
+        XElement settingsRegion =
+            NamedElement(document, xamlNamespace, "ConfigurationEditorsRegion");
+        XElement settingsScroller =
+            NamedElement(document, xamlNamespace, "ConfigurationEditorsScrollViewer");
 
         Assert.Equal("Visible", navigationReveal.Attribute("Visibility")?.Value);
         Assert.Equal("<", navigationReveal.Attribute("Content")?.Value);
         Assert.Equal("Collapsed", toolbarToggle.Attribute("Visibility")?.Value);
         Assert.DoesNotContain("x:Name=\"NavigationCloseButton\"", xaml, StringComparison.Ordinal);
         Assert.Equal("▲", settingsToggle.Attribute("Content")?.Value);
+        Assert.Equal("1", settingsRegion.Attribute("Grid.Row")?.Value);
+        Assert.Equal("Center", settingsToggle.Attribute("HorizontalAlignment")?.Value);
+        Assert.Equal("Bottom", settingsToggle.Attribute("VerticalAlignment")?.Value);
+        Assert.Equal("5", settingsToggle.Attribute("Panel.ZIndex")?.Value);
+        Assert.Equal("Auto", settingsScroller.Attribute("VerticalScrollBarVisibility")?.Value);
         Assert.Contains(
             "NavigationRevealButton.Visibility = Visibility.Visible",
             codeBehind,
@@ -410,6 +431,14 @@ public sealed class PatchWorkspaceUiContractTests
             StringComparison.Ordinal);
         Assert.Contains(
             "ConfigurationEditorsGrid.Visibility = Visibility.Visible",
+            codeBehind,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "ConfigurationEditorsRow.Height = collapsed",
+            codeBehind,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "new GridLength(5, GridUnitType.Star)",
             codeBehind,
             StringComparison.Ordinal);
         Assert.Contains("SetNavigationExpanded(true)", codeBehind, StringComparison.Ordinal);
@@ -428,7 +457,10 @@ public sealed class PatchWorkspaceUiContractTests
     {
         string xaml = File.ReadAllText(RepositoryFile("MainWindow.xaml"));
         string codeBehind = File.ReadAllText(RepositoryFile("MainWindow.xaml.cs"));
+        string bankXaml = File.ReadAllText(RepositoryFile("MachineBankWindow.xaml"));
+        string bankCode = File.ReadAllText(RepositoryFile("MachineBankWindow.xaml.cs"));
         XDocument document = XDocument.Parse(xaml);
+        XDocument bankDocument = XDocument.Parse(bankXaml);
         XNamespace xamlNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
 
         XElement bankNavigation =
@@ -438,16 +470,24 @@ public sealed class PatchWorkspaceUiContractTests
 
         Assert.Equal("Collapsed", bankNavigation.Attribute("Visibility")?.Value);
         Assert.Equal("Collapsed", bankTab.Attribute("Visibility")?.Value);
-        _ = NamedElement(document, xamlNamespace, "MachineBankSourceComboBox");
         _ = NamedElement(document, xamlNamespace, "AddDeviceFromBankButton");
         _ = NamedElement(document, xamlNamespace, "ManageMachineBankButton");
+        Assert.DoesNotContain("MachineBankSourceComboBox", xaml, StringComparison.Ordinal);
+        Assert.DoesNotContain("SelectedMachineBankPath", codeBehind, StringComparison.Ordinal);
         Assert.Contains(
-            "MachineBankDistributionService.DiscoverIncludedBankPaths()",
-            codeBehind,
+            "MachineBankCatalogService.Load(_bankPath)",
+            bankCode,
             StringComparison.Ordinal);
         Assert.Contains(
-            "OpenMachineBankWindow(SelectedMachineBankPath())",
+            "OpenMachineBankWindow(null)",
             codeBehind,
+            StringComparison.Ordinal);
+        Assert.Equal("1500", bankDocument.Root?.Attribute("Width")?.Value);
+        Assert.Equal("900", bankDocument.Root?.Attribute("Height")?.Value);
+        Assert.Equal("Window_Loaded", bankDocument.Root?.Attribute("Loaded")?.Value);
+        Assert.Contains(
+            "MaxHeight = Math.Max(MinHeight, workArea.Height - 32)",
+            bankCode,
             StringComparison.Ordinal);
     }
 
@@ -491,15 +531,16 @@ public sealed class PatchWorkspaceUiContractTests
             "DanteConfigEditor.Mac",
             "MachineBankDialog.axaml.cs"));
 
-        Assert.Contains("x:Name=\"MachineBankSourceComboBox\"", xaml, StringComparison.Ordinal);
         Assert.Contains("x:Name=\"AddDeviceFromBankButton\"", xaml, StringComparison.Ordinal);
         Assert.Contains("x:Name=\"ManageMachineBankButton\"", xaml, StringComparison.Ordinal);
+        Assert.DoesNotContain("MachineBankSourceComboBox", xaml, StringComparison.Ordinal);
+        Assert.DoesNotContain("SelectedMachineBankPath", codeBehind, StringComparison.Ordinal);
         Assert.Contains(
-            "MachineBankDistributionService.DiscoverIncludedBankPaths()",
-            codeBehind,
+            "MachineBankCatalogService.Load(_bankPath)",
+            dialogCode,
             StringComparison.Ordinal);
         Assert.Contains(
-            "await OpenMachineBankAsync(SelectedMachineBankPath())",
+            "await OpenMachineBankAsync(null)",
             codeBehind,
             StringComparison.Ordinal);
         Assert.Contains("string? initialBankPath = null", dialogCode, StringComparison.Ordinal);

@@ -62,6 +62,15 @@ public partial class MachineBankWindow : Window
 
     private string AllFilterLabel => L("Tous", "All");
 
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        Rect workArea = SystemParameters.WorkArea;
+        MaxWidth = Math.Max(MinWidth, workArea.Width - 32);
+        MaxHeight = Math.Max(MinHeight, workArea.Height - 32);
+        Width = Math.Min(Width, MaxWidth);
+        Height = Math.Min(Height, MaxHeight);
+    }
+
     private void ApplyLanguage()
     {
         Title = L("Banque de machines", "Device bank");

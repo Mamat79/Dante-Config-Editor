@@ -1,3 +1,5 @@
+using System.Xml.Linq;
+
 namespace DanteConfigEditorV3.Tests;
 
 public sealed class AtomicChaosUiContractTests
@@ -25,6 +27,11 @@ public sealed class AtomicChaosUiContractTests
         Assert.Contains("AtomicPatchesCheckBox", windowsXaml, StringComparison.Ordinal);
         Assert.Contains("AtomicIpCheckBox", windowsXaml, StringComparison.Ordinal);
         AssertSequenceControls(windowsXaml);
+        AssertSimplifiedKeyVisual(windowsXaml);
+        Assert.DoesNotContain("AtomicPanelResetButton", windowsXaml, StringComparison.Ordinal);
+        Assert.DoesNotContain("AtomicPanelResetButton_Click", windowsCode, StringComparison.Ordinal);
+        Assert.DoesNotContain("OFF · verticale", windowsXaml, StringComparison.Ordinal);
+        Assert.DoesNotContain("sans dialogue supplémentaire", windowsXaml, StringComparison.Ordinal);
         Assert.Contains("SelectedAtomicChaosOptions", windowsCode, StringComparison.Ordinal);
         Assert.Contains("_atomicPanelStage != AtomicPanelStage.Locked", windowsCode, StringComparison.Ordinal);
         Assert.Contains("_atomicPanelStage = AtomicPanelStage.CoverOpen", windowsCode, StringComparison.Ordinal);
@@ -46,6 +53,11 @@ public sealed class AtomicChaosUiContractTests
         Assert.Contains("AtomicPatchesCheckBox", macXaml, StringComparison.Ordinal);
         Assert.Contains("AtomicIpCheckBox", macXaml, StringComparison.Ordinal);
         AssertSequenceControls(macXaml);
+        AssertSimplifiedKeyVisual(macXaml);
+        Assert.DoesNotContain("AtomicPanelResetButton", macXaml, StringComparison.Ordinal);
+        Assert.DoesNotContain("AtomicPanelResetButton_Click", macCode, StringComparison.Ordinal);
+        Assert.DoesNotContain("OFF · verticale", macXaml, StringComparison.Ordinal);
+        Assert.DoesNotContain("sans dialogue supplémentaire", macXaml, StringComparison.Ordinal);
         Assert.Contains("SelectedAtomicChaosOptions", macCode, StringComparison.Ordinal);
         Assert.Contains("_atomicPanelStage != AtomicPanelStage.Locked", macCode, StringComparison.Ordinal);
         Assert.Contains("_atomicPanelStage = AtomicPanelStage.CoverOpen", macCode, StringComparison.Ordinal);
@@ -74,6 +86,26 @@ public sealed class AtomicChaosUiContractTests
         Assert.True(arm < @lock);
         Assert.True(@lock < fire);
         Assert.True(cover > fire);
+    }
+
+    private static void AssertSimplifiedKeyVisual(string xaml)
+    {
+        XDocument document = XDocument.Parse(xaml);
+        XNamespace xamlNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
+        XElement keyVisual = Assert.Single(
+            document.Descendants(),
+            element =>
+                string.Equals(
+                    element.Attribute(xamlNamespace + "Name")?.Value,
+                    "AtomicKeyVisual",
+                    StringComparison.Ordinal));
+
+        Assert.Single(
+            keyVisual.Descendants(),
+            element => element.Name.LocalName == "Ellipse");
+        Assert.Single(
+            keyVisual.Descendants(),
+            element => element.Name.LocalName == "Rectangle");
     }
 
     private static string RepositoryFile(params string[] relativeParts)

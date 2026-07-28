@@ -56,7 +56,6 @@ public partial class MainWindow : Window
     private DateTime? _lastSuccessfulSaveAt;
     private bool _navigationExpanded = true;
     private bool _inspectorExpanded = true;
-    private bool _refreshingMachineBankSources;
     private bool _synchronizingDeviceContext;
     private string? _selectedDeviceContextStableIdentity;
     private readonly LatencyChoice[] _latencies =
@@ -270,18 +269,6 @@ public partial class MainWindow : Window
     }
 
     private sealed record TargetDeviceSet(DanteDevice[] Devices, int LockedSkippedCount, string ScopeLabel);
-
-    private sealed record MachineBankSourceChoice(
-        string Path,
-        string DisplayName,
-        int TemplateCount,
-        bool IsActive)
-    {
-        public override string ToString()
-        {
-            return DisplayName;
-        }
-    }
 
     public MainWindow()
     {
@@ -920,7 +907,7 @@ public partial class MainWindow : Window
 
     private void ManageMachineBankButton_Click(object sender, RoutedEventArgs e)
     {
-        OpenMachineBankWindow(SelectedMachineBankPath());
+        OpenMachineBankWindow(null);
     }
 
     private void AddDeviceFromBankButton_Click(object sender, RoutedEventArgs e)
@@ -945,7 +932,6 @@ public partial class MainWindow : Window
             Owner = this
         };
         bool accepted = window.ShowDialog() == true;
-        RefreshMachineBankSources(window.CurrentBankPath);
         if (!accepted
             || window.SelectedPackageToAdd is null
             || window.SelectedInstanceOptions is null
@@ -965,111 +951,6 @@ public partial class MainWindow : Window
         {
             DeviceComboBox.SelectedItem = options.NewName;
         }
-    }
-
-    private void MachineBankSourceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (!_refreshingMachineBankSources)
-        {
-            UpdateMachineBankSummary();
-        }
-    }
-
-    private string? SelectedMachineBankPath()
-    {
-        return (MachineBankSourceComboBox.SelectedItem as MachineBankSourceChoice)?.Path
-            ?? MachineBankLocationService.CreateDefault().Load();
-    }
-
-    private void RefreshMachineBankSources(string? preferredPath = null)
-    {
-        if (MachineBankSourceComboBox is null)
-        {
-            return;
-        }
-
-        string activePath = MachineBankLocationService.CreateDefault().Load();
-        string? previousPath = preferredPath
-            ?? (MachineBankSourceComboBox.SelectedItem as MachineBankSourceChoice)?.Path;
-        List<string> paths =
-        [
-            activePath,
-            .. MachineBankDistributionService.DiscoverIncludedBankPaths()
-        ];
-
-        List<MachineBankSourceChoice> choices = [];
-        foreach (string path in paths
-                     .Select(Path.GetFullPath)
-                     .Distinct(StringComparer.OrdinalIgnoreCase))
-        {
-            int count;
-            try
-            {
-                count = new MachineBankRepository(path).List().Count;
-            }
-            catch (Exception ex)
-            {
-                DiagnosticLogService.Default.Write(
-                    "MachineBank",
-                    $"Impossible de compter les modèles de la banque {path}.",
-                    ex);
-                count = 0;
-            }
-
-            bool isActive = string.Equals(path, activePath, StringComparison.OrdinalIgnoreCase);
-            string bankName = isActive
-                ? (_language == UiLanguage.English ? "My active bank" : "Ma banque active")
-                : Path.GetFileName(path);
-            string modelLabel = _language == UiLanguage.English
-                ? count == 1 ? "template" : "templates"
-                : count == 1 ? "modèle" : "modèles";
-            choices.Add(new MachineBankSourceChoice(
-                path,
-                $"{bankName} · {count} {modelLabel}",
-                count,
-                isActive));
-        }
-
-        _refreshingMachineBankSources = true;
-        try
-        {
-            MachineBankSourceComboBox.ItemsSource = choices;
-            MachineBankSourceComboBox.SelectedItem = choices.FirstOrDefault(choice =>
-                    !string.IsNullOrWhiteSpace(previousPath)
-                    && string.Equals(choice.Path, previousPath, StringComparison.OrdinalIgnoreCase))
-                ?? choices.FirstOrDefault(choice => choice.IsActive)
-                ?? choices.FirstOrDefault();
-        }
-        finally
-        {
-            _refreshingMachineBankSources = false;
-        }
-
-        UpdateMachineBankSummary();
-    }
-
-    private void UpdateMachineBankSummary()
-    {
-        if (MachineBankSummaryTextBlock is null)
-        {
-            return;
-        }
-
-        if (MachineBankSourceComboBox.SelectedItem is not MachineBankSourceChoice source)
-        {
-            MachineBankSummaryTextBlock.Text = _language == UiLanguage.English
-                ? "No device bank was found."
-                : "Aucune banque de machines n'a été trouvée.";
-            return;
-        }
-
-        int includedCount = (MachineBankSourceComboBox.ItemsSource as IEnumerable<MachineBankSourceChoice>)
-            ?.Where(choice => !choice.IsActive)
-            .Sum(choice => choice.TemplateCount) ?? 0;
-        MachineBankSummaryTextBlock.Text = _language == UiLanguage.English
-            ? $"Selected bank: {source.TemplateCount} template(s). {includedCount} included template(s) are also available in the menu."
-            : $"Banque sélectionnée : {source.TemplateCount} modèle(s). {includedCount} modèle(s) fourni(s) sont aussi disponibles dans le menu.";
-        MachineBankSummaryTextBlock.ToolTip = source.Path;
     }
 
     private void RedoButton_Click(object sender, RoutedEventArgs e)
@@ -1639,39 +1520,34 @@ public partial class MainWindow : Window
                     Changed: device.TxCount > 0 || device.RxCount > 0))) + Environment.NewLine + T("Dialog.Continue"));
     }
 
-    private void ListRedundantButton_Click(object sender, RoutedEventArgs e)
+    private void ShowQuickListButton_Click(object sender, RoutedEventArgs e)
     {
-        ShowProjectList("Machines redondantes", project => project.ListRedundantDevices(_language));
-    }
-
-    private void ListDaisychainButton_Click(object sender, RoutedEventArgs e)
-    {
-        ShowProjectList("Machines en daisychain", project => project.ListDaisychainDevices(_language));
-    }
-
-    private void ListLatenciesButton_Click(object sender, RoutedEventArgs e)
-    {
-        ShowProjectList("Latences", project => project.ListLatencies(_language));
-    }
-
-    private void ListSampleRatesButton_Click(object sender, RoutedEventArgs e)
-    {
-        ShowProjectList("Sample rates", project => project.ListSamplerates(_language));
-    }
-
-    private void ListEncodingsButton_Click(object sender, RoutedEventArgs e)
-    {
-        ShowProjectList("Bits par échantillon", project => project.ListEncodings(_language));
-    }
-
-    private void ListStaticIpsButton_Click(object sender, RoutedEventArgs e)
-    {
-        ShowProjectList("IP fixes", project => project.ListStaticIpDevices(_language));
-    }
-
-    private void ListPreferredMastersButton_Click(object sender, RoutedEventArgs e)
-    {
-        ShowProjectList("Preferred masters", project => project.ListPreferredMasters(_language));
+        string choice = (QuickListComboBox.SelectedItem as ComboBoxItem)?.Tag?.ToString()
+            ?? "redundant";
+        switch (choice)
+        {
+            case "daisychain":
+                ShowProjectList("Machines en daisychain", project => project.ListDaisychainDevices(_language));
+                break;
+            case "latencies":
+                ShowProjectList("Latences", project => project.ListLatencies(_language));
+                break;
+            case "sample-rates":
+                ShowProjectList("Sample rates", project => project.ListSamplerates(_language));
+                break;
+            case "bits":
+                ShowProjectList("Bits par échantillon", project => project.ListEncodings(_language));
+                break;
+            case "static-ips":
+                ShowProjectList("IP fixes", project => project.ListStaticIpDevices(_language));
+                break;
+            case "preferred-masters":
+                ShowProjectList("Preferred masters", project => project.ListPreferredMasters(_language));
+                break;
+            default:
+                ShowProjectList("Machines redondantes", project => project.ListRedundantDevices(_language));
+                break;
+        }
     }
 
     private void SenderDeviceList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1892,6 +1768,9 @@ public partial class MainWindow : Window
     private void UpdateConfigurationEditorsToggleText()
     {
         bool collapsed = ConfigurationEditorsGrid.Visibility == Visibility.Collapsed;
+        ConfigurationEditorsRow.Height = collapsed
+            ? GridLength.Auto
+            : new GridLength(5, GridUnitType.Star);
         SettingsPanelsMenuItem.IsChecked = !collapsed;
         string action = collapsed ? "Afficher les réglages" : "Masquer les réglages";
         string helpText = collapsed
@@ -3601,11 +3480,6 @@ public partial class MainWindow : Window
         UpdateAtomicControlPanelState();
     }
 
-    private void AtomicPanelResetButton_Click(object sender, RoutedEventArgs e)
-    {
-        ResetAtomicControlPanel();
-    }
-
     private void ResetAtomicControlPanel()
     {
         _atomicPanelStage = AtomicPanelStage.Safe;
@@ -3625,9 +3499,7 @@ public partial class MainWindow : Window
         AtomicKeyButton.IsEnabled = projectAvailable && _atomicPanelStage < AtomicPanelStage.Locked;
         AtomicKeyRotateTransform.Angle = coverOpen ? 90 : 0;
         AtomicKeyTitleTextBlock.Text = _language == UiLanguage.English ? "1. KEY" : "1. CLÉ";
-        AtomicKeyPositionTextBlock.Text = coverOpen
-            ? (_language == UiLanguage.English ? "ON · right" : "ON · droite")
-            : (_language == UiLanguage.English ? "OFF · vertical" : "OFF · verticale");
+        AtomicKeyPositionTextBlock.Text = coverOpen ? "ON" : "OFF";
         AtomicKeyButton.Background = new SolidColorBrush(
             _atomicPanelStage == AtomicPanelStage.Safe
                 ? Color.FromRgb(55, 65, 81)
@@ -3655,10 +3527,6 @@ public partial class MainWindow : Window
             fired ? Color.FromRgb(239, 68, 68) : Color.FromRgb(75, 29, 34));
 
         AtomicOptionsBorder.IsEnabled = !locked;
-        AtomicPanelResetButton.IsEnabled = _atomicPanelStage != AtomicPanelStage.Safe;
-        AtomicPanelResetButton.Content = _language == UiLanguage.English
-            ? "RETURN TO SAFE"
-            : "RETOUR SAFE";
         AtomicPanelStatusTextBlock.Text = _atomicPanelStage switch
         {
             AtomicPanelStage.Safe => _language == UiLanguage.English
@@ -5422,7 +5290,6 @@ public partial class MainWindow : Window
         LanguageLabelTextBlock.Text = T("Language.Label");
         TranslateDependencyObject(this, []);
         UpdateConfigurationEditorsToggleText();
-        RefreshMachineBankSources();
         ApplyDataGridColumnHeaders();
         RefreshPendingPatchWorkspace();
         RefreshGlobalSearchResults();

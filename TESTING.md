@@ -1,5 +1,47 @@
 # Tests et historique DCE
 
+## Validation de maintenance 2026.1 Beta du 2026-07-28
+
+Périmètre :
+
+- version conservée : `2026.1.0-beta.1` ;
+- branche : `2026.1` ;
+- réorganisation ergonomique de Machines, de la banque et des panneaux ;
+- simplification visuelle du pupitre Atomic Bomb ;
+- documentation bilingue et nettoyage des médias historiques non référencés.
+
+Résultats locaux :
+
+- 397 tests Core/Windows réussis, 0 échec, 0 ignoré ;
+- 22 tests Avalonia/macOS sans écran réussis, 0 échec, 0 ignoré ;
+- build Windows Release : 0 avertissement, 0 erreur ;
+- publication Windows autonome `win-x64` réussie et lancement réel répondant ;
+- aucun package NuGet vulnérable signalé pour Windows ou macOS ;
+- quatre PDF rendus et contrôlés visuellement : 56 pages au total, sans
+  chevauchement ni texte tronqué ;
+- extraction du texte des quatre PDF sans caractère de remplacement, `Ø`
+  parasite ni séquence d'encodage UTF-8 incorrecte ;
+- captures Windows contrôlées en français et en anglais, thèmes clair et
+  sombre, y compris en largeur réduite ;
+- parité macOS contrôlée par compilation et tests de contrat ; aucun Mac
+  physique n'était disponible pour une validation visuelle native.
+
+Installateur local réellement installé :
+
+- fichier : `DanteConfigEditor2026_1_Beta_Installer.exe` ;
+- taille : `74 240 406` octets ;
+- SHA-256 :
+  `FA743F5283CD9977A48E65EF45ABED56E0382DEA5FC5D2BBDC24849322FBE48A` ;
+- installation silencieuse réussie dans
+  `C:\Program Files\Dante Config Editor 2026.1 Beta` ;
+- raccourcis Bureau et menu Démarrer présents ;
+- exécutable installé lancé, répondant et déclaré en
+  `2026.1.0-beta.1` ;
+- 41 modèles communautaires et 2 rôles génériques installés ;
+- banque personnelle inchangée avant/après installation : 77 fichiers,
+  1 587 873 octets, empreinte d'inventaire SHA-256
+  `36103497188849D75FA9D053FFA79DD27874C68C943EB424505DA402B0200C2F`.
+
 ## Validation finale des paquets 2026.1 Beta du 2026-07-27
 
 Périmètre :

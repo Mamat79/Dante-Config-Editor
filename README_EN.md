@@ -120,8 +120,8 @@ Updates never replace that personal bank.
   language;
 - standard top menu for quick access to File, Edit, Devices, View, Tools, and
   Help commands;
-- fully offline Atomic Bomb training tool with a vertical key that turns right,
-  automatically opens the cover, then enables ARM, LOCK, and FIRE.
+- fully offline Atomic Bomb training tool with a safety key that automatically
+  opens the cover, then enables ARM, LOCK, and FIRE.
 
 ## Importing and exporting labels
 

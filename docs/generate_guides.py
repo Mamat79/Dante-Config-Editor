@@ -555,7 +555,7 @@ def full_guide(language: str) -> None:
         ]
         page2 = [
             para("5. Page Machines", "h1"),
-            para("La page Machines rassemble la banque de modèles, les listes rapides, les actions globales, la machine sélectionnée, ses canaux et le tableau général."),
+            para("La page Machines rassemble les actions globales, une liste de contrôle compacte, la machine sélectionnée, ses canaux, le tableau général et l'accès aux banques."),
             para("Machine sélectionnée", "h2"),
             *bullets([
                 "Modifiez ensemble le nom, le mode réseau, la latence et le preferred master avec Appliquer les paramètres.",
@@ -567,13 +567,13 @@ def full_guide(language: str) -> None:
             para("Tableau des machines", "h2"),
             *bullets([
                 "La sélection multiple définit la cible Sélection non verrouillée. La colonne Lock protège les machines des actions globales.",
-                "Le preferred master peut être coché directement. Réduire les réglages agrandit le tableau.",
-                "Source de modèles filtre la banque personnelle ou une banque fournie. Gérer la banque ouvre par défaut une liste globale dédupliquée de 43 modèles avec leur origine ; Ajouter depuis la banque crée une instance indépendante.",
+                "Le Preferred Master peut être coché directement. La flèche centrale sous les réglages les masque ou les rouvre et agrandit le tableau.",
+                "Ajouter depuis la banque et Gérer les banques ouvrent directement la liste globale dédupliquée de 43 modèles avec leur origine. La banque personnelle et les banques fournies restent séparées.",
             ]),
             para("Recherche, filtres et actions globales", "h2"),
             *bullets([
                 "La recherche trouve les machines, canaux et références de patch après au moins deux caractères.",
-                "Les listes rapides filtrent modes réseau, latences, sample rates, bits, IP fixes et preferred masters.",
+                "La barre Liste rapide intégrée sous Actions globales affiche les modes réseau, latences, sample rates, bits, IP fixes ou Preferred Masters sans occuper plusieurs rangées de boutons.",
                 "Modifiées uniquement affiche les machines touchées ; Avant / après détaille chaque différence.",
                 "Choisissez toutes les machines non verrouillées, la sélection ou le filtre affiché. La cible reste visible avant l'application.",
             ]),
@@ -693,7 +693,7 @@ def full_guide(language: str) -> None:
         page5 = [
             para("13. Atomic Bomb : créer un exercice", "h1"),
             *bullets([
-                "Ouvrez Outils avancés puis Atomic Bomb. Décochez les catégories à épargner ; toutes sont sélectionnées par défaut. Tournez la clé vers la droite : le capot s'ouvre automatiquement. Appuyez ensuite sur ARM, LOCK et FIRE. FIRE applique immédiatement l'exercice, sans dialogue supplémentaire.",
+                "Ouvrez Outils avancés puis Atomic Bomb. Décochez les catégories à épargner ; toutes sont sélectionnées par défaut. Tournez la clé : le capot s'ouvre automatiquement. Appuyez ensuite sur ARM, LOCK et FIRE. FIRE applique immédiatement l'exercice.",
                 "La copie en mémoire reçoit des noms uniques mythologiques, audio ou humoristiques, ainsi qu'un mélange de patchs, modes réseau, Preferred Master, latences, sample rates, encodages et IP principales.",
                 "Les identifiants techniques, namespaces, DNS, passerelles et interfaces secondaires restent protégés.",
                 "Le résumé indique la graine du scénario. L'ensemble s'annule en une seule action et le fichier source n'est jamais écrasé.",
@@ -783,7 +783,7 @@ def full_guide(language: str) -> None:
                 ["Écran", "Utilité principale"],
                 [
                     ["Vue d'ensemble", "Compteurs, formats audio, réseau, horloge, alertes et dernières modifications."],
-                    ["Machines", "Machine sélectionnée, canaux, listes rapides, actions globales et tableau des machines."],
+                    ["Machines", "Machine sélectionnée, canaux, liste rapide compacte, actions globales et tableau des machines."],
                     ["Patch > Matrice", "Grille visuelle RX/TX, glissement, PATCH 1:1, zoom et renommage direct."],
                     ["Patch > Easy patch", "Sélection et plage 1:1 avec application immédiate et alerte de remplacement optionnelle."],
                     ["Patch > Liste RX vers TX", "Lecture et modification tabulaire des subscriptions, avec filtres et état détaillé."],
@@ -843,7 +843,7 @@ def full_guide(language: str) -> None:
             *screenshot(
                 language,
                 "devices",
-                "<b>1</b> listes rapides ; <b>2</b> onglets Réseau/audio, IP, Profils et Horloge ; <b>3</b> cible des actions et verrouillage.",
+                "<b>1</b> onglets Réseau/audio, IP, Profils et Horloge ; <b>2</b> liste rapide compacte ; <b>3</b> cible des actions et verrouillage.",
                 crop=(230, 210, 690, 820),
                 markers=[(0.22, 0.10, "1"), (0.45, 0.45, "2"), (0.55, 0.91, "3")],
                 width=104,
@@ -1025,7 +1025,7 @@ def full_guide(language: str) -> None:
                 [
                     ["Créer un modèle", "Sélectionner la machine > Enregistrer dans la banque > remplacer les labels propres au projet par des labels génériques > renseigner les métadonnées > Enregistrer."],
                     ["Ajouter une image", "Choisir PNG, JPEG ou WebP. L'image est copiée dans le dossier du modèle ; le fichier original peut ensuite être déplacé."],
-                    ["Parcourir les banques", "Machines > Gérer la banque ouvre les 43 modèles sans doublon. Le sélecteur isole la banque personnelle ou une banque fournie et la colonne Banque affiche l'origine."],
+                    ["Parcourir les banques", "Machines > Gérer les banques ouvre les 43 modèles sans doublon. Le filtre Banques affichées isole la banque personnelle ou une banque fournie, et la colonne Banque indique l'origine."],
                     ["Partager toute la banque", "Exporter la banque crée une archive *.dce-bank.zip vérifiée."],
                     ["Installer une banque", "Importer une banque puis choisir un dossier neuf ou vide. DCE ne remplace jamais silencieusement une banque existante."],
                     ["Ajouter au projet", "Sélectionner le modèle > Ajouter au projet > choisir un nom unique et les labels > confirmer."],
@@ -1106,7 +1106,7 @@ def full_guide(language: str) -> None:
             *screenshot(
                 language,
                 "atomic-bomb",
-                "Décochez les catégories à préserver. Tournez la clé vers la droite pour ouvrir automatiquement le capot, puis appuyez sur ARM, LOCK et FIRE. FIRE modifie immédiatement la copie en mémoire, sans dialogue supplémentaire.",
+                "Décochez les catégories à préserver. Tournez la clé pour ouvrir automatiquement le capot, puis appuyez sur ARM, LOCK et FIRE. FIRE modifie immédiatement la copie en mémoire.",
                 crop=(275, 200, 1405, 605),
                 maximum_height=100,
             ),
@@ -1168,13 +1168,13 @@ def full_guide(language: str) -> None:
             para("Device table", "h2"),
             *bullets([
                 "Multiple selection defines the Selected unlocked target. The Lock column protects devices from global actions.",
-                "Preferred Master can be toggled directly. Hide settings enlarges the table.",
-                "Template source filters the personal or a bundled bank. Manage bank opens a global deduplicated list of 43 templates with their source; Add from bank creates an independent instance.",
+                "Preferred Master can be toggled directly. The centered arrow below the settings hides or restores them and enlarges the table.",
+                "Add from bank and Manage banks directly open the global deduplicated list of 43 templates with their source. The personal and bundled banks remain separate.",
             ]),
             para("Search, filters, and global actions", "h2"),
             *bullets([
                 "Search finds devices, channels, and subscription references after at least two characters.",
-                "Quick lists filter network modes, latencies, sample rates, bits, static IPs, and Preferred Masters.",
+                "The compact Quick list bar below Global actions displays network modes, latencies, sample rates, bits, static IPs, or Preferred Masters without occupying several rows of buttons.",
                 "Modified only shows changed devices; Before / after lists every difference.",
                 "Choose all unlocked, selected unlocked, or visible unlocked devices. The target remains visible before application.",
             ]),
@@ -1294,7 +1294,7 @@ def full_guide(language: str) -> None:
         page5 = [
             para("13. Atomic Bomb: create an exercise", "h1"),
             *bullets([
-                "Open Advanced tools, then Atomic Bomb. Clear the categories you want to spare; all are selected by default. Turn the key to the right: the cover opens automatically. Then press ARM, LOCK, and FIRE in order. FIRE applies the exercise immediately, with no additional dialog.",
+                "Open Advanced tools, then Atomic Bomb. Clear the categories you want to spare; all are selected by default. Turn the key: the cover opens automatically. Then press ARM, LOCK, and FIRE in order. FIRE applies the exercise immediately.",
                 "The in-memory copy receives unique mythological, audio-themed, or playful names plus a mixture of subscriptions, network modes, Preferred Master states, latencies, sample rates, encodings, and primary IP settings.",
                 "Technical identifiers, namespaces, DNS, gateways, and secondary interfaces remain protected.",
                 "The summary displays the scenario seed. The entire operation is one undo step and the source file is never overwritten.",
@@ -1444,7 +1444,7 @@ def full_guide(language: str) -> None:
             *screenshot(
                 language,
                 "devices",
-                "<b>1</b> quick lists; <b>2</b> Network/audio, IP, Profiles, and Clock tabs; <b>3</b> target and locking controls.",
+                "<b>1</b> Network/audio, IP, Profiles, and Clock tabs; <b>2</b> compact Quick list bar; <b>3</b> target and locking controls.",
                 crop=(230, 210, 690, 820),
                 markers=[(0.22, 0.10, "1"), (0.45, 0.45, "2"), (0.55, 0.91, "3")],
                 width=104,
@@ -1626,7 +1626,7 @@ def full_guide(language: str) -> None:
                 [
                     ["Create a template", "Select the device > Save to device bank > replace project-specific labels with generic labels > enter metadata > Save."],
                     ["Add an image", "Choose PNG, JPEG, or WebP. The image is copied into the template folder, so the source file can later be moved."],
-                    ["Browse banks", "Devices > Manage bank opens all 43 templates without duplicates. The selector isolates the personal or a bundled bank, while the Bank column shows its source."],
+                    ["Browse banks", "Devices > Manage banks opens all 43 templates without duplicates. The Displayed banks filter isolates the personal or a bundled bank, while the Bank column shows its source."],
                     ["Share the bank", "Export bank creates a verified *.dce-bank.zip archive."],
                     ["Install a bank", "Import bank and choose a new or empty folder. DCE never silently replaces an existing bank."],
                     ["Add to project", "Select the template > Add to project > choose a unique name and labels > confirm."],
@@ -1707,7 +1707,7 @@ def full_guide(language: str) -> None:
             *screenshot(
                 language,
                 "atomic-bomb",
-                "Clear categories that must be preserved. Turn the key to the right to open the cover automatically, then press ARM, LOCK, and FIRE. FIRE immediately changes the in-memory copy, with no additional dialog.",
+                "Clear categories that must be preserved. Turn the key to open the cover automatically, then press ARM, LOCK, and FIRE. FIRE immediately changes the in-memory copy.",
                 crop=(275, 200, 1405, 605),
                 maximum_height=100,
             ),

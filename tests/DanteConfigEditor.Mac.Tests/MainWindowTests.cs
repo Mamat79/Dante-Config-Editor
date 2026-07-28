@@ -48,8 +48,22 @@ public sealed class MainWindowTests
         window.Show();
         try
         {
+            Grid editors = window.FindControl<Grid>("ConfigurationEditorsGrid")!;
+            Button reveal = window.FindControl<Button>("ConfigurationEditorsRevealButton")!;
             Assert.True(window.FindControl<TabItem>("ConfigurationTab")!.IsSelected);
-            Assert.True(window.FindControl<Grid>("ConfigurationEditorsGrid")!.IsEffectivelyVisible);
+            Assert.True(editors.IsEffectivelyVisible);
+            Assert.Equal("▲", reveal.Content);
+
+            reveal.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
+            Assert.False(editors.IsVisible);
+            Assert.Equal("▼", reveal.Content);
+            Assert.True(reveal.IsEffectivelyVisible);
+
+            reveal.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(editors.IsEffectivelyVisible);
+            Assert.Equal("▲", reveal.Content);
         }
         finally
         {
@@ -455,12 +469,22 @@ public sealed class MainWindowTests
 
             Assert.True(keyButton.IsEnabled);
             Assert.False(fireButton.IsEnabled);
+            Assert.Equal("OFF", window.FindControl<TextBlock>("AtomicKeyPositionTextBlock")!.Text);
             keyButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Assert.False(cover.IsVisible);
+            Assert.Equal("ON", window.FindControl<TextBlock>("AtomicKeyPositionTextBlock")!.Text);
             RotateTransform turnedKey = Assert.IsType<RotateTransform>(
                 window.FindControl<Grid>("AtomicKeyVisual")!.RenderTransform);
             Assert.Equal(90, turnedKey.Angle);
             Assert.True(armButton.IsEnabled);
+
+            keyButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Assert.True(cover.IsVisible);
+            Assert.Equal("OFF", window.FindControl<TextBlock>("AtomicKeyPositionTextBlock")!.Text);
+            Assert.False(armButton.IsEnabled);
+
+            keyButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Assert.False(cover.IsVisible);
             armButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Assert.True(lockButton.IsEnabled);
             Assert.False(fireButton.IsEnabled);

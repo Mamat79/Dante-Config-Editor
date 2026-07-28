@@ -171,14 +171,14 @@ Le dossier public [`machine-banks`](machine-banks/README.md) contient :
 - le SHA-256 de chaque archive ;
 - les consignes bilingues de téléchargement et de contribution.
 
-La banque `DCE Generic Roles 3.6` est générée de façon reproductible par
+La banque `DCE Generic Roles 2026.1` est générée de façon reproductible par
 `tools/Build-BundledMachineBanks.ps1`. Elle contient uniquement des rôles
 génériques 8x8 et 32x32 dépourvus d'identité matérielle, de réseau, de flows et
 de subscriptions. Le script produit à la fois la banque intégrée à
 l'installateur et son archive GitHub.
 
 Le même script vérifie puis archive de façon reproductible la banque
-communautaire `DCE Community Devices 3.6`. Il contrôle les noms attendus, le
+communautaire `DCE Community Devices 2026.1`. Il contrôle les noms attendus, le
 nombre de canaux, les images, les empreintes XML et l'absence d'identités,
 d'interfaces, d'adresses, de flows ou de subscriptions propres au projet
 source. Un échec de contrôle bloque la construction de l'installateur.

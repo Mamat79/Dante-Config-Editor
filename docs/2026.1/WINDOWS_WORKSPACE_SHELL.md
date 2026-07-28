@@ -25,7 +25,7 @@ travail afin de ne pas surcharger la barre supérieure.
 |---|---|
 | Projet | accueil, fichiers récents et récupération |
 | Vue d'ensemble | indicateurs du projet et dernières modifications |
-| Machines | listes rapides, actions globales, machine, canaux et tableau |
+| Machines | actions globales, liste rapide compacte, machine, canaux et tableau |
 | Patch | espace unifié Matrice, Easy patch et Liste RX vers TX |
 | Import / Export | Labels, Rapports et patchbook, Synoptique |
 | Centre de validation | erreurs, avertissements, informations et chemins XML |

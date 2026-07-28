@@ -1026,9 +1026,9 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition x:Name="ConfigurationEditorsRow" Height="5*" />
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
+                                <RowDefinition Height="2*" />
                             </Grid.RowDefinitions>
 
                             <Border Grid.Row="0"
@@ -1044,39 +1044,27 @@
                                         <Button x:Name="AddDeviceFromBankButton"
                                                 Content="Ajouter depuis la banque"
                                                 Click="AddDeviceFromBankButton_Click"
-                                                ToolTip="Choisissez une banque puis ajoutez une nouvelle machine indépendante au projet." />
+                                                ToolTip="Ouvre la vue globale des banques et ajoute une nouvelle machine indépendante au projet." />
                                         <Button x:Name="ManageMachineBankButton"
-                                                Content="Gérer la banque"
+                                                Content="Gérer les banques"
                                                 Style="{StaticResource SecondaryButtonStyle}"
                                                 Click="ManageMachineBankButton_Click"
-                                                ToolTip="Ouvre la banque sélectionnée pour rechercher, modifier, importer ou exporter des modèles." />
+                                                ToolTip="Ouvre la vue globale pour rechercher, filtrer et administrer les banques de machines." />
                                     </WrapPanel>
-                                    <StackPanel Margin="0,0,16,0">
-                                        <TextBlock Text="Machines"
-                                                   FontSize="18"
-                                                   FontWeight="SemiBold" />
-                                        <WrapPanel Margin="0,6,0,0">
-                                            <TextBlock Text="Source de modèles"
-                                                       Foreground="{DynamicResource MutedTextBrush}"
-                                                       VerticalAlignment="Center"
-                                                       Margin="0,0,8,8" />
-                                            <ComboBox x:Name="MachineBankSourceComboBox"
-                                                      MinWidth="290"
-                                                      MaxWidth="480"
-                                                      Margin="0,0,8,8"
-                                                      SelectionChanged="MachineBankSourceComboBox_SelectionChanged"
-                                                      AutomationProperties.Name="Source de la banque de machines"
-                                                      ToolTip="Votre banque active et les banques fournies restent séparées. Choisissez ici celle à consulter." />
-                                        </WrapPanel>
-                                        <TextBlock x:Name="MachineBankSummaryTextBlock"
-                                                   Foreground="{DynamicResource MutedTextBrush}"
-                                                   FontSize="12"
-                                                   Text="Chargement des banques de machines..." />
-                                    </StackPanel>
+                                    <TextBlock Text="Machines"
+                                               FontSize="18"
+                                               FontWeight="SemiBold"
+                                               VerticalAlignment="Center"
+                                               Margin="0,0,16,0" />
                                 </DockPanel>
                             </Border>
 
-                            <Grid x:Name="ConfigurationEditorsGrid" Grid.Row="1" Margin="0,0,0,12">
+                            <Grid x:Name="ConfigurationEditorsRegion" Grid.Row="1">
+                                <ScrollViewer x:Name="ConfigurationEditorsScrollViewer"
+                                              Margin="0,0,0,14"
+                                              VerticalScrollBarVisibility="Auto"
+                                              HorizontalScrollBarVisibility="Disabled">
+                            <Grid x:Name="ConfigurationEditorsGrid">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1.1*" />
                                     <ColumnDefinition Width="1.05*" />
@@ -1268,25 +1256,19 @@
 
                                 <Grid Grid.Column="0" Margin="0,0,12,0">
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
                                         <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-                                    <GroupBox Header="Listes rapides">
-                                        <WrapPanel>
-                                            <Button Content="Redondants" Style="{StaticResource SecondaryButtonStyle}" Click="ListRedundantButton_Click" />
-                                            <Button Content="Daisychain" Style="{StaticResource SecondaryButtonStyle}" Click="ListDaisychainButton_Click" />
-                                            <Button Content="Latences" Style="{StaticResource SecondaryButtonStyle}" Click="ListLatenciesButton_Click" />
-                                            <Button Content="Sample rates" Style="{StaticResource SecondaryButtonStyle}" Click="ListSampleRatesButton_Click" />
-                                            <Button Content="Bits" Style="{StaticResource SecondaryButtonStyle}" Click="ListEncodingsButton_Click" />
-                                            <Button Content="IP fixes" Style="{StaticResource SecondaryButtonStyle}" Click="ListStaticIpsButton_Click" />
-                                            <Button Content="Preferred masters" Style="{StaticResource SecondaryButtonStyle}" Click="ListPreferredMastersButton_Click" />
-                                        </WrapPanel>
-                                    </GroupBox>
-
-                                    <GroupBox Grid.Row="1" Header="Actions globales" Margin="0,8,0,0">
-                                        <TabControl Background="{DynamicResource SurfaceBrush}"
-                                                    BorderBrush="{DynamicResource BorderLineBrush}"
-                                                    Foreground="{DynamicResource TextBrush}">
+                                    <GroupBox Header="Actions globales"
+                                              Height="390">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <TabControl Background="{DynamicResource SurfaceBrush}"
+                                                        BorderBrush="{DynamicResource BorderLineBrush}"
+                                                        Foreground="{DynamicResource TextBrush}">
                                             <TabItem Header="Réseau / audio">
                                                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                                                               HorizontalScrollBarVisibility="Disabled">
@@ -1385,9 +1367,68 @@
                                                             ToolTip="Active le Preferred Master sur la machine choisie et le désactive sur toutes les autres." />
                                                 </StackPanel>
                                             </TabItem>
-                                        </TabControl>
+                                            </TabControl>
+                                            <Border Grid.Row="1"
+                                                    Margin="0,8,0,0"
+                                                    Padding="8"
+                                                    Background="{DynamicResource SurfaceAltBrush}"
+                                                    BorderBrush="{DynamicResource BorderLineBrush}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="4">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="Liste rapide"
+                                                               Margin="0,0,8,0"
+                                                               VerticalAlignment="Center"
+                                                               FontWeight="SemiBold" />
+                                                    <ComboBox x:Name="QuickListComboBox"
+                                                              Grid.Column="1"
+                                                              SelectedIndex="0"
+                                                              MinWidth="120"
+                                                              Margin="0,0,8,0"
+                                                              ToolTip="Choisissez l'information de contrôle à afficher.">
+                                                        <ComboBoxItem Content="Redondants" Tag="redundant" />
+                                                        <ComboBoxItem Content="Daisychain" Tag="daisychain" />
+                                                        <ComboBoxItem Content="Latences" Tag="latencies" />
+                                                        <ComboBoxItem Content="Sample rates" Tag="sample-rates" />
+                                                        <ComboBoxItem Content="Bits" Tag="bits" />
+                                                        <ComboBoxItem Content="IP fixes" Tag="static-ips" />
+                                                        <ComboBoxItem Content="Preferred masters" Tag="preferred-masters" />
+                                                    </ComboBox>
+                                                    <Button Grid.Column="2"
+                                                            Content="Afficher"
+                                                            Style="{StaticResource SecondaryButtonStyle}"
+                                                            Margin="0"
+                                                            Padding="10,4"
+                                                            Click="ShowQuickListButton_Click"
+                                                            ToolTip="Affiche la liste de contrôle sélectionnée." />
+                                                </Grid>
+                                            </Border>
+                                        </Grid>
                                     </GroupBox>
                                 </Grid>
+                            </Grid>
+                                </ScrollViewer>
+
+                            <Button x:Name="ToggleConfigurationEditorsButton"
+                                    Panel.ZIndex="5"
+                                    Content="&#x25B2;"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    Width="48"
+                                    MinWidth="48"
+                                    Height="26"
+                                    Padding="8,2"
+                                    Margin="0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Click="ToggleConfigurationEditorsButton_Click"
+                                    ToolTip="Masquer les réglages"
+                                    AutomationProperties.Name="Masquer les réglages"
+                                    AutomationProperties.HelpText="Masque ou rouvre les panneaux de réglage pour agrandir le tableau des machines." />
                             </Grid>
 
                             <Border Grid.Row="2"
@@ -1404,18 +1445,11 @@
                                                 Style="{StaticResource SecondaryButtonStyle}"
                                                 Click="ShowDeviceChangesButton_Click"
                                                 ToolTip="Affiche toutes les différences de machines, canaux et patchs depuis l'ouverture du XML." />
-                                        <Button x:Name="ToggleConfigurationEditorsButton"
-                                                Content="&#x25B2;"
-                                                Style="{StaticResource SecondaryButtonStyle}"
-                                                MinWidth="42"
-                                                Padding="8,4"
-                                                Click="ToggleConfigurationEditorsButton_Click"
-                                                ToolTip="Masquer les réglages"
-                                                AutomationProperties.Name="Masquer les réglages"
-                                                AutomationProperties.HelpText="Masque les panneaux de réglage pour agrandir le tableau des machines." />
                                     </StackPanel>
                                     <WrapPanel VerticalAlignment="Center">
                                         <Label Content="Filtre machines"
+                                               Margin="0,0,6,8"
+                                               VerticalAlignment="Center"
                                                ToolTip="Filtre seulement le tableau des machines, sans modifier le XML." />
                                         <ComboBox x:Name="DeviceFilterComboBox"
                                                   Width="190"
@@ -1423,6 +1457,8 @@
                                                   SelectionChanged="DeviceFilter_SelectionChanged"
                                                   ToolTip="Affiche rapidement les machines en IP fixe, preferred master, redondantes, daisychain, sans TX/RX ou avec formats différents." />
                                         <Label Content="Cible actions"
+                                               Margin="0,0,6,8"
+                                               VerticalAlignment="Center"
                                                ToolTip="Détermine quelles machines seront touchées par les actions globales." />
                                         <ComboBox x:Name="TargetScopeComboBox"
                                                   Width="230"
@@ -2683,7 +2719,7 @@
                                                         ContentTemplate="{x:Null}"
                                                         Style="{StaticResource AtomicSequenceButtonStyle}"
                                                         Click="AtomicKeyButton_Click"
-                                                        ToolTip="Tourne la clé de 90 degrés et ouvre automatiquement le capot. Un second clic remet le pupitre en sécurité."
+                                                        ToolTip="Tourne la clé et ouvre automatiquement le capot. Un second clic remet le pupitre en sécurité."
                                                         AutomationProperties.Name="Clé de sécurité Atomic Bomb">
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
@@ -2704,22 +2740,13 @@
                                                                      Fill="#111827"
                                                                      Stroke="#94A3B8"
                                                                      StrokeThickness="2" />
-                                                            <Rectangle Width="12"
-                                                                       Height="34"
-                                                                       RadiusX="4"
-                                                                       RadiusY="4"
-                                                                       Fill="#D1D5DB"
-                                                                       Stroke="#4B5563"
-                                                                       StrokeThickness="1" />
-                                                            <Rectangle Width="20"
-                                                                       Height="8"
-                                                                       Margin="0,0,0,20"
+                                                            <Rectangle Width="8"
+                                                                       Height="30"
                                                                        RadiusX="3"
                                                                        RadiusY="3"
-                                                                       Fill="#E5E7EB" />
-                                                            <Ellipse Width="7"
-                                                                     Height="7"
-                                                                     Fill="#374151" />
+                                                                       Fill="#E5E7EB"
+                                                                       Stroke="#64748B"
+                                                                       StrokeThickness="1" />
                                                         </Grid>
                                                         <StackPanel Grid.Column="1"
                                                                     Margin="8,0,0,0"
@@ -2730,19 +2757,13 @@
                                                                        FontWeight="Bold"
                                                                        TextAlignment="Left" />
                                                             <TextBlock x:Name="AtomicKeyPositionTextBlock"
-                                                                       Text="OFF · verticale"
+                                                                       Text="OFF"
                                                                        Foreground="#CBD5E1"
                                                                        FontSize="11"
                                                                        TextAlignment="Left" />
                                                         </StackPanel>
                                                     </Grid>
                                                 </Button>
-                                                <Button x:Name="AtomicPanelResetButton"
-                                                        Content="RETOUR SAFE"
-                                                        Style="{StaticResource SecondaryButtonStyle}"
-                                                        Margin="6,6,6,0"
-                                                        Click="AtomicPanelResetButton_Click"
-                                                        ToolTip="Annule la séquence sans modifier le projet." />
                                             </StackPanel>
 
                                             <Grid Grid.Column="2">
@@ -2818,7 +2839,7 @@
                                            FontWeight="SemiBold"
                                            TextWrapping="Wrap"
                                            TextAlignment="Center"
-                                           Text="Séquence : tournez la clé de 90° vers la droite pour ouvrir le capot → ARM → LOCK → FIRE. FIRE agit immédiatement, sans dialogue supplémentaire. Le XML original reste intact tant que vous n'écrasez pas volontairement son fichier." />
+                                           Text="Séquence : tournez la clé pour ouvrir le capot → ARM → LOCK → FIRE. FIRE agit immédiatement. Le XML original reste intact tant que vous n'écrasez pas volontairement son fichier." />
                             </Border>
                         </Grid>
                     </ScrollViewer>

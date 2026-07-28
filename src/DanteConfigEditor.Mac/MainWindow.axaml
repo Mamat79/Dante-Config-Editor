@@ -241,37 +241,25 @@
                 <TabItem x:Name="ConfigurationTab" Header="Machines">
                     <Grid RowDefinitions="Auto,Auto,Auto,*" RowSpacing="12" Margin="0,12,0,0">
                         <Border Grid.Row="0" Classes="panel">
-                            <Grid ColumnDefinitions="Auto,320,Auto,Auto,*"
+                            <Grid ColumnDefinitions="*,Auto,Auto"
                                   ColumnSpacing="8">
-                                <TextBlock Text="Banque de machines"
+                                <TextBlock Text="Machines"
                                            FontWeight="SemiBold"
                                            VerticalAlignment="Center"
                                            Margin="0,0,2,0" />
-                                <ComboBox x:Name="MachineBankSourceComboBox"
-                                          Grid.Column="1"
-                                          SelectionChanged="MachineBankSourceComboBox_SelectionChanged"
-                                          ToolTip.Tip="Choisit la banque utilisée par les actions de cette page." />
                                 <Button x:Name="AddDeviceFromBankButton"
-                                        Grid.Column="2"
+                                        Grid.Column="1"
                                         Classes="primary"
                                         Click="AddDeviceFromBankButton_Click"
-                                        ToolTip.Tip="Ouvre la banque sélectionnée et ajoute une machine indépendante au projet.">
+                                        ToolTip.Tip="Ouvre la vue globale des banques et ajoute une machine indépendante au projet.">
                                     Ajouter depuis la banque
                                 </Button>
                                 <Button x:Name="ManageMachineBankButton"
-                                        Grid.Column="3"
+                                        Grid.Column="2"
                                         Click="ManageMachineBankButton_Click"
-                                        ToolTip.Tip="Consulte et administre la banque sélectionnée.">
-                                    Gérer la banque
+                                        ToolTip.Tip="Ouvre la vue globale pour rechercher, filtrer et administrer les banques de machines.">
+                                    Gérer les banques
                                 </Button>
-                                <TextBlock x:Name="MachineBankSummaryTextBlock"
-                                           Grid.Column="4"
-                                           Classes="muted"
-                                           VerticalAlignment="Center"
-                                           Margin="4,0,0,0"
-                                           TextWrapping="NoWrap"
-                                           TextTrimming="CharacterEllipsis"
-                                           Text="Chargement des banques de machines..." />
                             </Grid>
                         </Border>
 
@@ -279,6 +267,7 @@
                               Grid.Row="1"
                               ColumnDefinitions="1.05*,1.05*,0.9*"
                               ColumnSpacing="12"
+                              Margin="0,0,0,14"
                               MinHeight="220"
                               MaxHeight="250">
                             <Border Grid.Column="0" Classes="panel">
@@ -415,6 +404,20 @@
                                 </ScrollViewer>
                             </Border>
                         </Grid>
+
+                        <Button x:Name="ConfigurationEditorsRevealButton"
+                                Grid.Row="1"
+                                ZIndex="5"
+                                Width="48"
+                                MinWidth="48"
+                                Height="26"
+                                Padding="8,2"
+                                Margin="0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"
+                                Content="▲"
+                                Click="ConfigurationEditorsRevealButton_Click"
+                                ToolTip.Tip="Masquer les réglages" />
 
                         <Border Grid.Row="2" Classes="panel">
                             <WrapPanel Orientation="Horizontal"
@@ -978,7 +981,7 @@
                                                 <Button x:Name="AtomicKeyButton"
                                                         Classes="atomicSequence"
                                                         Click="AtomicKeyButton_Click"
-                                                        ToolTip.Tip="Tourne la clé de 90 degrés et ouvre automatiquement le capot. Un second clic remet le pupitre en sécurité.">
+                                                        ToolTip.Tip="Tourne la clé et ouvre automatiquement le capot. Un second clic remet le pupitre en sécurité.">
                                                     <Grid ColumnDefinitions="54,*">
                                                         <Grid x:Name="AtomicKeyVisual"
                                                               Width="48"
@@ -990,22 +993,13 @@
                                                                      Fill="#111827"
                                                                      Stroke="#94A3B8"
                                                                      StrokeThickness="2" />
-                                                            <Rectangle Width="12"
-                                                                       Height="34"
-                                                                       RadiusX="4"
-                                                                       RadiusY="4"
-                                                                       Fill="#D1D5DB"
-                                                                       Stroke="#4B5563"
-                                                                       StrokeThickness="1" />
-                                                            <Rectangle Width="20"
-                                                                       Height="8"
-                                                                       Margin="0,0,0,20"
+                                                            <Rectangle Width="8"
+                                                                       Height="30"
                                                                        RadiusX="3"
                                                                        RadiusY="3"
-                                                                       Fill="#E5E7EB" />
-                                                            <Ellipse Width="7"
-                                                                     Height="7"
-                                                                     Fill="#374151" />
+                                                                       Fill="#E5E7EB"
+                                                                       Stroke="#64748B"
+                                                                       StrokeThickness="1" />
                                                         </Grid>
                                                         <StackPanel Grid.Column="1"
                                                                     Margin="8,0,0,0"
@@ -1015,16 +1009,12 @@
                                                                        Foreground="White"
                                                                        FontWeight="Bold" />
                                                             <TextBlock x:Name="AtomicKeyPositionTextBlock"
-                                                                       Text="OFF · verticale"
+                                                                       Text="OFF"
                                                                        Foreground="#CBD5E1"
                                                                        FontSize="11" />
                                                         </StackPanel>
                                                     </Grid>
                                                 </Button>
-                                                <Button x:Name="AtomicPanelResetButton"
-                                                        Content="RETOUR SAFE"
-                                                        Click="AtomicPanelResetButton_Click"
-                                                        ToolTip.Tip="Annule la séquence sans modifier le projet." />
                                             </StackPanel>
 
                                             <Grid Grid.Column="2">
@@ -1102,7 +1092,7 @@
                                            FontWeight="SemiBold"
                                            TextWrapping="Wrap"
                                            TextAlignment="Center"
-                                           Text="Séquence : tournez la clé de 90° vers la droite pour ouvrir le capot → ARM → LOCK → FIRE. FIRE agit immédiatement, sans dialogue supplémentaire. Le XML original reste intact tant que vous n'écrasez pas volontairement son fichier." />
+                                           Text="Séquence : tournez la clé pour ouvrir le capot → ARM → LOCK → FIRE. FIRE agit immédiatement. Le XML original reste intact tant que vous n'écrasez pas volontairement son fichier." />
                             </Border>
                         </Grid>
                     </ScrollViewer>

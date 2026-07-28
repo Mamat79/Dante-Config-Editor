@@ -6,6 +6,10 @@ L’interface 2026.1 doit permettre de comprendre l’état d’un projet avant 
 modifier son XML. Elle privilégie la densité lisible, la navigation prévisible
 et la proximité entre une action et son contexte.
 
+Hors de l’outil de formation Atomic Bomb, l’interface reste volontairement
+sobre, utilitaire et orientée vers les actions répétitives. Atomic Bomb est la
+seule zone où une mise en scène visuelle expressive est recherchée.
+
 ## Structure Windows
 
 Le shell est organisé en quatre zones :
