@@ -31,6 +31,8 @@ travaille uniquement sur des fichiers hors ligne.
 - accès direct à la vue globale des 43 modèles depuis Machines, sans sélecteur
   de banque redondant, avec une liste rapide compacte intégrée sous les actions
   globales ;
+- Actions globales aligné sur la hauteur du groupe Machine/Canaux, sans
+  ascenseur interne dans Réseau/audio sur un écran standard ;
 - fenêtre Banque agrandie et automatiquement limitée à la surface de travail
   disponible ;
 - réglages Machines ouverts au démarrage et repliables par une flèche centrale
@@ -41,6 +43,14 @@ travaille uniquement sur des fichiers hors ligne.
   la dernière langue choisis ;
 - page Atomic Bomb intégrée au shell avec clé de sécurité, ouverture automatique
   du capot, ARM, LOCK puis FIRE ;
+- réglages techniques conditionnés par les balises réellement présentes dans
+  chaque rôle Dante, sans création automatique de `redundancy`,
+  `preferred_master`, `samplerate`, `encoding`, `unicast_latency` ou
+  `ipv4_address` ;
+- commandes indisponibles désactivées avec une explication et une bulle d'aide
+  bilingues ;
+- matrice Patch plus compacte, flèches latérales plus visibles et ouverture de
+  « Voir dans Patch » directement sur la machine sélectionnée ;
 - profil local 2026.1 isolé.
 
 ## Fidélité XML
@@ -48,7 +58,8 @@ travaille uniquement sur des fichiers hors ligne.
 Le document original reste la source. DCE effectue des mutations ciblées et
 conserve les nœuds, attributs, namespaces, ordre et valeurs inconnues. Une
 sauvegarde utilise un temporaire, une relecture, une validation, une copie de
-sécurité et un remplacement atomique.
+sécurité et un remplacement atomique. Une balise technique absente du rôle
+d'origine n'est jamais ajoutée pour simuler une capacité non démontrée.
 
 Le corpus automatisé couvre notamment les presets partiels, TX ou RX seuls,
 subscriptions locales `.`, sources absentes, canaux absents, namespace par
@@ -71,10 +82,12 @@ Sur le preset synthétique de 200 machines avec 64 TX et 64 RX chacune :
 
 ## Validation automatisée
 
-- 397 tests Core/Windows réussis ;
+- 409 tests Core/Windows réussis ;
 - 22 tests Avalonia/macOS sans écran réussis ;
 - build Windows Release sans warning ;
-- corpus synthétique sauvegardé et comparé sémantiquement sans perte.
+- corpus synthétique sauvegardé et comparé sémantiquement sans perte ;
+- 11 XML locaux contrôlés en lecture seule par les tests d'intégration, sans
+  modification des originaux.
 
 Les nombres finaux de l’artefact livré sont consignés dans le rapport bêta.
 

@@ -29,6 +29,8 @@ Audinate. It only works on offline files.
   inspector, preserved when switching views;
 - direct access to the global 43-template view from Devices, with no redundant
   bank selector and a compact quick-list bar integrated below global actions;
+- Global actions now matches the Device/Channels panel height and no longer
+  needs an inner scrollbar in Network/audio on a standard display;
 - a larger Device bank window automatically constrained to the available work
   area;
 - device settings opened at startup and collapsible through a centered arrow
@@ -39,6 +41,13 @@ Audinate. It only works on offline files.
   theme and language;
 - integrated Atomic Bomb page with a safety key that automatically opens the
   cover, then enables ARM, LOCK, and FIRE;
+- technical settings are available only when their element already exists in
+  that Dante role; DCE does not create `redundancy`, `preferred_master`,
+  `samplerate`, `encoding`, `unicast_latency`, or `ipv4_address` to simulate
+  an unsupported capability;
+- unavailable controls are disabled with a bilingual explanation and tooltip;
+- a more compact Patch matrix, larger side-panel arrows, and Show in Patch
+  opening directly on the selected device;
 - isolated 2026.1 local profile.
 
 ## XML fidelity
@@ -46,7 +55,8 @@ Audinate. It only works on offline files.
 The original document remains the source of truth. DCE performs targeted
 mutations and preserves unknown nodes, attributes, namespaces, ordering, and
 values. Saving uses a temporary file, reload, validation, backup, and atomic
-replacement.
+replacement. A technical element missing from the original role is never
+added to simulate an unproven capability.
 
 Automated corpus coverage includes partial presets, TX-only and RX-only
 devices, local `.` subscriptions, missing sources, missing channels, default
@@ -69,10 +79,12 @@ For the synthetic 200-device preset with 64 TX and 64 RX per device:
 
 ## Automated validation
 
-- 397 Core/Windows tests passed;
+- 409 Core/Windows tests passed;
 - 22 headless Avalonia/macOS tests passed;
 - Windows Release build completed without warnings;
-- synthetic corpus saved and semantically compared without loss.
+- synthetic corpus saved and semantically compared without loss;
+- 11 local XML files checked read-only by integration tests without modifying
+  their originals.
 
 Final delivery counts are recorded in the beta report.
 

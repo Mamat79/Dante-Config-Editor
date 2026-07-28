@@ -47,6 +47,8 @@ Toutes les dates utilisent le calendrier ISO. Les versions antérieures à
 - la page Machines ouvre directement cette vue globale depuis ses deux boutons,
   sans sélecteur de source redondant, et regroupe la liste rapide dans une barre
   compacte sous les actions globales ;
+- le panneau Actions globales s'aligne sur la hauteur de Machine/Canaux et
+  affiche Réseau/audio sans ascenseur interne sur un écran standard ;
 - la fenêtre Banque s'ouvre en grand format et s'ajuste automatiquement à la
   surface de travail disponible ;
 - retrait du dépôt des vidéos et captures V3.3/V3.5, des archives publiques
@@ -58,6 +60,24 @@ Toutes les dates utilisent le calendrier ISO. Les versions antérieures à
 - l'inspecteur de droite suit désormais la dernière machine choisie dans
   Machines, Patch ou Easy Patch et conserve ce contexte au changement de vue ;
 - les fenêtres de banque Windows et macOS disposent du même parcours global.
+
+### Corrigé le 2026-07-29
+
+- les réglages techniques ne créent plus de balise absente du rôle Dante
+  d'origine : `redundancy`, `preferred_master`, `samplerate`, `encoding`,
+  `unicast_latency` et `ipv4_address` doivent déjà être présents ;
+- les actions globales modifient uniquement les machines qui exposent le
+  réglage demandé et annoncent clairement les machines ignorées ;
+- les commandes indisponibles sont désactivées avec une explication visible
+  et une bulle d'aide en français ou en anglais ;
+- le garde-fou bloque aussi l'ajout indirect d'une balise technique, notamment
+  lors d'une duplication ou d'une sauvegarde ;
+- le bandeau et les sélecteurs de la matrice Patch ont été compactés sans
+  masquer les libellés RX/TX, le zoom, FLIP ni Patch 1:1 ;
+- « Voir dans Patch » ouvre la matrice sur la dernière machine sélectionnée ;
+- les flèches persistantes des panneaux gauche et droit sont plus grandes ;
+- les panneaux Machines restent utilisables à `1536 x 864`, correspondant à
+  l'espace logique d'un écran Full HD réglé à 125 %.
 
 ### Performance
 

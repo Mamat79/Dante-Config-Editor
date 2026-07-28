@@ -66,16 +66,18 @@ et 200 %.
 
 ## Vérifications réalisées
 
-Le 28 juillet 2026 :
+Le 29 juillet 2026 :
 
 - compilation Windows Release sans avertissement ;
-- `397/397` tests Core/Windows réussis ;
+- `409/409` tests Core/Windows réussis ;
 - contrôle visuel réel de l'exécutable à environ `1266 x 813` et en fenêtre
   maximisée ;
 - ouverture de la fixture anonymisée `representative-preset.xml` ;
 - vérification des vues Projet, Vue d'ensemble et Machines ;
 - vérification en thèmes sombre et clair ;
 - vérification en français et en anglais ;
+- captures contrôlées en `1920 x 1024` et `1536 x 864` pour reproduire
+  l'espace logique d'un écran Full HD à 125 % ;
 - vérification des flèches persistantes, panneaux ouverts et repli manuel ;
 - vérification des trois modes de l'espace Patch ;
 - vérification d'un clic direct, puis Annuler et Rétablir ;
@@ -86,7 +88,7 @@ Le 28 juillet 2026 :
 
 Non vérifié dans ce lot :
 
-- échelles système Windows exactes 125 %, 150 % et 200 % ;
+- échelles système Windows exactes 150 % et 200 % ;
 - contraste élevé ;
 - Narrator, NVDA et VoiceOver ;
 - rendu 2026.1 sur un Mac physique.

@@ -560,6 +560,7 @@ def full_guide(language: str) -> None:
             *bullets([
                 "Modifiez ensemble le nom, le mode réseau, la latence et le preferred master avec Appliquer les paramètres.",
                 "Double-cliquez une ligne ou utilisez Détail machine pour régler l'IP, la sample rate, les bits, les canaux TX/RX et le patch de ses entrées RX.",
+                "Un réglage technique est disponible uniquement si sa balise existe déjà dans ce rôle Dante. Une commande désactivée affiche la raison au survol ; DCE n'invente pas une capacité absente.",
                 "Les changements d'une fiche machine sont appliqués en groupe avec une seule reconstruction du modèle.",
                 "Les resets peuvent déconnecter les RX, retirer les patchs utilisant les TX, ou effectuer les deux opérations.",
                 "La suppression d'une machine retire aussi les points de patch qui la référencent.",
@@ -652,6 +653,7 @@ def full_guide(language: str) -> None:
                 "Seule l'interface IPv4 principale, network=0 si elle existe, est ciblée. Une interface secondaire n'est pas modifiée.",
                 "Le DNS n'est pas réécrit implicitement. La passerelle ne change que lorsqu'une valeur est fournie par l'action.",
                 "Sample rate et bits sont modifiables par machine, globalement ou via un profil.",
+                "Les actions globales ignorent les machines sans balise compatible et indiquent le nombre de machines écartées.",
             ]),
             callout("Un mauvais réglage peut rendre une machine injoignable ou incompatible. Contrôlez les capacités réelles du matériel.", PALE_RED),
             para("12. Validation, comparaison et Import / Export", "h1"),
@@ -713,7 +715,7 @@ def full_guide(language: str) -> None:
                 [48, 122],
             ),
             para("15. Tests de non-régression", "h1"),
-            para("La suite 2026.1 exécute 397 tests Core/Windows et 22 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la duplication, la banque de machines, la création de projet, le format .dceproj, les profils XML, les commandes, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch, le soutien facultatif et la cohérence des traductions."),
+            para("La suite 2026.1 exécute 409 tests Core/Windows et 22 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, le refus des balises techniques absentes, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la duplication, la banque de machines, la création de projet, le format .dceproj, les profils XML, les commandes, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch, le soutien facultatif et la cohérence des traductions."),
             para("16. Limites connues", "h1"),
             *bullets([
                 "Aucun pilotage en temps réel et aucune communication avec les appareils.",
@@ -1161,6 +1163,7 @@ def full_guide(language: str) -> None:
             *bullets([
                 "Apply the name, network mode, latency, and Preferred Master state together with Apply settings.",
                 "Double-click a row or use Device details to edit IP settings, sample rate, bits per sample, TX/RX names, and subscriptions for its Rx inputs.",
+                "A technical setting is available only when its element already exists in that Dante role. Hovering a disabled command explains why; DCE does not invent a missing capability.",
                 "A complete Device details change is grouped into one model rebuild.",
                 "Clear actions can disconnect Rx inputs, remove subscriptions using Tx channels, or do both.",
                 "Deleting a device also removes subscription points that reference it.",
@@ -1253,6 +1256,7 @@ def full_guide(language: str) -> None:
                 "Only the primary IPv4 interface, network=0 when available, is targeted. A secondary interface is not changed.",
                 "DNS is not rewritten implicitly. Gateway changes only when the action provides a value.",
                 "Sample rate and bits per sample are editable per device, globally, or through a profile.",
+                "Global actions skip devices without the compatible element and report how many devices were excluded.",
             ]),
             callout("Incorrect settings can make a device unreachable or incompatible. Verify actual hardware capabilities.", PALE_RED),
             para("12. Validation, comparison, and Import / Export", "h1"),
@@ -1314,7 +1318,7 @@ def full_guide(language: str) -> None:
                 [48, 122],
             ),
             para("15. Regression tests", "h1"),
-            para("The 2026.1 suite runs 397 Core/Windows tests and 22 headless Mac tests. Coverage includes XML guards, save and recovery, IPv4 interfaces, subscriptions, large presets, duplication, the device bank, project creation, .dceproj packages, XML profiles, commands, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, optional support, and translation consistency."),
+            para("The 2026.1 suite runs 409 Core/Windows tests and 22 headless Mac tests. Coverage includes XML guards, rejection of missing technical elements, save and recovery, IPv4 interfaces, subscriptions, large presets, duplication, the device bank, project creation, .dceproj packages, XML profiles, commands, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, optional support, and translation consistency."),
             para("16. Known limitations", "h1"),
             *bullets([
                 "No real-time Dante control and no communication with devices.",

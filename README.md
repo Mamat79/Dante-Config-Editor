@@ -149,6 +149,13 @@ par identité stable, pas uniquement par nom. Les balises inconnues sont
 conservées ; une structure fondamentale inconnue entraîne une édition limitée
 ou la lecture seule.
 
+Pour les réglages dépendant du matériel, la présence de la balise dans le rôle
+chargé constitue la preuve minimale de capacité. DCE ne crée donc pas
+`redundancy`, `preferred_master`, `samplerate`, `encoding`,
+`unicast_latency` ou `ipv4_address` lorsqu'ils sont absents. La commande est
+désactivée ou refusée avec une explication précise ; une action globale ignore
+les machines non compatibles et indique combien ont été écartées.
+
 Les tests automatisés couvrent notamment :
 
 - cycle ouverture, sauvegarde sans modification et réouverture ;
@@ -157,6 +164,8 @@ Les tests automatisés couvrent notamment :
 - Unicode et ordre de balises ;
 - subscriptions locales `.`, sources ou canaux absents ;
 - interfaces IPv4 multiples et conservation de l’interface secondaire ;
+- refus de créer des réglages techniques absents et contrôle d'un corpus local
+  de 11 XML en lecture seule ;
 - renommages, patch, fusion, récupération, duplication et banque ;
 - presets synthétiques de 10, 50 et 200 machines avec 64 TX et 64 RX.
 

@@ -1,5 +1,29 @@
 # Rapport de nettoyage
 
+## Déplacement et nettoyage final - 2026-07-29
+
+Le dépôt de travail a été déplacé vers son emplacement définitif :
+
+`D:\IA\Projets\Codex\Applis Persos\Dante Editor\2026.1`
+
+Avant suppression de l'ancienne copie, les deux arbres ont été comparés :
+
+- 9 841 fichiers ;
+- 3 972 729 349 octets ;
+- aucune différence SHA-256.
+
+L'ancienne copie
+`D:\IA\Projets\Codex\Divers\DanteConfigEditorV3_v35` a ensuite été supprimée.
+Dans `D:\IA\Projets\Codex\Divers`, seul
+`.codex\environments\environment.toml` est conservé, car il décrit
+l'environnement du dossier de travail.
+
+Le dépôt définitif a également été débarrassé d'environ 3 Gio de sorties
+régénérables : `artifacts`, `dist`, `publish`, `tmp`, `bin`, `obj` et résultats
+de benchmark. Seuls l'installateur final et sa somme SHA-256 sont recréés sous
+`dist` pour l'installation et la publication. Aucun XML de production, aucune
+banque personnelle, aucun tag et aucune Release n'ont été supprimés.
+
 ## Mise à jour 2026.1 - 2026-07-28
 
 Le nettoyage 2026.1 a été effectué après vérification des références dans le

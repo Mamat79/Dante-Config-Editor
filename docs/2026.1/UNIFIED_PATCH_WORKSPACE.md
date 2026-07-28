@@ -63,13 +63,19 @@ Les mutations Patch passent par `ProjectCommandDispatcher` :
 ## Affichage compact
 
 À faible hauteur, les textes explicatifs sont compactés et la hauteur des
-en-têtes TX devient adaptative. Les commandes, l'option d'avertissement et les
-labels de canaux restent présents. Les grandes listes et la matrice conservent
-la virtualisation WPF.
+en-têtes TX devient adaptative. Dans la matrice intégrée, le titre et l'option
+d'avertissement partagent une ligne, les sélecteurs gardent les repères courts
+RX/TX et Patch 1:1 partage sa barre avec le zoom. Les commandes, l'option
+d'avertissement et les labels de canaux restent présents. Les grandes listes
+et la matrice conservent la virtualisation WPF.
+
+Le bouton **Voir dans Patch** de l'inspecteur sélectionne la vue Matrice et
+recentre les sélecteurs RX/TX sur la machine concernée lorsqu'elle expose des
+canaux correspondants.
 
 ## Vérifications réalisées
 
-Le 27 juillet 2026 :
+Le 29 juillet 2026 :
 
 - application réelle ouverte avec la fixture anonymisée
   `representative-preset.xml` ;
@@ -79,6 +85,8 @@ Le 27 juillet 2026 :
 - Annuler puis Rétablir depuis la barre supérieure ;
 - cohérence visuelle en français et en anglais ;
 - cohérence visuelle en thèmes sombre et clair ;
+- captures `1920 x 1024` et `1536 x 864`, cette dernière représentant l'espace
+  logique d'un écran Full HD à 125 % ;
 - tests automatisés de session stable, rebase, lots atomiques et contrats UI.
 
 ## Limites actuelles

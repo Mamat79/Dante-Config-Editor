@@ -141,6 +141,13 @@ mutation. Recognized sensitive fields and identities are tracked by stable
 identity, not only by name. Unknown tags are preserved; an unknown fundamental
 structure causes limited editing or read-only mode.
 
+For hardware-dependent settings, the element must already exist in the loaded
+role before DCE treats that capability as editable. DCE therefore does not
+create `redundancy`, `preferred_master`, `samplerate`, `encoding`,
+`unicast_latency`, or `ipv4_address` when they are absent. The command is
+disabled or rejected with a precise explanation; a global action skips
+unsupported devices and reports how many were excluded.
+
 Automated coverage includes:
 
 - open, unchanged save, and reopen cycles;
@@ -149,6 +156,8 @@ Automated coverage includes:
 - Unicode and element ordering;
 - local `.` subscriptions and missing sources/channels;
 - multiple IPv4 interfaces and secondary-interface preservation;
+- rejection of missing technical-setting elements and read-only integration
+  checks against a local corpus of 11 XML files;
 - rename, patch, merge, recovery, duplication, and bank workflows;
 - synthetic 10, 50, and 200-device presets with 64 TX and 64 RX each.
 

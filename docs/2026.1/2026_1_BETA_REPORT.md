@@ -1,20 +1,21 @@
 # Rapport de validation - Dante Config Editor 2026.1 Beta
 
-Date : 2026-07-28
+Date : 2026-07-29
 
 ## Références
 
 - version : `2026.1.0-beta.1` ;
 - branche : `2026.1` ;
 - base V3.6 : `25a1e7cc0568b86a56bdf039ecce060c8eeea1ec` ;
-- commit de code et de paquets validé :
-  `361aab9c98b8382addf45f74eb2e7861f5128b24` ;
+- commit de sécurité XML validé :
+  `02765f4` ;
 - identité Windows : `Dante Config Editor 2026.1 Beta` ;
 - profil local : `%LOCALAPPDATA%\DanteConfigEditor2026.1` ;
 - bundle macOS : `fr.mamat.danteconfigeditor.y2026-1-beta`.
 
-La branche n'a pas été fusionnée dans `main` et aucune Release GitHub n'a été
-créée. La V3.6 stable reste indépendante.
+La branche n'est pas fusionnée dans `main`. La prérelease GitHub `v2026.1`
+reste distincte de la V3.6 stable et conserve une identité d'installation
+séparée.
 
 ## Audit et architecture
 
@@ -52,6 +53,9 @@ documentation ; il ne correspond pas à une reconstruction du XML Dante.
 - synchronisation Patch, Easy patch, sélections et synoptique ;
 - centre de validation filtrable ;
 - profils XML et capacités explicites ;
+- refus de créer un réglage technique absent du rôle Dante source ;
+- actions globales limitées aux machines qui exposent réellement le réglage,
+  avec compte rendu des machines ignorées ;
 - index de machines/canaux et cache de validation.
 
 ## Intégrité XML
@@ -70,6 +74,8 @@ ciblée. Les tests couvrent notamment :
 - sauvegarde atomique et récupération ;
 - duplication et insertion de rôles sans recopier `instance_id` ni
   `device_id` ;
+- absence de création implicite de `redundancy`, `preferred_master`,
+  `samplerate`, `encoding`, `unicast_latency` ou `ipv4_address` ;
 - cycles ouverture, sauvegarde, comparaison sémantique et réouverture.
 
 Les chemins techniques inconnus restent bloqués par défaut lorsqu'une
@@ -85,26 +91,21 @@ Environnement local :
 - MSBuild `17.11.48` ;
 - Inno Setup `6.7.3`.
 
-Résultats locaux finaux du 28 juillet 2026 :
+Résultats locaux finaux du 29 juillet 2026 :
 
 | Contrôle | Résultat |
 |---|---:|
-| Tests Core/Windows | 386 réussis, 0 échec, 3 s |
-| Tests Avalonia/macOS sans écran | 22 réussis, 0 échec, 20 s |
-| Build Windows Release | 0 warning, 0 erreur, 1,40 s |
-| Build macOS Release | 0 warning, 0 erreur, 1,03 s |
-| Publish Windows autonome | réussi, 20,3 s |
-| Installateur Windows autonome | réussi, 41,08 s, 74 163 527 octets |
-| SHA-256 installateur | `a9bcb6d0c7347a12bfda9de1d24df1e7a58605af238303a0739b598b31550ef6` |
+| Tests Core/Windows | 409 réussis, 0 échec, 0 ignoré |
+| Tests Avalonia/macOS sans écran | 22 réussis, 0 échec, 0 ignoré |
+| Corpus XML local en lecture seule | 3 tests, 11 fichiers, 0 modification |
+| Build Windows Release | 0 warning, 0 erreur, 5,434 s |
+| Build macOS Release | 0 warning, 0 erreur, 1,367 s |
+| Installateur Windows autonome | réussi, 74 213 616 octets |
+| SHA-256 installateur | `d77a05821100b39d11e76173c10dc9da73044609a60f2aae09a5a480d3bc7d2e` |
 
-GitHub Actions de la base 2026.1 :
-
-- [Windows CI, exécution 30298793379](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30298793379) :
-  succès ;
-- [macOS CI, exécution 30298792909](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30298792909) :
-  succès ;
-- les fichiers TRX téléchargés confirment 364/364 tests Windows, 364/364 tests
-  Core sur macOS et 20/20 tests Avalonia.
+Les workflows Windows et macOS sont rejoués sur le commit publié. Les sommes
+propres aux artefacts GitHub restent fournies dans leurs fichiers `.sha256` ;
+elles ne sont pas supposées identiques à celles d'une construction locale.
 
 ## Performances
 
@@ -129,22 +130,23 @@ du preset ; leurs mesures présentent davantage de variabilité.
 
 | Paquet | Taille | SHA-256 |
 |---|---:|---|
-| Installateur Windows local testé | 69 759 045 octets | `2ad5fa4ab53b1621738c1c30841e5f1a0af4f89eb928e9f41482f305d8404b90` |
-| Installateur Windows CI | 69 767 745 octets | `72b84b0e6effb03d534d2a68b94ad5119231c7a0237077081e0fe56ef6fa044b` |
-| DMG Apple Silicon CI | 52 850 639 octets | `b1774f3eb710853b289242b3a090544438ff1b5d2ba5cfdd51fb03f9223cd206` |
-| DMG Intel CI | 54 282 491 octets | `0e4c9b52930ac8191b77270d5cab487cf70e970b326c0c5a927410806c9097a6` |
+| Installateur Windows local testé | 74 213 616 octets | `d77a05821100b39d11e76173c10dc9da73044609a60f2aae09a5a480d3bc7d2e` |
 
-Chaque empreinte a été recalculée après téléchargement et correspond au
-fichier `.sha256` livré avec l'artefact concerné.
+Les deux DMG et l'installateur construit par CI sont publiés avec leurs propres
+fichiers `.sha256` dans la prérelease `v2026.1`.
 
-L'installateur Windows local a été exécuté deux fois. Le contrôle confirme :
+L'installateur Windows local a été exécuté en mise à niveau. Le contrôle
+confirme :
 
 - installation dans
   `C:\Program Files\Dante Config Editor 2026.1 Beta\` ;
 - version `2026.1.0-beta.1`, fichier `2026.1.0.0` ;
 - une seule inscription bêta après mise à niveau ;
-- inscription de la V3.6 stable toujours présente ;
-- lancement réussi de l'application installée.
+- raccourcis Bureau et menu Démarrer présents ;
+- 41 modèles communautaires et 2 rôles génériques installés ;
+- banque personnelle inchangée, avec 77 fichiers, 1 587 873 octets et aucune
+  entrée ajoutée ou retirée ;
+- lancement réussi et application répondante avec la fixture représentative.
 
 L'installateur n'est pas signé Authenticode. Les DMG sont signés ad hoc mais
 ne sont pas notariés.
@@ -166,22 +168,24 @@ Contrôles effectués :
 - Centre de validation ;
 - thèmes sombre et clair ;
 - interface française et anglaise ;
+- contrôles à `1920 x 1024` et `1536 x 864`, cette seconde taille représentant
+  l'espace logique d'un écran Full HD à 125 % ;
 - lancement de l'exécutable installé.
 
-Aucun XML de production n'a été ouvert pendant cette validation.
+Les captures utilisent uniquement la fixture synthétique. Les 11 XML du corpus
+local ont été ouverts exclusivement par les tests d'intégration en lecture
+seule ; aucun original n'a été modifié ou ajouté au dépôt.
 
 ## Dante Controller : preuve et limite
 
-Le mainteneur a confirmé un import réel réussi de fichiers V3.6 modifiés avec
-DCE dans Dante Controller. Cette preuve est conservée dans l'historique du
-projet.
-
-Pour le commit 2026.1 validé ici :
+Le mainteneur a confirmé des imports réels réussis dans Dante Controller de
+fichiers modifiés avec DCE, y compris avec la version 2026.1. En complément :
 
 - les tests XML structurels et sémantiques sont verts ;
 - les nœuds inconnus et références testées sont préservés ;
-- aucun nouvel import manuel dans Dante Controller n'a été consigné pendant
-  ce cycle.
+- les réglages techniques absents ne sont plus inventés ;
+- les 11 fichiers du corpus local passent ouverture et contrôle en lecture
+  seule.
 
 Il serait donc incorrect d'annoncer une garantie universelle pour toutes les
 versions de Dante Controller et toutes les extensions constructeur. La
@@ -203,8 +207,8 @@ banques stockés ailleurs.
 
 - aucun contrôle sur un Mac physique dans ce cycle ;
 - aucun essai VoiceOver, Narrator, NVDA ou contraste élevé ;
-- échelles Windows exactes 125 %, 150 % et 200 % encore à contrôler
-  manuellement ;
+- échelles Windows natives 125 %, 150 % et 200 % encore à contrôler
+  manuellement ; la taille logique équivalente à 125 % a été vérifiée ;
 - interface macOS non identique au shell Windows ;
 - création complète de projet toujours expérimentale ;
 - absence de signature Authenticode et de notarisation Apple ;

@@ -46,6 +46,12 @@ Les actions Windows consultent `DanteXmlCapabilities`. Un profil en lecture
 seule ne peut pas réactiver une commande en contournant le centre de
 validation. Les exports sans mutation restent disponibles.
 
+Le profil général ne suffit pas à prouver qu'un réglage existe sur chaque
+machine. Pour `redundancy`, `preferred_master`, `samplerate`, `encoding`,
+`unicast_latency` et `ipv4_address`, DCE exige également que la balise existe
+déjà dans le rôle concerné. Son absence désactive la commande et le garde-fou
+bloque toute tentative indirecte de l'ajouter.
+
 ## Cibles et navigation
 
 Une anomalie peut cibler :
@@ -104,5 +110,7 @@ La phase a été contrôlée avec :
 - navigation vers `DEVICE-B` ;
 - navigation vers le RX local `DEVICE-A / RX 1`.
 
-Ces vérifications ne constituent pas un nouvel import Dante Controller du
-build 2026.1.
+Le mainteneur a importé avec succès des sorties 2026.1 dans Dante Controller.
+Les vérifications ci-dessus couvrent le build automatisé ; elles ne constituent
+pas une garantie universelle pour chaque extension constructeur ou version de
+Dante Controller.

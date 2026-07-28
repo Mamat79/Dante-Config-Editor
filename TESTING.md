@@ -1,5 +1,52 @@
 # Tests et historique DCE
 
+## Validation de sécurité XML et installation du 2026-07-29
+
+Périmètre :
+
+- version conservée : `2026.1.0-beta.1` ;
+- branche : `2026.1` ;
+- commit de code validé : `02765f4` ;
+- capacités techniques déduites uniquement des balises déjà présentes dans
+  chaque rôle Dante ;
+- matrice Patch compactée et navigation « Voir dans Patch » corrigée ;
+- documentation et captures bilingues régénérées.
+
+Résultats locaux depuis une restauration propre :
+
+- restauration application Windows : `1,402 s` ;
+- restauration tests Core/Windows : `2,003 s` ;
+- restauration tests Avalonia/macOS : `1,284 s` ;
+- 409 tests Core/Windows réussis, 0 échec, 0 ignoré ;
+- 22 tests Avalonia/macOS sans écran réussis, 0 échec, 0 ignoré ;
+- 3 tests d'intégration locale réussis sur 11 XML réels ouverts en lecture
+  seule, sans modifier ni versionner les originaux ;
+- build Windows Release : 0 avertissement, 0 erreur ;
+- build macOS Release : 0 avertissement, 0 erreur ;
+- aucun package NuGet vulnérable signalé pour Windows ou macOS ;
+- contrôles visuels Windows en français et en anglais, thèmes clair et sombre,
+  à `1920 x 1024` et `1536 x 864` ;
+- quatre PDF rendus et contrôlés : 56 pages, sans chevauchement, texte tronqué
+  ni caractère d'encodage incorrect.
+
+Installateur local réellement installé :
+
+- fichier : `DanteConfigEditor2026_1_Beta_Installer.exe` ;
+- taille : `74 213 616` octets ;
+- SHA-256 :
+  `D77A05821100B39D11E76173C10DC9DA73044609A60F2AAE09A5A480D3BC7D2E` ;
+- installation silencieuse réussie avec le code `0` dans
+  `C:\Program Files\Dante Config Editor 2026.1 Beta` ;
+- raccourcis Bureau et menu Démarrer présents ;
+- entrée de désinstallation unique présente ;
+- exécutable installé lancé avec la fixture représentative, répondant et
+  déclaré en `2026.1.0-beta.1` ;
+- 41 modèles communautaires et 2 rôles génériques installés ;
+- banque personnelle inchangée avant/après installation : 77 fichiers,
+  1 587 873 octets, aucune entrée ajoutée ou retirée, empreinte d'inventaire
+  SHA-256 identique
+  `3b64b07d2cb8ee379e8beaec5df56d13b00707a4a2c89ad674423b7778db313e`.
+
 ## Validation de maintenance 2026.1 Beta du 2026-07-28
 
 Périmètre :

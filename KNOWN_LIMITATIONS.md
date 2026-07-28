@@ -65,4 +65,9 @@
 
 ## Statut de la version
 
-La V3.6 reste la base stable de `main`. La 2026.1 Beta est isolée dans la branche `2026.1`, avec une identité d'installation et un profil distincts ; aucune Release GitHub ni fusion dans `main` n'est effectuée automatiquement. Dante Config Editor reste un outil tiers non officiel Audinate. Toujours travailler sur une copie, lire le rapport avant/après et valider les structures de preset importantes dans Dante Controller avant une utilisation terrain.
+La V3.6 reste la base stable de `main`. La 2026.1 Beta est isolée dans la
+branche `2026.1`, avec une identité d'installation, un profil et une
+prérelease GitHub distincts. Dante Config Editor reste un outil tiers non
+officiel Audinate. Toujours travailler sur une copie, lire le rapport
+avant/après et valider les structures de preset importantes dans Dante
+Controller avant une utilisation terrain.
