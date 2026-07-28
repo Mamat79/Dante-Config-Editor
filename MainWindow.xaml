@@ -121,6 +121,32 @@
             </Style.Triggers>
         </Style>
 
+        <Style TargetType="{x:Type Menu}">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+        </Style>
+
+        <Style TargetType="{x:Type MenuItem}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+            <Setter Property="Padding" Value="9,6" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+
+        <Style x:Key="AtomicSequenceButtonStyle"
+               TargetType="{x:Type Button}"
+               BasedOn="{StaticResource SecondaryButtonStyle}">
+            <Setter Property="MinWidth" Value="128" />
+            <Setter Property="MinHeight" Value="58" />
+            <Setter Property="Margin" Value="6" />
+            <Setter Property="Padding" Value="16,10" />
+            <Setter Property="Background" Value="#374151" />
+            <Setter Property="BorderBrush" Value="#6B7280" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+
         <!-- Commande d'entraînement dessinée en XAML, sans image externe. -->
         <Style x:Key="AtomicButtonStyle"
                TargetType="{x:Type Button}"
@@ -155,28 +181,18 @@
                             <Ellipse x:Name="AtomicFace"
                                      Width="92"
                                      Height="92"
+                                     Fill="{TemplateBinding Background}"
                                      Stroke="#7F0B0B"
-                                     StrokeThickness="3">
-                                <Ellipse.Fill>
-                                    <RadialGradientBrush Center="0.35,0.25"
-                                                         GradientOrigin="0.32,0.2"
-                                                         RadiusX="0.78"
-                                                         RadiusY="0.78">
-                                        <GradientStop Color="#FF6B5E" Offset="0" />
-                                        <GradientStop Color="#F32121" Offset="0.45" />
-                                        <GradientStop Color="#A60000" Offset="1" />
-                                    </RadialGradientBrush>
-                                </Ellipse.Fill>
-                            </Ellipse>
+                                     StrokeThickness="3" />
                             <StackPanel HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         IsHitTestVisible="False">
-                                <TextBlock Text="ATOMIC"
+                                <TextBlock Text="3"
                                            Foreground="#FFF4F4"
                                            FontSize="9"
                                            FontWeight="SemiBold"
                                            TextAlignment="Center" />
-                                <TextBlock Text="BOMB"
+                                <TextBlock Text="FIRE"
                                            Foreground="White"
                                            FontSize="19"
                                            FontWeight="Black"
@@ -478,11 +494,150 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
+
+                <Menu x:Name="ApplicationMenu"
+                      Grid.Row="0"
+                      Margin="-8,-6,-8,10"
+                      Padding="2"
+                      Background="Transparent"
+                      Foreground="{DynamicResource TextBrush}"
+                      AutomationProperties.Name="Menu principal">
+                    <MenuItem Header="Fichier">
+                        <MenuItem Header="Nouveau projet"
+                                  InputGestureText="Ctrl+N"
+                                  Click="NewProjectButton_Click" />
+                        <MenuItem Header="Ouvrir un XML"
+                                  InputGestureText="Ctrl+O"
+                                  Click="OpenButton_Click" />
+                        <MenuItem Header="Ajouter un XML au projet"
+                                  IsEnabled="{Binding IsEnabled, ElementName=MergeXmlButton}"
+                                  Click="MergeXmlButton_Click" />
+                        <Separator />
+                        <MenuItem Header="Enregistrer"
+                                  InputGestureText="Ctrl+S"
+                                  IsEnabled="{Binding IsEnabled, ElementName=SaveButton}"
+                                  Click="SaveButton_Click" />
+                        <MenuItem Header="Enregistrer sous"
+                                  InputGestureText="Ctrl+Maj+S"
+                                  IsEnabled="{Binding IsEnabled, ElementName=SaveAsButton}"
+                                  Click="SaveAsButton_Click" />
+                        <Separator />
+                        <MenuItem Header="Quitter"
+                                  InputGestureText="Alt+F4"
+                                  Click="ExitMenuItem_Click" />
+                    </MenuItem>
+
+                    <MenuItem Header="Édition">
+                        <MenuItem Header="Annuler"
+                                  InputGestureText="Ctrl+Z"
+                                  IsEnabled="{Binding IsEnabled, ElementName=UndoLastButton}"
+                                  Click="UndoLastButton_Click" />
+                        <MenuItem Header="Rétablir"
+                                  InputGestureText="Ctrl+Y"
+                                  IsEnabled="{Binding IsEnabled, ElementName=RedoButton}"
+                                  Click="RedoButton_Click" />
+                        <Separator />
+                        <MenuItem Header="Annuler les changements non enregistrés"
+                                  IsEnabled="{Binding IsEnabled, ElementName=RevertButton}"
+                                  Click="RevertButton_Click" />
+                    </MenuItem>
+
+                    <MenuItem Header="Machines">
+                        <MenuItem Header="Ouvrir la banque de machines"
+                                  Click="OpenMachineBankButton_Click" />
+                        <MenuItem Header="Ajouter depuis la banque"
+                                  IsEnabled="{Binding IsEnabled, ElementName=AddDeviceFromBankButton}"
+                                  Click="AddDeviceFromBankButton_Click" />
+                        <Separator />
+                        <MenuItem Header="Dupliquer la machine sélectionnée"
+                                  IsEnabled="{Binding IsEnabled, ElementName=DuplicateDeviceButton}"
+                                  Click="DuplicateDeviceButton_Click" />
+                        <MenuItem Header="Enregistrer la machine dans la banque"
+                                  IsEnabled="{Binding IsEnabled, ElementName=SaveDeviceToBankButton}"
+                                  Click="SaveDeviceToBankButton_Click" />
+                        <MenuItem Header="Supprimer la machine sélectionnée"
+                                  IsEnabled="{Binding IsEnabled, ElementName=DeleteDeviceButton}"
+                                  Click="DeleteDeviceButton_Click" />
+                    </MenuItem>
+
+                    <MenuItem Header="Affichage">
+                        <MenuItem x:Name="NavigationMenuItem"
+                                  Header="Navigation"
+                                  IsCheckable="True"
+                                  IsChecked="True"
+                                  Click="NavigationMenuItem_Click" />
+                        <MenuItem x:Name="InspectorMenuItem"
+                                  Header="Inspecteur"
+                                  IsCheckable="True"
+                                  IsChecked="True"
+                                  Click="InspectorMenuItem_Click" />
+                        <MenuItem x:Name="SettingsPanelsMenuItem"
+                                  Header="Réglages de la page Machines"
+                                  IsCheckable="True"
+                                  IsChecked="True"
+                                  Click="ToggleConfigurationEditorsButton_Click" />
+                        <Separator />
+                        <MenuItem Header="Vue d'ensemble"
+                                  Tag="Overview"
+                                  Click="NavigateMenuItem_Click" />
+                        <MenuItem Header="Machines"
+                                  Tag="Machines"
+                                  Click="NavigateMenuItem_Click" />
+                        <MenuItem Header="Patch"
+                                  Tag="Patch"
+                                  Click="NavigateMenuItem_Click" />
+                        <MenuItem Header="Banque de machines"
+                                  Tag="DeviceLibrary"
+                                  Click="NavigateMenuItem_Click" />
+                        <MenuItem Header="Import / Export"
+                                  Tag="ImportExport"
+                                  Click="NavigateMenuItem_Click" />
+                        <Separator />
+                        <MenuItem x:Name="DarkThemeMenuItem"
+                                  Header="Thème sombre"
+                                  IsCheckable="True"
+                                  IsChecked="True"
+                                  Click="DarkThemeMenuItem_Click" />
+                    </MenuItem>
+
+                    <MenuItem Header="Outils">
+                        <MenuItem Header="Centre de validation"
+                                  Tag="Validation"
+                                  Click="NavigateMenuItem_Click" />
+                        <MenuItem Header="Historique"
+                                  Tag="History"
+                                  Click="NavigateMenuItem_Click" />
+                        <MenuItem Header="Ouvrir les journaux"
+                                  Click="OpenDiagnosticLogsButton_Click" />
+                        <Separator />
+                        <MenuItem Header="Atomic Bomb"
+                                  Tag="AdvancedTools"
+                                  Click="NavigateMenuItem_Click" />
+                    </MenuItem>
+
+                    <MenuItem Header="Aide">
+                        <MenuItem Header="Démarrage rapide"
+                                  Click="OpenQuickStartButton_Click" />
+                        <MenuItem Header="Notice complète"
+                                  Click="OpenFullNoticeButton_Click" />
+                        <MenuItem Header="Notes de version"
+                                  Click="OpenReleaseNotesMenuItem_Click" />
+                        <Separator />
+                        <MenuItem Header="Projet GitHub"
+                                  Click="OpenGitHubMenuItem_Click" />
+                        <MenuItem Header="Soutenir DCE"
+                                  Click="SupportDceButton_Click" />
+                        <Separator />
+                        <MenuItem Header="À propos de DCE"
+                                  Click="AboutMenuItem_Click" />
+                    </MenuItem>
+                </Menu>
 
                 <!-- Le titre et l'état restent sur une ligne bornée. Le chemin est
                      tronqué plutôt que replié, afin de ne jamais agrandir la barre. -->
-                <Grid Grid.Row="0">
+                <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
@@ -549,7 +704,7 @@
 
                  <!-- Les commandes passent sur une seconde ligne si la fenêtre est
                       étroite, sans masquer les onglets ni le tableau des machines. -->
-                 <WrapPanel Grid.Row="1" Margin="0,10,0,0" VerticalAlignment="Center">
+                 <WrapPanel Grid.Row="2" Margin="0,10,0,0" VerticalAlignment="Center">
                      <Button x:Name="NavigationToggleButton"
                              Content="Navigation"
                              Style="{StaticResource SecondaryButtonStyle}"
@@ -2404,68 +2559,269 @@
                 </TabItem>
 
                 <TabItem x:Name="AtomicBombTab" Header="Atomic Bomb">
-                    <Grid Margin="0,12,0,0">
-                        <Border MinWidth="920"
-                                MaxWidth="1120"
-                                MinHeight="520"
-                                Padding="34"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Background="#2B1114"
-                                BorderBrush="#8B1A1A"
-                                BorderThickness="2"
-                                CornerRadius="6">
-                            <StackPanel HorizontalAlignment="Center">
-                                <TextBlock Text="GÉNÉRATEUR D'EXPÉRIENCE HORRIBLE (MAIS PÉDAGOGIQUE)"
-                                           Foreground="White"
-                                           FontSize="19"
-                                           FontWeight="Bold"
-                                           TextAlignment="Center" />
-                                <TextBlock Margin="0,8,0,12"
-                                           MaxWidth="940"
-                                           Foreground="#FECACA"
-                                           TextWrapping="Wrap"
-                                           TextAlignment="Center"
-                                           Text="Composez le pire réseau de formation possible, sans toucher au vrai fichier. Décochez simplement ce que vous souhaitez épargner." />
-                                <Border Margin="0,0,0,14"
-                                        Padding="14,10"
-                                        Background="#3A171B"
-                                        BorderBrush="#7F1D1D"
-                                        BorderThickness="1"
-                                        CornerRadius="4">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Auto">
+                        <Grid MinWidth="980"
+                              MaxWidth="1120"
+                              HorizontalAlignment="Left"
+                              Margin="18">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Border Grid.Row="0"
+                                    Padding="20,16"
+                                    Background="#2B1114"
+                                    BorderBrush="#8B1A1A"
+                                    BorderThickness="1"
+                                    CornerRadius="5">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
                                     <StackPanel>
-                                        <TextBlock Text="Que faut-il saboter ?"
+                                        <TextBlock Text="ATOMIC BOMB"
                                                    Foreground="White"
-                                                   FontWeight="SemiBold"
+                                                   FontSize="24"
+                                                   FontWeight="Bold" />
+                                        <TextBlock Margin="0,4,20,0"
+                                                   MaxWidth="760"
+                                                   Foreground="#FECACA"
+                                                   TextWrapping="Wrap"
+                                                   Text="Générateur d'expérience horrible, mais pédagogique. Le projet chargé devient une copie d'exercice volontairement chaotique." />
+                                    </StackPanel>
+                                    <Border Grid.Column="1"
+                                            Padding="14,8"
+                                            VerticalAlignment="Center"
+                                            Background="#111827"
+                                            BorderBrush="#64748B"
+                                            BorderThickness="1"
+                                            CornerRadius="4">
+                                        <TextBlock x:Name="AtomicPanelStatusTextBlock"
+                                                   Text="SAFE · Tournez la clé"
+                                                   Foreground="#94A3B8"
+                                                   FontWeight="Bold"
                                                    TextAlignment="Center" />
-                                        <UniformGrid Columns="2" Margin="0,8,0,0">
-                                            <CheckBox x:Name="AtomicDeviceNamesCheckBox" Content="Noms des machines" IsChecked="True" Foreground="White" Margin="8,3" />
-                                            <CheckBox x:Name="AtomicTxLabelsCheckBox" Content="Labels des canaux TX" IsChecked="True" Foreground="White" Margin="8,3" />
-                                            <CheckBox x:Name="AtomicRxLabelsCheckBox" Content="Labels des canaux RX" IsChecked="True" Foreground="White" Margin="8,3" />
-                                            <CheckBox x:Name="AtomicPatchesCheckBox" Content="Patchs / subscriptions" IsChecked="True" Foreground="White" Margin="8,3" />
-                                            <CheckBox x:Name="AtomicNetworkModeCheckBox" Content="Modes réseau" IsChecked="True" Foreground="White" Margin="8,3" />
-                                            <CheckBox x:Name="AtomicPreferredMasterCheckBox" Content="Preferred Master" IsChecked="True" Foreground="White" Margin="8,3" />
-                                            <CheckBox x:Name="AtomicLatencyCheckBox" Content="Latences" IsChecked="True" Foreground="White" Margin="8,3" />
-                                            <CheckBox x:Name="AtomicSampleRateCheckBox" Content="Fréquences d'échantillonnage" IsChecked="True" Foreground="White" Margin="8,3" />
-                                            <CheckBox x:Name="AtomicEncodingCheckBox" Content="Bits par échantillon" IsChecked="True" Foreground="White" Margin="8,3" />
-                                            <CheckBox x:Name="AtomicIpCheckBox" Content="IP principales" IsChecked="True" Foreground="White" Margin="8,3" />
+                                    </Border>
+                                </Grid>
+                            </Border>
+
+                            <Grid Grid.Row="1"
+                                  Margin="0,12,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="440" />
+                                    <ColumnDefinition Width="12" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Border x:Name="AtomicOptionsBorder"
+                                        Grid.Column="0"
+                                        Padding="18"
+                                        Background="#24181D"
+                                        BorderBrush="#5F3036"
+                                        BorderThickness="1"
+                                        CornerRadius="5">
+                                    <StackPanel>
+                                        <TextBlock Text="PÉRIMÈTRE DE L'EXERCICE"
+                                                   Foreground="White"
+                                                   FontSize="16"
+                                                   FontWeight="Bold" />
+                                        <TextBlock Margin="0,4,0,12"
+                                                   Foreground="#FECACA"
+                                                   TextWrapping="Wrap"
+                                                   Text="Décochez les catégories qui doivent rester intactes." />
+                                        <UniformGrid Columns="2">
+                                            <CheckBox x:Name="AtomicDeviceNamesCheckBox" Content="Noms des machines" IsChecked="True" Foreground="White" Margin="4,5" />
+                                            <CheckBox x:Name="AtomicTxLabelsCheckBox" Content="Labels des canaux TX" IsChecked="True" Foreground="White" Margin="4,5" />
+                                            <CheckBox x:Name="AtomicRxLabelsCheckBox" Content="Labels des canaux RX" IsChecked="True" Foreground="White" Margin="4,5" />
+                                            <CheckBox x:Name="AtomicPatchesCheckBox" Content="Patchs / subscriptions" IsChecked="True" Foreground="White" Margin="4,5" />
+                                            <CheckBox x:Name="AtomicNetworkModeCheckBox" Content="Modes réseau" IsChecked="True" Foreground="White" Margin="4,5" />
+                                            <CheckBox x:Name="AtomicPreferredMasterCheckBox" Content="Preferred Master" IsChecked="True" Foreground="White" Margin="4,5" />
+                                            <CheckBox x:Name="AtomicLatencyCheckBox" Content="Latences" IsChecked="True" Foreground="White" Margin="4,5" />
+                                            <CheckBox x:Name="AtomicSampleRateCheckBox" Content="Fréquences d'échantillonnage" IsChecked="True" Foreground="White" Margin="4,5" />
+                                            <CheckBox x:Name="AtomicEncodingCheckBox" Content="Bits par échantillon" IsChecked="True" Foreground="White" Margin="4,5" />
+                                            <CheckBox x:Name="AtomicIpCheckBox" Content="IP principales" IsChecked="True" Foreground="White" Margin="4,5" />
                                         </UniformGrid>
                                     </StackPanel>
                                 </Border>
-                                <Button x:Name="AtomicChaosButton"
-                                        HorizontalAlignment="Center"
-                                        Content="ATOMIC BOMB"
-                                        Style="{StaticResource AtomicButtonStyle}"
-                                        Click="AtomicChaosButton_Click"
-                                        ToolTip="Crée un exercice hors ligne en mélangeant uniquement les catégories cochées. Trois confirmations sont requises." />
-                                <TextBlock Margin="0,12,0,0"
-                                           Foreground="#FCA5A5"
+
+                                <Border Grid.Column="2"
+                                        Padding="18"
+                                        Background="#111827"
+                                        BorderBrush="#64748B"
+                                        BorderThickness="1"
+                                        CornerRadius="5">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="PUPITRE DE COMMANDE"
+                                                   Foreground="#CBD5E1"
+                                                   FontSize="16"
+                                                   FontWeight="Bold" />
+
+                                        <Grid Grid.Row="1"
+                                              Margin="0,14,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="170" />
+                                                <ColumnDefinition Width="14" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <StackPanel Grid.Column="0"
+                                                        VerticalAlignment="Center">
+                                                <TextBlock Text="AUTORISATION"
+                                                           Foreground="#94A3B8"
+                                                           FontWeight="SemiBold"
+                                                           TextAlignment="Center"
+                                                           Margin="0,0,0,8" />
+                                                <Button x:Name="AtomicKeyButton"
+                                                        ContentTemplate="{x:Null}"
+                                                        Style="{StaticResource AtomicSequenceButtonStyle}"
+                                                        Click="AtomicKeyButton_Click"
+                                                        ToolTip="Tourne la clé de 90 degrés et ouvre automatiquement le capot. Un second clic remet le pupitre en sécurité."
+                                                        AutomationProperties.Name="Clé de sécurité Atomic Bomb">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="54" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid x:Name="AtomicKeyVisual"
+                                                              Width="48"
+                                                              Height="48"
+                                                              VerticalAlignment="Center"
+                                                              RenderTransformOrigin="0.5,0.5">
+                                                            <Grid.RenderTransform>
+                                                                <RotateTransform x:Name="AtomicKeyRotateTransform"
+                                                                                 Angle="0" />
+                                                            </Grid.RenderTransform>
+                                                            <Ellipse Width="46"
+                                                                     Height="46"
+                                                                     Fill="#111827"
+                                                                     Stroke="#94A3B8"
+                                                                     StrokeThickness="2" />
+                                                            <Rectangle Width="12"
+                                                                       Height="34"
+                                                                       RadiusX="4"
+                                                                       RadiusY="4"
+                                                                       Fill="#D1D5DB"
+                                                                       Stroke="#4B5563"
+                                                                       StrokeThickness="1" />
+                                                            <Rectangle Width="20"
+                                                                       Height="8"
+                                                                       Margin="0,0,0,20"
+                                                                       RadiusX="3"
+                                                                       RadiusY="3"
+                                                                       Fill="#E5E7EB" />
+                                                            <Ellipse Width="7"
+                                                                     Height="7"
+                                                                     Fill="#374151" />
+                                                        </Grid>
+                                                        <StackPanel Grid.Column="1"
+                                                                    Margin="8,0,0,0"
+                                                                    VerticalAlignment="Center">
+                                                            <TextBlock x:Name="AtomicKeyTitleTextBlock"
+                                                                       Text="1. CLÉ"
+                                                                       Foreground="White"
+                                                                       FontWeight="Bold"
+                                                                       TextAlignment="Left" />
+                                                            <TextBlock x:Name="AtomicKeyPositionTextBlock"
+                                                                       Text="OFF · verticale"
+                                                                       Foreground="#CBD5E1"
+                                                                       FontSize="11"
+                                                                       TextAlignment="Left" />
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </Button>
+                                                <Button x:Name="AtomicPanelResetButton"
+                                                        Content="RETOUR SAFE"
+                                                        Style="{StaticResource SecondaryButtonStyle}"
+                                                        Margin="6,6,6,0"
+                                                        Click="AtomicPanelResetButton_Click"
+                                                        ToolTip="Annule la séquence sans modifier le projet." />
+                                            </StackPanel>
+
+                                            <Grid Grid.Column="2">
+                                                <Border Background="#1F2937"
+                                                        BorderBrush="#475569"
+                                                        BorderThickness="1"
+                                                        CornerRadius="5"
+                                                        Padding="12">
+                                                    <UniformGrid x:Name="AtomicButtonDeck"
+                                                                 Columns="3">
+                                                        <Button x:Name="AtomicArmButton"
+                                                                Content="ARM"
+                                                                MinWidth="108"
+                                                                Style="{StaticResource AtomicSequenceButtonStyle}"
+                                                                IsEnabled="False"
+                                                                Click="AtomicArmButton_Click"
+                                                                ToolTip="Arme la copie de travail sans encore la modifier." />
+                                                        <Button x:Name="AtomicLockButton"
+                                                                Content="LOCK"
+                                                                MinWidth="108"
+                                                                Style="{StaticResource AtomicSequenceButtonStyle}"
+                                                                IsEnabled="False"
+                                                                Click="AtomicLockButton_Click"
+                                                                ToolTip="Verrouille les options choisies et autorise FIRE." />
+                                                        <Button x:Name="AtomicChaosButton"
+                                                                Content="FIRE"
+                                                                Background="#4B1D22"
+                                                                HorizontalAlignment="Center"
+                                                                Style="{StaticResource AtomicButtonStyle}"
+                                                                IsEnabled="False"
+                                                                Click="AtomicChaosButton_Click"
+                                                                ToolTip="Déclenche immédiatement l'exercice hors ligne lorsque ARM et LOCK sont actifs." />
+                                                    </UniformGrid>
+                                                </Border>
+
+                                                <Border x:Name="AtomicSafetyCover"
+                                                        Panel.ZIndex="2"
+                                                        MinHeight="154"
+                                                        Background="#D934171B"
+                                                        BorderBrush="#EF4444"
+                                                        BorderThickness="3"
+                                                        CornerRadius="4"
+                                                        ToolTip="La clé ouvre ce capot et révèle ARM, LOCK et FIRE.">
+                                                    <StackPanel>
+                                                        <TextBlock x:Name="AtomicCoverTitleTextBlock"
+                                                                   Text="2. CAPOT DE SÉCURITÉ"
+                                                                   Foreground="#FECACA"
+                                                                   FontSize="17"
+                                                                   FontWeight="Bold"
+                                                                   TextAlignment="Center" />
+                                                        <TextBlock x:Name="AtomicCoverHintTextBlock"
+                                                                   Text="VERROUILLÉ · tourner la clé pour ouvrir"
+                                                                   Foreground="#FECACA"
+                                                                   TextAlignment="Center"
+                                                                   Margin="0,6,0,0" />
+                                                    </StackPanel>
+                                                </Border>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+
+                            <Border Grid.Row="2"
+                                    Margin="0,12,0,0"
+                                    Padding="14,10"
+                                    Background="#3A171B"
+                                    BorderBrush="#7F1D1D"
+                                    BorderThickness="1"
+                                    CornerRadius="4">
+                                <TextBlock Foreground="#FCA5A5"
+                                           MaxWidth="1040"
                                            FontWeight="SemiBold"
+                                           TextWrapping="Wrap"
                                            TextAlignment="Center"
-                                           Text="Trois confirmations avant le chaos. Le XML original, lui, dort tranquille." />
-                            </StackPanel>
-                        </Border>
-                    </Grid>
+                                           Text="Séquence : tournez la clé de 90° vers la droite pour ouvrir le capot → ARM → LOCK → FIRE. FIRE agit immédiatement, sans dialogue supplémentaire. Le XML original reste intact tant que vous n'écrasez pas volontairement son fichier." />
+                            </Border>
+                        </Grid>
+                    </ScrollViewer>
                 </TabItem>
 
                 <TabItem x:Name="HomeTab" Header="Projet">

@@ -502,9 +502,9 @@ def quick_start(language: str) -> None:
         else "<b>Remember:</b> no real-time control, no Audinate API, and no guarantee for every XML format. Import validation in official tools remains mandatory."
     )
     atomic_note = (
-        "<b>Exercice :</b> Atomic Bomb se trouve dans Outils avancés. Décochez les catégories à épargner, confirmez trois fois, puis utilisez Enregistrer sous pour créer le fichier destiné aux stagiaires. Les identifiants techniques restent protégés."
+        "<b>Exercice :</b> Atomic Bomb se trouve dans Outils avancés. Décochez les catégories à épargner, tournez la clé pour ouvrir automatiquement le capot, puis appuyez sur ARM, LOCK et FIRE. Utilisez ensuite Enregistrer sous pour créer le fichier destiné aux stagiaires. Les identifiants techniques restent protégés."
         if french
-        else "<b>Exercise:</b> Atomic Bomb is located under Advanced tools. Clear categories you want to spare, confirm three times, then use Save as to create the trainee file. Technical identifiers remain protected."
+        else "<b>Exercise:</b> Atomic Bomb is located under Advanced tools. Clear categories you want to spare, turn the key to open the cover automatically, then press ARM, LOCK, and FIRE. Then use Save as to create the trainee file. Technical identifiers remain protected."
     )
     labels_note = (
         "<b>Labels console :</b> choisissez A&H CSV natif - dLive/Avantis, Yamaha ZIP natif - CL/QL ou DMT XLSX/ODS. Les modèles sont inclus. Le CSV générique DCE n'est pas un fichier dLive Director."
@@ -538,7 +538,7 @@ def full_guide(language: str) -> None:
                 "L'import réussi dans Dante Controller constitue la validation finale avant exploitation.",
             ]),
             para("3. Ouvrir un projet", "h1"),
-            para("Cliquez sur Ouvrir XML, sélectionnez le fichier, puis contrôlez les compteurs de machines, canaux TX/RX et patchs actifs. Les XML avec namespace par défaut sont pris en charge. La langue et le thème restent modifiables à tout moment."),
+            para("Cliquez sur Ouvrir XML, sélectionnez le fichier, puis contrôlez les compteurs de machines, canaux TX/RX et patchs actifs. Les XML avec namespace par défaut sont pris en charge. Le premier lancement utilise le thème clair ; le dernier thème et la dernière langue choisis sont ensuite restaurés automatiquement."),
         ]
         beta_page = [
             para("4. Espace de travail 2026.1", "h1"),
@@ -693,7 +693,7 @@ def full_guide(language: str) -> None:
         page5 = [
             para("13. Atomic Bomb : créer un exercice", "h1"),
             *bullets([
-                "Ouvrez Outils avancés puis Atomic Bomb. Décochez les catégories à épargner ; toutes sont sélectionnées par défaut. Trois confirmations détaillent ensuite les conséquences avant toute modification.",
+                "Ouvrez Outils avancés puis Atomic Bomb. Décochez les catégories à épargner ; toutes sont sélectionnées par défaut. Tournez la clé vers la droite : le capot s'ouvre automatiquement. Appuyez ensuite sur ARM, LOCK et FIRE. FIRE applique immédiatement l'exercice, sans dialogue supplémentaire.",
                 "La copie en mémoire reçoit des noms uniques mythologiques, audio ou humoristiques, ainsi qu'un mélange de patchs, modes réseau, Preferred Master, latences, sample rates, encodages et IP principales.",
                 "Les identifiants techniques, namespaces, DNS, passerelles et interfaces secondaires restent protégés.",
                 "Le résumé indique la graine du scénario. L'ensemble s'annule en une seule action et le fichier source n'est jamais écrasé.",
@@ -713,7 +713,7 @@ def full_guide(language: str) -> None:
                 [48, 122],
             ),
             para("15. Tests de non-régression", "h1"),
-            para("La suite 2026.1 exécute 395 tests Core/Windows et 22 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la duplication, la banque de machines, la création de projet, le format .dceproj, les profils XML, les commandes, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch, le soutien facultatif et la cohérence des traductions."),
+            para("La suite 2026.1 exécute 397 tests Core/Windows et 22 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la duplication, la banque de machines, la création de projet, le format .dceproj, les profils XML, les commandes, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch, le soutien facultatif et la cohérence des traductions."),
             para("16. Limites connues", "h1"),
             *bullets([
                 "Aucun pilotage en temps réel et aucune communication avec les appareils.",
@@ -1091,7 +1091,7 @@ def full_guide(language: str) -> None:
             feature_band([
                 ("Centre de validation", "Erreurs, avertissements, formats audio, IP fixes, patchs locaux et chemins XML."),
                 ("Historique", "Modifications, comparaison XML, journaux, diagnostic et notices."),
-                ("Outils avancés", "Atomic Bomb, catégories configurables et trois confirmations obligatoires."),
+                ("Outils avancés", "Atomic Bomb, catégories configurables et pupitre clé, capot, ARM, LOCK, FIRE."),
             ]),
             Spacer(1, 3 * mm),
             *bullets([
@@ -1106,8 +1106,8 @@ def full_guide(language: str) -> None:
             *screenshot(
                 language,
                 "atomic-bomb",
-                "Décochez les catégories à préserver. Trois confirmations sont exigées avant de modifier la copie en mémoire.",
-                crop=(450, 300, 1375, 840),
+                "Décochez les catégories à préserver. Tournez la clé vers la droite pour ouvrir automatiquement le capot, puis appuyez sur ARM, LOCK et FIRE. FIRE modifie immédiatement la copie en mémoire, sans dialogue supplémentaire.",
+                crop=(275, 200, 1405, 605),
                 maximum_height=100,
             ),
             *bullets([
@@ -1139,7 +1139,7 @@ def full_guide(language: str) -> None:
                 "A successful import into Dante Controller is the final validation before operation.",
             ]),
             para("3. Open a project", "h1"),
-            para("Click Open XML, choose the file, then review device, TX/RX channel, and active subscription counts. XML files with a default namespace are supported. Language and theme can be changed at any time."),
+            para("Click Open XML, choose the file, then review device, TX/RX channel, and active subscription counts. XML files with a default namespace are supported. The first launch uses the light theme; the last selected theme and language are then restored automatically."),
         ]
         beta_page = [
             para("4. 2026.1 workspace", "h1"),
@@ -1294,7 +1294,7 @@ def full_guide(language: str) -> None:
         page5 = [
             para("13. Atomic Bomb: create an exercise", "h1"),
             *bullets([
-                "Open Advanced tools, then Atomic Bomb. Clear the categories you want to spare; all are selected by default. Three confirmations describe the consequences before any change.",
+                "Open Advanced tools, then Atomic Bomb. Clear the categories you want to spare; all are selected by default. Turn the key to the right: the cover opens automatically. Then press ARM, LOCK, and FIRE in order. FIRE applies the exercise immediately, with no additional dialog.",
                 "The in-memory copy receives unique mythological, audio-themed, or playful names plus a mixture of subscriptions, network modes, Preferred Master states, latencies, sample rates, encodings, and primary IP settings.",
                 "Technical identifiers, namespaces, DNS, gateways, and secondary interfaces remain protected.",
                 "The summary displays the scenario seed. The entire operation is one undo step and the source file is never overwritten.",
@@ -1314,7 +1314,7 @@ def full_guide(language: str) -> None:
                 [48, 122],
             ),
             para("15. Regression tests", "h1"),
-            para("The 2026.1 suite runs 395 Core/Windows tests and 22 headless Mac tests. Coverage includes XML guards, save and recovery, IPv4 interfaces, subscriptions, large presets, duplication, the device bank, project creation, .dceproj packages, XML profiles, commands, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, optional support, and translation consistency."),
+            para("The 2026.1 suite runs 397 Core/Windows tests and 22 headless Mac tests. Coverage includes XML guards, save and recovery, IPv4 interfaces, subscriptions, large presets, duplication, the device bank, project creation, .dceproj packages, XML profiles, commands, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, optional support, and translation consistency."),
             para("16. Known limitations", "h1"),
             *bullets([
                 "No real-time Dante control and no communication with devices.",
@@ -1692,7 +1692,7 @@ def full_guide(language: str) -> None:
             feature_band([
                 ("Validation center", "Errors, warnings, audio formats, static IPs, local subscriptions, and XML paths."),
                 ("History", "Changes, XML comparison, logs, diagnostics, and user guides."),
-                ("Advanced tools", "Atomic Bomb, configurable categories, and three required confirmations."),
+                ("Advanced tools", "Atomic Bomb, configurable categories, and a key, cover, ARM, LOCK, FIRE panel."),
             ]),
             Spacer(1, 3 * mm),
             *bullets([
@@ -1707,8 +1707,8 @@ def full_guide(language: str) -> None:
             *screenshot(
                 language,
                 "atomic-bomb",
-                "Clear categories that must be preserved. Three confirmations are required before changing the in-memory copy.",
-                crop=(450, 300, 1375, 840),
+                "Clear categories that must be preserved. Turn the key to the right to open the cover automatically, then press ARM, LOCK, and FIRE. FIRE immediately changes the in-memory copy, with no additional dialog.",
+                crop=(275, 200, 1405, 605),
                 maximum_height=100,
             ),
             *bullets([

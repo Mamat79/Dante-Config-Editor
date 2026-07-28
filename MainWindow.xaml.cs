@@ -25,6 +25,15 @@ namespace DanteConfigEditor;
 
 public partial class MainWindow : Window
 {
+    private enum AtomicPanelStage
+    {
+        Safe,
+        CoverOpen,
+        Armed,
+        Locked,
+        Fired
+    }
+
     private string AllSendersItem => T("Filter.AllSenders");
     private string AllReceiversItem => T("Filter.AllReceivers");
 
@@ -124,12 +133,14 @@ public partial class MainWindow : Window
     private PatchWorkspaceView? _easyPatchWorkspace;
     private UnifiedPatchSession? _unifiedPatchSession;
     private PatchWorkspaceDisplayMode _patchWorkspaceDisplayMode = PatchWorkspaceDisplayMode.Matrix;
+    private AtomicPanelStage _atomicPanelStage = AtomicPanelStage.Safe;
     private UiLanguage _language = UiLanguage.French;
     private bool _editModeEnabled;
 
     // Évite que les changements de sélection déclenchés par RefreshAll relancent
     // eux-mêmes des actions utilisateur.
     private bool _refreshingUi;
+    private bool _loadingThemePreference;
     private bool _committingPatchInlineRename;
     private string? _patchSeriesDeviceName;
     private DanteChannelKind? _patchSeriesKind;
@@ -310,8 +321,14 @@ public partial class MainWindow : Window
         PendingPatchGrid.ItemsSource = _pendingPatchRows;
         GlobalDaisychainRadioButton.IsChecked = true;
         DaisychainRadioButton.IsChecked = true;
-        SetTheme(useLightTheme: false);
+        bool useLightTheme = ThemeSettingsService.LoadUseLightTheme();
+        _loadingThemePreference = true;
+        ThemeToggleButton.IsChecked = useLightTheme;
+        _loadingThemePreference = false;
+        SetTheme(useLightTheme);
+        DarkThemeMenuItem.IsChecked = !useLightTheme;
         ApplyLanguageToInterface();
+        ResetAtomicControlPanel();
         SetNavigationExpanded(true);
         SetInspectorExpanded(true);
         RefreshRecentFiles();
@@ -1807,9 +1824,15 @@ public partial class MainWindow : Window
         SetNavigationExpanded(!_navigationExpanded);
     }
 
+    private void NavigationMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        SetNavigationExpanded(NavigationMenuItem.IsChecked);
+    }
+
     private void SetNavigationExpanded(bool expanded)
     {
         _navigationExpanded = expanded;
+        NavigationMenuItem.IsChecked = _navigationExpanded;
         NavigationColumn.Width = _navigationExpanded
             ? new GridLength((double)FindResource("ShellNavigationExpandedWidth"))
             : new GridLength(0);
@@ -1833,9 +1856,15 @@ public partial class MainWindow : Window
         SetInspectorExpanded(!_inspectorExpanded);
     }
 
+    private void InspectorMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        SetInspectorExpanded(InspectorMenuItem.IsChecked);
+    }
+
     private void SetInspectorExpanded(bool expanded)
     {
         _inspectorExpanded = expanded;
+        InspectorMenuItem.IsChecked = _inspectorExpanded;
         InspectorColumn.Width = _inspectorExpanded
             ? new GridLength((double)FindResource("ShellInspectorExpandedWidth"))
             : new GridLength(0);
@@ -1863,6 +1892,7 @@ public partial class MainWindow : Window
     private void UpdateConfigurationEditorsToggleText()
     {
         bool collapsed = ConfigurationEditorsGrid.Visibility == Visibility.Collapsed;
+        SettingsPanelsMenuItem.IsChecked = !collapsed;
         string action = collapsed ? "Afficher les réglages" : "Masquer les réglages";
         string helpText = collapsed
             ? "Affiche les panneaux de réglage de la configuration."
@@ -1875,6 +1905,84 @@ public partial class MainWindow : Window
         AutomationProperties.SetHelpText(
             ToggleConfigurationEditorsButton,
             LocalizeLiteral(helpText));
+    }
+
+    private void NavigateMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem { Tag: string sectionName }
+            && Enum.TryParse(sectionName, ignoreCase: false, out WorkspaceSection section))
+        {
+            _workspaceNavigation.NavigateTo(section);
+        }
+    }
+
+    private void DarkThemeMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        // Le ToggleButton historique est coché en thème clair.
+        ThemeToggleButton.IsChecked = !DarkThemeMenuItem.IsChecked;
+    }
+
+    private void OpenReleaseNotesMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        OpenBundledDocument(
+            _language == UiLanguage.English
+                ? "RELEASE_NOTES_EN.md"
+                : "RELEASE_NOTES.md");
+    }
+
+    private void OpenGitHubMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo("https://github.com/Mamat79/Dante-Config-Editor")
+            {
+                UseShellExecute = true
+            });
+        }
+        catch (Exception exception)
+        {
+            ShowError(
+                _language == UiLanguage.English
+                    ? "Unable to open GitHub"
+                    : "Ouverture de GitHub impossible",
+                exception);
+        }
+    }
+
+    private void AboutMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        string message = _language == UiLanguage.English
+            ? """
+              Dante Config Editor 2026.1 Beta
+
+              Offline Dante Controller XML editor.
+              Unofficial third-party project, not affiliated with Audinate.
+
+              By Mamat
+              et ses agents
+              -------[]--
+              """
+            : """
+              Dante Config Editor 2026.1 Beta
+
+              Éditeur hors ligne de fichiers XML Dante Controller.
+              Projet tiers non officiel, sans affiliation avec Audinate.
+
+              By Mamat
+              et ses agents
+              -------[]--
+              """;
+        MessageBox.Show(
+            this,
+            message,
+            _language == UiLanguage.English ? "About DCE" : "À propos de DCE",
+            MessageBoxButton.OK,
+            MessageBoxImage.Information);
+    }
+
+    private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
     }
 
     private void ImportantWarningsDetailsButton_Click(object sender, RoutedEventArgs e)
@@ -3456,9 +3564,131 @@ public partial class MainWindow : Window
         return string.IsNullOrWhiteSpace(safe) ? "device" : safe;
     }
 
+    private void AtomicKeyButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_atomicPanelStage == AtomicPanelStage.Safe)
+        {
+            _atomicPanelStage = AtomicPanelStage.CoverOpen;
+            UpdateAtomicControlPanelState();
+            return;
+        }
+
+        if (_atomicPanelStage < AtomicPanelStage.Locked)
+        {
+            ResetAtomicControlPanel();
+        }
+    }
+
+    private void AtomicArmButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_atomicPanelStage != AtomicPanelStage.CoverOpen)
+        {
+            return;
+        }
+
+        _atomicPanelStage = AtomicPanelStage.Armed;
+        UpdateAtomicControlPanelState();
+    }
+
+    private void AtomicLockButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_atomicPanelStage != AtomicPanelStage.Armed)
+        {
+            return;
+        }
+
+        _atomicPanelStage = AtomicPanelStage.Locked;
+        UpdateAtomicControlPanelState();
+    }
+
+    private void AtomicPanelResetButton_Click(object sender, RoutedEventArgs e)
+    {
+        ResetAtomicControlPanel();
+    }
+
+    private void ResetAtomicControlPanel()
+    {
+        _atomicPanelStage = AtomicPanelStage.Safe;
+        UpdateAtomicControlPanelState();
+    }
+
+    private void UpdateAtomicControlPanelState()
+    {
+        bool projectAvailable = _project is not null
+            && _projectSession.HasProject
+            && _projectSession.Profile.Capabilities.AllowsEditing;
+        bool coverOpen = _atomicPanelStage >= AtomicPanelStage.CoverOpen;
+        bool armed = _atomicPanelStage >= AtomicPanelStage.Armed;
+        bool locked = _atomicPanelStage >= AtomicPanelStage.Locked;
+        bool fired = _atomicPanelStage == AtomicPanelStage.Fired;
+
+        AtomicKeyButton.IsEnabled = projectAvailable && _atomicPanelStage < AtomicPanelStage.Locked;
+        AtomicKeyRotateTransform.Angle = coverOpen ? 90 : 0;
+        AtomicKeyTitleTextBlock.Text = _language == UiLanguage.English ? "1. KEY" : "1. CLÉ";
+        AtomicKeyPositionTextBlock.Text = coverOpen
+            ? (_language == UiLanguage.English ? "ON · right" : "ON · droite")
+            : (_language == UiLanguage.English ? "OFF · vertical" : "OFF · verticale");
+        AtomicKeyButton.Background = new SolidColorBrush(
+            _atomicPanelStage == AtomicPanelStage.Safe
+                ? Color.FromRgb(55, 65, 81)
+                : Color.FromRgb(217, 119, 6));
+
+        AtomicSafetyCover.Visibility = coverOpen ? Visibility.Collapsed : Visibility.Visible;
+        AtomicCoverTitleTextBlock.Text = _language == UiLanguage.English
+            ? "2. SAFETY COVER"
+            : "2. CAPOT DE SÉCURITÉ";
+        AtomicCoverHintTextBlock.Text = _language == UiLanguage.English
+            ? "LOCKED · turn the key to open"
+            : "VERROUILLÉ · tourner la clé pour ouvrir";
+
+        AtomicArmButton.IsEnabled = projectAvailable
+            && _atomicPanelStage == AtomicPanelStage.CoverOpen;
+        AtomicLockButton.IsEnabled = projectAvailable
+            && _atomicPanelStage == AtomicPanelStage.Armed;
+        AtomicChaosButton.IsEnabled = projectAvailable
+            && _atomicPanelStage == AtomicPanelStage.Locked;
+        AtomicArmButton.Background = new SolidColorBrush(
+            armed ? Color.FromRgb(217, 119, 6) : Color.FromRgb(55, 65, 81));
+        AtomicLockButton.Background = new SolidColorBrush(
+            locked ? Color.FromRgb(37, 99, 235) : Color.FromRgb(55, 65, 81));
+        AtomicChaosButton.Background = new SolidColorBrush(
+            fired ? Color.FromRgb(239, 68, 68) : Color.FromRgb(75, 29, 34));
+
+        AtomicOptionsBorder.IsEnabled = !locked;
+        AtomicPanelResetButton.IsEnabled = _atomicPanelStage != AtomicPanelStage.Safe;
+        AtomicPanelResetButton.Content = _language == UiLanguage.English
+            ? "RETURN TO SAFE"
+            : "RETOUR SAFE";
+        AtomicPanelStatusTextBlock.Text = _atomicPanelStage switch
+        {
+            AtomicPanelStage.Safe => _language == UiLanguage.English
+                ? "SAFE · Turn the key"
+                : "SAFE · Tournez la clé",
+            AtomicPanelStage.CoverOpen => _language == UiLanguage.English
+                ? "COVER OPEN · Press ARM"
+                : "CAPOT OUVERT · Appuyez sur ARM",
+            AtomicPanelStage.Armed => _language == UiLanguage.English
+                ? "ARMED · Press LOCK"
+                : "ARMÉ · Appuyez sur LOCK",
+            AtomicPanelStage.Locked => _language == UiLanguage.English
+                ? "LOCKED · FIRE will execute immediately"
+                : "VERROUILLÉ · FIRE exécutera immédiatement",
+            _ => _language == UiLanguage.English ? "FIRED" : "TIR DÉCLENCHÉ"
+        };
+        AtomicPanelStatusTextBlock.Foreground = new SolidColorBrush(
+            fired
+                ? Color.FromRgb(248, 113, 113)
+                : locked
+                    ? Color.FromRgb(147, 197, 253)
+                    : armed
+                        ? Color.FromRgb(253, 186, 116)
+                        : Color.FromRgb(148, 163, 184));
+    }
+
     private void AtomicChaosButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!EnsureProjectLoaded())
+        if (_atomicPanelStage != AtomicPanelStage.Locked
+            || !EnsureProjectLoaded())
         {
             return;
         }
@@ -3467,15 +3697,13 @@ public partial class MainWindow : Window
         if (!options.HasSelection)
         {
             MessageBox.Show(this, T("Dialog.AtomicChaosNothingSelected"), T("Dialog.AtomicChaosTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
+            ResetAtomicControlPanel();
             return;
         }
 
-        if (!ConfirmAtomicChaosStage("Dialog.AtomicChaosFirst")
-            || !ConfirmAtomicChaosStage("Dialog.AtomicChaosSecond")
-            || !ConfirmAtomicChaosStage("Dialog.AtomicChaosThird"))
-        {
-            return;
-        }
+        _atomicPanelStage = AtomicPanelStage.Fired;
+        UpdateAtomicControlPanelState();
+        Dispatcher.Invoke(DispatcherPriority.Render, new Action(() => { }));
 
         AtomicChaosResult? result = null;
         bool applied = RunProjectAction(
@@ -3483,6 +3711,7 @@ public partial class MainWindow : Window
             () => result = _project!.ApplyAtomicChaos(options));
         if (!applied || result is null)
         {
+            ResetAtomicControlPanel();
             return;
         }
 
@@ -3498,6 +3727,7 @@ public partial class MainWindow : Window
         AddLog(summary);
         SaveSummaryTextBox.Text = summary + Environment.NewLine + Environment.NewLine + _project!.BuildCompatibilityReport(_language);
         MessageBox.Show(this, summary, T("Dialog.AtomicChaosTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
+        ResetAtomicControlPanel();
     }
 
     private AtomicChaosOptions SelectedAtomicChaosOptions() => new(
@@ -3511,16 +3741,6 @@ public partial class MainWindow : Window
         AtomicSampleRateCheckBox.IsChecked == true,
         AtomicEncodingCheckBox.IsChecked == true,
         AtomicIpCheckBox.IsChecked == true);
-
-    private bool ConfirmAtomicChaosStage(string key)
-    {
-        return MessageBox.Show(
-            this,
-            T(key),
-            T("Dialog.AtomicChaosTitle"),
-            MessageBoxButton.YesNo,
-            MessageBoxImage.Warning) == MessageBoxResult.Yes;
-    }
 
     private void CompatibilityReportButton_Click(object sender, RoutedEventArgs e)
     {
@@ -4094,6 +4314,11 @@ public partial class MainWindow : Window
     private void ThemeToggleButton_Checked(object sender, RoutedEventArgs e)
     {
         SetTheme(useLightTheme: true);
+        if (!_loadingThemePreference)
+        {
+            ThemeSettingsService.SaveUseLightTheme(useLightTheme: true);
+        }
+        DarkThemeMenuItem.IsChecked = false;
         ThemeToggleButton.Content = LocalizeLiteral("Thème sombre");
         RefreshEasyPatchWorkspace();
     }
@@ -4101,6 +4326,11 @@ public partial class MainWindow : Window
     private void ThemeToggleButton_Unchecked(object sender, RoutedEventArgs e)
     {
         SetTheme(useLightTheme: false);
+        if (!_loadingThemePreference)
+        {
+            ThemeSettingsService.SaveUseLightTheme(useLightTheme: false);
+        }
+        DarkThemeMenuItem.IsChecked = true;
         ThemeToggleButton.Content = LocalizeLiteral("Thème clair");
         RefreshEasyPatchWorkspace();
     }
@@ -4115,6 +4345,10 @@ public partial class MainWindow : Window
             }
 
             ReplaceUnifiedPatchSession(null);
+            if (_atomicPanelStage != AtomicPanelStage.Safe)
+            {
+                ResetAtomicControlPanel();
+            }
             return;
         }
 
@@ -4123,6 +4357,7 @@ public partial class MainWindow : Window
         {
             _projectSession.OpenProject(_project);
             ReplaceUnifiedPatchSession(new UnifiedPatchSession(_project));
+            ResetAtomicControlPanel();
             return;
         }
 
@@ -5203,8 +5438,11 @@ public partial class MainWindow : Window
 
         switch (dependencyObject)
         {
-            case HeaderedContentControl headeredContentControl when headeredContentControl.Header is string header:
-                headeredContentControl.Header = LocalizeLiteral(header);
+            case HeaderedItemsControl headeredItemsControl when headeredItemsControl.Header is string itemsHeader:
+                headeredItemsControl.Header = LocalizeLiteral(itemsHeader);
+                break;
+            case HeaderedContentControl headeredContentControl when headeredContentControl.Header is string contentHeader:
+                headeredContentControl.Header = LocalizeLiteral(contentHeader);
                 break;
             case ContentControl contentControl when contentControl.Content is string content:
                 contentControl.Content = LocalizeLiteral(content);
@@ -5292,6 +5530,7 @@ public partial class MainWindow : Window
         {
             control.IsEnabled = canUseProjectActions;
         }
+        UpdateAtomicControlPanelState();
 
         if (!hasProject || !_projectSession.HasProject)
         {
@@ -5330,6 +5569,7 @@ public partial class MainWindow : Window
         RemovePatchButton.IsEnabled = capabilities.CanEditPatch;
         ApplyExclusivePreferredMasterButton.IsEnabled =
             capabilities.CanEditAudioFormat;
+        UpdateAtomicControlPanelState();
     }
 
     private IEnumerable<Control> EditableControls()
@@ -5360,7 +5600,6 @@ public partial class MainWindow : Window
         yield return RemovePatchButton;
         yield return OpenVisualPatchButton;
         yield return ApplyExclusivePreferredMasterButton;
-        yield return AtomicChaosButton;
     }
 
     private string BuildDefaultReportFileName(string extension)

@@ -185,9 +185,6 @@ public static class LocalizationService
         ["Dialog.DeviceDetailsWarning"] = "Les changements de cette fiche peuvent modifier le nom de la machine, ses formats, son IP et ses canaux. Continuer ?",
         ["Dialog.AtomicChaosTitle"] = "Atomic Bomb - exercice de dépannage",
         ["Dialog.AtomicChaosNothingSelected"] = "Cochez au moins une catégorie à saboter. Même une bombe pédagogique a besoin d'une cible.",
-        ["Dialog.AtomicChaosFirst"] = "Premier verrou : cette fonction désorganise volontairement la copie XML chargée, uniquement dans les catégories cochées. Continuer ?",
-        ["Dialog.AtomicChaosSecond"] = "Deuxième verrou : le résultat sera volontairement incohérent, mais seules des valeurs Dante reconnues seront écrites. Les identifiants techniques, DNS, passerelles et interfaces secondaires seront conservés. Préparer cet exercice ?",
-        ["Dialog.AtomicChaosThird"] = "DERNIÈRE CONFIRMATION : atomiser la configuration en mémoire ? Le fichier original restera intact et Enregistrer sous sera obligatoire pour conserver l'exercice.",
         ["Dialog.AtomicChaosCompleted"] = "Scénario atomique créé (graine {0}). {1} machine(s), {2} TX, {3} RX patché(s), {4} RX libre(s), {5} IP fixe(s), {6} IP automatique(s). Le XML original n'a pas été modifié. Utilisez Enregistrer sous pour conserver l'exercice.",
         ["Dialog.RecoveryTitle"] = "Récupération de session",
         ["Dialog.RecoveryFound"] = "Une copie automatique non enregistrée datant du {0:g} a été trouvée. Voulez-vous la récupérer ?\n\nNon supprimera cette copie temporaire et ouvrira le XML original.",
@@ -504,9 +501,6 @@ public static class LocalizationService
         ["Dialog.DeviceDetailsWarning"] = "This device sheet can change the device name, formats, IP address, and channels. Continue?",
         ["Dialog.AtomicChaosTitle"] = "Atomic Bomb - troubleshooting exercise",
         ["Dialog.AtomicChaosNothingSelected"] = "Select at least one category to sabotage. Even an educational bomb needs a target.",
-        ["Dialog.AtomicChaosFirst"] = "First lock: this function deliberately scrambles the loaded XML copy, only in the selected categories. Continue?",
-        ["Dialog.AtomicChaosSecond"] = "Second lock: the result will be deliberately inconsistent, but only recognized Dante values will be written. Technical identifiers, DNS, gateways, and secondary interfaces will be preserved. Prepare this exercise?",
-        ["Dialog.AtomicChaosThird"] = "FINAL CONFIRMATION: atomize the configuration in memory? The original file will remain intact and Save As will be required to keep the exercise.",
         ["Dialog.AtomicChaosCompleted"] = "Atomic scenario created (seed {0}). {1} device(s), {2} Tx channels, {3} patched Rx, {4} free Rx, {5} static IP(s), {6} automatic IP(s). The original XML was not modified. Use Save As to keep the exercise.",
         ["Dialog.RecoveryTitle"] = "Session recovery",
         ["Dialog.RecoveryFound"] = "An unsaved automatic copy from {0:g} was found. Do you want to recover it?\n\nNo will delete this temporary copy and open the original XML.",
@@ -1363,6 +1357,30 @@ public static class LocalizationService
         Add(map, "GÉNÉRATEUR D'EXPÉRIENCE HORRIBLE (MAIS PÉDAGOGIQUE)", "HORRIBLE EXPERIENCE GENERATOR (BUT EDUCATIONAL)");
         Add(map, "Composez le pire réseau de formation possible, sans toucher au vrai fichier. Décochez simplement ce que vous souhaitez épargner.", "Build the worst training network imaginable without touching the real file. Simply clear anything you want to spare.");
         Add(map, "Que faut-il saboter ?", "What should be sabotaged?");
+        Add(map, "Générateur d'expérience horrible, mais pédagogique. Le projet chargé devient une copie d'exercice volontairement chaotique.", "Horrible, but educational, experience generator. The loaded project becomes a deliberately chaotic training copy.");
+        Add(map, "PÉRIMÈTRE DE L'EXERCICE", "EXERCISE SCOPE");
+        Add(map, "Décochez les catégories qui doivent rester intactes.", "Clear the categories that must remain untouched.");
+        Add(map, "PUPITRE DE COMMANDE", "CONTROL PANEL");
+        Add(map, "AUTORISATION", "AUTHORIZATION");
+        Add(map, "3", "3");
+        Add(map, "ARM", "ARM");
+        Add(map, "LOCK", "LOCK");
+        Add(map, "FIRE", "FIRE");
+        Add(map, "1. CLÉ", "1. KEY");
+        Add(map, "OFF · verticale", "OFF · vertical");
+        Add(map, "ON · droite", "ON · right");
+        Add(map, "SAFE · Tournez la clé", "SAFE · Turn the key");
+        Add(map, "2. CAPOT DE SÉCURITÉ", "2. SAFETY COVER");
+        Add(map, "VERROUILLÉ · tourner la clé pour ouvrir", "LOCKED · turn the key to open");
+        Add(map, "RETOUR SAFE", "RETURN TO SAFE");
+        Add(map, "Tourne la clé de 90 degrés et ouvre automatiquement le capot. Un second clic remet le pupitre en sécurité.", "Turns the key 90 degrees and opens the cover automatically. A second click returns the panel to safe.");
+        Add(map, "Clé de sécurité Atomic Bomb", "Atomic Bomb safety key");
+        Add(map, "Annule la séquence sans modifier le projet.", "Cancels the sequence without changing the project.");
+        Add(map, "Arme la copie de travail sans encore la modifier.", "Arms the working copy without changing it yet.");
+        Add(map, "Verrouille les options choisies et autorise FIRE.", "Locks the selected options and enables FIRE.");
+        Add(map, "Déclenche immédiatement l'exercice hors ligne lorsque ARM et LOCK sont actifs.", "Immediately starts the offline exercise once ARM and LOCK are active.");
+        Add(map, "La clé ouvre ce capot et révèle ARM, LOCK et FIRE.", "The key opens this cover and reveals ARM, LOCK, and FIRE.");
+        Add(map, "Séquence : tournez la clé de 90° vers la droite pour ouvrir le capot → ARM → LOCK → FIRE. FIRE agit immédiatement, sans dialogue supplémentaire. Le XML original reste intact tant que vous n'écrasez pas volontairement son fichier.", "Sequence: turn the key 90° to the right to open the cover → ARM → LOCK → FIRE. FIRE acts immediately, with no additional dialog. The original XML remains intact unless you deliberately overwrite its file.");
         Add(map, "Noms des machines", "Device names");
         Add(map, "Labels des canaux TX", "Tx channel labels");
         Add(map, "Labels des canaux RX", "Rx channel labels");
@@ -1373,8 +1391,6 @@ public static class LocalizationService
         Add(map, "Bits par échantillon", "Bits per sample");
         Add(map, "IP principales", "Primary IP settings");
         Add(map, "ATOMIC BOMB", "ATOMIC BOMB");
-        Add(map, "Crée un exercice hors ligne en mélangeant uniquement les catégories cochées. Trois confirmations sont requises.", "Creates an offline exercise by scrambling only the selected categories. Three confirmations are required.");
-        Add(map, "Trois confirmations avant le chaos. Le XML original, lui, dort tranquille.", "Three confirmations before the chaos. The original XML sleeps peacefully.");
         Add(map, "Charge un export XML Dante Controller.", "Loads a Dante Controller XML export.");
         Add(map, "Ajoute les machines d'un autre XML au projet ouvert. Les doublons peuvent être renommés.", "Adds devices from another XML to the open project. Duplicates can be renamed.");
         Add(map, "Enregistre un nouveau XML et crée un backup de sécurité.", "Saves a new XML file and creates a safety backup.");
@@ -1433,6 +1449,25 @@ public static class LocalizationService
 
         // Shell Windows 2026.1.
         Add(map, "Dante Config Editor 2026.1 Beta", "Dante Config Editor 2026.1 Beta");
+        Add(map, "Fichier", "File");
+        Add(map, "Édition", "Edit");
+        Add(map, "Affichage", "View");
+        Add(map, "Outils", "Tools");
+        Add(map, "Aide", "Help");
+        Add(map, "Ouvrir un XML", "Open XML");
+        Add(map, "Enregistrer sous", "Save as");
+        Add(map, "Quitter", "Exit");
+        Add(map, "Annuler les changements non enregistrés", "Discard unsaved changes");
+        Add(map, "Dupliquer la machine sélectionnée", "Duplicate selected device");
+        Add(map, "Enregistrer la machine dans la banque", "Save device to library");
+        Add(map, "Supprimer la machine sélectionnée", "Delete selected device");
+        Add(map, "Réglages de la page Machines", "Device page settings");
+        Add(map, "Thème sombre", "Dark theme");
+        Add(map, "Thème clair", "Light theme");
+        Add(map, "Démarrage rapide", "Quick start");
+        Add(map, "Notes de version", "Release notes");
+        Add(map, "Projet GitHub", "GitHub project");
+        Add(map, "À propos de DCE", "About DCE");
         Add(map, "XML Dante", "Dante XML");
         Add(map, "Profil : non détecté", "Profile: not detected");
         Add(map, "Pas encore enregistré", "Not saved yet");
@@ -1535,7 +1570,14 @@ public static class LocalizationService
         Dictionary<string, string> map = new(StringComparer.Ordinal);
         foreach (KeyValuePair<string, string> pair in LiteralFrenchToEnglish)
         {
-            map.TryAdd(pair.Value, pair.Key);
+            // Une entrée identique dans les deux langues ("Sample rates" par
+            // exemple) ne doit pas masquer une vraie traduction française
+            // ajoutée plus loin dans le catalogue.
+            if (!map.TryGetValue(pair.Value, out string? existingFrench)
+                || string.Equals(existingFrench, pair.Value, StringComparison.Ordinal))
+            {
+                map[pair.Value] = pair.Key;
+            }
         }
 
         return map;

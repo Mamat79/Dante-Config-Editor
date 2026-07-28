@@ -19,6 +19,15 @@ namespace DanteConfigEditor.Mac;
 
 public partial class MainWindow : Window
 {
+    private enum AtomicPanelStage
+    {
+        Safe,
+        CoverOpen,
+        Armed,
+        Locked,
+        Fired
+    }
+
     private sealed record MachineBankSourceChoice(
         string Path,
         string DisplayName,
@@ -64,6 +73,7 @@ public partial class MainWindow : Window
     private bool _editEnabled;
     private bool _initializing = true;
     private bool _refreshingMachineBankSources;
+    private AtomicPanelStage _atomicPanelStage = AtomicPanelStage.Safe;
 
     public MainWindow()
     {
@@ -71,7 +81,7 @@ public partial class MainWindow : Window
 
         MigrateV36Settings();
         _language = LanguageSettingsService.Load();
-        _darkTheme = LoadThemePreference();
+        _darkTheme = !ThemeSettingsService.LoadUseLightTheme();
         _recoveryTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(750) };
         _recoveryTimer.Tick += RecoveryTimer_Tick;
 
@@ -207,6 +217,7 @@ public partial class MainWindow : Window
 
             created.SaveAs(form.DestinationPath);
             _project = created;
+            ResetAtomicControlPanel();
             _editEnabled = true;
             RecentFilesService.Add(form.DestinationPath);
             RefreshRecentFiles();
@@ -424,6 +435,7 @@ public partial class MainWindow : Window
             }
 
             _project = loadedProject;
+            ResetAtomicControlPanel();
             _editEnabled = false;
             RecentFilesService.Add(path);
             RefreshRecentFiles();
@@ -591,6 +603,7 @@ public partial class MainWindow : Window
         {
             SessionRecoveryService.Delete(path);
             _project = DanteProject.Load(path);
+            ResetAtomicControlPanel();
             _editEnabled = false;
             RefreshAll();
             SetStatus(L("Changements annulés.", "Changes reverted."));
@@ -1326,9 +1339,127 @@ public partial class MainWindow : Window
         FindControl<TextBox>("ReportTextBox")!.Text = _project.Validate().ToDisplayText(_language);
     }
 
+    private void AtomicKeyButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_atomicPanelStage == AtomicPanelStage.Safe)
+        {
+            _atomicPanelStage = AtomicPanelStage.CoverOpen;
+            UpdateAtomicControlPanelState();
+            return;
+        }
+
+        if (_atomicPanelStage < AtomicPanelStage.Locked)
+        {
+            ResetAtomicControlPanel();
+        }
+    }
+
+    private void AtomicArmButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_atomicPanelStage != AtomicPanelStage.CoverOpen)
+        {
+            return;
+        }
+
+        _atomicPanelStage = AtomicPanelStage.Armed;
+        UpdateAtomicControlPanelState();
+    }
+
+    private void AtomicLockButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_atomicPanelStage != AtomicPanelStage.Armed)
+        {
+            return;
+        }
+
+        _atomicPanelStage = AtomicPanelStage.Locked;
+        UpdateAtomicControlPanelState();
+    }
+
+    private void AtomicPanelResetButton_Click(object? sender, RoutedEventArgs e)
+    {
+        ResetAtomicControlPanel();
+    }
+
+    private void ResetAtomicControlPanel()
+    {
+        _atomicPanelStage = AtomicPanelStage.Safe;
+        UpdateAtomicControlPanelState();
+    }
+
+    private void UpdateAtomicControlPanelState()
+    {
+        bool projectAvailable = _project is not null;
+        bool coverOpen = _atomicPanelStage >= AtomicPanelStage.CoverOpen;
+        bool armed = _atomicPanelStage >= AtomicPanelStage.Armed;
+        bool locked = _atomicPanelStage >= AtomicPanelStage.Locked;
+        bool fired = _atomicPanelStage == AtomicPanelStage.Fired;
+
+        Button keyButton = FindControl<Button>("AtomicKeyButton")!;
+        keyButton.IsEnabled = projectAvailable && _atomicPanelStage < AtomicPanelStage.Locked;
+        FindControl<Grid>("AtomicKeyVisual")!.RenderTransform =
+            new RotateTransform(coverOpen ? 90 : 0);
+        FindControl<TextBlock>("AtomicKeyTitleTextBlock")!.Text =
+            L("1. CLÉ", "1. KEY");
+        FindControl<TextBlock>("AtomicKeyPositionTextBlock")!.Text =
+            coverOpen
+                ? L("ON · droite", "ON · right")
+                : L("OFF · verticale", "OFF · vertical");
+        keyButton.Background = AtomicBrush(
+            _atomicPanelStage == AtomicPanelStage.Safe ? "#374151" : "#D97706");
+
+        FindControl<Border>("AtomicSafetyCover")!.IsVisible = !coverOpen;
+        FindControl<TextBlock>("AtomicCoverTitleTextBlock")!.Text =
+            L("2. CAPOT DE SÉCURITÉ", "2. SAFETY COVER");
+        FindControl<TextBlock>("AtomicCoverHintTextBlock")!.Text =
+            L("VERROUILLÉ · tourner la clé pour ouvrir", "LOCKED · turn the key to open");
+
+        Button armButton = FindControl<Button>("AtomicArmButton")!;
+        Button lockButton = FindControl<Button>("AtomicLockButton")!;
+        Button fireButton = FindControl<Button>("AtomicChaosButton")!;
+        armButton.IsEnabled = projectAvailable
+            && _atomicPanelStage == AtomicPanelStage.CoverOpen;
+        lockButton.IsEnabled = projectAvailable
+            && _atomicPanelStage == AtomicPanelStage.Armed;
+        fireButton.IsEnabled = projectAvailable
+            && _atomicPanelStage == AtomicPanelStage.Locked;
+        armButton.Background = AtomicBrush(armed ? "#D97706" : "#374151");
+        lockButton.Background = AtomicBrush(locked ? "#2563EB" : "#374151");
+        fireButton.Background = AtomicBrush(fired ? "#EF4444" : "#4B1D22");
+
+        FindControl<Border>("AtomicOptionsBorder")!.IsEnabled = !locked;
+        Button resetButton = FindControl<Button>("AtomicPanelResetButton")!;
+        resetButton.IsEnabled = _atomicPanelStage != AtomicPanelStage.Safe;
+        resetButton.Content = L("RETOUR SAFE", "RETURN TO SAFE");
+
+        TextBlock status = FindControl<TextBlock>("AtomicPanelStatusTextBlock")!;
+        status.Text = _atomicPanelStage switch
+        {
+            AtomicPanelStage.Safe => L("SAFE · Tournez la clé", "SAFE · Turn the key"),
+            AtomicPanelStage.CoverOpen => L("CAPOT OUVERT · Appuyez sur ARM", "COVER OPEN · Press ARM"),
+            AtomicPanelStage.Armed => L("ARMÉ · Appuyez sur LOCK", "ARMED · Press LOCK"),
+            AtomicPanelStage.Locked => L(
+                "VERROUILLÉ · FIRE exécutera immédiatement",
+                "LOCKED · FIRE will execute immediately"),
+            _ => L("TIR DÉCLENCHÉ", "FIRED")
+        };
+        status.Foreground = AtomicBrush(
+            fired
+                ? "#F87171"
+                : locked
+                    ? "#93C5FD"
+                    : armed
+                        ? "#FDBA74"
+                        : "#94A3B8");
+    }
+
+    private static IBrush AtomicBrush(string color) =>
+        new SolidColorBrush(Color.Parse(color));
+
     private async void AtomicChaosButton_Click(object? sender, RoutedEventArgs e)
     {
-        if (_project is null)
+        if (_atomicPanelStage != AtomicPanelStage.Locked
+            || _project is null)
         {
             return;
         }
@@ -1339,15 +1470,13 @@ public partial class MainWindow : Window
             await ShowInfoAsync(
                 LocalizationService.Text(_language, "Dialog.AtomicChaosTitle"),
                 LocalizationService.Text(_language, "Dialog.AtomicChaosNothingSelected"));
+            ResetAtomicControlPanel();
             return;
         }
 
-        if (!await ConfirmAtomicChaosStageAsync("Dialog.AtomicChaosFirst")
-            || !await ConfirmAtomicChaosStageAsync("Dialog.AtomicChaosSecond")
-            || !await ConfirmAtomicChaosStageAsync("Dialog.AtomicChaosThird"))
-        {
-            return;
-        }
+        _atomicPanelStage = AtomicPanelStage.Fired;
+        UpdateAtomicControlPanelState();
+        await Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.Render);
 
         AtomicChaosResult? result = null;
         await ExecuteMutationAsync(
@@ -1356,6 +1485,7 @@ public partial class MainWindow : Window
             project => result = project.ApplyAtomicChaos(options));
         if (result is null || _project is null)
         {
+            ResetAtomicControlPanel();
             return;
         }
 
@@ -1371,6 +1501,7 @@ public partial class MainWindow : Window
             result.DynamicIpCount);
         FindControl<TextBox>("ReportTextBox")!.Text = summary + Environment.NewLine + Environment.NewLine + _project.BuildCompatibilityReport(_language);
         await ShowInfoAsync(LocalizationService.Text(_language, "Dialog.AtomicChaosTitle"), summary);
+        ResetAtomicControlPanel();
     }
 
     private AtomicChaosOptions SelectedAtomicChaosOptions() => new(
@@ -1384,14 +1515,6 @@ public partial class MainWindow : Window
         FindControl<CheckBox>("AtomicSampleRateCheckBox")!.IsChecked == true,
         FindControl<CheckBox>("AtomicEncodingCheckBox")!.IsChecked == true,
         FindControl<CheckBox>("AtomicIpCheckBox")!.IsChecked == true);
-
-    private Task<bool> ConfirmAtomicChaosStageAsync(string key)
-    {
-        return ConfirmAsync(
-            LocalizationService.Text(_language, "Dialog.AtomicChaosTitle"),
-            LocalizationService.Text(_language, key),
-            L("ATOMISER LA COPIE", "ATOMIZE THE COPY"));
-    }
 
     private void CompatibilityButton_Click(object? sender, RoutedEventArgs e)
     {
@@ -1498,6 +1621,71 @@ public partial class MainWindow : Window
     private void FullGuideButton_Click(object? sender, RoutedEventArgs e)
     {
         OpenBundledDocument($"Notice_DanteConfigEditorV3_{DocumentLanguageSuffix()}.pdf");
+    }
+
+    private void OpenReleaseNotesMenuItem_Click(object? sender, RoutedEventArgs e)
+    {
+        OpenBundledDocument(_language == UiLanguage.English
+            ? "RELEASE_NOTES_EN.md"
+            : "RELEASE_NOTES.md");
+    }
+
+    private async void OpenGitHubMenuItem_Click(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo("https://github.com/Mamat79/Dante-Config-Editor")
+            {
+                UseShellExecute = true
+            });
+        }
+        catch (Exception exception)
+        {
+            await ShowErrorAsync(
+                L("Ouverture de GitHub impossible", "Unable to open GitHub"),
+                exception);
+        }
+    }
+
+    private async void AboutMenuItem_Click(object? sender, RoutedEventArgs e)
+    {
+        await ShowInfoAsync(
+            L("À propos de DCE", "About DCE"),
+            L(
+                """
+                Dante Config Editor 2026.1 Beta
+
+                Éditeur hors ligne de fichiers XML Dante Controller.
+                Projet tiers non officiel, sans affiliation avec Audinate.
+
+                By Mamat
+                et ses agents
+                -------[]--
+                """,
+                """
+                Dante Config Editor 2026.1 Beta
+
+                Offline Dante Controller XML editor.
+                Unofficial third-party project, not affiliated with Audinate.
+
+                By Mamat
+                et ses agents
+                -------[]--
+                """));
+    }
+
+    private void ExitMenuItem_Click(object? sender, RoutedEventArgs e)
+    {
+        Close();
+    }
+
+    private void NavigateMenuItem_Click(object? sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem { Tag: string tabName }
+            && FindControl<TabItem>(tabName) is { } tab)
+        {
+            FindControl<TabControl>("MainTabs")!.SelectedItem = tab;
+        }
     }
 
     private async void SupportDceButton_Click(object? sender, RoutedEventArgs e)
@@ -1628,8 +1816,13 @@ public partial class MainWindow : Window
     private void ThemeButton_Click(object? sender, RoutedEventArgs e)
     {
         _darkTheme = !_darkTheme;
-        SaveThemePreference(_darkTheme);
+        ThemeSettingsService.SaveUseLightTheme(!_darkTheme);
         ApplyTheme();
+    }
+
+    private void ThemeMenuItem_Click(object? sender, RoutedEventArgs e)
+    {
+        ThemeButton_Click(sender, e);
     }
 
     private void ConfigureChoiceLists()
@@ -1938,19 +2131,33 @@ public partial class MainWindow : Window
     private void UpdateUiState()
     {
         bool loaded = _project is not null;
+        bool deviceSelected = SelectedDeviceRow() is not null;
         FindControl<Button>("MergeButton")!.IsEnabled = loaded;
         FindControl<Button>("SaveButton")!.IsEnabled = loaded;
         FindControl<Button>("EditButton")!.IsEnabled = loaded && !_editEnabled;
         FindControl<Button>("UndoButton")!.IsEnabled = loaded && _editEnabled && _project!.CanUndo;
         FindControl<Button>("RevertButton")!.IsEnabled = loaded && _project!.IsModified;
-        FindControl<Button>("AtomicChaosButton")!.IsEnabled = loaded;
         FindControl<TabControl>("MainTabs")!.IsEnabled = loaded;
+        FindControl<MenuItem>("MergeMenuItem")!.IsEnabled = loaded;
+        FindControl<MenuItem>("SaveMenuItem")!.IsEnabled = loaded;
+        FindControl<MenuItem>("UndoMenuItem")!.IsEnabled =
+            loaded && _editEnabled && _project!.CanUndo;
+        FindControl<MenuItem>("RevertMenuItem")!.IsEnabled =
+            loaded && _project!.IsModified;
+        FindControl<MenuItem>("AddDeviceFromBankMenuItem")!.IsEnabled = loaded;
+        FindControl<MenuItem>("DuplicateDeviceMenuItem")!.IsEnabled =
+            loaded && deviceSelected;
+        FindControl<MenuItem>("SaveDeviceToBankMenuItem")!.IsEnabled =
+            loaded && deviceSelected;
+        FindControl<MenuItem>("DeleteDeviceMenuItem")!.IsEnabled =
+            loaded && deviceSelected;
         FindControl<TextBlock>("ModeText")!.Text = _editEnabled
             ? LocalizationService.Text(_language, "Status.EditMode")
             : LocalizationService.Text(_language, "Status.ReadOnlyMode");
         FindControl<Button>("EditButton")!.Content = _editEnabled
             ? LocalizationService.Text(_language, "Status.EditActiveButton")
             : LocalizationService.Text(_language, "Status.ActivateEditButton");
+        UpdateAtomicControlPanelState();
     }
 
     private async Task ExecuteMutationAsync(
@@ -2210,6 +2417,9 @@ public partial class MainWindow : Window
         {
             switch (element)
             {
+                case MenuItem menuItem when menuItem.Header is string menuHeader:
+                    menuItem.Header = LocalizationService.TranslateLiteral(_language, menuHeader);
+                    break;
                 case HeaderedContentControl headered when headered.Header is string header:
                     headered.Header = LocalizationService.TranslateLiteral(_language, header);
                     break;
@@ -2299,6 +2509,9 @@ public partial class MainWindow : Window
 
         Title = L("Dante Config Editor 2026.1 Beta - macOS", "Dante Config Editor 2026.1 Beta - macOS");
         FindControl<Button>("ThemeButton")!.Content = _darkTheme ? L("Thème clair", "Light theme") : L("Thème sombre", "Dark theme");
+        FindControl<MenuItem>("ThemeMenuItem")!.Header =
+            _darkTheme ? L("Thème clair", "Light theme") : L("Thème sombre", "Dark theme");
+        UpdateAtomicControlPanelState();
     }
 
     private void RefreshLiteralComboSelection(string controlName)
@@ -2373,6 +2586,12 @@ public partial class MainWindow : Window
         if (FindControl<Button>("ThemeButton") is { } button)
         {
             button.Content = _darkTheme ? L("Thème clair", "Light theme") : L("Thème sombre", "Dark theme");
+        }
+
+        if (FindControl<MenuItem>("ThemeMenuItem") is { } themeMenuItem)
+        {
+            themeMenuItem.Header =
+                _darkTheme ? L("Thème clair", "Light theme") : L("Thème sombre", "Dark theme");
         }
     }
 
@@ -2490,33 +2709,4 @@ public partial class MainWindow : Window
     private static bool Contains(string? value, string search) =>
         !string.IsNullOrWhiteSpace(value) && value.Contains(search, StringComparison.OrdinalIgnoreCase);
 
-    private static string ThemePreferencePath => Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "DanteConfigEditorV3",
-        "theme-macos.txt");
-
-    private static bool LoadThemePreference()
-    {
-        try
-        {
-            return !File.Exists(ThemePreferencePath)
-                || !string.Equals(File.ReadAllText(ThemePreferencePath).Trim(), "light", StringComparison.OrdinalIgnoreCase);
-        }
-        catch
-        {
-            return true;
-        }
-    }
-
-    private static void SaveThemePreference(bool dark)
-    {
-        try
-        {
-            Directory.CreateDirectory(Path.GetDirectoryName(ThemePreferencePath)!);
-            File.WriteAllText(ThemePreferencePath, dark ? "dark" : "light");
-        }
-        catch
-        {
-        }
-    }
 }

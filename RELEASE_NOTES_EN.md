@@ -27,6 +27,13 @@ Audinate. It only works on offline files.
   templates, with bundled templates protected as read-only;
 - shared device selection across Machines, Patch, Easy Patch, and the
   inspector, preserved when switching views;
+- standard application menu on Windows and macOS with direct access to files,
+  devices, views, tools, and guides;
+- light theme on first launch, followed by restoration of the last selected
+  theme and language;
+- integrated Atomic Bomb page with a vertical key that turns right,
+  automatically opens the cover, then enables ARM, LOCK, and FIRE, with no
+  additional confirmation dialog;
 - isolated 2026.1 local profile.
 
 ## XML fidelity
@@ -57,7 +64,7 @@ For the synthetic 200-device preset with 64 TX and 64 RX per device:
 
 ## Automated validation
 
-- 395 Core/Windows tests passed;
+- 397 Core/Windows tests passed;
 - 22 headless Avalonia/macOS tests passed;
 - Windows Release build completed without warnings;
 - synthetic corpus saved and semantically compared without loss.

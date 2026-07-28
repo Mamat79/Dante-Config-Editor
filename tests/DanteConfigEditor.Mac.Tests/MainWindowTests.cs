@@ -6,6 +6,7 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
+using Avalonia.Media;
 using Avalonia.Threading;
 using DanteConfigEditor.Models;
 using DanteConfigEditor.Services;
@@ -428,7 +429,7 @@ public sealed class MainWindowTests
     }
 
     [AvaloniaFact]
-    public async Task AtomicButtonBecomesAvailableInDedicatedTabAfterProjectLoad()
+    public async Task AtomicPanelUnlocksFireOnlyAfterFullSequence()
     {
         string source = Path.Combine(AppContext.BaseDirectory, "Fixtures", "representative-preset.xml");
         string temporaryXml = Path.Combine(Path.GetTempPath(), $"dante-mac-atomic-layout-{Guid.NewGuid():N}.xml");
@@ -438,8 +439,13 @@ public sealed class MainWindowTests
         window.Show();
         try
         {
-            Button atomicButton = window.FindControl<Button>("AtomicChaosButton")!;
-            Assert.False(atomicButton.IsEnabled);
+            Button fireButton = window.FindControl<Button>("AtomicChaosButton")!;
+            Button keyButton = window.FindControl<Button>("AtomicKeyButton")!;
+            Border cover = window.FindControl<Border>("AtomicSafetyCover")!;
+            Button armButton = window.FindControl<Button>("AtomicArmButton")!;
+            Button lockButton = window.FindControl<Button>("AtomicLockButton")!;
+            Assert.False(keyButton.IsEnabled);
+            Assert.False(fireButton.IsEnabled);
 
             await window.OpenStartupFileAsync(temporaryXml);
             TabItem safetyTab = window.FindControl<TabItem>("SafetyTab")!;
@@ -447,9 +453,21 @@ public sealed class MainWindowTests
             atomicTab.IsSelected = true;
             Dispatcher.UIThread.RunJobs();
 
-            Assert.True(atomicButton.IsEnabled);
+            Assert.True(keyButton.IsEnabled);
+            Assert.False(fireButton.IsEnabled);
+            keyButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Assert.False(cover.IsVisible);
+            RotateTransform turnedKey = Assert.IsType<RotateTransform>(
+                window.FindControl<Grid>("AtomicKeyVisual")!.RenderTransform);
+            Assert.Equal(90, turnedKey.Angle);
+            Assert.True(armButton.IsEnabled);
+            armButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Assert.True(lockButton.IsEnabled);
+            Assert.False(fireButton.IsEnabled);
+            lockButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Assert.True(fireButton.IsEnabled);
             Assert.True(MainTabs(window).Items.IndexOf(atomicTab) > MainTabs(window).Items.IndexOf(safetyTab));
-            AssertControlFits(window, atomicButton);
+            AssertControlFits(window, fireButton);
             foreach (string checkBoxName in new[]
             {
                 "AtomicDeviceNamesCheckBox", "AtomicTxLabelsCheckBox", "AtomicRxLabelsCheckBox",

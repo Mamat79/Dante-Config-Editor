@@ -36,6 +36,13 @@ Toutes les dates utilisent le calendrier ISO. Les versions antérieures à
 
 ### Corrigé le 2026-07-28
 
+- ajout d'un menu d'application standard sur Windows et macOS sans retirer
+  l'inspecteur contextuel rétractable ;
+- thème clair au premier lancement, puis conservation du dernier thème et de
+  la dernière langue choisis sur Windows et macOS ;
+- intégration de la page Atomic Bomb au shell et remplacement des trois
+  dialogues par une séquence visuelle : clé verticale tournée à droite,
+  ouverture automatique du capot, ARM, LOCK, FIRE ;
 - la banque personnelle et les deux banques fournies sont visibles ensemble
   dans une liste dédupliquée de 43 modèles, avec filtre par banque et origine ;
 - les modèles fournis sont protégés en lecture seule mais restent exportables,

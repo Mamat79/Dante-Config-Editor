@@ -116,7 +116,12 @@ Updates never replace that personal bank.
 - SVG/PDF synoptic with locations and grouped cables;
 - automatic recovery and atomic saving;
 - French/English UI and light/dark themes;
-- fully offline Atomic Bomb training tool.
+- light theme on first launch, then restoration of the last selected theme and
+  language;
+- standard top menu for quick access to File, Edit, Devices, View, Tools, and
+  Help commands;
+- fully offline Atomic Bomb training tool with a vertical key that turns right,
+  automatically opens the cover, then enables ARM, LOCK, and FIRE.
 
 ## Importing and exporting labels
 

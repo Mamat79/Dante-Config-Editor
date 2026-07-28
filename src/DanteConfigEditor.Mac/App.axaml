@@ -55,6 +55,17 @@
             <Setter Property="CornerRadius" Value="6" />
             <Setter Property="Padding" Value="14" />
         </Style>
+        <Style Selector="Button.atomicSequence">
+            <Setter Property="MinWidth" Value="128" />
+            <Setter Property="MinHeight" Value="58" />
+            <Setter Property="Margin" Value="4" />
+            <Setter Property="Padding" Value="16,10" />
+            <Setter Property="Background" Value="#374151" />
+            <Setter Property="BorderBrush" Value="#6B7280" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
         <Style Selector="Button.atomic">
             <Setter Property="Foreground" Value="White" />
             <Setter Property="FontWeight" Value="Bold" />
@@ -71,7 +82,7 @@
                                  StrokeThickness="4" />
                         <Ellipse Width="92"
                                  Height="92"
-                                 Fill="#E71919"
+                                 Fill="{TemplateBinding Background}"
                                  Stroke="#7F0B0B"
                                  StrokeThickness="3" />
                         <Ellipse Width="65"
@@ -83,12 +94,12 @@
                         <StackPanel HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     IsHitTestVisible="False">
-                            <TextBlock Text="ATOMIC"
+                            <TextBlock Text="3"
                                        Foreground="#FFF4F4"
                                        FontSize="9"
                                        FontWeight="SemiBold"
                                        TextAlignment="Center" />
-                            <TextBlock Text="BOMB"
+                            <TextBlock Text="FIRE"
                                        Foreground="White"
                                        FontSize="19"
                                        FontWeight="Black"

@@ -28,6 +28,13 @@ travaille uniquement sur des fichiers hors ligne.
   `43` modèles uniques et protection en lecture seule des modèles fournis ;
 - sélection de machine partagée entre Machines, Patch, Easy Patch et
   l'inspecteur, conservée lors des changements de vue ;
+- menu d'application standard sur Windows et macOS, avec accès direct aux
+  fichiers, machines, vues, outils et notices ;
+- thème clair au premier lancement, puis restauration du dernier thème et de
+  la dernière langue choisis ;
+- page Atomic Bomb intégrée au shell avec clé verticale tournée à droite,
+  ouverture automatique du capot, ARM, LOCK puis FIRE, sans dialogue de
+  confirmation supplémentaire ;
 - profil local 2026.1 isolé.
 
 ## Fidélité XML
@@ -58,7 +65,7 @@ Sur le preset synthétique de 200 machines avec 64 TX et 64 RX chacune :
 
 ## Validation automatisée
 
-- 395 tests Core/Windows réussis ;
+- 397 tests Core/Windows réussis ;
 - 22 tests Avalonia/macOS sans écran réussis ;
 - build Windows Release sans warning ;
 - corpus synthétique sauvegardé et comparé sémantiquement sans perte.

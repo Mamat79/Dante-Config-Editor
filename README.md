@@ -121,7 +121,12 @@ personnelle. Une mise à jour ne remplace jamais cette dernière.
 - synoptique SVG/PDF avec emplacements et câbles regroupés ;
 - récupération automatique et sauvegardes atomiques ;
 - interface française/anglaise et thèmes clair/sombre ;
-- outil de formation Atomic Bomb, entièrement hors ligne.
+- premier lancement en thème clair, puis restauration du dernier thème et de
+  la dernière langue choisis ;
+- menu supérieur standard pour retrouver rapidement les commandes Fichier,
+  Édition, Machines, Affichage, Outils et Aide ;
+- outil de formation Atomic Bomb entièrement hors ligne, avec clé verticale
+  tournant à droite, ouverture automatique du capot, puis ARM, LOCK et FIRE.
 
 ## Import et export de labels
 
