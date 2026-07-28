@@ -1,4 +1,29 @@
-# Rapport de nettoyage V3.07 Beta
+# Rapport de nettoyage
+
+## Mise à jour 2026.1 - 2026-07-28
+
+Le nettoyage 2026.1 a été effectué après vérification des références dans le
+code, l'installateur, les notices, le catalogue de banques et la Release
+GitHub active.
+
+- état avant nettoyage : 576 fichiers suivis, 37 794 578 octets ;
+- état après nettoyage : 547 fichiers suivis, 29 145 683 octets ;
+- réduction : 29 fichiers et 8 648 895 octets ;
+- suppression des vidéos, sous-titres, sommes et captures V3.3/V3.5 qui
+  n'étaient plus référencés ;
+- suppression des deux archives GitHub V3.6 absentes du catalogue 2026.1 ;
+- suppression de l'ancienne description de Release V3.4 ;
+- conservation des vidéos, captures, notices et archives 2026.1 ;
+- conservation des petites banques V3.6 sous `Resources` uniquement parce
+  qu'elles servent encore de fixtures aux tests de lecture et de migration ;
+- aucune Release, aucun tag, aucun XML de production et aucune banque
+  personnelle n'ont été supprimés ou modifiés.
+
+Les règles `.gitignore` empêchent désormais la réintroduction accidentelle de
+captures `docs/media/v*` et de vidéos historiques nommées
+`dce-v*-presentation-*`.
+
+## Historique du nettoyage V3.07 Beta
 
 Date : 2026-07-11  
 Branche : `main`  

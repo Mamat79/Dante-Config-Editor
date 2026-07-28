@@ -37,6 +37,8 @@ __pycache__/
 # des chemins de travail. Les videos finales et leurs sommes sont publiees.
 docs/media/v3.3/
 !docs/media/*.mp4.sha256
+docs/media/v*/
+docs/media/dce-v*-presentation-*
 
 # OS files
 Thumbs.db
