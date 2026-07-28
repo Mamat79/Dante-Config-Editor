@@ -22,6 +22,7 @@ public partial class MainWindow
             string categoryLabel,
             string targetLabel,
             string message,
+            string technicalDetail,
             string suggestedAction)
         {
             Issue = issue;
@@ -29,6 +30,7 @@ public partial class MainWindow
             CategoryLabel = categoryLabel;
             TargetLabel = targetLabel;
             Message = message;
+            TechnicalDetail = technicalDetail;
             SuggestedAction = suggestedAction;
         }
 
@@ -42,7 +44,7 @@ public partial class MainWindow
 
         public string Message { get; }
 
-        public string TechnicalDetail => Issue.TechnicalDetail;
+        public string TechnicalDetail { get; }
 
         public string XmlPath => Issue.XmlPath ?? string.Empty;
 
@@ -69,12 +71,18 @@ public partial class MainWindow
         string action = string.IsNullOrWhiteSpace(issue.SuggestedActionKey)
             ? T("Validation.Action.None")
             : T(issue.SuggestedActionKey);
+        string technicalDetail = _language == UiLanguage.English
+            ? LocalizationService.TranslateValidationMessage(
+                _language,
+                issue.TechnicalDetail)
+            : issue.TechnicalDetail;
         return new ValidationCenterRow(
             issue,
             severity,
             category,
             issue.Target?.DisplayName ?? _project?.PresetName ?? T("Blank"),
             message,
+            technicalDetail,
             action);
     }
 
@@ -90,13 +98,16 @@ public partial class MainWindow
                 "Validation.Legacy.",
                 StringComparison.Ordinal))
         {
-            // Les validateurs historiques produisent encore leurs détails en
-            // français. En français, ce texte exact reste le meilleur message
-            // humain ; en anglais, le résumé est traduit et le détail brut est
-            // conservé séparément pour le diagnostic.
+            string translated = LocalizationService.TranslateValidationMessage(
+                _language,
+                issue.TechnicalDetail);
             return _language == UiLanguage.French
-                ? issue.TechnicalDetail
-                : localized;
+                || !string.Equals(
+                    translated,
+                    issue.TechnicalDetail,
+                    StringComparison.Ordinal)
+                    ? translated
+                    : localized;
         }
 
         return keyWasFound ? localized : issue.TechnicalDetail;

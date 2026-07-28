@@ -155,7 +155,8 @@ internal sealed partial class MachineBankDialog : Window
             [
                 AllFilterLabel,
                 .. _allTemplates
-                    .Select(item => item.Category)
+                    .Select(item =>
+                        MachineTemplateLocalizationService.Category(item, _language))
                     .Where(value => !string.IsNullOrWhiteSpace(value))
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .OrderBy(value => value, StringComparer.OrdinalIgnoreCase)
@@ -204,15 +205,23 @@ internal sealed partial class MachineBankDialog : Window
             .Where(item => manufacturer == AllFilterLabel
                 || string.Equals(item.Manufacturer, manufacturer, StringComparison.OrdinalIgnoreCase))
             .Where(item => category == AllFilterLabel
-                || string.Equals(item.Category, category, StringComparison.OrdinalIgnoreCase))
+                || string.Equals(
+                    MachineTemplateLocalizationService.Category(item, _language),
+                    category,
+                    StringComparison.OrdinalIgnoreCase))
             .Where(item => item.TxCount >= minimumTx && item.RxCount >= minimumRx)
             .Where(item => string.IsNullOrWhiteSpace(search)
                 || Contains(item.TemplateName, search)
                 || Contains(item.Manufacturer, search)
                 || Contains(item.Model, search)
                 || Contains(item.Description, search)
+                || Contains(
+                    MachineTemplateLocalizationService.Description(item, _language),
+                    search)
                 || item.Tags.Any(tag => Contains(tag, search)))
-            .Select(item => new MacMachineBankRow(item))
+            .Select(item => new MacMachineBankRow(
+                item,
+                MachineTemplateLocalizationService.Category(item, _language)))
             .ToArray();
 
         _visibleRows.Clear();
@@ -253,11 +262,17 @@ internal sealed partial class MachineBankDialog : Window
             FindControl<TextBlock>("SelectedTemplateNameText")!.Text = metadata.TemplateName;
             FindControl<TextBlock>("SelectedHardwareText")!.Text = string.Join(
                 " · ",
-                new[] { metadata.Manufacturer, metadata.Model, metadata.Category }
+                new[]
+                {
+                    metadata.Manufacturer,
+                    metadata.Model,
+                    MachineTemplateLocalizationService.Category(metadata, _language)
+                }
                     .Where(value => !string.IsNullOrWhiteSpace(value)));
             FindControl<TextBlock>("SelectedCountsText")!.Text =
                 $"{metadata.TxCount} TX / {metadata.RxCount} RX · preset {Blank(metadata.SourcePresetVersion)}";
-            FindControl<TextBlock>("SelectedDescriptionText")!.Text = metadata.Description;
+            FindControl<TextBlock>("SelectedDescriptionText")!.Text =
+                MachineTemplateLocalizationService.Description(metadata, _language);
             FindControl<TextBlock>("SelectedTagsText")!.Text = metadata.Tags.Count == 0
                 ? string.Empty
                 : "Tags: " + string.Join(", ", metadata.Tags);
@@ -786,9 +801,12 @@ internal sealed partial class MachineBankDialog : Window
 
 internal sealed class MacMachineBankRow
 {
-    public MacMachineBankRow(MachineTemplateMetadata metadata)
+    public MacMachineBankRow(
+        MachineTemplateMetadata metadata,
+        string displayCategory)
     {
         Metadata = metadata;
+        Category = displayCategory;
     }
 
     public MachineTemplateMetadata Metadata { get; }
@@ -801,7 +819,7 @@ internal sealed class MacMachineBankRow
 
     public string Model => Metadata.Model;
 
-    public string Category => Metadata.Category;
+    public string Category { get; }
 
     public int TxCount => Metadata.TxCount;
 

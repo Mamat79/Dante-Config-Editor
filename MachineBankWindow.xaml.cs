@@ -192,7 +192,8 @@ public partial class MachineBankWindow : Window
                 .ToArray();
             CategoryFilterComboBox.ItemsSource = new[] { AllFilterLabel }
                 .Concat(_allTemplates
-                    .Select(item => item.Category)
+                    .Select(item =>
+                        MachineTemplateLocalizationService.Category(item, _language))
                     .Where(value => !string.IsNullOrWhiteSpace(value))
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .OrderBy(value => value, StringComparer.OrdinalIgnoreCase))
@@ -233,15 +234,23 @@ public partial class MachineBankWindow : Window
             .Where(item => manufacturer == AllFilterLabel
                 || string.Equals(item.Manufacturer, manufacturer, StringComparison.OrdinalIgnoreCase))
             .Where(item => category == AllFilterLabel
-                || string.Equals(item.Category, category, StringComparison.OrdinalIgnoreCase))
+                || string.Equals(
+                    MachineTemplateLocalizationService.Category(item, _language),
+                    category,
+                    StringComparison.OrdinalIgnoreCase))
             .Where(item => item.TxCount >= minimumTx && item.RxCount >= minimumRx)
             .Where(item => string.IsNullOrWhiteSpace(search)
                 || Contains(item.TemplateName, search)
                 || Contains(item.Manufacturer, search)
                 || Contains(item.Model, search)
                 || Contains(item.Description, search)
+                || Contains(
+                    MachineTemplateLocalizationService.Description(item, _language),
+                    search)
                 || item.Tags.Any(tag => Contains(tag, search)))
-            .Select(item => new MachineBankRow(item))
+            .Select(item => new MachineBankRow(
+                item,
+                MachineTemplateLocalizationService.Category(item, _language)))
             .ToArray();
         _visibleRows.Clear();
         foreach (MachineBankRow row in rows)
@@ -281,11 +290,17 @@ public partial class MachineBankWindow : Window
             SelectedTemplateNameTextBlock.Text = metadata.TemplateName;
             SelectedHardwareTextBlock.Text = string.Join(
                 " · ",
-                new[] { metadata.Manufacturer, metadata.Model, metadata.Category }
+                new[]
+                {
+                    metadata.Manufacturer,
+                    metadata.Model,
+                    MachineTemplateLocalizationService.Category(metadata, _language)
+                }
                     .Where(value => !string.IsNullOrWhiteSpace(value)));
             SelectedCountsTextBlock.Text =
                 $"{metadata.TxCount} TX / {metadata.RxCount} RX · preset {Blank(metadata.SourcePresetVersion)}";
-            SelectedDescriptionTextBlock.Text = metadata.Description;
+            SelectedDescriptionTextBlock.Text =
+                MachineTemplateLocalizationService.Description(metadata, _language);
             SelectedTagsTextBlock.Text = metadata.Tags.Count == 0
                 ? string.Empty
                 : "Tags: " + string.Join(", ", metadata.Tags);
@@ -887,9 +902,12 @@ public partial class MachineBankWindow : Window
 
 public sealed class MachineBankRow
 {
-    public MachineBankRow(MachineTemplateMetadata metadata)
+    public MachineBankRow(
+        MachineTemplateMetadata metadata,
+        string displayCategory)
     {
         Metadata = metadata;
+        Category = displayCategory;
     }
 
     public MachineTemplateMetadata Metadata { get; }
@@ -902,7 +920,7 @@ public sealed class MachineBankRow
 
     public string Model => Metadata.Model;
 
-    public string Category => Metadata.Category;
+    public string Category { get; }
 
     public int TxCount => Metadata.TxCount;
 
