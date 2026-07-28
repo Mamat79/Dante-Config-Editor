@@ -132,6 +132,32 @@ public sealed class PatchWorkspaceUiContractTests
     }
 
     [Fact]
+    public void PatchDeviceSelectionFeedsTheSharedInspectorContext()
+    {
+        string workspaceCode = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml.cs"));
+        string mainWindowCode = File.ReadAllText(RepositoryFile("MainWindow.xaml.cs"));
+
+        Assert.Contains("PatchDeviceFocusChangedEventArgs", workspaceCode, StringComparison.Ordinal);
+        Assert.Contains("DeviceFocusChanged?.Invoke", workspaceCode, StringComparison.Ordinal);
+        Assert.Contains(
+            "workspace.DeviceFocusChanged += EasyPatchWorkspace_DeviceFocusChanged",
+            mainWindowCode,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "SynchronizeSelectedDeviceContext(subscription.RxDevice",
+            mainWindowCode,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "_project.FindDeviceByStableIdentity",
+            ExtractMethod(mainWindowCode, "private DanteDevice? SelectedInspectorDevice"),
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "candidate.Device.StableIdentity",
+            ExtractMethod(mainWindowCode, "private void SynchronizeSelectedDeviceContext"),
+            StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void EasyPatchOpensOnTheMatrixThenOffersSelectionAndInlineRename()
     {
         string xaml = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml"));

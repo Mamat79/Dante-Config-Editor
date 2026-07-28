@@ -34,6 +34,16 @@ Toutes les dates utilisent le calendrier ISO. Les versions antérieures à
 - 43 modèles fournis intégrés aux installateurs Windows et macOS sans écraser
   la banque personnelle.
 
+### Corrigé le 2026-07-28
+
+- la banque personnelle et les deux banques fournies sont visibles ensemble
+  dans une liste dédupliquée de 43 modèles, avec filtre par banque et origine ;
+- les modèles fournis sont protégés en lecture seule mais restent exportables,
+  ajoutables au projet et duplicables dans la banque personnelle ;
+- l'inspecteur de droite suit désormais la dernière machine choisie dans
+  Machines, Patch ou Easy Patch et conserve ce contexte au changement de vue ;
+- les fenêtres de banque Windows et macOS disposent du même parcours global.
+
 ### Performance
 
 - édition groupée de 200 machines : `317,410 ms` vers `38,092 ms` ;
@@ -59,5 +69,5 @@ La checklist manuelle reste recommandée pour chaque fichier de production.
 
 - Windows : `DanteConfigEditor2026_1_Beta_Installer.exe` ;
 - macOS Apple Silicon et Intel : DMG autonomes dédiés ;
-- aucune Release GitHub créée automatiquement ;
+- Release bêta : <https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.1> ;
 - aucune fusion automatique dans `main`.

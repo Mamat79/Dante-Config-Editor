@@ -160,6 +160,30 @@ public sealed class MachineDialogUiContractTests
     }
 
     [Fact]
+    public void MachineBankShowsAllAvailableBanksOnWindowsAndMac()
+    {
+        string windowsXaml = File.ReadAllText(RepositoryFile("MachineBankWindow.xaml"));
+        string windowsCode = File.ReadAllText(RepositoryFile("MachineBankWindow.xaml.cs"));
+        string macXaml = File.ReadAllText(RepositoryFile(
+            "src",
+            "DanteConfigEditor.Mac",
+            "MachineBankDialog.axaml"));
+        string macCode = File.ReadAllText(RepositoryFile(
+            "src",
+            "DanteConfigEditor.Mac",
+            "MachineBankDialog.axaml.cs"));
+
+        Assert.Contains("x:Name=\"BankSourceComboBox\"", windowsXaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"BankColumn\"", windowsXaml, StringComparison.Ordinal);
+        Assert.Contains("MachineBankCatalogService.Load", windowsCode, StringComparison.Ordinal);
+        Assert.Contains("_catalog.UniqueEntries", windowsCode, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"BankSourceComboBox\"", macXaml, StringComparison.Ordinal);
+        Assert.Contains("Binding=\"{Binding BankName}\"", macXaml, StringComparison.Ordinal);
+        Assert.Contains("MachineBankCatalogService.Load", macCode, StringComparison.Ordinal);
+        Assert.Contains("_catalog.UniqueEntries", macCode, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void TemplateMetadataUsesExplicitFrenchAndEnglishHelp()
     {
         string code = File.ReadAllText(RepositoryFile("MachineTemplateEditorWindow.xaml.cs"));

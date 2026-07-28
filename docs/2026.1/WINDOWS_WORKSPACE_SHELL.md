@@ -33,9 +33,15 @@ travail afin de ne pas surcharger la barre supérieure.
 | Outils avancés | Atomic Bomb |
 
 La banque de machines est accessible directement en tête de la page Machines :
-la liste choisit la banque active ou une banque fournie, puis les actions
-permettent d'ajouter un modèle au projet ou de gérer la banque. La version
-macOS suit le même parcours.
+la fenêtre regroupe par défaut la banque personnelle et les banques fournies
+dans une liste dédupliquée. Un sélecteur permet d'isoler une banque et la
+colonne Banque indique l'origine de chaque modèle. La version macOS suit le
+même parcours.
+
+L'inspecteur de droite suit une sélection unique partagée. Choisir une machine
+dans Machines, un RX ou un TX dans Patch, ou un appareil dans Easy Patch met à
+jour l'inspecteur. Cette dernière machine reste sélectionnée au retour dans la
+page Machines, y compris après un renommage.
 
 ## Comportement adaptatif
 
@@ -63,7 +69,7 @@ et 200 %.
 Le 28 juillet 2026 :
 
 - compilation Windows Release sans avertissement ;
-- `392/392` tests Core/Windows réussis ;
+- `395/395` tests Core/Windows réussis ;
 - contrôle visuel réel de l'exécutable à environ `1266 x 813` et en fenêtre
   maximisée ;
 - ouverture de la fixture anonymisée `representative-preset.xml` ;

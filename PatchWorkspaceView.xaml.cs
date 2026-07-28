@@ -31,6 +31,15 @@ public sealed class DirectPatchRequestEventArgs(
         edits ?? throw new ArgumentNullException(nameof(edits));
 }
 
+public sealed class PatchDeviceFocusChangedEventArgs(
+    string deviceName,
+    DanteChannelKind kind) : EventArgs
+{
+    public string DeviceName { get; } = deviceName;
+
+    public DanteChannelKind Kind { get; } = kind;
+}
+
 public sealed record PatchMatrixOneToOneState(
     string CountText,
     string? TxDeviceName,
@@ -154,6 +163,8 @@ public partial class PatchWorkspaceView : UserControl
     public event EventHandler? ApplyRequested;
 
     public event EventHandler<DirectPatchRequestEventArgs>? DirectApplyRequested;
+
+    public event EventHandler<PatchDeviceFocusChangedEventArgs>? DeviceFocusChanged;
 
     public event EventHandler? CancelRequested;
 
@@ -373,6 +384,7 @@ public partial class PatchWorkspaceView : UserControl
         RefreshSourceChannelsAndMatrixColumns();
         RefreshTargetRows();
         UpdateDeviceNavigationState();
+        NotifyDeviceFocus(result.RxDeviceName, DanteChannelKind.Rx);
         SetInfo(_embedded
             ? L("Machines TX et RX inversées.", "Tx and Rx devices swapped.")
             : L(
@@ -390,6 +402,7 @@ public partial class PatchWorkspaceView : UserControl
         RefreshSourceChannelsAndMatrixColumns();
         RefreshTargetRows();
         UpdateDeviceNavigationState();
+        NotifyDeviceFocus(TxDeviceComboBox.SelectedItem as string, DanteChannelKind.Tx);
     }
 
     private void RxDeviceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -398,6 +411,17 @@ public partial class PatchWorkspaceView : UserControl
         {
             RefreshTargetRows();
             UpdateDeviceNavigationState();
+            NotifyDeviceFocus(RxDeviceComboBox.SelectedItem as string, DanteChannelKind.Rx);
+        }
+    }
+
+    private void NotifyDeviceFocus(string? deviceName, DanteChannelKind kind)
+    {
+        if (!string.IsNullOrWhiteSpace(deviceName))
+        {
+            DeviceFocusChanged?.Invoke(
+                this,
+                new PatchDeviceFocusChangedEventArgs(deviceName, kind));
         }
     }
 

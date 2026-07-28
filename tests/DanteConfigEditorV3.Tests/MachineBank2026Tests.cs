@@ -43,6 +43,51 @@ public sealed class MachineBank2026Tests
     }
 
     [Fact]
+    public void CatalogCombinesBanksAndPrefersActiveCopiesOfDuplicateTemplates()
+    {
+        using BankWorkspace workspace = new();
+        string active = workspace.Subdirectory("MyBank");
+        CopyDirectory(
+            RepositoryFile(
+                "Resources",
+                "MachineBanks",
+                "Bundled",
+                "DCE Community Devices 3.6"),
+            active);
+        string community = RepositoryFile(
+            "Resources",
+            "MachineBanks",
+            "Bundled",
+            "DCE Community Devices 2026.1");
+        string generic = RepositoryFile(
+            "Resources",
+            "MachineBanks",
+            "Bundled",
+            "DCE Generic Roles 2026.1");
+
+        MachineBankCatalogSnapshot catalog = MachineBankCatalogService.Load(
+            active,
+            [community, generic]);
+
+        Assert.Empty(catalog.Issues);
+        Assert.Equal(3, catalog.Sources.Count);
+        Assert.Equal(52, catalog.Entries.Count);
+        Assert.Equal(43, catalog.UniqueEntries.Count);
+        Assert.Equal(9, catalog.UniqueEntries.Count(entry => entry.IsActiveBank));
+        Assert.All(
+            new MachineBankRepository(active).List(),
+            activeTemplate => Assert.Contains(
+                catalog.UniqueEntries,
+                entry =>
+                    entry.Metadata.TemplateId == activeTemplate.TemplateId
+                    && entry.IsActiveBank
+                    && string.Equals(
+                        entry.BankPath,
+                        active,
+                        StringComparison.OrdinalIgnoreCase)));
+    }
+
+    [Fact]
     public void NewBankUsesFormat2AndDetectsImageCorruption()
     {
         using BankWorkspace workspace = new();

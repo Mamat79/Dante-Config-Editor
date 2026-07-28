@@ -93,8 +93,11 @@ IP configuration, flows, and subscriptions are not copied by default.
 `DCE Generic Roles 2026.1` and `DCE Community Devices 2026.1` are bundled with
 the application. Together they provide 43 templates, including 41 illustrated,
 sanitized community templates. The Devices page lets users select a bank, add
-a template to the project, or manage its contents. Updates refresh only the
-application-managed copy and never replace the personal bank.
+a template to the project, or manage its contents. The window now combines the
+personal and bundled banks in one deduplicated list. A selector can isolate one
+bank, and the `Bank` column identifies each template's source. Bundled
+templates remain read-only and may be duplicated into the personal bank.
+Updates never replace that personal bank.
 
 ## Main features
 
@@ -148,8 +151,9 @@ These tests do not replace final import in Dante Controller.
 
 ## Install the beta
 
-No 2026.1 GitHub Release is published automatically. Branch packages are
-available as GitHub Actions artifacts after a successful run.
+The [DCE 2026.1 Beta Release](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.1)
+contains the Windows and macOS installers, guides, videos, and bundled banks.
+GitHub Actions also retains branch artifacts after a successful run.
 
 ### Windows 11 x64
 

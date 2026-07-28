@@ -19,11 +19,18 @@ partagé ou synchronisé.
 
 Depuis DCE, l'utilisateur peut :
 
+- afficher toutes les banques installées dans une liste globale dédupliquée ;
+- isoler une banque et identifier l'origine de chaque modèle ;
 - changer de banque active ;
 - ouvrir son dossier ;
 - exporter une banque en `.dce-bank.zip` ;
 - importer une archive dans un dossier neuf ou vide ;
 - ouvrir le catalogue public GitHub.
+
+Dans la vue globale, un modèle présent à la fois dans la banque personnelle et
+dans une banque fournie n'apparaît qu'une fois : la copie personnelle est
+prioritaire. Les modèles fournis sont en lecture seule ; ils peuvent toutefois
+être ajoutés à un projet, exportés ou dupliqués dans la banque personnelle.
 
 ## Évolution proposée : catalogue intégré
 

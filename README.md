@@ -97,9 +97,11 @@ Les identités matérielles, IP, flows et subscriptions ne sont pas recopiés pa
 défaut. Les banques `DCE Generic Roles 2026.1` et
 `DCE Community Devices 2026.1` sont intégrées à l'application. Elles
 fournissent 43 modèles, dont 41 modèles communautaires illustrés et assainis.
-La page Machines permet de choisir une banque, d'ajouter un modèle au projet
-ou de gérer son contenu. Une mise à jour rafraîchit uniquement la copie gérée
-par l'application et ne remplace jamais la banque personnelle.
+La fenêtre affiche désormais en une seule liste dédupliquée la banque
+personnelle et les banques fournies. Le sélecteur permet aussi d'isoler une
+banque ; la colonne `Banque` indique l'origine de chaque modèle. Les modèles
+fournis restent en lecture seule et peuvent être dupliqués dans la banque
+personnelle. Une mise à jour ne remplace jamais cette dernière.
 
 ## Fonctions principales
 
@@ -157,9 +159,10 @@ Ces tests ne remplacent pas l’import final dans Dante Controller.
 
 ## Installer la bêta
 
-Aucune Release GitHub 2026.1 n’est publiée automatiquement. Les paquets de la
-branche sont disponibles dans les artefacts des workflows GitHub Actions après
-un run réussi.
+La [Release DCE 2026.1 Beta](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.1)
+regroupe les installateurs Windows et macOS, les notices, les vidéos et les
+banques fournies. Les workflows GitHub Actions conservent également leurs
+artefacts après un run réussi.
 
 ### Windows 11 x64
 

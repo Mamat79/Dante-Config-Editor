@@ -545,7 +545,7 @@ def full_guide(language: str) -> None:
             para("Windows et macOS organisent le travail par intention : Projet, Vue d'ensemble, Machines, Patch, Import / Export, Centre de validation, Historique et Outils avancés. La banque est accessible directement depuis Machines."),
             *bullets([
                 "La barre supérieure conserve le fichier actif, Enregistrer sous, Annuler et Rétablir.",
-                "L'inspecteur de droite affiche le contexte de la sélection sans changer de page.",
+                "L'inspecteur de droite suit la dernière machine sélectionnée dans Machines, Patch ou Easy Patch et conserve ce contexte au changement de page.",
                 "Navigation, réglages et inspecteur démarrent ouverts ; une flèche toujours visible masque ou rouvre chaque zone.",
                 "Matrice, Easy patch, Liste RX vers TX et Synoptique partagent les mêmes identités stables et la même session.",
                 "Le Centre de validation sépare contrôles internes DCE et validation manuelle Dante Controller.",
@@ -568,7 +568,7 @@ def full_guide(language: str) -> None:
             *bullets([
                 "La sélection multiple définit la cible Sélection non verrouillée. La colonne Lock protège les machines des actions globales.",
                 "Le preferred master peut être coché directement. Réduire les réglages agrandit le tableau.",
-                "Source de modèles choisit la banque personnelle ou une banque fournie ; Ajouter depuis la banque crée une instance indépendante et Gérer la banque ouvre son administration.",
+                "Source de modèles filtre la banque personnelle ou une banque fournie. Gérer la banque ouvre par défaut une liste globale dédupliquée de 43 modèles avec leur origine ; Ajouter depuis la banque crée une instance indépendante.",
             ]),
             para("Recherche, filtres et actions globales", "h2"),
             *bullets([
@@ -713,7 +713,7 @@ def full_guide(language: str) -> None:
                 [48, 122],
             ),
             para("15. Tests de non-régression", "h1"),
-            para("La suite 2026.1 exécute 392 tests Core/Windows et 22 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la duplication, la banque de machines, la création de projet, le format .dceproj, les profils XML, les commandes, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch, le soutien facultatif et la cohérence des traductions."),
+            para("La suite 2026.1 exécute 395 tests Core/Windows et 22 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la duplication, la banque de machines, la création de projet, le format .dceproj, les profils XML, les commandes, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch, le soutien facultatif et la cohérence des traductions."),
             para("16. Limites connues", "h1"),
             *bullets([
                 "Aucun pilotage en temps réel et aucune communication avec les appareils.",
@@ -757,6 +757,7 @@ def full_guide(language: str) -> None:
                 "Choisissez Enregistrer dans la banque, renseignez fabricant, modèle, catégorie, description, tags et labels génériques.",
                 "Une image PNG, JPEG ou WebP facultative est copiée dans le dossier du modèle ; aucun chemin externe fragile n'est conservé.",
                 "La banque se trouve par défaut dans Documents/Dante Config Editor/Machine Bank. Son emplacement peut être choisi, ouvert, copié ou placé dans un dossier synchronisé.",
+                "La fenêtre affiche toutes les banques installées dans une liste dédupliquée de 43 modèles. Le sélecteur isole une banque et la colonne Banque indique l'origine ; une copie personnelle est prioritaire sur un doublon fourni.",
                 "Exporter la banque crée une archive vérifiée *.dce-bank.zip. Importer une banque exige un dossier neuf ou vide et ne remplace jamais l'existant.",
                 "Banques GitHub ouvre le catalogue public. DCE Generic Roles 2026.1 fournit deux rôles génériques d'essai. DCE Community Devices 2026.1 fournit 41 modèles illustrés et assainis issus de fabricants variés. Les 43 modèles sont intégrés aux installateurs sans modifier la banque personnelle et ne contiennent ni identité matérielle, ni donnée réseau, ni flow, ni subscription.",
                 "L'administration permet recherche, filtres, modification, duplication, suppression confirmée et import/export d'un modèle ZIP.",
@@ -1024,7 +1025,7 @@ def full_guide(language: str) -> None:
                 [
                     ["Créer un modèle", "Sélectionner la machine > Enregistrer dans la banque > remplacer les labels propres au projet par des labels génériques > renseigner les métadonnées > Enregistrer."],
                     ["Ajouter une image", "Choisir PNG, JPEG ou WebP. L'image est copiée dans le dossier du modèle ; le fichier original peut ensuite être déplacé."],
-                    ["Changer de banque", "Machines > Source de modèles > Gérer la banque. Un dossier local, partagé ou synchronisé peut être utilisé."],
+                    ["Parcourir les banques", "Machines > Gérer la banque ouvre les 43 modèles sans doublon. Le sélecteur isole la banque personnelle ou une banque fournie et la colonne Banque affiche l'origine."],
                     ["Partager toute la banque", "Exporter la banque crée une archive *.dce-bank.zip vérifiée."],
                     ["Installer une banque", "Importer une banque puis choisir un dossier neuf ou vide. DCE ne remplace jamais silencieusement une banque existante."],
                     ["Ajouter au projet", "Sélectionner le modèle > Ajouter au projet > choisir un nom unique et les labels > confirmer."],
@@ -1145,7 +1146,7 @@ def full_guide(language: str) -> None:
             para("Windows and macOS organize work by intent: Project, Overview, Devices, Patch, Import / Export, Validation center, History, and Advanced tools. The bank is available directly from Devices."),
             *bullets([
                 "The top bar keeps the active file, Save as, Undo, and Redo available.",
-                "The right inspector shows selection context without changing pages.",
+                "The right inspector follows the last device selected in Devices, Patch, or Easy patch and keeps that context when changing pages.",
                 "Navigation, settings, and inspector start expanded; one persistent arrow hides or reopens each area.",
                 "Matrix, Easy patch, Rx-to-Tx list, and Synoptic share stable identities and one session.",
                 "The Validation Center separates internal DCE checks from manual Dante Controller validation.",
@@ -1168,7 +1169,7 @@ def full_guide(language: str) -> None:
             *bullets([
                 "Multiple selection defines the Selected unlocked target. The Lock column protects devices from global actions.",
                 "Preferred Master can be toggled directly. Hide settings enlarges the table.",
-                "Template source selects the personal or a bundled bank; Add from bank creates an independent instance and Manage bank opens its administration.",
+                "Template source filters the personal or a bundled bank. Manage bank opens a global deduplicated list of 43 templates with their source; Add from bank creates an independent instance.",
             ]),
             para("Search, filters, and global actions", "h2"),
             *bullets([
@@ -1313,7 +1314,7 @@ def full_guide(language: str) -> None:
                 [48, 122],
             ),
             para("15. Regression tests", "h1"),
-            para("The 2026.1 suite runs 392 Core/Windows tests and 22 headless Mac tests. Coverage includes XML guards, save and recovery, IPv4 interfaces, subscriptions, large presets, duplication, the device bank, project creation, .dceproj packages, XML profiles, commands, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, optional support, and translation consistency."),
+            para("The 2026.1 suite runs 395 Core/Windows tests and 22 headless Mac tests. Coverage includes XML guards, save and recovery, IPv4 interfaces, subscriptions, large presets, duplication, the device bank, project creation, .dceproj packages, XML profiles, commands, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, optional support, and translation consistency."),
             para("16. Known limitations", "h1"),
             *bullets([
                 "No real-time Dante control and no communication with devices.",
@@ -1357,6 +1358,7 @@ def full_guide(language: str) -> None:
                 "Choose Save to machine bank and enter manufacturer, model, category, description, tags, and generic labels.",
                 "An optional PNG, JPEG, or WebP image is copied into the model folder; no fragile external path is kept.",
                 "The default bank is Documents/Dante Config Editor/Machine Bank. You may choose, open, copy, or place it in a synchronized folder.",
+                "The window combines all installed banks into one deduplicated list of 43 templates. The selector isolates one bank and the Bank column identifies the source; a personal copy takes priority over a bundled duplicate.",
                 "Export bank creates a verified *.dce-bank.zip archive. Import bank requires a new or empty folder and never replaces existing data.",
                 "GitHub banks opens the public catalog. DCE Generic Roles 2026.1 provides two generic test roles. DCE Community Devices 2026.1 provides 41 sanitized illustrated templates from several manufacturers. These banks contain no hardware identity, network data, flow, or subscription.",
                 "Administration supports search, filters, edit, duplicate, confirmed delete, and model ZIP import/export.",
@@ -1624,7 +1626,7 @@ def full_guide(language: str) -> None:
                 [
                     ["Create a template", "Select the device > Save to device bank > replace project-specific labels with generic labels > enter metadata > Save."],
                     ["Add an image", "Choose PNG, JPEG, or WebP. The image is copied into the template folder, so the source file can later be moved."],
-                    ["Change bank", "Devices > Template source > Manage bank. You may use a local, shared, or synchronized folder."],
+                    ["Browse banks", "Devices > Manage bank opens all 43 templates without duplicates. The selector isolates the personal or a bundled bank, while the Bank column shows its source."],
                     ["Share the bank", "Export bank creates a verified *.dce-bank.zip archive."],
                     ["Install a bank", "Import bank and choose a new or empty folder. DCE never silently replaces an existing bank."],
                     ["Add to project", "Select the template > Add to project > choose a unique name and labels > confirm."],

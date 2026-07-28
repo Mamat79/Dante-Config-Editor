@@ -10,7 +10,7 @@ Ce document complète les notes utilisateur
 - base : V3.6 stabilisée au commit `25a1e7c` ;
 - branche : `2026.1` ;
 - aucune fusion automatique dans `main` ;
-- aucune Release GitHub automatique ;
+- Release bêta conservée sous le tag `v2026.1` ;
 - installation côte à côte avec la V3.6.
 
 ## Changements structurants
@@ -22,6 +22,9 @@ Ce document complète les notes utilisateur
 - migration locale et banque format 2 ;
 - shell Windows, Patch unifié, synoptique et Centre de validation ;
 - indexation des machines/canaux et cache de validation.
+- vue globale dédupliquée des banques personnelle et fournies ;
+- inspecteur synchronisé avec la dernière machine parcourue dans Machines,
+  Patch et Easy Patch.
 
 ## Compatibilité
 

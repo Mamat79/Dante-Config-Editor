@@ -2,10 +2,10 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Banque de machines"
-        Width="1180"
-        Height="760"
-        MinWidth="940"
-        MinHeight="620"
+        Width="1280"
+        Height="800"
+        MinWidth="1000"
+        MinHeight="650"
         WindowStartupLocation="CenterOwner">
     <Window.Resources>
         <ResourceDictionary>
@@ -17,6 +17,7 @@
 
     <Grid Margin="18">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -60,7 +61,36 @@
             </WrapPanel>
         </Grid>
 
-        <Grid Grid.Row="1" Margin="0,14,0,12">
+        <Border Grid.Row="1"
+                Margin="0,14,0,0"
+                Padding="12,8"
+                Background="{DynamicResource DialogSurfaceBrush}"
+                BorderBrush="{DynamicResource DialogBorderBrush}"
+                BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="420" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Label x:Name="BankSourceLabel"
+                       Content="Banques affichées"
+                       VerticalAlignment="Center"
+                       Margin="0,0,8,0" />
+                <ComboBox x:Name="BankSourceComboBox"
+                          Grid.Column="1"
+                          MinWidth="320"
+                          SelectionChanged="BankSourceComboBox_SelectionChanged" />
+                <TextBlock x:Name="BankSourceSummaryTextBlock"
+                           Grid.Column="2"
+                           Margin="14,0,0,0"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource DialogMutedBrush}"
+                           TextWrapping="Wrap" />
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="2" Margin="0,10,0,12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1.5*" />
                 <ColumnDefinition Width="*" />
@@ -92,11 +122,11 @@
             </StackPanel>
         </Grid>
 
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1.55*" />
+                <ColumnDefinition Width="1.7*" />
                 <ColumnDefinition Width="12" />
-                <ColumnDefinition Width="0.95*" />
+                <ColumnDefinition Width="0.9*" />
             </Grid.ColumnDefinitions>
 
             <DataGrid x:Name="TemplatesGrid"
@@ -107,6 +137,10 @@
                       SelectionMode="Single"
                       SelectionChanged="TemplatesGrid_SelectionChanged">
                 <DataGrid.Columns>
+                    <DataGridTextColumn x:Name="BankColumn"
+                                        Header="Banque"
+                                        Binding="{Binding BankName}"
+                                        Width="1.1*" />
                     <DataGridTextColumn x:Name="TemplateNameColumn"
                                         Header="Modèle de banque"
                                         Binding="{Binding TemplateName}"
@@ -187,7 +221,7 @@
             </Border>
         </Grid>
 
-        <Grid Grid.Row="3" Margin="0,14,0,0">
+        <Grid Grid.Row="4" Margin="0,14,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />

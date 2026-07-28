@@ -20,9 +20,12 @@ public partial class MachineBankWindow : Window
     private readonly bool _canAddToProject;
     private readonly ObservableCollection<MachineBankRow> _visibleRows = [];
     private readonly MachineBankLocationService _locationService;
-    private IReadOnlyList<MachineTemplateMetadata> _allTemplates = [];
+    private IReadOnlyList<MachineBankCatalogEntry> _allTemplates = [];
+    private MachineBankCatalogSnapshot _catalog = new([], [], [], []);
     private MachineBankRepository _repository;
     private string _bankPath;
+    private string? _initialBankPath;
+    private bool _updatingBankSources;
     private bool _updatingFilters;
 
     public MachineBankWindow(
@@ -38,8 +41,9 @@ public partial class MachineBankWindow : Window
         _usedDeviceNames = usedDeviceNames.ToHashSet(StringComparer.OrdinalIgnoreCase);
         _canAddToProject = canAddToProject;
         _locationService = MachineBankLocationService.CreateDefault();
-        _bankPath = string.IsNullOrWhiteSpace(initialBankPath)
-            ? _locationService.Load()
+        _bankPath = Path.GetFullPath(_locationService.Load());
+        _initialBankPath = string.IsNullOrWhiteSpace(initialBankPath)
+            ? null
             : Path.GetFullPath(initialBankPath);
         _repository = new MachineBankRepository(_bankPath);
         DialogThemeService.Apply(this, useLightTheme);
@@ -52,7 +56,9 @@ public partial class MachineBankWindow : Window
 
     public MachineInstanceOptions? SelectedInstanceOptions { get; private set; }
 
-    public string CurrentBankPath => _bankPath;
+    public string CurrentBankPath =>
+        (BankSourceComboBox.SelectedItem as MachineBankSourceChoice)?.Path
+        ?? _bankPath;
 
     private string AllFilterLabel => L("Tous", "All");
 
@@ -60,6 +66,8 @@ public partial class MachineBankWindow : Window
     {
         Title = L("Banque de machines", "Device bank");
         HeadingTextBlock.Text = Title;
+        BankSourceLabel.Content = L("Banques affichées", "Displayed banks");
+        BankColumn.Header = L("Banque", "Bank");
         GithubBanksButton.Content = L("Banques GitHub", "GitHub banks");
         MigrateBankButton.Content = L("Migrer une copie", "Migrate a copy");
         ChangeBankButton.Content = L("Changer de banque", "Change bank");
@@ -113,6 +121,9 @@ public partial class MachineBankWindow : Window
         SearchTextBox.ToolTip = L(
             "Recherche dans le nom, le fabricant, le modèle, la catégorie, la description et les mots-clés.",
             "Searches names, manufacturers, models, categories, descriptions and keywords.");
+        BankSourceComboBox.ToolTip = L(
+            "Affiche toutes les banques sans doublons, ou limite la liste à une seule banque.",
+            "Shows all banks without duplicates, or limits the list to one bank.");
         ManufacturerFilterComboBox.ToolTip = L(
             "Limite la liste à un fabricant.",
             "Limits the list to one manufacturer.");
@@ -156,15 +167,23 @@ public partial class MachineBankWindow : Window
     {
         try
         {
-            _allTemplates = _repository.List();
-            int formatVersion = _repository.GetFormatVersion();
-            BankPathTextBlock.Text = $"{_bankPath}  ·  format {formatVersion}";
-            MigrateBankButton.Visibility = formatVersion
-                < MachineBankMigrationService.CurrentBankFormatVersion
-                ? Visibility.Visible
-                : Visibility.Collapsed;
-            RefreshFilterSources();
-            ApplyFilters(selectTemplateId);
+            MachineBankSourceChoice? previous =
+                BankSourceComboBox.SelectedItem as MachineBankSourceChoice;
+            bool selectAll = previous?.IsAll
+                ?? string.IsNullOrWhiteSpace(_initialBankPath);
+            string? selectedPath = previous?.Path ?? _initialBankPath;
+            _catalog = MachineBankCatalogService.Load(_bankPath);
+            foreach (MachineBankCatalogIssue issue in _catalog.Issues)
+            {
+                DiagnosticLogService.Default.Write(
+                    "MachineBank",
+                    $"Impossible de lire la banque {issue.BankPath}.",
+                    issue.Exception);
+            }
+
+            RefreshBankSources(selectedPath, selectAll);
+            _initialBankPath = null;
+            ApplySelectedBankSource(selectTemplateId);
         }
         catch (Exception ex)
         {
@@ -179,6 +198,125 @@ public partial class MachineBankWindow : Window
         }
     }
 
+    private void RefreshBankSources(string? preferredPath, bool selectAll)
+    {
+        List<MachineBankSourceChoice> choices =
+        [
+            new(
+                null,
+                L(
+                    $"Toutes les banques · {_catalog.UniqueEntries.Count} modèles uniques",
+                    $"All banks · {_catalog.UniqueEntries.Count} unique templates"),
+                _catalog.UniqueEntries.Count,
+                IsActive: false,
+                IsAll: true)
+        ];
+        choices.AddRange(_catalog.Sources.Select(source =>
+        {
+            string name = source.IsActive
+                ? L("Ma banque active", "My active bank")
+                : source.Name;
+            string modelLabel = L(
+                source.Templates.Count == 1 ? "modèle" : "modèles",
+                source.Templates.Count == 1 ? "template" : "templates");
+            return new MachineBankSourceChoice(
+                source.Path,
+                $"{name} · {source.Templates.Count} {modelLabel}",
+                source.Templates.Count,
+                source.IsActive,
+                IsAll: false);
+        }));
+
+        _updatingBankSources = true;
+        try
+        {
+            BankSourceComboBox.ItemsSource = choices;
+            BankSourceComboBox.SelectedItem = selectAll
+                ? choices[0]
+                : choices.FirstOrDefault(choice =>
+                        !choice.IsAll
+                        && !string.IsNullOrWhiteSpace(preferredPath)
+                        && string.Equals(
+                            choice.Path,
+                            preferredPath,
+                            StringComparison.OrdinalIgnoreCase))
+                    ?? choices[0];
+        }
+        finally
+        {
+            _updatingBankSources = false;
+        }
+    }
+
+    private void BankSourceComboBox_SelectionChanged(
+        object sender,
+        SelectionChangedEventArgs e)
+    {
+        if (!_updatingBankSources)
+        {
+            ApplySelectedBankSource();
+        }
+    }
+
+    private void ApplySelectedBankSource(Guid? selectTemplateId = null)
+    {
+        MachineBankSourceChoice? selected =
+            BankSourceComboBox.SelectedItem as MachineBankSourceChoice;
+        if (selected is null)
+        {
+            _allTemplates = [];
+            BankSourceSummaryTextBlock.Text = string.Empty;
+            BankPathTextBlock.Text = string.Empty;
+            RefreshFilterSources();
+            ApplyFilters();
+            return;
+        }
+
+        if (selected.IsAll)
+        {
+            _allTemplates = _catalog.UniqueEntries;
+            BankPathTextBlock.Text = L(
+                $"{_catalog.UniqueEntries.Count} modèles uniques dans {_catalog.Sources.Count} banques",
+                $"{_catalog.UniqueEntries.Count} unique templates across {_catalog.Sources.Count} banks");
+            BankSourceSummaryTextBlock.Text = L(
+                "Les doublons utilisent la version de votre banque active.",
+                "Duplicate templates use the version from your active bank.");
+            MigrateBankButton.Visibility = Visibility.Collapsed;
+        }
+        else
+        {
+            _allTemplates = _catalog.Entries
+                .Where(entry => string.Equals(
+                    entry.BankPath,
+                    selected.Path,
+                    StringComparison.OrdinalIgnoreCase))
+                .ToArray();
+            MachineBankCatalogSource? source = _catalog.Sources.FirstOrDefault(candidate =>
+                string.Equals(
+                    candidate.Path,
+                    selected.Path,
+                    StringComparison.OrdinalIgnoreCase));
+            BankPathTextBlock.Text = source is null
+                ? selected.Path ?? string.Empty
+                : $"{source.Path}  ·  format {source.FormatVersion}";
+            BankSourceSummaryTextBlock.Text = selected.IsActive
+                ? L(
+                    "Banque personnelle modifiable.",
+                    "Editable personal bank.")
+                : L(
+                    "Banque fournie en lecture seule. Vous pouvez ajouter ou exporter ses modèles.",
+                    "Bundled read-only bank. You can add or export its templates.");
+            MigrateBankButton.Visibility = selected.IsActive
+                && source is not null
+                && source.FormatVersion < MachineBankMigrationService.CurrentBankFormatVersion
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+        }
+
+        RefreshFilterSources();
+        ApplyFilters(selectTemplateId);
+    }
+
     private void RefreshFilterSources()
     {
         _updatingFilters = true;
@@ -190,7 +328,7 @@ public partial class MachineBankWindow : Window
                 ?? AllFilterLabel;
             ManufacturerFilterComboBox.ItemsSource = new[] { AllFilterLabel }
                 .Concat(_allTemplates
-                    .Select(item => item.Manufacturer)
+                    .Select(item => item.Metadata.Manufacturer)
                     .Where(value => !string.IsNullOrWhiteSpace(value))
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .OrderBy(value => value, StringComparer.OrdinalIgnoreCase))
@@ -198,7 +336,9 @@ public partial class MachineBankWindow : Window
             CategoryFilterComboBox.ItemsSource = new[] { AllFilterLabel }
                 .Concat(_allTemplates
                     .Select(item =>
-                        MachineTemplateLocalizationService.Category(item, _language))
+                        MachineTemplateLocalizationService.Category(
+                            item.Metadata,
+                            _language))
                     .Where(value => !string.IsNullOrWhiteSpace(value))
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .OrderBy(value => value, StringComparer.OrdinalIgnoreCase))
@@ -237,25 +377,39 @@ public partial class MachineBankWindow : Window
         int minimumRx = ParseMinimum(MinimumRxTextBox.Text);
         MachineBankRow[] rows = _allTemplates
             .Where(item => manufacturer == AllFilterLabel
-                || string.Equals(item.Manufacturer, manufacturer, StringComparison.OrdinalIgnoreCase))
+                || string.Equals(
+                    item.Metadata.Manufacturer,
+                    manufacturer,
+                    StringComparison.OrdinalIgnoreCase))
             .Where(item => category == AllFilterLabel
                 || string.Equals(
-                    MachineTemplateLocalizationService.Category(item, _language),
+                    MachineTemplateLocalizationService.Category(
+                        item.Metadata,
+                        _language),
                     category,
                     StringComparison.OrdinalIgnoreCase))
-            .Where(item => item.TxCount >= minimumTx && item.RxCount >= minimumRx)
+            .Where(item =>
+                item.Metadata.TxCount >= minimumTx
+                && item.Metadata.RxCount >= minimumRx)
             .Where(item => string.IsNullOrWhiteSpace(search)
-                || Contains(item.TemplateName, search)
-                || Contains(item.Manufacturer, search)
-                || Contains(item.Model, search)
-                || Contains(item.Description, search)
+                || Contains(item.Metadata.TemplateName, search)
+                || Contains(item.Metadata.Manufacturer, search)
+                || Contains(item.Metadata.Model, search)
+                || Contains(item.Metadata.Description, search)
                 || Contains(
-                    MachineTemplateLocalizationService.Description(item, _language),
+                    MachineTemplateLocalizationService.Description(
+                        item.Metadata,
+                        _language),
                     search)
-                || item.Tags.Any(tag => Contains(tag, search)))
+                || item.Metadata.Tags.Any(tag => Contains(tag, search)))
             .Select(item => new MachineBankRow(
                 item,
-                MachineTemplateLocalizationService.Category(item, _language)))
+                MachineTemplateLocalizationService.Category(
+                    item.Metadata,
+                    _language),
+                item.IsActiveBank
+                    ? L("Ma banque", "My bank")
+                    : item.BankName))
             .ToArray();
         _visibleRows.Clear();
         foreach (MachineBankRow row in rows)
@@ -290,7 +444,7 @@ public partial class MachineBankWindow : Window
 
         try
         {
-            MachineTemplatePackage package = _repository.Load(row.TemplateId);
+            MachineTemplatePackage package = RepositoryFor(row).Load(row.TemplateId);
             MachineTemplateMetadata metadata = package.Metadata;
             SelectedTemplateNameTextBlock.Text = metadata.TemplateName;
             SelectedHardwareTextBlock.Text = string.Join(
@@ -335,7 +489,7 @@ public partial class MachineBankWindow : Window
 
         try
         {
-            MachineTemplatePackage package = _repository.Load(row.TemplateId);
+            MachineTemplatePackage package = RepositoryFor(row).Load(row.TemplateId);
             string suggestedName = BuildSuggestedDeviceName(package.Metadata);
             MachineInstanceWindow window = new(
                 _language,
@@ -368,9 +522,22 @@ public partial class MachineBankWindow : Window
             return;
         }
 
+        if (!row.IsActiveBank)
+        {
+            MessageBox.Show(
+                this,
+                L(
+                    "Les modèles fournis sont protégés. Dupliquez ce modèle pour créer une copie modifiable dans votre banque.",
+                    "Bundled templates are protected. Duplicate this template to create an editable copy in your bank."),
+                Title,
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+            return;
+        }
+
         try
         {
-            MachineTemplatePackage package = _repository.Load(row.TemplateId);
+            MachineTemplatePackage package = RepositoryFor(row).Load(row.TemplateId);
             MachineTemplateEditorWindow window = BuildEditor(
                 package,
                 L("Modifier le modèle", "Edit template"),
@@ -405,7 +572,7 @@ public partial class MachineBankWindow : Window
 
         try
         {
-            MachineTemplatePackage package = _repository.Load(row.TemplateId);
+            MachineTemplatePackage package = RepositoryFor(row).Load(row.TemplateId);
             MachineTemplateEditorWindow window = BuildEditor(
                 package,
                 L("Dupliquer le modèle", "Duplicate template"),
@@ -423,6 +590,7 @@ public partial class MachineBankWindow : Window
                 package,
                 BuildEditRequest(window.Result));
             MachineTemplateMetadata saved = _repository.Save(duplicate);
+            SelectBankSource(_bankPath);
             RefreshBank(saved.TemplateId);
         }
         catch (Exception ex)
@@ -435,6 +603,11 @@ public partial class MachineBankWindow : Window
     {
         MachineBankRow? row = RequireSelection();
         if (row is null)
+        {
+            return;
+        }
+
+        if (!row.IsActiveBank)
         {
             return;
         }
@@ -454,7 +627,7 @@ public partial class MachineBankWindow : Window
 
         try
         {
-            _repository.Delete(row.TemplateId);
+            RepositoryFor(row).Delete(row.TemplateId);
             RefreshBank();
         }
         catch (Exception ex)
@@ -480,6 +653,7 @@ public partial class MachineBankWindow : Window
         try
         {
             MachineTemplateMetadata imported = _repository.Import(dialog.FileName);
+            SelectBankSource(_bankPath);
             RefreshBank(imported.TemplateId);
         }
         catch (Exception ex)
@@ -509,7 +683,7 @@ public partial class MachineBankWindow : Window
 
         try
         {
-            _repository.Export(row.TemplateId, dialog.FileName);
+            RepositoryFor(row).Export(row.TemplateId, dialog.FileName);
         }
         catch (Exception ex)
         {
@@ -652,8 +826,10 @@ public partial class MachineBankWindow : Window
     {
         try
         {
-            Directory.CreateDirectory(_bankPath);
-            Process.Start(new ProcessStartInfo(_bankPath)
+            string path = (BankSourceComboBox.SelectedItem as MachineBankSourceChoice)?.Path
+                ?? _bankPath;
+            Directory.CreateDirectory(path);
+            Process.Start(new ProcessStartInfo(path)
             {
                 UseShellExecute = true
             });
@@ -672,6 +848,10 @@ public partial class MachineBankWindow : Window
             _locationService.Save(fullPath);
             _bankPath = fullPath;
             _repository = new MachineBankRepository(_bankPath);
+            _initialBankPath = fullPath;
+            _updatingBankSources = true;
+            BankSourceComboBox.SelectedItem = null;
+            _updatingBankSources = false;
             RefreshBank();
         }
         catch (Exception ex)
@@ -837,11 +1017,26 @@ public partial class MachineBankWindow : Window
 
     private void SetSelectionButtons(bool hasSelection)
     {
+        MachineBankRow? row = hasSelection ? SelectedRow() : null;
+        bool editable = row?.IsActiveBank == true;
         AddToProjectButton.IsEnabled = hasSelection && _canAddToProject;
-        EditTemplateButton.IsEnabled = hasSelection;
+        EditTemplateButton.IsEnabled = editable;
         DuplicateTemplateButton.IsEnabled = hasSelection;
-        DeleteTemplateButton.IsEnabled = hasSelection;
+        DeleteTemplateButton.IsEnabled = editable;
         ExportTemplateButton.IsEnabled = hasSelection;
+        string protectedHelp = L(
+            "Les modèles fournis sont en lecture seule. Dupliquez le modèle pour le personnaliser.",
+            "Bundled templates are read-only. Duplicate the template to customize it.");
+        EditTemplateButton.ToolTip = editable
+            ? L(
+                "Modifie les informations et labels du modèle sélectionné.",
+                "Edits the selected template's details and labels.")
+            : protectedHelp;
+        DeleteTemplateButton.ToolTip = editable
+            ? L(
+                "Supprime le modèle sélectionné après confirmation.",
+                "Deletes the selected template after confirmation.")
+            : protectedHelp;
     }
 
     private MachineBankRow? SelectedRow()
@@ -863,6 +1058,31 @@ public partial class MachineBankWindow : Window
         }
 
         return row;
+    }
+
+    private static MachineBankRepository RepositoryFor(MachineBankRow row)
+    {
+        return new MachineBankRepository(row.BankPath);
+    }
+
+    private void SelectBankSource(string path)
+    {
+        MachineBankSourceChoice? choice = BankSourceComboBox.Items
+            .OfType<MachineBankSourceChoice>()
+            .FirstOrDefault(candidate =>
+                !candidate.IsAll
+                && string.Equals(
+                    candidate.Path,
+                    path,
+                    StringComparison.OrdinalIgnoreCase));
+        if (choice is null)
+        {
+            return;
+        }
+
+        _updatingBankSources = true;
+        BankSourceComboBox.SelectedItem = choice;
+        _updatingBankSources = false;
     }
 
     private void ShowError(string title, Exception exception)
@@ -908,16 +1128,26 @@ public partial class MachineBankWindow : Window
 public sealed class MachineBankRow
 {
     public MachineBankRow(
-        MachineTemplateMetadata metadata,
-        string displayCategory)
+        MachineBankCatalogEntry entry,
+        string displayCategory,
+        string bankName)
     {
-        Metadata = metadata;
+        Metadata = entry.Metadata;
+        BankPath = entry.BankPath;
+        IsActiveBank = entry.IsActiveBank;
         Category = displayCategory;
+        BankName = bankName;
     }
 
     public MachineTemplateMetadata Metadata { get; }
 
     public Guid TemplateId => Metadata.TemplateId;
+
+    public string BankPath { get; }
+
+    public string BankName { get; }
+
+    public bool IsActiveBank { get; }
 
     public string TemplateName => Metadata.TemplateName;
 
@@ -930,4 +1160,14 @@ public sealed class MachineBankRow
     public int TxCount => Metadata.TxCount;
 
     public int RxCount => Metadata.RxCount;
+}
+
+public sealed record MachineBankSourceChoice(
+    string? Path,
+    string DisplayName,
+    int TemplateCount,
+    bool IsActive,
+    bool IsAll)
+{
+    public override string ToString() => DisplayName;
 }

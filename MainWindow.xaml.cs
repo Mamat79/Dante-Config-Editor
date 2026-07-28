@@ -48,6 +48,8 @@ public partial class MainWindow : Window
     private bool _navigationExpanded = true;
     private bool _inspectorExpanded = true;
     private bool _refreshingMachineBankSources;
+    private bool _synchronizingDeviceContext;
+    private string? _selectedDeviceContextStableIdentity;
     private readonly LatencyChoice[] _latencies =
     [
         new("250", "0,25 ms"),
@@ -779,7 +781,7 @@ public partial class MainWindow : Window
 
     private void DeviceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (_refreshingUi || _project is null)
+        if (_refreshingUi || _synchronizingDeviceContext || _project is null)
         {
             return;
         }
@@ -790,13 +792,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        NewNameTextBox.Text = device.Name;
-        RedundantRadioButton.IsChecked = device.IsRedundant;
-        DaisychainRadioButton.IsChecked = !device.IsRedundant;
-        SelectLatency(LatencyComboBox, device.Latency);
-        PreferredMasterCheckBox.IsChecked = device.PreferredMaster;
-        RefreshChannelSelector();
-        RefreshInspector();
+        SynchronizeSelectedDeviceContext(device.Name, synchronizeGrid: true);
     }
 
     private void ApplyDeviceSettingsButton_Click(object sender, RoutedEventArgs e)
@@ -902,7 +898,7 @@ public partial class MainWindow : Window
 
     private void OpenMachineBankButton_Click(object sender, RoutedEventArgs e)
     {
-        OpenMachineBankWindow(SelectedMachineBankPath());
+        OpenMachineBankWindow(null);
     }
 
     private void ManageMachineBankButton_Click(object sender, RoutedEventArgs e)
@@ -917,7 +913,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        OpenMachineBankWindow(SelectedMachineBankPath());
+        OpenMachineBankWindow(null);
     }
 
     private void OpenMachineBankWindow(string? bankPath)
@@ -1671,6 +1667,7 @@ public partial class MainWindow : Window
         if (!string.Equals(deviceName, AllSendersItem, StringComparison.OrdinalIgnoreCase))
         {
             SourceDeviceComboBox.SelectedItem = deviceName;
+            SynchronizeSelectedDeviceContext(deviceName, synchronizeGrid: true);
         }
 
         RefreshPatchRows();
@@ -1681,6 +1678,11 @@ public partial class MainWindow : Window
         if (_refreshingUi || ReceiverDeviceList.SelectedItem is not string deviceName)
         {
             return;
+        }
+
+        if (!string.Equals(deviceName, AllReceiversItem, StringComparison.OrdinalIgnoreCase))
+        {
+            SynchronizeSelectedDeviceContext(deviceName, synchronizeGrid: true);
         }
 
         RefreshPatchRows();
@@ -2085,15 +2087,15 @@ public partial class MainWindow : Window
 
     private void DeviceGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (_refreshingUi)
+        if (_refreshingUi || _synchronizingDeviceContext)
         {
             return;
         }
 
-        if (DeviceGrid.SelectedItem is DeviceRow row
-            && !string.Equals(DeviceComboBox.SelectedItem as string, row.Name, StringComparison.OrdinalIgnoreCase))
+        if (DeviceGrid.SelectedItem is DeviceRow row)
         {
-            DeviceComboBox.SelectedItem = row.Name;
+            SynchronizeSelectedDeviceContext(row.Name, synchronizeGrid: false);
+            return;
         }
 
         RefreshInspector();
@@ -2321,6 +2323,12 @@ public partial class MainWindow : Window
 
     private void SourceDeviceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        if (!_refreshingUi
+            && SourceDeviceComboBox.SelectedItem is string deviceName)
+        {
+            SynchronizeSelectedDeviceContext(deviceName, synchronizeGrid: true);
+        }
+
         RefreshSourceChannels();
     }
 
@@ -2344,6 +2352,9 @@ public partial class MainWindow : Window
             SelectSourceChannel(subscription.TxChannelName);
         }
 
+        // Une ligne de la grille représente d'abord le récepteur. Il redevient
+        // donc le contexte courant après la sélection éventuelle de sa source.
+        SynchronizeSelectedDeviceContext(subscription.RxDevice, synchronizeGrid: true);
         SelectSynopticCableForSubscription(subscription);
 
         if (subscription.IsExternalMissingDevice)
@@ -2763,6 +2774,7 @@ public partial class MainWindow : Window
             workspace.RestoreMatrixOneToOneState(matrixOneToOneState);
             workspace.DirectApplyRequested += EasyPatchWorkspace_DirectApplyRequested;
             workspace.InlineChannelNavigationRequested += EasyPatchWorkspace_InlineChannelNavigationRequested;
+            workspace.DeviceFocusChanged += EasyPatchWorkspace_DeviceFocusChanged;
             _easyPatchProject = _project;
             _easyPatchWorkspace = workspace;
             EasyPatchHost.Content = workspace;
@@ -2773,6 +2785,13 @@ public partial class MainWindow : Window
             else
             {
                 workspace.ShowMatrixMode();
+            }
+
+            if (_workspaceNavigation.CurrentSection == WorkspaceSection.Patch)
+            {
+                SynchronizeSelectedDeviceContext(
+                    workspace.SelectedRxDeviceName ?? workspace.SelectedTxDeviceName,
+                    synchronizeGrid: true);
             }
         }
         catch (Exception exception)
@@ -2790,6 +2809,13 @@ public partial class MainWindow : Window
             _easyPatchWorkspace?.FocusChannelEditor(e.Kind, e.DanteId, e.Matrix)));
     }
 
+    private void EasyPatchWorkspace_DeviceFocusChanged(
+        object? sender,
+        PatchDeviceFocusChangedEventArgs e)
+    {
+        SynchronizeSelectedDeviceContext(e.DeviceName, synchronizeGrid: true);
+    }
+
     private void EasyPatchWorkspace_DirectApplyRequested(
         object? sender,
         DirectPatchRequestEventArgs e)
@@ -2799,6 +2825,7 @@ public partial class MainWindow : Window
             return;
         }
 
+        SynchronizeSelectedDeviceContext(e.Edits[0].RxDeviceName, synchronizeGrid: true);
         if (RunUnifiedPatchAction(
             Tf("Action.VisualPatchesApplied", e.Edits.Count),
             e.Edits))
@@ -4163,6 +4190,7 @@ public partial class MainWindow : Window
         {
             if (_project is null)
             {
+                _selectedDeviceContextStableIdentity = null;
                 FilePathTextBlock.Text = T("Status.NoFileOpen");
                 ProjectSummaryTextBlock.Text = T("Status.LoadXmlToStart");
                 ImportantWarningsBorder.Visibility = Visibility.Collapsed;
@@ -4197,11 +4225,16 @@ public partial class MainWindow : Window
 
             IReadOnlyList<DanteDevice> devices = _project.Devices;
             string[] deviceNames = devices.Select(device => device.Name).Where(name => !string.IsNullOrWhiteSpace(name)).ToArray();
-            string selectedDevice = DeviceComboBox.SelectedItem as string ?? deviceNames.FirstOrDefault() ?? string.Empty;
-            HashSet<string> selectedDeviceGridNames = DeviceGrid.SelectedItems
+            DanteDevice? contextDevice = _project.FindDeviceByStableIdentity(
+                _selectedDeviceContextStableIdentity);
+            string selectedDevice = contextDevice?.Name
+                ?? DeviceComboBox.SelectedItem as string
+                ?? deviceNames.FirstOrDefault()
+                ?? string.Empty;
+            HashSet<string> selectedDeviceGridIdentities = DeviceGrid.SelectedItems
                 .OfType<DeviceRow>()
-                .Select(row => row.Name)
-                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+                .Select(row => row.Device.StableIdentity)
+                .ToHashSet(StringComparer.Ordinal);
             string selectedSenderFilter = SenderDeviceList.SelectedItem as string ?? string.Empty;
             string selectedReceiverFilter = ReceiverDeviceList.SelectedItem as string ?? string.Empty;
             string selectedSourceDevice = SourceDeviceComboBox.SelectedItem as string ?? deviceNames.FirstOrDefault() ?? string.Empty;
@@ -4258,13 +4291,27 @@ public partial class MainWindow : Window
             }
 
             DeviceGrid.SelectedItems.Clear();
-            foreach (DeviceRow row in _deviceRows.Where(row => selectedDeviceGridNames.Contains(row.Name)))
+            foreach (DeviceRow row in _deviceRows.Where(row =>
+                         selectedDeviceGridIdentities.Contains(row.Device.StableIdentity)))
             {
                 DeviceGrid.SelectedItems.Add(row);
             }
 
             DeviceComboBox.ItemsSource = deviceNames;
             DeviceComboBox.SelectedItem = deviceNames.Contains(selectedDevice) ? selectedDevice : deviceNames.FirstOrDefault();
+            DanteDevice? selectedContextDevice = _project.FindDevice(
+                DeviceComboBox.SelectedItem as string);
+            _selectedDeviceContextStableIdentity = selectedContextDevice?.StableIdentity;
+            if (DeviceGrid.SelectedItems.Count == 0
+                && selectedContextDevice is not null
+                && _deviceRows.FirstOrDefault(row =>
+                    string.Equals(
+                        row.Device.StableIdentity,
+                        selectedContextDevice.StableIdentity,
+                        StringComparison.Ordinal)) is DeviceRow contextRow)
+            {
+                DeviceGrid.SelectedItem = contextRow;
+            }
             SelectLatency(GlobalLatencyComboBox, _latencies.First().XmlValue);
             SelectSampleRate(GlobalSampleRateComboBox, devices.Select(device => device.Samplerate).FirstOrDefault(value => !string.IsNullOrWhiteSpace(value)) ?? _sampleRates.First().XmlValue);
             SelectEncoding(GlobalEncodingComboBox, devices.Select(device => device.Encoding).FirstOrDefault(value => !string.IsNullOrWhiteSpace(value)) ?? _encodings.First().XmlValue);
@@ -4906,7 +4953,9 @@ public partial class MainWindow : Window
             return;
         }
 
-        DeviceRow[] selectedRows = DeviceGrid.SelectedItems.OfType<DeviceRow>().ToArray();
+        DeviceRow[] selectedRows = _workspaceNavigation.CurrentSection == WorkspaceSection.Machines
+            ? DeviceGrid.SelectedItems.OfType<DeviceRow>().ToArray()
+            : [];
         int selectedCount = selectedRows.Length > 0 ? selectedRows.Length : 1;
         InspectorTitleTextBlock.Text = device.Name;
         InspectorSubtitleTextBlock.Text = selectedCount > 1
@@ -4957,12 +5006,84 @@ public partial class MainWindow : Window
             return null;
         }
 
+        DanteDevice? contextualDevice = _project.FindDeviceByStableIdentity(
+            _selectedDeviceContextStableIdentity);
+        if (contextualDevice is not null)
+        {
+            return contextualDevice;
+        }
+
         string? deviceName = DeviceGrid.SelectedItems
             .OfType<DeviceRow>()
             .Select(row => row.Name)
             .FirstOrDefault()
             ?? DeviceComboBox.SelectedItem as string;
         return _project.FindDevice(deviceName);
+    }
+
+    private void SynchronizeSelectedDeviceContext(
+        string? deviceName,
+        bool synchronizeGrid)
+    {
+        if (_project is null || string.IsNullOrWhiteSpace(deviceName))
+        {
+            return;
+        }
+
+        DanteDevice? device = _project.FindDevice(deviceName);
+        if (device is null)
+        {
+            return;
+        }
+
+        _selectedDeviceContextStableIdentity = device.StableIdentity;
+        _synchronizingDeviceContext = true;
+        try
+        {
+            if (!string.Equals(
+                    DeviceComboBox.SelectedItem as string,
+                    device.Name,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                DeviceComboBox.SelectedItem = device.Name;
+            }
+
+            if (synchronizeGrid)
+            {
+                DeviceRow? row = _deviceRows.FirstOrDefault(candidate =>
+                    string.Equals(
+                        candidate.Device.StableIdentity,
+                        device.StableIdentity,
+                        StringComparison.Ordinal));
+                if (row is not null
+                    && !ReferenceEquals(DeviceGrid.SelectedItem, row))
+                {
+                    DeviceGrid.SelectedItems.Clear();
+                    DeviceGrid.SelectedItem = row;
+                    if (_workspaceNavigation.CurrentSection == WorkspaceSection.Machines)
+                    {
+                        DeviceGrid.ScrollIntoView(row);
+                    }
+                }
+            }
+        }
+        finally
+        {
+            _synchronizingDeviceContext = false;
+        }
+
+        PopulateSelectedDeviceEditor(device);
+        RefreshInspector();
+    }
+
+    private void PopulateSelectedDeviceEditor(DanteDevice device)
+    {
+        NewNameTextBox.Text = device.Name;
+        RedundantRadioButton.IsChecked = device.IsRedundant;
+        DaisychainRadioButton.IsChecked = !device.IsRedundant;
+        SelectLatency(LatencyComboBox, device.Latency);
+        PreferredMasterCheckBox.IsChecked = device.PreferredMaster;
+        RefreshChannelSelector();
     }
 
     private void RefreshRecentFiles()
