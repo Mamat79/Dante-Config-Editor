@@ -176,21 +176,12 @@ def paste_with_shadow(canvas: Image.Image, image: Image.Image, x: int, y: int) -
 
 
 def sanitize_capture(path: Path, language: str, image_name: str) -> None:
-    """Masque les chemins locaux des captures avant leur versionnement."""
-    if image_name == "support.png":
-        return
-
-    image = Image.open(path).convert("RGB")
-    draw = ImageDraw.Draw(image)
-    if image_name == "device-bank.png":
-        draw.rectangle((14, 76, 820, 108), fill="#0C121D")
-        label = "Banque de démonstration assainie" if language == "fr" else "Sanitized demonstration bank"
-        draw.text((20, 82), label, fill="#AFC0D8", font=font(14))
-    else:
-        draw.rectangle((8, 55, 1515, 84), fill="#151E2D")
-        label = "Preset synthétique de démonstration" if language == "fr" else "Synthetic demonstration preset"
-        draw.text((15, 61), label, fill="#AFC0D8", font=font(14))
-    image.save(path, optimize=True)
+    """Valide les captures générées depuis le corpus synthétique assaini."""
+    del language
+    with Image.open(path) as image:
+        minimum_height = 580 if image_name == "support.png" else 650
+        if image.width < 680 or image.height < minimum_height:
+            raise ValueError(f"Capture inattendue {path}: {image.size}")
 
 
 def sanitize_captures() -> None:
@@ -208,7 +199,8 @@ def load_capture(language: str, image_name: str) -> Image.Image:
         raise FileNotFoundError(f"Capture manquante : {capture_path}")
 
     image = Image.open(capture_path).convert("RGB")
-    if image.width < 680 or image.height < 650:
+    minimum_height = 580 if image_name == "support.png" else 650
+    if image.width < 680 or image.height < minimum_height:
         raise ValueError(f"Capture inattendue {capture_path}: {image.size}")
     return image
 

@@ -6,8 +6,11 @@ L'installateur Windows permet déjà de choisir séparément :
 
 - le dossier de la banque active ;
 - le dossier dans lequel copier les banques fournies ;
-- l'installation de `DCE Generic Roles 3.6` ;
-- l'installation de `DCE Community Devices 3.6`.
+- l'installation de `DCE Generic Roles 2026.1` ;
+- l'installation de `DCE Community Devices 2026.1`.
+
+La banque communautaire 2026.1 contient 41 modèles illustrés et assainis. Les
+descriptions françaises et anglaises sont affichées selon la langue active.
 
 Chaque banque fournie est copiée dans un dossier distinct. Un dossier existant
 n'est jamais écrasé : un nouveau nom est choisi. La bibliothèque personnelle

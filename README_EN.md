@@ -58,8 +58,8 @@ for field requirements and functional decisions.
 - bounded Undo/Redo and readable history;
 - versioned `.dceproj` workspace package, separate from Dante XML;
 - capability-aware XML profiles and read-only mode;
-- Windows shell with side navigation and contextual inspector;
-- one Patch workspace with table, matrix, Easy Patch, selection, and 1:1 views;
+- consistent Windows and macOS side navigation with contextual inspector;
+- one Patch workspace with Matrix, Easy patch, and Rx-to-Tx list views;
 - interactive synoptic synchronized with selection and subscriptions;
 - searchable, navigable, and exportable Validation Center;
 - device-bank format 2 and non-destructive V3.6 migration;
@@ -67,8 +67,9 @@ for field requirements and functional decisions.
 - indexes and caches invalidated on every XML mutation;
 - wider synthetic XML corpus and 10/50/200-device benchmarks.
 
-The macOS build currently retains the V3.6 visual organization while using the
-shared engine, the 2026.1 profile, and a separate package identity.
+The macOS build now follows the same functional organization as Windows, with
+the same main workflows, shared engine, 2026.1 profile, and separate package
+identity. A few controls retain their native platform rendering.
 
 ## Three different file concepts
 
@@ -89,9 +90,10 @@ Never import it directly into Dante Controller: export its Dante XML first.
 
 A bank holds reusable and shareable templates. Insertion creates an independent
 instance and does not bind a project to the source template. Hardware identity,
-IP configuration, flows, and subscriptions are not copied by default. Included
-banks retain their historical `3.6` names and never overwrite an existing
-folder.
+IP configuration, flows, and subscriptions are not copied by default.
+`DCE Generic Roles 2026.1` and `DCE Community Devices 2026.1` never overwrite
+an existing folder. The community bank provides 41 illustrated, sanitized
+templates.
 
 ## Main features
 
@@ -104,7 +106,7 @@ folder.
 - profiles and global actions on an unlocked selection;
 - cautious role deletion and duplication;
 - transactional insertion from a device bank;
-- experimental minimal project creation;
+- offline creation of a minimal XML 3.0.0 project;
 - JSON, CSV, DMT XLSX/ODS, A&H dLive/Avantis, and Yamaha CL/QL label exchange;
 - TXT/PDF reports, patchbooks, and before/after comparison;
 - SVG/PDF synoptic with locations and grouped cables;
@@ -187,10 +189,10 @@ dotnet publish .\DanteConfigEditorV3.csproj -c Release -r win-x64 --self-contain
 
 - no live Dante network control;
 - no Audinate SDK or API;
-- complete project creation remains experimental;
+- project creation is currently limited to the supported XML 3.0.0 profile;
 - duplicated or bank-created roles have no real hardware identity;
 - unknown XML profiles are limited or read-only;
-- the complete 2026.1 workspace is currently Windows-focused;
+- minor native rendering differences remain between Windows and macOS;
 - Windows installer is not Authenticode signed;
 - DMGs are not notarized;
 - manual Dante Controller validation is required for each important new preset

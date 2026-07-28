@@ -58,8 +58,8 @@ Les besoins métier et les décisions fonctionnelles restent dirigés par Mamat.
 - Annuler/Rétablir et historique borné ;
 - projet DCE versionné `.dceproj`, distinct du XML Dante ;
 - profil XML avec capacités explicites et mode lecture seule ;
-- shell Windows avec navigation latérale et inspecteur contextuel ;
-- espace Patch unique avec vues tableau, matrice, Easy Patch, sélection et 1:1 ;
+- navigation latérale et inspecteur contextuel cohérents sur Windows et macOS ;
+- espace Patch unique avec Matrice, Easy patch et Liste RX vers TX ;
 - synoptique interactif synchronisé avec la sélection et le patch ;
 - Centre de validation filtrable, navigable et exportable ;
 - banque de machines format 2 et migration non destructive de la V3.6 ;
@@ -67,9 +67,10 @@ Les besoins métier et les décisions fonctionnelles restent dirigés par Mamat.
 - index et caches invalidés à chaque mutation XML ;
 - corpus XML synthétique élargi et benchmarks 10, 50 et 200 machines.
 
-La version macOS conserve pour le moment l’organisation visuelle de la V3.6,
-mais utilise le moteur partagé, le profil 2026.1 et une identité de paquet
-distincte.
+La version macOS suit désormais la même organisation fonctionnelle que
+Windows, avec les mêmes parcours principaux, le moteur partagé, le profil
+2026.1 et une identité de paquet distincte. Quelques contrôles gardent le rendu
+natif de chaque plateforme.
 
 ## Trois formats à ne pas confondre
 
@@ -93,8 +94,9 @@ directement dans Dante Controller : exportez d’abord son XML Dante.
 Une banque contient des modèles réutilisables et partageables. Une insertion
 crée une instance indépendante ; elle ne lie pas le projet au modèle source.
 Les identités matérielles, IP, flows et subscriptions ne sont pas recopiés par
-défaut. Les banques incluses gardent leur nom historique `3.6` et sont
-installées sans remplacer un dossier existant.
+défaut. Les banques `DCE Generic Roles 2026.1` et
+`DCE Community Devices 2026.1` sont installées sans remplacer un dossier
+existant. La banque communautaire fournit 41 modèles illustrés et assainis.
 
 ## Fonctions principales
 
@@ -107,7 +109,7 @@ installées sans remplacer un dossier existant.
 - profils et actions globales sur une sélection non verrouillée ;
 - suppression et duplication prudente d’un rôle de machine ;
 - ajout transactionnel depuis une banque ;
-- création expérimentale d’un projet minimal ;
+- création hors ligne d’un projet minimal au format XML 3.0.0 ;
 - import/export de labels JSON, CSV, DMT XLSX/ODS, A&H dLive/Avantis et
   Yamaha CL/QL ;
 - rapports TXT/PDF, patchbooks et comparaison avant/après ;
@@ -195,10 +197,10 @@ dotnet publish .\DanteConfigEditorV3.csproj -c Release -r win-x64 --self-contain
 
 - aucune commande en temps réel du réseau Dante ;
 - aucune API ou SDK Audinate ;
-- création complète de projet encore expérimentale ;
+- création de projet limitée au profil XML 3.0.0 actuellement pris en charge ;
 - rôle dupliqué ou issu d’une banque sans identité matérielle réelle ;
 - profil XML inconnu limité ou en lecture seule ;
-- interface 2026.1 complète actuellement centrée sur Windows ;
+- légères différences de rendu natif entre Windows et macOS ;
 - installateur Windows non signé Authenticode ;
 - DMG non notariés ;
 - validation manuelle Dante Controller requise pour chaque nouvelle structure

@@ -13,15 +13,13 @@ garde-fou et la sauvegarde atomique contrôler l'export.
 
 ## Modes
 
-Un seul onglet Patch expose cinq représentations :
+Un seul onglet Patch expose trois représentations :
 
 | Mode | Usage |
 |---|---|
 | Matrice | clic, glissement et Patch 1:1 directement dans la grille RX/TX |
 | Easy patch | sélection multiple et affectation par plage |
 | Liste RX vers TX | lecture détaillée de chaque RX et de sa source courante |
-| Par machine | même liste, filtrée sur la machine sélectionnée |
-| Modifications en attente | contrôle d'un lot explicitement préparé |
 
 Les modes Matrice et Easy patch réutilisent la même instance
 `UnifiedPatchSession`. La liste est reconstruite depuis le même projet après
@@ -37,14 +35,9 @@ L'option « M'avertir si le RX est déjà patché » est cochée par défaut. Si
 est décochée, un remplacement reste explicite dans la grille mais ne déclenche
 plus la confirmation.
 
-La vue « Modifications en attente » n'intercepte pas les clics directs. Elle
-sert aux opérations qui ont été volontairement préparées comme un lot. Un lot
-est appliqué dans une seule transaction et crée une seule étape
-Annuler/Rétablir.
-
 ## Identités et synchronisation
 
-Une modification en attente conserve :
+Chaque commande de patch conserve :
 
 - l'identité stable de la machine RX ;
 - le Dante Id du canal RX ;
@@ -90,8 +83,8 @@ Le 27 juillet 2026 :
 
 ## Limites actuelles
 
-- L'interface Patch macOS conserve son organisation existante. Elle compile
-  avec le Core partagé, mais n'a pas reçu la refonte visuelle Windows.
+- L'interface Patch macOS suit les trois mêmes parcours, avec un rendu natif
+  Avalonia qui peut différer légèrement de WPF.
 - Les renommages de canaux depuis certaines anciennes vues utilisent encore le
   chemin V3.6 ; ils invalident proprement la pile Rétablir 2026.1.
 - Aucune validation sur un Mac physique n'a été effectuée dans ce lot.

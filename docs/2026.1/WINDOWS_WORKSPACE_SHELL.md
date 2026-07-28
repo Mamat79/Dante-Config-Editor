@@ -2,9 +2,8 @@
 
 ## Objectif
 
-Le shell 2026.1 réorganise progressivement l'application Windows sans retirer
-les vues V3.6. Il fournit un point d'entrée cohérent pour les prochains lots
-Patch, Synoptique et Validation, tout en laissant le moteur XML inchangé.
+Le shell 2026.1 organise l'application Windows par intention sans modifier le
+moteur XML ni reconstruire le document Dante.
 
 ## Organisation
 
@@ -26,17 +25,15 @@ travail afin de ne pas surcharger la barre supérieure.
 |---|---|
 | Projet | accueil, fichiers récents et récupération |
 | Vue d'ensemble | indicateurs du projet et dernières modifications |
-| Machines | vue Configuration V3.6 conservée |
-| Patch | espace unifié Matrice, Easy patch, liste, machine et lots en attente |
-| Synoptique | module Synoptique existant |
+| Machines | listes rapides, actions globales, machine, canaux et tableau |
+| Patch | espace unifié Matrice, Easy patch et Liste RX vers TX |
 | Banque de machines | accès et migration sûre de la banque |
-| Import / Export | outils d'échange existants |
-| Centre de validation | Santé du fichier |
-| Historique | Sécurité et journal |
+| Import / Export | Labels, Rapports et patchbook, Synoptique |
+| Centre de validation | erreurs, avertissements, informations et chemins XML |
+| Historique | modifications, comparaison XML, notices et journaux |
 | Outils avancés | Atomic Bomb |
 
-Cette correspondance est transitoire : elle permet de déplacer une vue à la
-fois sans réécrire le comportement métier ni le XML généré.
+La version macOS suit les mêmes sections et les mêmes parcours principaux.
 
 ## Comportement adaptatif
 
@@ -64,10 +61,10 @@ et 200 %.
 
 ## Vérifications réalisées
 
-Le 27 juillet 2026 :
+Le 28 juillet 2026 :
 
 - compilation Windows Release sans avertissement ;
-- `343/343` tests Windows réussis ;
+- `386/386` tests Core/Windows réussis ;
 - contrôle visuel réel de l'exécutable à environ `1266 x 813` et en fenêtre
   maximisée ;
 - ouverture de la fixture anonymisée `representative-preset.xml` ;
@@ -75,11 +72,11 @@ Le 27 juillet 2026 :
 - vérification en thèmes sombre et clair ;
 - vérification en français et en anglais ;
 - vérification du repli automatique de l'inspecteur ;
-- vérification des cinq modes de l'espace Patch ;
+- vérification des trois modes de l'espace Patch ;
 - vérification d'un clic direct, puis Annuler et Rétablir ;
 - vérification d'une ligne RX visible à faible hauteur avec la bannière de
   soutien affichée ;
-- `20/20` tests macOS sans écran réussis et compilation macOS sans
+- `22/22` tests macOS sans écran réussis et compilation macOS sans
   avertissement.
 
 Non vérifié dans ce lot :

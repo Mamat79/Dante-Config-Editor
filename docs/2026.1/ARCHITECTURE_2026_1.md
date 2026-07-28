@@ -197,7 +197,9 @@ Réalisé :
   contextuel ;
 - repli adaptatif des panneaux secondaires sans masquer les réglages Machines ;
 - session Patch unique reposant sur les identités stables et les Dante Id ;
-- cinq représentations Patch dans un seul espace Windows ;
+- trois représentations Patch exposées dans un seul espace Windows
+  (Matrice, Easy patch et Liste RX vers TX), les vues techniques historiques
+  restant hors de la navigation utilisateur ;
 - transactions Patch atomiques reliées à Annuler et Rétablir ;
 - rebase explicite des changements préparés après renommage ;
 - synoptique Windows sélectionnable relié aux subscriptions Patch par

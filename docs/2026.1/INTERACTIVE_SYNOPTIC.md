@@ -66,6 +66,7 @@ Le 27 juillet 2026, avec `representative-preset.xml` :
   identifiants stables ;
 - tests complets Windows et macOS.
 
-Le comportement interactif ajouté dans cette tranche concerne l'interface
-Windows 2026.1. L'interface macOS conserve le synoptique V3.6, tout en
-consommant le même modèle et les mêmes exports.
+Windows et macOS exposent le synoptique dans Import / Export et consomment le
+même modèle métier. Les interactions avancées restent implémentées avec les
+contrôles natifs de chaque plateforme et peuvent donc présenter de légères
+différences visuelles.

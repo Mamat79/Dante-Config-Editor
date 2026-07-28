@@ -1,6 +1,6 @@
 # Rapport de validation - Dante Config Editor 2026.1 Beta
 
-Date : 2026-07-27
+Date : 2026-07-28
 
 ## Références
 
@@ -8,7 +8,7 @@ Date : 2026-07-27
 - branche : `2026.1` ;
 - base V3.6 : `25a1e7cc0568b86a56bdf039ecce060c8eeea1ec` ;
 - commit de code et de paquets validé :
-  `7a50b3c17611c7b2bf231e5c8ca9b0abc2c67b73` ;
+  `361aab9c98b8382addf45f74eb2e7861f5128b24` ;
 - identité Windows : `Dante Config Editor 2026.1 Beta` ;
 - profil local : `%LOCALAPPDATA%\DanteConfigEditor2026.1` ;
 - bundle macOS : `fr.mamat.danteconfigeditor.y2026-1-beta`.
@@ -85,20 +85,19 @@ Environnement local :
 - MSBuild `17.11.48` ;
 - Inno Setup `6.7.3`.
 
-Résultats :
+Résultats locaux finaux du 28 juillet 2026 :
 
 | Contrôle | Résultat |
 |---|---:|
-| Tests Core/Windows | 364 réussis, 0 échec |
-| Tests Avalonia/macOS sans écran | 20 réussis, 0 échec |
-| Build Windows Release | 0 warning, 0 erreur, 4,41 s |
-| Build macOS Release | 0 warning, 0 erreur, 1,12 s |
-| Publish Windows autonome | réussi, 17,34 s |
-| Publish Apple Silicon | réussi, 5,50 s |
-| Publish Intel | réussi, 3,91 s |
-| Audit NuGet vulnérabilités | aucune vulnérabilité signalée |
+| Tests Core/Windows | 386 réussis, 0 échec, 3 s |
+| Tests Avalonia/macOS sans écran | 22 réussis, 0 échec, 20 s |
+| Build Windows Release | 0 warning, 0 erreur, 1,40 s |
+| Build macOS Release | 0 warning, 0 erreur, 1,03 s |
+| Publish Windows autonome | réussi, 20,3 s |
+| Installateur Windows autonome | réussi, 41,08 s, 74 163 527 octets |
+| SHA-256 installateur | `a9bcb6d0c7347a12bfda9de1d24df1e7a58605af238303a0739b598b31550ef6` |
 
-GitHub Actions :
+GitHub Actions de la base 2026.1 :
 
 - [Windows CI, exécution 30298793379](https://github.com/Mamat79/DanteConfigEditorV3/actions/runs/30298793379) :
   succès ;

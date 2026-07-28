@@ -251,7 +251,7 @@ def screenshot(
     maximum_height: float = 112,
 ) -> list:
     """Ajoute une capture recadrée sans déformer l'interface."""
-    source = ROOT / "media" / "v3.5" / language.lower() / f"{name}.png"
+    source = ROOT / "media" / "2026.1" / language.lower() / f"{name}.png"
     with PillowImage.open(source) as opened:
         image = opened.convert("RGB")
         if crop is not None:
@@ -424,7 +424,7 @@ def quick_start(language: str) -> None:
         [
             ("Ouvrir XML", "Choisissez un export Dante. L'application travaille hors ligne et n'accède pas au réseau."),
             ("Contrôler les alertes", "Affichez les machines concernées et vérifiez chaque point signalé."),
-            ("Modifier", "Utilisez Détail machine, Easy patch sous Windows, l'atelier visuel sur Mac ou les actions globales. Verrouillez les machines à exclure."),
+            ("Modifier", "Utilisez Machines, Matrice, Easy patch, Liste RX vers TX ou les actions globales. Verrouillez les machines à exclure."),
             ("Vérifier", "Utilisez Modifiées uniquement puis Avant / après. Les changements techniques inconnus sont bloqués."),
             ("Enregistrer sous", "Choisissez un nouveau nom. La destination est remplacée atomiquement et sauvegardée si elle existait."),
             ("Tester l'import", "Importez le résultat dans Dante Controller sur une copie de travail avant toute intervention terrain."),
@@ -433,7 +433,7 @@ def quick_start(language: str) -> None:
         else [
             ("Open XML", "Choose a Dante export. The application works offline and does not access the network."),
             ("Review alerts", "Show affected devices and verify every reported item."),
-            ("Edit", "Use Device details, Easy patch on Windows, the visual patch workshop on Mac, or global actions. Lock devices that must be excluded."),
+            ("Edit", "Use Devices, Matrix, Easy patch, Rx-to-Tx list, or global actions. Lock devices that must be excluded."),
             ("Review", "Use Modified only and Before / after. Unknown technical changes are blocked."),
             ("Save as", "Choose a new name. The destination is replaced atomically and backed up when it already exists."),
             ("Test the import", "Import the result into Dante Controller on a working copy before any field operation."),
@@ -502,9 +502,9 @@ def quick_start(language: str) -> None:
         else "<b>Remember:</b> no real-time control, no Audinate API, and no guarantee for every XML format. Import validation in official tools remains mandatory."
     )
     atomic_note = (
-        "<b>Exercice :</b> Atomic Bomb dispose de son propre onglet après Sécurité et journal. Décochez les catégories à épargner, confirmez trois fois, puis utilisez Enregistrer sous pour créer le fichier destiné aux stagiaires. Les identifiants techniques restent protégés."
+        "<b>Exercice :</b> Atomic Bomb se trouve dans Outils avancés. Décochez les catégories à épargner, confirmez trois fois, puis utilisez Enregistrer sous pour créer le fichier destiné aux stagiaires. Les identifiants techniques restent protégés."
         if french
-        else "<b>Exercise:</b> Atomic Bomb has its own tab after Safety and log. Clear categories you want to spare, confirm three times, then use Save as to create the trainee file. Technical identifiers remain protected."
+        else "<b>Exercise:</b> Atomic Bomb is located under Advanced tools. Clear categories you want to spare, confirm three times, then use Save as to create the trainee file. Technical identifiers remain protected."
     )
     labels_note = (
         "<b>Labels console :</b> choisissez A&H CSV natif - dLive/Avantis, Yamaha ZIP natif - CL/QL ou DMT XLSX/ODS. Les modèles sont inclus. Le CSV générique DCE n'est pas un fichier dLive Director."
@@ -526,8 +526,8 @@ def full_guide(language: str) -> None:
                 "L'installation proposée par défaut se trouve dans Program Files et crée des raccourcis dans le menu Démarrer et sur le Bureau.",
                 "Une installation 2026.1 Beta utilise son propre AppId, son dossier Program Files, ses raccourcis et son profil local afin de cohabiter avec la V3.6.",
                 "La 2026.1 peut copier les réglages V3.6 vers son profil, mais ne modifie jamais le profil V3.6 en place.",
-                "L'assistant propose le dossier de banque actif et le dossier des banques fournies. Les banques DCE Generic Roles 3.6 et DCE Community Devices 3.6 sont facultatives, sélectionnables séparément et aucun dossier existant n'est remplacé.",
-                "Deux DMG 2026.1 Beta autonomes sont prévus pour Apple Silicon et Intel. Ils contiennent les deux archives dans le dossier Machine Banks ; leur bundle distinct peut cohabiter avec la V3.6.",
+                "L'assistant propose le dossier de banque actif et le dossier des banques fournies. Les banques DCE Generic Roles 2026.1 et DCE Community Devices 2026.1 sont facultatives, sélectionnables séparément et aucun dossier existant n'est remplacé.",
+                "Deux DMG 2026.1 Beta autonomes sont construits sur macOS pour Apple Silicon et Intel. Ils contiennent les banques 2026.1 dans le dossier Machine Banks ; leur bundle distinct peut cohabiter avec la V3.6.",
                 "Les quatre notices PDF françaises et anglaises sont installées et restent accessibles depuis l'application.",
             ]),
             para("2. Principes de sécurité", "h1"),
@@ -542,19 +542,19 @@ def full_guide(language: str) -> None:
         ]
         beta_page = [
             para("4. Espace de travail 2026.1", "h1"),
-            para("La version Windows organise le travail par intention : Accueil, Vue d'ensemble, Machines, Patch, Synoptique, Banque, Import / Export, Validation, Sécurité et Atomic Bomb."),
+            para("Windows et macOS organisent le travail par intention : Projet, Vue d'ensemble, Machines, Patch, Banque de machines, Import / Export, Centre de validation, Historique et Outils avancés."),
             *bullets([
                 "La barre supérieure conserve le fichier actif, Enregistrer sous, Annuler et Rétablir.",
                 "L'inspecteur de droite affiche le contexte de la sélection sans changer de page.",
-                "Patch, Easy Patch et le synoptique partagent les mêmes identités stables et la même session.",
+                "Matrice, Easy patch, Liste RX vers TX et Synoptique partagent les mêmes identités stables et la même session.",
                 "Le Centre de validation sépare contrôles internes DCE et validation manuelle Dante Controller.",
                 "Un XML Dante reste le fichier d'échange officiel ; un .dceproj conserve en plus la disposition, les notes, les ressources et l'historique DCE.",
             ]),
-            callout("Les captures de cette notice sont de vraies captures de la V3.5 sur un preset synthétique. Elles illustrent les fonctions conservées ; la navigation et l'habillage 2026.1 diffèrent.", PALE_BLUE),
+            callout("Toutes les captures de cette notice sont générées avec l'interface 2026.1, un preset synthétique anonymisé et la banque publique assainie. Aucun XML de production n'est utilisé.", PALE_BLUE),
         ]
         page2 = [
-            para("4. Page Configuration", "h1"),
-            para("La page Configuration rassemble la machine sélectionnée, ses canaux, les actions globales et le tableau général."),
+            para("5. Page Machines", "h1"),
+            para("La page Machines rassemble les listes rapides, les actions globales, la machine sélectionnée, ses canaux et le tableau général."),
             para("Machine sélectionnée", "h2"),
             *bullets([
                 "Modifiez ensemble le nom, le mode réseau, la latence et le preferred master avec Appliquer les paramètres.",
@@ -573,17 +573,17 @@ def full_guide(language: str) -> None:
                 "La recherche trouve les machines, canaux et références de patch après au moins deux caractères.",
                 "Les listes rapides filtrent modes réseau, latences, sample rates, bits, IP fixes et preferred masters.",
                 "Modifiées uniquement affiche les machines touchées ; Avant / après détaille chaque différence.",
-                "Choisissez toutes les machines non verrouillées, la sélection ou le filtre affiché. Une prévisualisation précède l'application.",
+                "Choisissez toutes les machines non verrouillées, la sélection ou le filtre affiché. La cible reste visible avant l'application.",
             ]),
         ]
         page3 = [
-            para("5. Alertes navigables", "h1"),
+            para("6. Alertes navigables", "h1"),
             para("Le bandeau Points à vérifier signale les mélanges redondant/daisychain, IP fixes, sample rates multiples et encodages multiples."),
             *bullets([
                 "Cliquez sur Voir les machines, choisissez l'alerte puis examinez les devices filtrés.",
-                "Après correction, vérifiez que l'alerte disparaît et consultez Santé du fichier.",
+                "Après correction, vérifiez que l'alerte disparaît et consultez le Centre de validation.",
             ]),
-            para("6. Profils rapides", "h1"),
+            para("7. Profils rapides", "h1"),
             data_table(
                 ["Profil", "Réglages appliqués"],
                 [
@@ -598,7 +598,7 @@ def full_guide(language: str) -> None:
             ),
             Spacer(1, 2 * mm),
             callout("Vérifiez que chaque matériel accepte la sample rate, les bits, la latence et le mode demandés.", PALE_RED),
-            para("7. Récupération automatique", "h1"),
+            para("8. Récupération automatique", "h1"),
             para("Après une modification, l'application attend brièvement puis écrit la récupération en arrière-plan, sans bloquer l'interface ni remplacer le XML source."),
             *bullets([
                 "À la prochaine ouverture du même XML, choisissez de restaurer ou d'abandonner la session.",
@@ -607,7 +607,7 @@ def full_guide(language: str) -> None:
             ]),
         ]
         page4 = [
-            para("8. Canaux et patchs", "h1"),
+            para("9. Canaux et patchs", "h1"),
             *bullets([
                 "Les canaux TX/RX peuvent être renommés individuellement ou par plage avec {00}, {000}, {n} et {device}.",
                 "Le renommage d'un TX met à jour tous les alias de subscription reconnus dans le projet.",
@@ -638,13 +638,13 @@ def full_guide(language: str) -> None:
                 ],
                 [50, 35, 85],
             ),
-            para("9. Ajouter un XML au projet", "h1"),
+            para("10. Ajouter un XML au projet", "h1"),
             *bullets([
                 "Les machines dont le nom est unique sont toujours importées.",
                 "Seuls les doublons sont proposés au renommage automatique ou manuel.",
                 "Les patchs importés suivent les nouveaux noms des machines renommées.",
             ]),
-            para("10. IP et formats audio", "h1"),
+            para("11. IP et formats audio", "h1"),
             *bullets([
                 "L'IP automatique ou fixe est réglable machine par machine ou globalement.",
                 "Seule l'interface IPv4 principale, network=0 si elle existe, est ciblée. Une interface secondaire n'est pas modifiée.",
@@ -652,9 +652,9 @@ def full_guide(language: str) -> None:
                 "Sample rate et bits sont modifiables par machine, globalement ou via un profil.",
             ]),
             callout("Un mauvais réglage peut rendre une machine injoignable ou incompatible. Contrôlez les capacités réelles du matériel.", PALE_RED),
-            para("11. Santé, comparaison et Import / Export", "h1"),
+            para("12. Validation, comparaison et Import / Export", "h1"),
             *bullets([
-                "Santé du fichier regroupe statistiques, erreurs, warnings, patchs libres/locaux et compatibilité.",
+                "Le Centre de validation regroupe statistiques, erreurs, avertissements, patchs libres/locaux et compatibilité.",
                 "La comparaison XML affiche les différences dans un tableau.",
                 "Les exports TXT/PDF portent la version du logiciel et la signature By Mamat et ses agents.",
                 "Import / Export regroupe Labels, Rapports et patchbook et Synoptique. Le synoptique mémorise les emplacements, affiche ou masque les machines, propose un aperçu séparé dont le zoom conserve les proportions et exporte un SVG ou un PDF ; sa mise en page locale ne modifie jamais le XML Dante.",
@@ -689,16 +689,16 @@ def full_guide(language: str) -> None:
             para("Les classeurs DMT inclus proviennent du projet MIT dLive MIDI Tools de Tobias Grupe. Le fichier DMT_LICENSE.txt est fourni avec l'application.", "small"),
         ]
         page5 = [
-            para("12. Atomic Bomb : créer un exercice", "h1"),
+            para("13. Atomic Bomb : créer un exercice", "h1"),
             *bullets([
-                "Ouvrez l'onglet Atomic Bomb placé après Sécurité et journal. Décochez les catégories à épargner ; toutes sont sélectionnées par défaut. Trois confirmations détaillent ensuite les conséquences avant toute modification.",
+                "Ouvrez Outils avancés puis Atomic Bomb. Décochez les catégories à épargner ; toutes sont sélectionnées par défaut. Trois confirmations détaillent ensuite les conséquences avant toute modification.",
                 "La copie en mémoire reçoit des noms uniques mythologiques, audio ou humoristiques, ainsi qu'un mélange de patchs, modes réseau, Preferred Master, latences, sample rates, encodages et IP principales.",
                 "Les identifiants techniques, namespaces, DNS, passerelles et interfaces secondaires restent protégés.",
                 "Le résumé indique la graine du scénario. L'ensemble s'annule en une seule action et le fichier source n'est jamais écrasé.",
                 "Utilisez Enregistrer sous pour remettre le preset aux stagiaires, puis vérifiez son import dans l'outil Dante officiel approprié.",
             ]),
             callout("Ce mode sert uniquement à la formation hors ligne. Il ne dérègle aucun appareil et ne communique pas avec le réseau Dante.", PALE_RED),
-            para("13. Sauvegarde et validation finale", "h1"),
+            para("14. Sauvegarde et validation finale", "h1"),
             para("Utilisez Enregistrer sous. Le XML temporaire est relu, le garde-fou vérifie les changements, puis la destination est remplacée atomiquement. Une erreur avant le remplacement laisse l'ancienne destination intacte."),
             data_table(
                 ["Contrôle", "Action recommandée"],
@@ -710,9 +710,9 @@ def full_guide(language: str) -> None:
                 ],
                 [48, 122],
             ),
-            para("14. Tests de non-régression", "h1"),
-            para("La suite 2026.1 exécute 364 tests Core/Windows et 20 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la duplication, la banque de machines, la création expérimentale de projet, le format .dceproj, les profils XML, les commandes, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch, le soutien facultatif et la cohérence des traductions."),
-            para("15. Limites connues", "h1"),
+            para("15. Tests de non-régression", "h1"),
+            para("La suite 2026.1 exécute plus de 380 tests Core/Windows et plus de 20 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la duplication, la banque de machines, la création de projet, le format .dceproj, les profils XML, les commandes, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch, le soutien facultatif et la cohérence des traductions."),
+            para("16. Limites connues", "h1"),
             *bullets([
                 "Aucun pilotage en temps réel et aucune communication avec les appareils.",
                 "Aucun SDK/API Audinate et aucun contournement de protocole propriétaire.",
@@ -720,22 +720,22 @@ def full_guide(language: str) -> None:
                 "L'historique d'annulation conserve au maximum 10 états pour limiter la mémoire.",
                 "La matrice affiche uniquement les deux machines choisies pour préserver les performances sur les gros presets.",
                 "Les DMG Mac sont signés ad hoc mais non notariés ; le premier lancement peut nécessiter un clic droit puis Ouvrir.",
-                "L'onglet Windows Easy patch n'est pas reproduit à l'identique sur Mac, qui conserve l'atelier visuel Avalonia.",
+                "Windows et macOS proposent les mêmes parcours principaux ; certains contrôles gardent toutefois un rendu natif légèrement différent.",
                 "Des noms TX dupliqués sont ambigus dans les subscriptions Dante et doivent être renommés avant Easy patch.",
                 "Les classeurs natifs correspondent aux modèles DMT 2.13.0 observés et aux exemples dLive, Avantis, CL5 et QL5 fournis ; JSON/CSV DMT 2.14.0-RC1 est testé séparément.",
                 "Les rôles génériques dupliqués ou ajoutés depuis la banque n'emportent aucun identifiant matériel instance_id/device_id ; seule une importation réelle dans Dante Controller peut confirmer leur utilisation avec une version donnée.",
-                "Nouveau projet produit une structure minimale expérimentale au format 3.0.0. Elle doit impérativement être importée et contrôlée dans Dante Controller avant tout usage.",
+                "Nouveau projet produit une structure minimale au format 3.0.0. Contrôlez toujours le fichier final dans Dante Controller avant exploitation.",
             ]),
-            para("16. Aide et informations", "h1"),
+            para("17. Aide et informations", "h1"),
             para(
                 f"Quick start et Notice complète ouvrent automatiquement le PDF français ou anglais selon la langue active. "
                 f"Projet public : {GITHUB} - Crédit : By Mamat et ses agents.",
                 "small",
             ),
-            para("17. Soutenir DCE", "h1"),
+            para("18. Soutenir DCE", "h1"),
             para("Dante Config Editor reste entièrement gratuit et toutes ses fonctions sont disponibles sans contribution."),
             *bullets([
-                "Le bouton Soutenir DCE se trouve dans Sécurité et journal.",
+                "Le bouton Soutenir DCE se trouve dans le bandeau supérieur et les informations d'aide restent accessibles depuis Historique.",
                 "Le bouton Soutenir DCE affiche le QR PayPal à scanner avec l'application du téléphone et un bouton PayPal.Me pour ordinateur ; aucun paiement n'est intégré à DCE et aucune connexion n'est effectuée au démarrage.",
                 "Le rappel local n'apparaît pas au premier lancement. Il peut être reporté de 20 lancements ou désactivé définitivement.",
                 "Une étoile sur GitHub ou un retour utilisateur aide aussi gratuitement. Et si vous êtes vraiment fous, vous pouvez même faire les deux !",
@@ -756,7 +756,7 @@ def full_guide(language: str) -> None:
                 "Une image PNG, JPEG ou WebP facultative est copiée dans le dossier du modèle ; aucun chemin externe fragile n'est conservé.",
                 "La banque se trouve par défaut dans Documents/Dante Config Editor/Machine Bank. Son emplacement peut être choisi, ouvert, copié ou placé dans un dossier synchronisé.",
                 "Exporter la banque crée une archive vérifiée *.dce-bank.zip. Importer une banque exige un dossier neuf ou vide et ne remplace jamais l'existant.",
-                "Banques GitHub ouvre le catalogue public dans main. Les banques gardent leur nom historique 3.6 : DCE Generic Roles 3.6 fournit deux rôles d'essai 8x8 et 32x32. DCE Community Devices 3.6 fournit neuf modèles illustrés assainis : Yamaha QL1 et Rio1608-D2, Fohhn DI4.1000, Lake LM 44, RME Digiface Dante, Glensound Divine, Beatrice D8 et AOIP22, et Allen & Heath SDante 64x64. Ces banques ne contiennent ni identité matérielle, ni donnée réseau, ni abonnement.",
+                "Banques GitHub ouvre le catalogue public. DCE Generic Roles 2026.1 fournit deux rôles génériques d'essai. DCE Community Devices 2026.1 fournit 41 modèles illustrés et assainis issus de fabricants variés. Ces banques ne contiennent ni identité matérielle, ni donnée réseau, ni flow, ni subscription.",
                 "L'administration permet recherche, filtres, modification, duplication, suppression confirmée et import/export d'un modèle ZIP.",
             ]),
             para("Ajouter un modèle au projet", "h2"),
@@ -765,13 +765,13 @@ def full_guide(language: str) -> None:
                 "L'instance ajoutée est indépendante du modèle. Modifier l'une ne modifie jamais l'autre.",
                 "DCE vérifie la version du modèle, son empreinte, le nombre de canaux, le namespace et la version de preset avant une insertion transactionnelle.",
             ]),
-            para("Nouveau projet expérimental", "h2"),
+            para("Nouveau projet hors ligne", "h2"),
             *bullets([
                 "Nouveau projet crée une structure minimale 3.0.0 vide ou contenant un premier rôle issu de la banque.",
                 "Le fichier existant n'est jamais écrasé silencieusement. L'écriture passe par un temporaire puis par validation et remplacement atomique.",
-                "Réouvrez le XML dans DCE, consultez Santé du fichier, puis effectuez obligatoirement un import manuel dans Dante Controller.",
+                "Réouvrez le XML dans DCE, consultez le Centre de validation, puis effectuez un import de contrôle dans Dante Controller.",
             ]),
-            callout("Les journaux techniques sont accessibles depuis Sécurité et journal. Ils expliquent les échecs d'import, de validation, de banque et d'export sans modifier le projet.", PALE_GREEN),
+            callout("Les journaux techniques sont accessibles depuis Historique. Ils expliquent les échecs d'import, de validation, de banque et d'export sans modifier le projet.", PALE_GREEN),
         ]
         screen_map = [
             para("Repère des écrans", "h1"),
@@ -779,15 +779,17 @@ def full_guide(language: str) -> None:
             data_table(
                 ["Écran", "Utilité principale"],
                 [
-                    ["Configuration", "Vue d'ensemble, machine sélectionnée, canaux, listes rapides, actions globales et tableau des machines."],
-                    ["Patch", "Lecture et modification tabulaire des subscriptions RX vers TX, avec filtres et renommage direct."],
-                    ["Easy patch", "Grille visuelle, sélection/plage, application immédiate et alerte de remplacement optionnelle."],
+                    ["Vue d'ensemble", "Compteurs, formats audio, réseau, horloge, alertes et dernières modifications."],
+                    ["Machines", "Machine sélectionnée, canaux, listes rapides, actions globales et tableau des machines."],
+                    ["Patch > Matrice", "Grille visuelle RX/TX, glissement, PATCH 1:1, zoom et renommage direct."],
+                    ["Patch > Easy patch", "Sélection et plage 1:1 avec application immédiate et alerte de remplacement optionnelle."],
+                    ["Patch > Liste RX vers TX", "Lecture et modification tabulaire des subscriptions, avec filtres et état détaillé."],
                     ["Import / Export > Labels", "Échange JSON/CSV, DMT XLSX/ODS, A&H et Yamaha, avec rapport d'import."],
                     ["Import / Export > Rapports", "Rapports TXT/PDF, patchbooks TXT/CSV et topologie textuelle simple."],
                     ["Import / Export > Synoptique", "Emplacements, ordre, visibilité, zoom, reset et exports SVG/PDF."],
-                    ["Santé du fichier", "Erreurs, avertissements, informations de patch et filtres de contrôle."],
-                    ["Sécurité et journal", "Validation, rapport final, compatibilité, historique, comparaison XML, notices et soutien facultatif."],
-                    ["Atomic Bomb", "Création hors ligne d'un exercice de dépannage configurable et annulable."],
+                    ["Centre de validation", "Erreurs, avertissements, informations, chemins XML, navigation et export du rapport."],
+                    ["Historique", "Modifications, comparaison XML, notices, journaux et diagnostic."],
+                    ["Outils avancés", "Atomic Bomb : création hors ligne d'un exercice configurable et annulable."],
                 ],
                 [54, 116],
             ),
@@ -803,9 +805,9 @@ def full_guide(language: str) -> None:
             Spacer(1, 3 * mm),
             *screenshot(
                 language,
-                "configuration",
-                "Vue Configuration : listes rapides et actions globales à gauche, machine et canaux au centre, tableau général en bas.",
-                crop=(225, 25, 1905, 735),
+                "overview",
+                "Vue d'ensemble : compteurs, formats audio, réseau, horloge et dernières modifications dans un seul écran.",
+                crop=(220, 195, 1605, 760),
                 maximum_height=102,
             ),
         ]
@@ -820,10 +822,10 @@ def full_guide(language: str) -> None:
             Spacer(1, 3 * mm),
             *screenshot(
                 language,
-                "configuration",
+                "devices",
                 "<b>1</b> paramètres de la machine ; <b>2</b> canal TX/RX choisi ; <b>3</b> renommage par plage.",
-                crop=(695, 35, 1905, 490),
-                markers=[(0.16, 0.22, "1"), (0.62, 0.22, "2"), (0.67, 0.75, "3")],
+                crop=(700, 195, 1600, 700),
+                markers=[(0.25, 0.34, "1"), (0.70, 0.22, "2"), (0.75, 0.66, "3")],
                 maximum_height=86,
             ),
             *bullets([
@@ -837,17 +839,17 @@ def full_guide(language: str) -> None:
             para("Une action globale s'applique uniquement à la cible affichée : toutes les machines non verrouillées, la sélection non verrouillée ou le filtre courant. Vérifiez toujours la cible avant de confirmer."),
             *screenshot(
                 language,
-                "configuration",
+                "devices",
                 "<b>1</b> listes rapides ; <b>2</b> onglets Réseau/audio, IP, Profils et Horloge ; <b>3</b> cible des actions et verrouillage.",
-                crop=(230, 35, 705, 575),
-                markers=[(0.22, 0.10, "1"), (0.45, 0.40, "2"), (0.55, 0.94, "3")],
+                crop=(230, 210, 690, 820),
+                markers=[(0.22, 0.10, "1"), (0.45, 0.45, "2"), (0.55, 0.91, "3")],
                 width=104,
                 maximum_height=118,
             ),
             para("Utiliser un profil", "h2"),
             *bullets([
                 "Ouvrez Actions globales > Profils, choisissez le profil, puis cliquez sur Appliquer le profil.",
-                "La prévisualisation compare l'état actuel et l'état visé pour chaque machine réellement concernée.",
+                "Avant / après permet de relire l'état initial et l'état obtenu pour chaque machine réellement concernée.",
                 "Les profils règlent sample rate, bits, latence et IP automatique ; les deux derniers règlent aussi Redondant ou Daisychain.",
                 "Une machine verrouillée est toujours exclue. Annuler action restaure l'état précédent en une seule opération.",
             ]),
@@ -858,10 +860,10 @@ def full_guide(language: str) -> None:
             para("Le renommage direct fonctionne dans Configuration, Détail machine, Patch et Easy patch. Pour un TX, DCE met également à jour toutes les subscriptions reconnues qui utilisent ce nom."),
             *screenshot(
                 language,
-                "configuration",
+                "devices",
                 "<b>1</b> choisir RX ou TX et le canal ; <b>2</b> saisir le nom ; <b>3</b> choisir la plage ; <b>4</b> définir le préfixe et le numéro de départ.",
-                crop=(1310, 70, 1905, 410),
-                markers=[(0.12, 0.13, "1"), (0.17, 0.36, "2"), (0.12, 0.72, "3"), (0.65, 0.91, "4")],
+                crop=(1150, 210, 1595, 610),
+                markers=[(0.18, 0.13, "1"), (0.24, 0.36, "2"), (0.19, 0.69, "3"), (0.73, 0.86, "4")],
                 width=155,
                 maximum_height=90,
             ),
@@ -897,11 +899,10 @@ def full_guide(language: str) -> None:
             para("Chaque ligne représente un RX et sa source TX. Patch est la vue la plus précise pour filtrer, vérifier une source locale ou externe, remplacer une subscription ou la supprimer."),
             *screenshot(
                 language,
-                "patch",
-                "<b>1</b> recherche et état ; <b>2</b> source TX à appliquer ; <b>3</b> mode Simple/Expert ; <b>4</b> résultat RX vers TX.",
-                crop=(475, 35, 1905, 310),
-                markers=[(0.16, 0.18, "1"), (0.52, 0.18, "2"), (0.81, 0.18, "3"), (0.56, 0.70, "4")],
-                maximum_height=75,
+                "patch-list",
+                "Filtres RX/TX à gauche, choix de source en haut et résultat complet RX vers TX dans le tableau.",
+                crop=(230, 215, 1595, 940),
+                maximum_height=96,
             ),
             feature_band([
                 ("Simple", "Affiche RX device/Id/canal, TX device/Id/canal et l'état."),
@@ -923,9 +924,9 @@ def full_guide(language: str) -> None:
             *screenshot(
                 language,
                 "easy-patch",
-                "<b>1</b> machine RX ; <b>2</b> FLIP échange seulement les rôles RX/TX affichés ; <b>3</b> machine TX ; <b>4</b> grille de patch.",
-                crop=(240, 115, 1905, 735),
-                markers=[(0.10, 0.08, "1"), (0.50, 0.08, "2"), (0.78, 0.08, "3"), (0.23, 0.52, "4")],
+                "<b>1</b> machine RX ; <b>2</b> FLIP échange seulement les rôles affichés ; <b>3</b> machine TX ; <b>4</b> sélection, plage et Patch 1:1.",
+                crop=(230, 215, 1595, 900),
+                markers=[(0.20, 0.30, "1"), (0.50, 0.30, "2"), (0.80, 0.30, "3"), (0.50, 0.67, "4")],
                 maximum_height=105,
             ),
             callout("<b>FLIP ne retourne aucun patch.</b> Il échange uniquement les deux machines sélectionnées afin d'observer ou de créer les liaisons dans l'autre sens.", PALE_GREEN),
@@ -945,6 +946,13 @@ def full_guide(language: str) -> None:
                 [52, 118],
             ),
             Spacer(1, 3 * mm),
+            *screenshot(
+                language,
+                "patch",
+                "Matrice compacte : les RX sont en lignes, les TX en colonnes, et chaque clic ou glissement s'applique immédiatement.",
+                crop=(230, 215, 1595, 930),
+                maximum_height=92,
+            ),
             *bullets([
                 "Chaque clic ou glissement modifie immédiatement le projet ; il n'existe plus de lot de prévisualisation à valider.",
                 "M'avertir si le RX est déjà patché est activé par défaut. Décochez cette option uniquement si vous acceptez les remplacements sans confirmation.",
@@ -975,7 +983,7 @@ def full_guide(language: str) -> None:
             *bullets([
                 "Un XML invalide, une version différente ou un namespace différent bloque toute la fusion.",
                 "Un nom final déjà utilisé bloque l'opération au lieu de produire un doublon ambigu.",
-                "La fusion est annulable. Utilisez ensuite Santé du fichier et Avant / après avant Enregistrer sous.",
+                "La fusion est annulable. Utilisez ensuite le Centre de validation et Avant / après avant Enregistrer sous.",
             ]),
         ]
         bank_concept_page = [
@@ -988,7 +996,7 @@ def full_guide(language: str) -> None:
                     ["Enregistrer dans la banque", "Machine du projet courant", "Modèle assaini, versionné et réutilisable."],
                     ["Ajouter depuis la banque", "Modèle de banque", "Nouvelle instance indépendante dans le projet ouvert."],
                     ["Ajouter XML au projet", "Second preset XML", "Machines compatibles et leurs références ajoutées au projet courant."],
-                    ["Nouveau projet", "Structure minimale et banque", "XML 3.0.0 expérimental à valider impérativement."],
+                    ["Nouveau projet", "Structure minimale et banque", "XML 3.0.0 à contrôler avant exploitation."],
                 ],
                 [43, 51, 76],
             ),
@@ -1028,7 +1036,7 @@ def full_guide(language: str) -> None:
                 "La version, l'empreinte, le namespace, le nombre de canaux et la version de preset sont vérifiés avant insertion.",
                 "Les banques GitHub fournies sont assainies et peuvent être installées séparément ; une banque personnelle n'est jamais remplacée.",
             ]),
-            callout("Après ajout ou création de projet, réouvrez le XML, vérifiez Santé du fichier puis importez une copie dans Dante Controller. Les rôles génériques sans identité matérielle restent expérimentaux.", PALE_RED),
+            callout("Après ajout ou création de projet, réouvrez le XML, vérifiez le Centre de validation puis importez une copie dans Dante Controller. Un rôle générique sans identité matérielle doit être contrôlé avant exploitation.", PALE_RED),
         ]
         visual_labels = [
             para("Import / Export de labels", "h1"),
@@ -1037,8 +1045,8 @@ def full_guide(language: str) -> None:
                 language,
                 "labels",
                 "Import à gauche, export à droite. Le bouton DMT ouvre le projet dLive MIDI Tools associé.",
-                crop=(540, 360, 1585, 535),
-                maximum_height=55,
+                crop=(230, 215, 1595, 930),
+                maximum_height=96,
             ),
             *bullets([
                 "Import : choisir le fichier, vérifier le rapport détecté, associer les listes aux machines, puis appliquer uniquement les changements valides.",
@@ -1053,8 +1061,8 @@ def full_guide(language: str) -> None:
                 language,
                 "synoptic",
                 "<b>1</b> emplacement ; <b>2</b> ordre et visibilité ; <b>3</b> aperçu zoomable ; <b>4</b> reset et exports SVG/PDF.",
-                crop=(240, 80, 1905, 815),
-                markers=[(0.15, 0.15, "1"), (0.14, 0.45, "2"), (0.62, 0.42, "3"), (0.75, 0.94, "4")],
+                crop=(230, 215, 1595, 940),
+                markers=[(0.15, 0.22, "1"), (0.15, 0.50, "2"), (0.65, 0.47, "3"), (0.75, 0.94, "4")],
                 maximum_height=105,
             ),
             *bullets([
@@ -1069,25 +1077,25 @@ def full_guide(language: str) -> None:
         ]
         visual_health = [
             para("Contrôler avant d'enregistrer", "h1"),
-            para("Santé du fichier sépare les erreurs bloquantes, les avertissements et les informations. Lisez la ligne complète : elle précise la catégorie, la machine, le canal et la cause."),
+            para("Le Centre de validation sépare les erreurs bloquantes, les avertissements et les informations. Lisez la ligne complète : elle précise la catégorie, l'élément concerné, la cause et le chemin XML."),
             *screenshot(
                 language,
-                "health",
+                "validation",
                 "Exemple anonymisé : formats audio mélangés, mode réseau mixte, IP fixe, patch local et RX libre.",
-                crop=(225, 0, 1905, 285),
-                maximum_height=52,
+                crop=(230, 215, 1595, 930),
+                maximum_height=96,
             ),
             feature_band([
-                ("Santé du fichier", "Erreurs, warnings, formats audio mélangés, IP fixes et patchs locaux."),
-                ("Sécurité et journal", "Résumé avant sauvegarde, compatibilité XML, rapports, historique et notices."),
-                ("Atomic Bomb", "Onglet séparé, catégories configurables et trois confirmations obligatoires."),
+                ("Centre de validation", "Erreurs, avertissements, formats audio, IP fixes, patchs locaux et chemins XML."),
+                ("Historique", "Modifications, comparaison XML, journaux, diagnostic et notices."),
+                ("Outils avancés", "Atomic Bomb, catégories configurables et trois confirmations obligatoires."),
             ]),
             Spacer(1, 3 * mm),
             *bullets([
                 "Une erreur bloque la sauvegarde ; un warning exige une vérification mais peut décrire une situation volontaire.",
                 "Points à vérifier > Voir les machines applique un filtre pour retrouver rapidement les appareils concernés.",
                 "Modifiées uniquement puis Avant / après permettent de relire précisément le périmètre des changements.",
-                "Sécurité et journal regroupe validation, compatibilité, historique, comparaison XML, rapports et accès aux notices.",
+                "Historique regroupe modifications, comparaison XML, journaux, diagnostic et accès aux notices.",
             ]),
         ]
         visual_atomic = [
@@ -1096,7 +1104,7 @@ def full_guide(language: str) -> None:
                 language,
                 "atomic-bomb",
                 "Décochez les catégories à préserver. Trois confirmations sont exigées avant de modifier la copie en mémoire.",
-                crop=(600, 155, 1535, 690),
+                crop=(450, 300, 1375, 840),
                 maximum_height=100,
             ),
             *bullets([
@@ -1116,8 +1124,8 @@ def full_guide(language: str) -> None:
                 "The default location is Program Files, with Start menu and desktop shortcuts.",
                 "A 2026.1 Beta installation uses its own AppId, Program Files folder, shortcuts, and local profile so it can coexist with V3.6.",
                 "2026.1 may copy V3.6 settings into its own profile but never modifies the V3.6 profile in place.",
-                "The wizard offers separate active-bank and included-bank folders. DCE Generic Roles 3.6 and DCE Community Devices 3.6 are optional, can be selected independently, and no existing folder is replaced.",
-                "Two self-contained 2026.1 Beta DMGs are planned for Apple Silicon and Intel. They include both archives in the Machine Banks folder, and their separate bundle can coexist with V3.6.",
+                "The wizard offers separate active-bank and included-bank folders. DCE Generic Roles 2026.1 and DCE Community Devices 2026.1 are optional, can be selected independently, and no existing folder is replaced.",
+                "Two self-contained 2026.1 Beta DMGs are built on macOS for Apple Silicon and Intel. They include the 2026.1 banks in the Machine Banks folder, and their separate bundle can coexist with V3.6.",
                 "All four French and English PDFs are installed and remain available from the application.",
             ]),
             para("2. Safety principles", "h1"),
@@ -1132,19 +1140,19 @@ def full_guide(language: str) -> None:
         ]
         beta_page = [
             para("4. 2026.1 workspace", "h1"),
-            para("The Windows build organizes work by intent: Home, Overview, Devices, Patch, Synoptic, Device bank, Import / Export, Validation, Safety, and Atomic Bomb."),
+            para("Windows and macOS organize work by intent: Project, Overview, Devices, Patch, Device bank, Import / Export, Validation center, History, and Advanced tools."),
             *bullets([
                 "The top bar keeps the active file, Save as, Undo, and Redo available.",
                 "The right inspector shows selection context without changing pages.",
-                "Patch, Easy Patch, and the synoptic share stable identities and one session.",
+                "Matrix, Easy patch, Rx-to-Tx list, and Synoptic share stable identities and one session.",
                 "The Validation Center separates internal DCE checks from manual Dante Controller validation.",
                 "Dante XML remains the official exchange file; a .dceproj additionally stores DCE layout, notes, assets, and history.",
             ]),
-            callout("Screenshots in this guide are real V3.5 captures using a synthetic preset. They illustrate retained workflows; 2026.1 navigation and styling differ.", PALE_BLUE),
+            callout("Every screenshot in this guide is generated with the 2026.1 interface, an anonymized synthetic preset, and the sanitized public bank. No production XML is used.", PALE_BLUE),
         ]
         page2 = [
-            para("4. Configuration page", "h1"),
-            para("The Configuration page combines the selected device, its channels, global actions, and the device table."),
+            para("5. Devices page", "h1"),
+            para("The Devices page combines quick lists, global actions, the selected device, its channels, and the complete device table."),
             para("Selected device", "h2"),
             *bullets([
                 "Apply the name, network mode, latency, and Preferred Master state together with Apply settings.",
@@ -1163,17 +1171,17 @@ def full_guide(language: str) -> None:
                 "Search finds devices, channels, and subscription references after at least two characters.",
                 "Quick lists filter network modes, latencies, sample rates, bits, static IPs, and Preferred Masters.",
                 "Modified only shows changed devices; Before / after lists every difference.",
-                "Choose all unlocked, selected unlocked, or visible unlocked devices. A preview is shown before application.",
+                "Choose all unlocked, selected unlocked, or visible unlocked devices. The target remains visible before application.",
             ]),
         ]
         page3 = [
-            para("5. Navigable alerts", "h1"),
+            para("6. Navigable alerts", "h1"),
             para("The Items to check banner reports mixed redundant/daisychain modes, static IPs, multiple sample rates, and multiple bit depths."),
             *bullets([
                 "Click Show devices, choose an alert, then review the filtered devices.",
-                "After correcting an item, verify that the alert disappears and review File health.",
+                "After correcting an item, verify that the alert disappears and review the Validation center.",
             ]),
-            para("6. Quick profiles", "h1"),
+            para("7. Quick profiles", "h1"),
             data_table(
                 ["Profile", "Applied settings"],
                 [
@@ -1188,7 +1196,7 @@ def full_guide(language: str) -> None:
             ),
             Spacer(1, 2 * mm),
             callout("Verify that every device supports the requested sample rate, bit depth, latency, and network mode.", PALE_RED),
-            para("7. Automatic recovery", "h1"),
+            para("8. Automatic recovery", "h1"),
             para("After a change, the application waits briefly and writes recovery data in the background without blocking the interface or replacing the source XML."),
             *bullets([
                 "When reopening the same XML, choose whether to restore or discard the previous session.",
@@ -1197,7 +1205,7 @@ def full_guide(language: str) -> None:
             ]),
         ]
         page4 = [
-            para("8. Channels and subscriptions", "h1"),
+            para("9. Channels and subscriptions", "h1"),
             *bullets([
                 "TX/RX channels can be renamed individually or by range with {00}, {000}, {n}, and {device}.",
                 "Renaming a Tx channel updates every recognized subscription alias in the project.",
@@ -1228,13 +1236,13 @@ def full_guide(language: str) -> None:
                 ],
                 [50, 35, 85],
             ),
-            para("9. Add XML to project", "h1"),
+            para("10. Add XML to project", "h1"),
             *bullets([
                 "Devices with unique names are always imported.",
                 "Only conflicting names are offered for automatic or manual rename.",
                 "Imported subscriptions follow renamed imported devices.",
             ]),
-            para("10. IP and audio formats", "h1"),
+            para("11. IP and audio formats", "h1"),
             *bullets([
                 "Automatic or static IP is editable per device or through a global action.",
                 "Only the primary IPv4 interface, network=0 when available, is targeted. A secondary interface is not changed.",
@@ -1242,9 +1250,9 @@ def full_guide(language: str) -> None:
                 "Sample rate and bits per sample are editable per device, globally, or through a profile.",
             ]),
             callout("Incorrect settings can make a device unreachable or incompatible. Verify actual hardware capabilities.", PALE_RED),
-            para("11. File health, comparison, and Import / Export", "h1"),
+            para("12. Validation, comparison, and Import / Export", "h1"),
             *bullets([
-                "File health combines statistics, errors, warnings, free/local subscriptions, and compatibility checks.",
+                "The Validation center combines statistics, errors, warnings, free/local subscriptions, and compatibility checks.",
                 "XML comparison displays differences in a table.",
                 "TXT/PDF exports include the application version and the By Mamat et ses agents signature.",
                 "Import / Export groups Labels, Reports and patchbook, and Synoptic. The synoptic remembers locations, shows or hides devices, provides a separate preview whose zoom preserves proportions, and exports SVG or PDF; its local layout sidecar never changes Dante XML.",
@@ -1279,16 +1287,16 @@ def full_guide(language: str) -> None:
             para("Bundled DMT workbooks come from Tobias Grupe's MIT-licensed dLive MIDI Tools project. DMT_LICENSE.txt is included with the application.", "small"),
         ]
         page5 = [
-            para("12. Atomic Bomb: create an exercise", "h1"),
+            para("13. Atomic Bomb: create an exercise", "h1"),
             *bullets([
-                "Open the Atomic Bomb tab after Safety and log. Clear the categories you want to spare; all are selected by default. Three confirmations then describe the consequences before any change.",
+                "Open Advanced tools, then Atomic Bomb. Clear the categories you want to spare; all are selected by default. Three confirmations describe the consequences before any change.",
                 "The in-memory copy receives unique mythological, audio-themed, or playful names plus a mixture of subscriptions, network modes, Preferred Master states, latencies, sample rates, encodings, and primary IP settings.",
                 "Technical identifiers, namespaces, DNS, gateways, and secondary interfaces remain protected.",
                 "The summary displays the scenario seed. The entire operation is one undo step and the source file is never overwritten.",
                 "Use Save as to provide the trainee preset, then verify its import in the appropriate official Dante tool.",
             ]),
             callout("This mode is only for offline training. It does not alter any device or communicate with the Dante network.", PALE_RED),
-            para("13. Save and final validation", "h1"),
+            para("14. Save and final validation", "h1"),
             para("Use Save as. The temporary XML is reloaded, protected changes are checked, and the destination is replaced atomically. A failure before replacement leaves the previous destination intact."),
             data_table(
                 ["Check", "Recommended action"],
@@ -1300,9 +1308,9 @@ def full_guide(language: str) -> None:
                 ],
                 [48, 122],
             ),
-            para("14. Regression tests", "h1"),
-            para("The 2026.1 suite runs 364 Core/Windows tests and 20 headless Mac tests. Coverage includes XML guards, save and recovery, IPv4 interfaces, subscriptions, large presets, duplication, the device bank, experimental project creation, .dceproj packages, XML profiles, commands, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, optional support, and translation consistency."),
-            para("15. Known limitations", "h1"),
+            para("15. Regression tests", "h1"),
+            para("The 2026.1 suite runs more than 380 Core/Windows tests and more than 20 headless Mac tests. Coverage includes XML guards, save and recovery, IPv4 interfaces, subscriptions, large presets, duplication, the device bank, project creation, .dceproj packages, XML profiles, commands, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, optional support, and translation consistency."),
+            para("16. Known limitations", "h1"),
             *bullets([
                 "No real-time Dante control and no communication with devices.",
                 "No Audinate SDK/API and no proprietary protocol bypass.",
@@ -1310,22 +1318,22 @@ def full_guide(language: str) -> None:
                 "Undo keeps at most 10 states to limit memory use.",
                 "The matrix displays only the two selected devices to preserve performance on large presets.",
                 "Mac DMGs are ad hoc signed but not notarized; first launch may require right-clicking the application and choosing Open.",
-                "The Windows Easy patch tab is not reproduced identically on Mac, which keeps the Avalonia visual patch workshop.",
+                "Windows and macOS expose the same main workflows, although some controls retain a slightly different native rendering.",
                 "Duplicate Tx names are ambiguous in Dante subscriptions and must be renamed before using Easy patch.",
                 "Native workbooks match observed DMT 2.13.0 templates and the supplied dLive, Avantis, CL5, and QL5 examples; DMT 2.14.0-RC1 JSON/CSV is tested separately.",
                 "Generic roles duplicated or added from the bank carry no hardware instance_id/device_id. Only an actual Dante Controller import can confirm their use with a given version.",
-                "New project writes an experimental minimal 3.0.0 structure. It must be imported and reviewed in Dante Controller before use.",
+                "New project writes a minimal 3.0.0 structure. Always review the final file in Dante Controller before operation.",
             ]),
-            para("16. Help and information", "h1"),
+            para("17. Help and information", "h1"),
             para(
                 f"Quick start and Full guide automatically open the French or English PDF for the active language. "
                 f"Public project: {GITHUB} - Credit: By Mamat et ses agents.",
                 "small",
             ),
-            para("17. Support DCE", "h1"),
+            para("18. Support DCE", "h1"),
             para("Dante Config Editor remains completely free, and every feature is available without contributing."),
             *bullets([
-                "The Support DCE button is available in Safety and log.",
+                "The Support DCE button is available in the top banner, while help information remains accessible from History.",
                 "The Support DCE button displays the PayPal QR code for the phone app and a PayPal.Me button for computers; DCE contains no payment system and performs no network request at startup.",
                 "The local reminder does not appear on first launch. It can be postponed for 20 launches or disabled permanently.",
                 "Starring the GitHub project or sharing feedback also helps for free. And if you are truly crazy, you can even do both!",
@@ -1346,7 +1354,7 @@ def full_guide(language: str) -> None:
                 "An optional PNG, JPEG, or WebP image is copied into the model folder; no fragile external path is kept.",
                 "The default bank is Documents/Dante Config Editor/Machine Bank. You may choose, open, copy, or place it in a synchronized folder.",
                 "Export bank creates a verified *.dce-bank.zip archive. Import bank requires a new or empty folder and never replaces existing data.",
-                "GitHub banks opens the public catalog in main. Banks retain their historical 3.6 names: DCE Generic Roles 3.6 provides generic 8x8 and 32x32 test roles. DCE Community Devices 3.6 provides nine sanitized illustrated templates: Yamaha QL1 and Rio1608-D2, Fohhn DI4.1000, Lake LM 44, RME Digiface Dante, Glensound Divine, Beatrice D8 and AOIP22, and Allen & Heath SDante 64x64. These banks contain no hardware identity, network data, or subscription.",
+                "GitHub banks opens the public catalog. DCE Generic Roles 2026.1 provides two generic test roles. DCE Community Devices 2026.1 provides 41 sanitized illustrated templates from several manufacturers. These banks contain no hardware identity, network data, flow, or subscription.",
                 "Administration supports search, filters, edit, duplicate, confirmed delete, and model ZIP import/export.",
             ]),
             para("Add a template to the project", "h2"),
@@ -1355,13 +1363,13 @@ def full_guide(language: str) -> None:
                 "The inserted instance is independent from the template. Editing either one never changes the other.",
                 "DCE checks model version, checksum, channel counts, namespace, and preset version before a transactional insertion.",
             ]),
-            para("Experimental new project", "h2"),
+            para("New offline project", "h2"),
             *bullets([
                 "New project writes a minimal 3.0.0 structure, either empty or with one initial role from the bank.",
                 "An existing file is never overwritten silently. Writing uses a temporary file followed by validation and atomic replacement.",
-                "Reopen the XML in DCE, review File health, then perform a mandatory manual import into Dante Controller.",
+                "Reopen the XML in DCE, review the Validation center, then perform a control import into Dante Controller.",
             ]),
-            callout("Technical logs are available from Safety and log. They explain import, validation, bank, and export failures without changing the project.", PALE_GREEN),
+            callout("Technical logs are available from History. They explain import, validation, bank, and export failures without changing the project.", PALE_GREEN),
         ]
         screen_map = [
             para("Screen map", "h1"),
@@ -1369,22 +1377,24 @@ def full_guide(language: str) -> None:
             data_table(
                 ["Screen", "Main purpose"],
                 [
-                    ["Configuration", "Overview, selected device, channels, quick lists, global actions, and device table."],
-                    ["Patch", "Tabular review and editing of Rx-to-Tx subscriptions, with filters and direct renaming."],
-                    ["Easy patch", "Visual matrix, selection/range tools, immediate apply, and optional replacement warning."],
+                    ["Overview", "Counters, audio formats, network, clock, alerts, and latest changes."],
+                    ["Devices", "Selected device, channels, quick lists, global actions, and device table."],
+                    ["Patch > Matrix", "Visual Rx/Tx matrix, drag gestures, PATCH 1:1, zoom, and direct rename."],
+                    ["Patch > Easy patch", "Selection and 1:1 range tools with immediate apply and optional replacement warning."],
+                    ["Patch > Rx-to-Tx list", "Tabular subscription review and editing with filters and detailed state."],
                     ["Import / Export > Labels", "JSON/CSV, DMT XLSX/ODS, A&H, and Yamaha exchange with an import report."],
                     ["Import / Export > Reports", "TXT/PDF reports, TXT/CSV patchbooks, and a simple text topology."],
                     ["Import / Export > Synoptic", "Locations, order, visibility, zoom, reset, and SVG/PDF exports."],
-                    ["File health", "Errors, warnings, subscription information, and review filters."],
-                    ["Safety and log", "Validation, final report, compatibility, history, XML comparison, user guides, and optional support."],
-                    ["Atomic Bomb", "Configurable, undoable, offline troubleshooting exercise generation."],
+                    ["Validation center", "Errors, warnings, information, XML paths, navigation, and report export."],
+                    ["History", "Changes, XML comparison, user guides, logs, and diagnostics."],
+                    ["Advanced tools", "Atomic Bomb: configurable, undoable, offline troubleshooting exercises."],
                 ],
                 [54, 116],
             ),
         ]
         visual_overview = [
             para("The essentials on one screen", "h1"),
-            para("The Configuration page addresses the software's original need: review an entire preset quickly without opening each Dante Controller page in turn."),
+            para("The Overview page addresses the software's original need: review an entire preset quickly without opening each Dante Controller page in turn."),
             feature_band([
                 ("Spot issues", "Colored rows and the side banner highlight important discrepancies."),
                 ("Target safely", "Filters, multiple selection, and locks define exactly which devices are affected."),
@@ -1393,9 +1403,9 @@ def full_guide(language: str) -> None:
             Spacer(1, 3 * mm),
             *screenshot(
                 language,
-                "configuration",
-                "Configuration view: quick lists and global actions on the left, device and channels in the center, complete device table at the bottom.",
-                crop=(225, 25, 1905, 735),
+                "overview",
+                "Overview: counters, audio formats, network, clock, and latest changes on one screen.",
+                crop=(220, 195, 1605, 760),
                 maximum_height=102,
             ),
         ]
@@ -1410,10 +1420,10 @@ def full_guide(language: str) -> None:
             Spacer(1, 3 * mm),
             *screenshot(
                 language,
-                "configuration",
+                "devices",
                 "<b>1</b> device settings; <b>2</b> selected Tx/Rx channel; <b>3</b> range rename.",
-                crop=(695, 35, 1905, 490),
-                markers=[(0.16, 0.22, "1"), (0.62, 0.22, "2"), (0.67, 0.75, "3")],
+                crop=(700, 195, 1600, 700),
+                markers=[(0.25, 0.34, "1"), (0.70, 0.22, "2"), (0.75, 0.66, "3")],
                 maximum_height=86,
             ),
             *bullets([
@@ -1427,17 +1437,17 @@ def full_guide(language: str) -> None:
             para("A global action affects only the displayed target: all unlocked devices, the unlocked selection, or the current filter. Always review the target before confirming."),
             *screenshot(
                 language,
-                "configuration",
+                "devices",
                 "<b>1</b> quick lists; <b>2</b> Network/audio, IP, Profiles, and Clock tabs; <b>3</b> target and locking controls.",
-                crop=(230, 35, 705, 575),
-                markers=[(0.22, 0.10, "1"), (0.45, 0.40, "2"), (0.55, 0.94, "3")],
+                crop=(230, 210, 690, 820),
+                markers=[(0.22, 0.10, "1"), (0.45, 0.45, "2"), (0.55, 0.91, "3")],
                 width=104,
                 maximum_height=118,
             ),
             para("Apply a profile", "h2"),
             *bullets([
                 "Open Global actions > Profiles, choose a profile, then select Apply profile.",
-                "The preview compares the current and target states for every device that will actually be affected.",
+                "Before / after reviews the initial and resulting states for every device that was actually affected.",
                 "Profiles set sample rate, bit depth, latency, and automatic IP; the last two also set Redundant or Daisy-chain.",
                 "A locked device is always excluded. Undo restores the previous state as one operation.",
             ]),
@@ -1448,10 +1458,10 @@ def full_guide(language: str) -> None:
             para("Direct rename works in Configuration, Device details, Patch, and Easy patch. For a Tx channel, DCE also updates every recognized subscription that uses the old name."),
             *screenshot(
                 language,
-                "configuration",
+                "devices",
                 "<b>1</b> choose Rx or Tx and a channel; <b>2</b> enter the name; <b>3</b> choose the range; <b>4</b> set prefix and starting number.",
-                crop=(1310, 70, 1905, 410),
-                markers=[(0.12, 0.13, "1"), (0.17, 0.36, "2"), (0.12, 0.72, "3"), (0.65, 0.91, "4")],
+                crop=(1150, 210, 1595, 610),
+                markers=[(0.18, 0.13, "1"), (0.24, 0.36, "2"), (0.19, 0.69, "3"), (0.73, 0.86, "4")],
                 width=155,
                 maximum_height=90,
             ),
@@ -1487,11 +1497,10 @@ def full_guide(language: str) -> None:
             para("Every row represents one Rx channel and its Tx source. Patch is the most precise view for filtering, reviewing local or external sources, replacing a subscription, or removing it."),
             *screenshot(
                 language,
-                "patch",
-                "<b>1</b> search and state; <b>2</b> Tx source to apply; <b>3</b> Simple/Expert mode; <b>4</b> Rx-to-Tx result.",
-                crop=(475, 35, 1905, 310),
-                markers=[(0.16, 0.18, "1"), (0.52, 0.18, "2"), (0.81, 0.18, "3"), (0.56, 0.70, "4")],
-                maximum_height=75,
+                "patch-list",
+                "Rx/Tx filters on the left, source selection at the top, and the complete Rx-to-Tx result in the table.",
+                crop=(230, 215, 1595, 940),
+                maximum_height=96,
             ),
             feature_band([
                 ("Simple", "Shows Rx device/ID/channel, Tx device/ID/channel, and state."),
@@ -1513,9 +1522,9 @@ def full_guide(language: str) -> None:
             *screenshot(
                 language,
                 "easy-patch",
-                "<b>1</b> Rx device; <b>2</b> FLIP exchanges only the displayed Rx/Tx roles; <b>3</b> Tx device; <b>4</b> patch matrix.",
-                crop=(240, 115, 1905, 735),
-                markers=[(0.10, 0.08, "1"), (0.50, 0.08, "2"), (0.78, 0.08, "3"), (0.23, 0.52, "4")],
+                "<b>1</b> Rx device; <b>2</b> FLIP exchanges only the displayed roles; <b>3</b> Tx device; <b>4</b> selection, range, and Patch 1:1.",
+                crop=(230, 215, 1595, 900),
+                markers=[(0.20, 0.30, "1"), (0.50, 0.30, "2"), (0.80, 0.30, "3"), (0.50, 0.67, "4")],
                 maximum_height=105,
             ),
             callout("<b>FLIP does not reverse subscriptions.</b> It only exchanges the two selected devices so you can inspect or create subscriptions in the opposite direction.", PALE_GREEN),
@@ -1535,6 +1544,13 @@ def full_guide(language: str) -> None:
                 [52, 118],
             ),
             Spacer(1, 3 * mm),
+            *screenshot(
+                language,
+                "patch",
+                "Compact matrix: Rx channels are rows, Tx channels are columns, and every click or drag is applied immediately.",
+                crop=(230, 215, 1595, 930),
+                maximum_height=92,
+            ),
             *bullets([
                 "Every click or drag changes the project immediately; there is no preview batch waiting to be applied.",
                 "Warn me when the Rx channel is already patched is enabled by default. Clear it only when you accept replacement without confirmation.",
@@ -1565,7 +1581,7 @@ def full_guide(language: str) -> None:
             *bullets([
                 "Invalid XML, a different preset version, or a different namespace blocks the complete merge.",
                 "A final name that is already used blocks the operation instead of producing an ambiguous duplicate.",
-                "The merge can be undone. Review File health and Before / after before Save as.",
+                "The merge can be undone. Review the Validation center and Before / after before Save as.",
             ]),
         ]
         bank_concept_page = [
@@ -1578,7 +1594,7 @@ def full_guide(language: str) -> None:
                     ["Save to device bank", "Device in the open project", "Sanitized, versioned, reusable template."],
                     ["Add from device bank", "Bank template", "Independent new instance in the open project."],
                     ["Add XML to project", "Second XML preset", "Compatible devices and references added to the open project."],
-                    ["New project", "Minimal structure and bank", "Experimental 3.0.0 XML that requires validation."],
+                    ["New project", "Minimal structure and bank", "3.0.0 XML to review before operation."],
                 ],
                 [43, 51, 76],
             ),
@@ -1618,7 +1634,7 @@ def full_guide(language: str) -> None:
                 "Version, checksum, namespace, channel counts, and preset version are checked before insertion.",
                 "Bundled GitHub banks are sanitized and installed separately; a personal bank is never replaced.",
             ]),
-            callout("After insertion or project creation, reopen the XML, review File health, and import a copy into Dante Controller. Generic roles without hardware identity remain experimental.", PALE_RED),
+            callout("After insertion or project creation, reopen the XML, review the Validation center, and import a copy into Dante Controller. A generic role without hardware identity must be reviewed before operation.", PALE_RED),
         ]
         visual_labels = [
             para("Label Import / Export", "h1"),
@@ -1627,8 +1643,8 @@ def full_guide(language: str) -> None:
                 language,
                 "labels",
                 "Import is on the left and export on the right. The DMT button opens the associated dLive MIDI Tools project.",
-                crop=(540, 360, 1585, 535),
-                maximum_height=55,
+                crop=(230, 215, 1595, 930),
+                maximum_height=96,
             ),
             *bullets([
                 "Import: choose the file, review the detection report, associate source lists with devices, and apply only valid changes.",
@@ -1643,8 +1659,8 @@ def full_guide(language: str) -> None:
                 language,
                 "synoptic",
                 "<b>1</b> location; <b>2</b> order and visibility; <b>3</b> zoomable preview; <b>4</b> reset and SVG/PDF exports.",
-                crop=(240, 80, 1905, 815),
-                markers=[(0.15, 0.15, "1"), (0.14, 0.45, "2"), (0.62, 0.42, "3"), (0.75, 0.94, "4")],
+                crop=(230, 215, 1595, 940),
+                markers=[(0.15, 0.22, "1"), (0.15, 0.50, "2"), (0.65, 0.47, "3"), (0.75, 0.94, "4")],
                 maximum_height=105,
             ),
             *bullets([
@@ -1659,25 +1675,25 @@ def full_guide(language: str) -> None:
         ]
         visual_health = [
             para("Review before saving", "h1"),
-            para("File health separates blocking errors, warnings, and information. Read the complete row: it identifies the category, device, channel, and cause."),
+            para("The Validation center separates blocking errors, warnings, and information. Read the complete row: it identifies the category, affected item, cause, and XML path."),
             *screenshot(
                 language,
-                "health",
+                "validation",
                 "Anonymized example: mixed audio formats, mixed network mode, static IP, local subscription, and free Rx.",
-                crop=(225, 0, 1905, 285),
-                maximum_height=52,
+                crop=(230, 215, 1595, 930),
+                maximum_height=96,
             ),
             feature_band([
-                ("File health", "Errors, warnings, mixed audio formats, static IPs, and local subscriptions."),
-                ("Safety and log", "Pre-save summary, XML compatibility, reports, history, and user guides."),
-                ("Atomic Bomb", "Separate tab, configurable categories, and three required confirmations."),
+                ("Validation center", "Errors, warnings, audio formats, static IPs, local subscriptions, and XML paths."),
+                ("History", "Changes, XML comparison, logs, diagnostics, and user guides."),
+                ("Advanced tools", "Atomic Bomb, configurable categories, and three required confirmations."),
             ]),
             Spacer(1, 3 * mm),
             *bullets([
                 "An error blocks saving; a warning requires review but may describe an intentional condition.",
                 "Items to check > Show devices applies a filter to find affected devices quickly.",
                 "Modified only followed by Before / after reviews the exact scope of the changes.",
-                "Safety and log combines validation, compatibility, history, XML comparison, reports, and user guides.",
+                "History combines changes, XML comparison, logs, diagnostics, and user guides.",
             ]),
         ]
         visual_atomic = [
@@ -1686,7 +1702,7 @@ def full_guide(language: str) -> None:
                 language,
                 "atomic-bomb",
                 "Clear categories that must be preserved. Three confirmations are required before changing the in-memory copy.",
-                crop=(600, 155, 1535, 690),
+                crop=(450, 300, 1375, 840),
                 maximum_height=100,
             ),
             *bullets([
