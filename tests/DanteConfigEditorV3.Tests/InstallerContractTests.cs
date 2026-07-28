@@ -72,6 +72,18 @@ public sealed class InstallerContractTests
         Assert.Contains("CopyFile(SettingsPath, SettingsPath + '.bak', False)", installerScript, StringComparison.Ordinal);
         Assert.Contains("DCE Generic Roles 2026.1", installerScript, StringComparison.Ordinal);
         Assert.Contains("DCE Community Devices 2026.1", installerScript, StringComparison.Ordinal);
+        Assert.Contains(
+            "DestDir: \"{app}\\Machine Banks\\DCE Generic Roles 2026.1\"",
+            installerScript,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "DestDir: \"{app}\\Machine Banks\\DCE Community Devices 2026.1\"",
+            installerScript,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "Type: filesandordirs; Name: \"{app}\\Machine Banks\\DCE Community Devices 2026.1\"",
+            installerScript,
+            StringComparison.Ordinal);
         Assert.Contains("onlyifdoesntexist", installerScript, StringComparison.Ordinal);
         Assert.Contains("ShouldInstallBundledBank", installerScript, StringComparison.Ordinal);
         Assert.Contains("ShouldInstallCommunityBank", installerScript, StringComparison.Ordinal);

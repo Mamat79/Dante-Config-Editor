@@ -37,9 +37,10 @@ devices, local `.` subscriptions, missing sources, missing channels, default
 namespaces, Unicode, unknown extensions, multiple interfaces, and mixed audio
 modes.
 
-The maintainer successfully imported V3.6 output into Dante Controller. For
-this 2026.1 beta, **manual Dante Controller validation is required** using
-`docs/2026.1/DANTE_CONTROLLER_MANUAL_VALIDATION.md`.
+The maintainer successfully imported 2026.1 output into Dante Controller with
+his validation files. The
+`docs/2026.1/DANTE_CONTROLLER_MANUAL_VALIDATION.md` checklist remains
+recommended for each XML structure and every production operation.
 
 ## Performance
 
@@ -52,8 +53,8 @@ For the synthetic 200-device preset with 64 TX and 64 RX per device:
 
 ## Automated validation
 
-- 364 Core/Windows tests passed;
-- 20 headless Avalonia/macOS tests passed;
+- 392 Core/Windows tests passed;
+- 22 headless Avalonia/macOS tests passed;
 - Windows Release build completed without warnings;
 - synthetic corpus saved and semantically compared without loss.
 
@@ -66,6 +67,8 @@ Final delivery counts are recorded in the beta report.
 `DanteConfigEditor2026_1_Beta_Installer.exe` includes the .NET 8 runtime and
 bilingual guides. Its default folder is
 `C:\Program Files\Dante Config Editor 2026.1 Beta\`.
+All 43 bundled templates are installed in the application folder without
+replacing the personal bank.
 
 ### macOS
 
@@ -76,7 +79,7 @@ hoc signed but not notarized.
 
 - complete project creation remains experimental;
 - duplication and bank insertion do not create a real hardware identity;
-- the complete 2026.1 interface is currently Windows-focused;
+- a few controls retain different native rendering on Windows and macOS;
 - Windows installer is not Authenticode signed;
 - DMGs are not notarized;
-- no GitHub Release is published automatically.
+- GitHub publication is performed manually after artifact validation.

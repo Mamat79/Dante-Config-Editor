@@ -27,22 +27,21 @@ travail afin de ne pas surcharger la barre supérieure.
 | Vue d'ensemble | indicateurs du projet et dernières modifications |
 | Machines | listes rapides, actions globales, machine, canaux et tableau |
 | Patch | espace unifié Matrice, Easy patch et Liste RX vers TX |
-| Banque de machines | accès et migration sûre de la banque |
 | Import / Export | Labels, Rapports et patchbook, Synoptique |
 | Centre de validation | erreurs, avertissements, informations et chemins XML |
 | Historique | modifications, comparaison XML, notices et journaux |
 | Outils avancés | Atomic Bomb |
 
-La version macOS suit les mêmes sections et les mêmes parcours principaux.
+La banque de machines est accessible directement en tête de la page Machines :
+la liste choisit la banque active ou une banque fournie, puis les actions
+permettent d'ajouter un modèle au projet ou de gérer la banque. La version
+macOS suit le même parcours.
 
 ## Comportement adaptatif
 
-- Les réglages de la vue Machines restent affichés au premier lancement.
-- Sous `1400` pixels logiques, l'inspecteur se replie pour préserver l'espace
-  central.
-- Sous `1160` pixels logiques, la navigation peut également se replier.
-- Les boutons `Navigation` et `Afficher inspecteur` permettent de rouvrir les
-  deux panneaux.
+- Navigation, réglages Machines et inspecteur sont ouverts à chaque lancement.
+- Chaque zone dispose d'une flèche toujours visible pour la masquer ou la
+  rouvrir. Aucun repli n'est déclenché automatiquement par la largeur.
 - Les trois colonnes Machines répartissent davantage d'espace aux actions
   globales afin d'éviter les textes coupés.
 
@@ -64,14 +63,14 @@ et 200 %.
 Le 28 juillet 2026 :
 
 - compilation Windows Release sans avertissement ;
-- `386/386` tests Core/Windows réussis ;
+- `392/392` tests Core/Windows réussis ;
 - contrôle visuel réel de l'exécutable à environ `1266 x 813` et en fenêtre
   maximisée ;
 - ouverture de la fixture anonymisée `representative-preset.xml` ;
 - vérification des vues Projet, Vue d'ensemble et Machines ;
 - vérification en thèmes sombre et clair ;
 - vérification en français et en anglais ;
-- vérification du repli automatique de l'inspecteur ;
+- vérification des flèches persistantes, panneaux ouverts et repli manuel ;
 - vérification des trois modes de l'espace Patch ;
 - vérification d'un clic direct, puis Annuler et Rétablir ;
 - vérification d'une ligne RX visible à faible hauteur avec la bannière de

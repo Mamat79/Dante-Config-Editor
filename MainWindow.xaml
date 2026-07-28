@@ -553,6 +553,7 @@
                      <Button x:Name="NavigationToggleButton"
                              Content="Navigation"
                              Style="{StaticResource SecondaryButtonStyle}"
+                             Visibility="Collapsed"
                              Click="NavigationToggleButton_Click"
                              ToolTip="Affiche ou masque la navigation principale." />
                       <Button x:Name="NewProjectButton"
@@ -615,6 +616,7 @@
                      <Button x:Name="InspectorToggleButton"
                              Content="Inspecteur"
                              Style="{StaticResource SecondaryButtonStyle}"
+                             Visibility="Collapsed"
                              Click="InspectorToggleButton_Click"
                              ToolTip="Affiche ou masque l'inspecteur contextuel." />
                      <ComboBox x:Name="RecentFilesComboBox"
@@ -664,13 +666,14 @@
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="NavigationColumn" Width="216" MinWidth="0" />
-                <ColumnDefinition x:Name="NavigationSplitterColumn" Width="5" />
+                <ColumnDefinition x:Name="NavigationSplitterColumn" Width="34" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition x:Name="InspectorSplitterColumn" Width="5" />
+                <ColumnDefinition x:Name="InspectorSplitterColumn" Width="34" />
                 <ColumnDefinition x:Name="InspectorColumn" Width="292" MinWidth="0" />
             </Grid.ColumnDefinitions>
 
-            <Border Grid.Column="0"
+            <Border x:Name="NavigationBorder"
+                    Grid.Column="0"
                     Background="{DynamicResource SurfaceBrush}"
                     BorderBrush="{DynamicResource BorderLineBrush}"
                     BorderThickness="0,0,1,0"
@@ -678,22 +681,10 @@
                 <DockPanel x:Name="NavigationPanel">
                     <StackPanel DockPanel.Dock="Top">
                         <Grid Margin="0,0,0,10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
                             <TextBlock Text="Navigation"
                                        FontWeight="SemiBold"
                                        FontSize="15"
                                        VerticalAlignment="Center" />
-                            <Button Grid.Column="1"
-                                    Content="Réduire"
-                                    Style="{StaticResource SecondaryButtonStyle}"
-                                    Padding="8,4"
-                                    MinHeight="28"
-                                    Margin="8,0,0,0"
-                                    Click="NavigationToggleButton_Click"
-                                    ToolTip="Masque la navigation principale." />
                         </Grid>
 
                         <StackPanel Margin="0,0,0,12">
@@ -734,6 +725,7 @@
                                          Tag="DeviceLibrary"
                                          GroupName="ShellNavigation"
                                          Style="{StaticResource ShellNavigationRadioStyle}"
+                                         Visibility="Collapsed"
                                          Checked="NavigationButton_Checked" />
                             <RadioButton x:Name="ImportExportNavigationButton"
                                          Content="Import / Export"
@@ -846,12 +838,28 @@
             <GridSplitter x:Name="NavigationSplitter"
                           Grid.Column="1"
                           Width="5"
-                          HorizontalAlignment="Stretch"
+                          HorizontalAlignment="Right"
                           VerticalAlignment="Stretch"
                           Background="{DynamicResource BorderLineBrush}"
                           ResizeDirection="Columns"
                           ResizeBehavior="PreviousAndNext"
                           ShowsPreview="True" />
+
+            <Button x:Name="NavigationRevealButton"
+                    Grid.Column="1"
+                    Content="&lt;"
+                    Visibility="Visible"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Width="30"
+                    MinHeight="64"
+                    Padding="4,12"
+                    Panel.ZIndex="2"
+                    Style="{StaticResource SecondaryButtonStyle}"
+                    Click="NavigationToggleButton_Click"
+                    ToolTip="Masquer navigation"
+                    AutomationProperties.Name="Masquer navigation"
+                    AutomationProperties.HelpText="Masque ou rouvre la navigation principale." />
 
              <TabControl x:Name="MainTabs"
                          Grid.Column="2"
@@ -864,10 +872,56 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <Grid x:Name="ConfigurationEditorsGrid" Grid.Row="0" Margin="0,0,0,12">
+                            <Border Grid.Row="0"
+                                    Background="{DynamicResource SurfaceBrush}"
+                                    BorderBrush="{DynamicResource BorderLineBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="6"
+                                    Padding="12"
+                                    Margin="0,0,0,10">
+                                <DockPanel LastChildFill="True">
+                                    <WrapPanel DockPanel.Dock="Right"
+                                               HorizontalAlignment="Right">
+                                        <Button x:Name="AddDeviceFromBankButton"
+                                                Content="Ajouter depuis la banque"
+                                                Click="AddDeviceFromBankButton_Click"
+                                                ToolTip="Choisissez une banque puis ajoutez une nouvelle machine indépendante au projet." />
+                                        <Button x:Name="ManageMachineBankButton"
+                                                Content="Gérer la banque"
+                                                Style="{StaticResource SecondaryButtonStyle}"
+                                                Click="ManageMachineBankButton_Click"
+                                                ToolTip="Ouvre la banque sélectionnée pour rechercher, modifier, importer ou exporter des modèles." />
+                                    </WrapPanel>
+                                    <StackPanel Margin="0,0,16,0">
+                                        <TextBlock Text="Machines"
+                                                   FontSize="18"
+                                                   FontWeight="SemiBold" />
+                                        <WrapPanel Margin="0,6,0,0">
+                                            <TextBlock Text="Source de modèles"
+                                                       Foreground="{DynamicResource MutedTextBrush}"
+                                                       VerticalAlignment="Center"
+                                                       Margin="0,0,8,8" />
+                                            <ComboBox x:Name="MachineBankSourceComboBox"
+                                                      MinWidth="290"
+                                                      MaxWidth="480"
+                                                      Margin="0,0,8,8"
+                                                      SelectionChanged="MachineBankSourceComboBox_SelectionChanged"
+                                                      AutomationProperties.Name="Source de la banque de machines"
+                                                      ToolTip="Votre banque active et les banques fournies restent séparées. Choisissez ici celle à consulter." />
+                                        </WrapPanel>
+                                        <TextBlock x:Name="MachineBankSummaryTextBlock"
+                                                   Foreground="{DynamicResource MutedTextBrush}"
+                                                   FontSize="12"
+                                                   Text="Chargement des banques de machines..." />
+                                    </StackPanel>
+                                </DockPanel>
+                            </Border>
+
+                            <Grid x:Name="ConfigurationEditorsGrid" Grid.Row="1" Margin="0,0,0,12">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1.1*" />
                                     <ColumnDefinition Width="1.05*" />
@@ -1181,7 +1235,7 @@
                                 </Grid>
                             </Grid>
 
-                            <Border Grid.Row="1"
+                            <Border Grid.Row="2"
                                     Background="{DynamicResource SurfaceBrush}"
                                     BorderBrush="{DynamicResource BorderLineBrush}"
                                     BorderThickness="1"
@@ -1196,10 +1250,14 @@
                                                 Click="ShowDeviceChangesButton_Click"
                                                 ToolTip="Affiche toutes les différences de machines, canaux et patchs depuis l'ouverture du XML." />
                                         <Button x:Name="ToggleConfigurationEditorsButton"
-                                                Content="Réduire les réglages"
+                                                Content="&#x25B2;"
                                                 Style="{StaticResource SecondaryButtonStyle}"
+                                                MinWidth="42"
+                                                Padding="8,4"
                                                 Click="ToggleConfigurationEditorsButton_Click"
-                                                ToolTip="Masque les panneaux de réglage pour agrandir le tableau des machines." />
+                                                ToolTip="Masquer les réglages"
+                                                AutomationProperties.Name="Masquer les réglages"
+                                                AutomationProperties.HelpText="Masque les panneaux de réglage pour agrandir le tableau des machines." />
                                     </StackPanel>
                                     <WrapPanel VerticalAlignment="Center">
                                         <Label Content="Filtre machines"
@@ -1236,7 +1294,7 @@
                             </Border>
 
                             <DataGrid x:Name="DeviceGrid"
-                                      Grid.Row="2"
+                                      Grid.Row="3"
                                       MinHeight="160"
                                       SelectionMode="Extended"
                                       SelectionUnit="FullRow"
@@ -2607,7 +2665,9 @@
                     </ScrollViewer>
                 </TabItem>
 
-                <TabItem x:Name="DeviceLibraryShellTab" Header="Banque de machines">
+                <TabItem x:Name="DeviceLibraryShellTab"
+                         Header="Banque de machines"
+                         Visibility="Collapsed">
                     <Grid Margin="16">
                         <StackPanel MaxWidth="720"
                                     HorizontalAlignment="Left"
@@ -2631,7 +2691,7 @@
             <GridSplitter x:Name="InspectorSplitter"
                           Grid.Column="3"
                           Width="5"
-                          HorizontalAlignment="Stretch"
+                          HorizontalAlignment="Left"
                           VerticalAlignment="Stretch"
                           Background="{DynamicResource BorderLineBrush}"
                           ResizeDirection="Columns"
@@ -2640,18 +2700,19 @@
 
             <Button x:Name="InspectorRevealButton"
                     Grid.Column="3"
-                    Content="&lt;"
-                    Visibility="Collapsed"
-                    HorizontalAlignment="Stretch"
+                    Content="&gt;"
+                    Visibility="Visible"
+                    HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    MinWidth="30"
+                    Width="30"
                     MinHeight="64"
                     Padding="4,12"
+                    Panel.ZIndex="2"
                     Style="{StaticResource SecondaryButtonStyle}"
                     Click="InspectorToggleButton_Click"
-                    ToolTip="Afficher inspecteur"
-                    AutomationProperties.Name="Afficher inspecteur"
-                    AutomationProperties.HelpText="Rouvre l'inspecteur contextuel masqué." />
+                    ToolTip="Masquer inspecteur"
+                    AutomationProperties.Name="Masquer inspecteur"
+                    AutomationProperties.HelpText="Masque ou rouvre l'inspecteur contextuel." />
 
             <Border Grid.Column="4"
                     x:Name="InspectorBorder"
@@ -2661,10 +2722,6 @@
                     Padding="14">
                 <DockPanel>
                     <Grid DockPanel.Dock="Top" Margin="0,0,0,12">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
                         <StackPanel>
                             <TextBlock x:Name="InspectorTitleTextBlock"
                                        Text="Inspecteur"
@@ -2675,15 +2732,6 @@
                                        Foreground="{DynamicResource MutedTextBrush}"
                                        FontSize="12" />
                         </StackPanel>
-                        <Button x:Name="InspectorCloseButton"
-                                Grid.Column="1"
-                                Content="Masquer"
-                                Style="{StaticResource SecondaryButtonStyle}"
-                                Padding="8,4"
-                                MinHeight="28"
-                                Margin="8,0,0,0"
-                                Click="InspectorToggleButton_Click"
-                                ToolTip="Masque l'inspecteur contextuel." />
                     </Grid>
 
                     <ScrollViewer VerticalScrollBarVisibility="Auto"

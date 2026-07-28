@@ -19,20 +19,28 @@ public sealed class InterfaceSettingsTests
     }
 
     [Fact]
-    public void WindowsMainWindowLoadsTheExpandedDefaultAndDoesNotHideItForDpi()
+    public void WindowsMainWindowAlwaysStartsExpandedAndDoesNotHidePanelsForDpi()
     {
         string mainWindow = File.ReadAllText(RepositoryFile("MainWindow.xaml.cs"));
 
         Assert.Contains(
-            "InterfaceSettingsService.LoadConfigurationEditorsExpanded()",
+            "ConfigurationEditorsGrid.Visibility = Visibility.Visible",
             mainWindow,
             StringComparison.Ordinal);
         Assert.Contains(
-            "Le facteur DPI ne doit jamais cacher les réglages au premier lancement.",
+            "SetNavigationExpanded(true)",
+            mainWindow,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "SetInspectorExpanded(true)",
             mainWindow,
             StringComparison.Ordinal);
         Assert.DoesNotContain(
-            "ConfigurationEditorsGrid.Visibility = width",
+            "if (width < 1400 && _inspectorExpanded)",
+            mainWindow,
+            StringComparison.Ordinal);
+        Assert.DoesNotContain(
+            "if (width < 1160 && _navigationExpanded)",
             mainWindow,
             StringComparison.Ordinal);
     }

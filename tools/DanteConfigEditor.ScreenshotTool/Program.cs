@@ -60,6 +60,7 @@ internal static class Program
             Directory.CreateDirectory(languageOutput);
             using TemporaryPreset temporaryPreset = new(fixture, language);
             CaptureMainWindow(temporaryPreset.Path, language, languageOutput);
+            CaptureNewProject(language, languageOutput);
             CaptureBank(publicBank, language, languageOutput);
             CaptureSupport(language, languageOutput);
         }
@@ -96,6 +97,11 @@ internal static class Program
 
         Select(window, "MachinesNavigationButton");
         Capture(window, Path.Combine(outputDirectory, "devices.png"));
+        InvokePrivate(window, "SetNavigationExpanded", [false]);
+        InvokePrivate(window, "SetInspectorExpanded", [false]);
+        Capture(window, Path.Combine(outputDirectory, "devices-collapsed-sidebars.png"));
+        InvokePrivate(window, "SetNavigationExpanded", [true]);
+        InvokePrivate(window, "SetInspectorExpanded", [true]);
 
         Select(window, "PatchNavigationButton");
         Select(window, "PatchMatrixModeButton");
@@ -155,6 +161,46 @@ internal static class Program
         Capture(window, Path.Combine(outputDirectory, "device-bank.png"));
         window.Close();
         PumpDispatcher();
+    }
+
+    private static void CaptureNewProject(UiLanguage language, string outputDirectory)
+    {
+        NewProjectWindow window = new(language, useLightTheme: false)
+        {
+            WindowStartupLocation = WindowStartupLocation.Manual,
+            Width = 920,
+            Height = 660,
+            Left = 0,
+            Top = 0,
+            ShowInTaskbar = false
+        };
+
+        window.Show();
+        PumpDispatcher();
+        CaptureWholeWindow(window, Path.Combine(outputDirectory, "new-project.png"));
+        window.Close();
+        PumpDispatcher();
+    }
+
+    private static void CaptureWholeWindow(Window window, string outputPath)
+    {
+        window.UpdateLayout();
+        PumpDispatcher();
+
+        int width = Math.Max(1, (int)Math.Ceiling(window.ActualWidth));
+        int height = Math.Max(1, (int)Math.Ceiling(window.ActualHeight));
+        RenderTargetBitmap bitmap = new(
+            width,
+            height,
+            96,
+            96,
+            PixelFormats.Pbgra32);
+        bitmap.Render(window);
+
+        PngBitmapEncoder encoder = new();
+        encoder.Frames.Add(BitmapFrame.Create(bitmap));
+        using FileStream output = File.Create(outputPath);
+        encoder.Save(output);
     }
 
     private static void CaptureSupport(UiLanguage language, string outputDirectory)

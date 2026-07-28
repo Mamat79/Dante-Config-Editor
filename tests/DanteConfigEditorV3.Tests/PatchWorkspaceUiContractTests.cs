@@ -322,7 +322,7 @@ public sealed class PatchWorkspaceUiContractTests
     }
 
     [Fact]
-    public void InspectorCanAlwaysBeReopenedAfterItIsHidden()
+    public void InspectorUsesOnePersistentArrowAndStartsExpanded()
     {
         string xaml = File.ReadAllText(RepositoryFile("MainWindow.xaml"));
         string codeBehind = File.ReadAllText(RepositoryFile("MainWindow.xaml.cs"));
@@ -330,23 +330,154 @@ public sealed class PatchWorkspaceUiContractTests
         XNamespace xamlNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
 
         XElement reveal = NamedElement(document, xamlNamespace, "InspectorRevealButton");
-        XElement close = NamedElement(document, xamlNamespace, "InspectorCloseButton");
+        XElement toolbarToggle = NamedElement(document, xamlNamespace, "InspectorToggleButton");
 
-        Assert.Equal("Collapsed", reveal.Attribute("Visibility")?.Value);
-        Assert.Equal("Afficher inspecteur", reveal.Attribute("ToolTip")?.Value);
-        Assert.Equal("Masquer", close.Attribute("Content")?.Value);
+        Assert.Equal("Visible", reveal.Attribute("Visibility")?.Value);
+        Assert.Equal(">", reveal.Attribute("Content")?.Value);
+        Assert.Equal("Collapsed", toolbarToggle.Attribute("Visibility")?.Value);
+        Assert.DoesNotContain("x:Name=\"InspectorCloseButton\"", xaml, StringComparison.Ordinal);
         Assert.Contains(
-            "InspectorRevealButton.Visibility = _inspectorExpanded ? Visibility.Collapsed : Visibility.Visible",
+            "InspectorRevealButton.Visibility = Visibility.Visible",
             codeBehind,
             StringComparison.Ordinal);
         Assert.Contains(
-            "InspectorSplitterColumn.Width = _inspectorExpanded ? new GridLength(5) : new GridLength(34)",
+            "InspectorSplitterColumn.Width = new GridLength(34)",
             codeBehind,
             StringComparison.Ordinal);
         Assert.Contains(
-            "LocalizeLiteral(\"Afficher inspecteur\")",
+            "SetInspectorExpanded(true)",
             codeBehind,
             StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void LeftNavigationAndMachineSettingsUsePersistentArrowHandles()
+    {
+        string xaml = File.ReadAllText(RepositoryFile("MainWindow.xaml"));
+        string codeBehind = File.ReadAllText(RepositoryFile("MainWindow.xaml.cs"));
+        XDocument document = XDocument.Parse(xaml);
+        XNamespace xamlNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
+
+        XElement navigationReveal =
+            NamedElement(document, xamlNamespace, "NavigationRevealButton");
+        XElement toolbarToggle =
+            NamedElement(document, xamlNamespace, "NavigationToggleButton");
+        XElement settingsToggle =
+            NamedElement(document, xamlNamespace, "ToggleConfigurationEditorsButton");
+
+        Assert.Equal("Visible", navigationReveal.Attribute("Visibility")?.Value);
+        Assert.Equal("<", navigationReveal.Attribute("Content")?.Value);
+        Assert.Equal("Collapsed", toolbarToggle.Attribute("Visibility")?.Value);
+        Assert.DoesNotContain("x:Name=\"NavigationCloseButton\"", xaml, StringComparison.Ordinal);
+        Assert.Equal("▲", settingsToggle.Attribute("Content")?.Value);
+        Assert.Contains(
+            "NavigationRevealButton.Visibility = Visibility.Visible",
+            codeBehind,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "NavigationSplitterColumn.Width = new GridLength(34)",
+            codeBehind,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "ToggleConfigurationEditorsButton.Content = collapsed ? \"\\u25BC\" : \"\\u25B2\"",
+            codeBehind,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "ConfigurationEditorsGrid.Visibility = Visibility.Visible",
+            codeBehind,
+            StringComparison.Ordinal);
+        Assert.Contains("SetNavigationExpanded(true)", codeBehind, StringComparison.Ordinal);
+        Assert.DoesNotContain(
+            "InterfaceSettingsService.LoadConfigurationEditorsExpanded()",
+            codeBehind,
+            StringComparison.Ordinal);
+        Assert.DoesNotContain(
+            "InterfaceSettingsService.SaveConfigurationEditorsExpanded(",
+            codeBehind,
+            StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void DeviceBankActionsAreOwnedByTheMachinesPage()
+    {
+        string xaml = File.ReadAllText(RepositoryFile("MainWindow.xaml"));
+        string codeBehind = File.ReadAllText(RepositoryFile("MainWindow.xaml.cs"));
+        XDocument document = XDocument.Parse(xaml);
+        XNamespace xamlNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
+
+        XElement bankNavigation =
+            NamedElement(document, xamlNamespace, "DeviceLibraryNavigationButton");
+        XElement bankTab =
+            NamedElement(document, xamlNamespace, "DeviceLibraryShellTab");
+
+        Assert.Equal("Collapsed", bankNavigation.Attribute("Visibility")?.Value);
+        Assert.Equal("Collapsed", bankTab.Attribute("Visibility")?.Value);
+        _ = NamedElement(document, xamlNamespace, "MachineBankSourceComboBox");
+        _ = NamedElement(document, xamlNamespace, "AddDeviceFromBankButton");
+        _ = NamedElement(document, xamlNamespace, "ManageMachineBankButton");
+        Assert.Contains(
+            "MachineBankDistributionService.DiscoverIncludedBankPaths()",
+            codeBehind,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "OpenMachineBankWindow(SelectedMachineBankPath())",
+            codeBehind,
+            StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void NewProjectDialogIsResponsiveAndListsInstalledBanks()
+    {
+        string xaml = File.ReadAllText(RepositoryFile("NewProjectWindow.xaml"));
+        string codeBehind = File.ReadAllText(RepositoryFile("NewProjectWindow.xaml.cs"));
+        XDocument document = XDocument.Parse(xaml);
+        XNamespace xamlNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
+
+        XElement window = document.Root!;
+        Assert.Equal("920", window.Attribute("Width")?.Value);
+        Assert.Equal("660", window.Attribute("Height")?.Value);
+        Assert.Equal("Window_Loaded", window.Attribute("Loaded")?.Value);
+        _ = NamedElement(document, xamlNamespace, "OpenBanksButton");
+        _ = NamedElement(document, xamlNamespace, "SourceHelpTextBlock");
+        Assert.Contains(
+            "MachineBankDistributionService.DiscoverIncludedBankPaths()",
+            codeBehind,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "MaxHeight = Math.Max(MinHeight, workArea.Height - 32)",
+            codeBehind,
+            StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void MacMachinesPageOffersInstalledBanksWithoutReplacingTheActiveBank()
+    {
+        string xaml = File.ReadAllText(RepositoryFile(
+            "src",
+            "DanteConfigEditor.Mac",
+            "MainWindow.axaml"));
+        string codeBehind = File.ReadAllText(RepositoryFile(
+            "src",
+            "DanteConfigEditor.Mac",
+            "MainWindow.axaml.cs"));
+        string dialogCode = File.ReadAllText(RepositoryFile(
+            "src",
+            "DanteConfigEditor.Mac",
+            "MachineBankDialog.axaml.cs"));
+
+        Assert.Contains("x:Name=\"MachineBankSourceComboBox\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"AddDeviceFromBankButton\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"ManageMachineBankButton\"", xaml, StringComparison.Ordinal);
+        Assert.Contains(
+            "MachineBankDistributionService.DiscoverIncludedBankPaths()",
+            codeBehind,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "await OpenMachineBankAsync(SelectedMachineBankPath())",
+            codeBehind,
+            StringComparison.Ordinal);
+        Assert.Contains("string? initialBankPath = null", dialogCode, StringComparison.Ordinal);
+        Assert.Contains("Path.GetFullPath(initialBankPath)", dialogCode, StringComparison.Ordinal);
     }
 
     [Fact]

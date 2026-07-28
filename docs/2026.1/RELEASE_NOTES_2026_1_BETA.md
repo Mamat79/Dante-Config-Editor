@@ -25,15 +25,15 @@ Ce document complète les notes utilisateur
 
 ## Compatibilité
 
-La V3.6 a été testée avec succès dans Dante Controller par le mainteneur. Les
-tests 2026.1 vérifient la conservation sémantique du corpus synthétique et le
-garde-fou XML.
-
-**Validation manuelle Dante Controller requise** pour la sortie 2026.1 avant
-promotion en version stable.
+La 2026.1 a été testée avec succès dans Dante Controller par le mainteneur. Les
+tests automatisés vérifient en complément la conservation sémantique du corpus
+synthétique et le garde-fou XML. Un contrôle reste recommandé pour chaque
+nouvelle structure de preset avant exploitation.
 
 ## Distribution
 
 L’installateur Windows et les deux DMG utilisent une identité distincte. Le
 profil V3.6 n’est ni modifié ni supprimé. Les données utilisateur et banques
-ne sont jamais supprimées par la désinstallation.
+ne sont jamais supprimées par la désinstallation. Les 43 modèles fournis sont
+également embarqués dans les installateurs et restent séparés de la banque
+personnelle.

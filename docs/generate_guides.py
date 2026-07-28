@@ -526,7 +526,7 @@ def full_guide(language: str) -> None:
                 "L'installation proposée par défaut se trouve dans Program Files et crée des raccourcis dans le menu Démarrer et sur le Bureau.",
                 "Une installation 2026.1 Beta utilise son propre AppId, son dossier Program Files, ses raccourcis et son profil local afin de cohabiter avec la V3.6.",
                 "La 2026.1 peut copier les réglages V3.6 vers son profil, mais ne modifie jamais le profil V3.6 en place.",
-                "L'assistant propose le dossier de banque actif et le dossier des banques fournies. Les banques DCE Generic Roles 2026.1 et DCE Community Devices 2026.1 sont facultatives, sélectionnables séparément et aucun dossier existant n'est remplacé.",
+                "Les 43 modèles de DCE Generic Roles 2026.1 et DCE Community Devices 2026.1 sont intégrés à l'application. L'assistant peut aussi en créer des copies partageables dans un dossier choisi, sans remplacer la banque personnelle.",
                 "Deux DMG 2026.1 Beta autonomes sont construits sur macOS pour Apple Silicon et Intel. Ils contiennent les banques 2026.1 dans le dossier Machine Banks ; leur bundle distinct peut cohabiter avec la V3.6.",
                 "Les quatre notices PDF françaises et anglaises sont installées et restent accessibles depuis l'application.",
             ]),
@@ -542,10 +542,11 @@ def full_guide(language: str) -> None:
         ]
         beta_page = [
             para("4. Espace de travail 2026.1", "h1"),
-            para("Windows et macOS organisent le travail par intention : Projet, Vue d'ensemble, Machines, Patch, Banque de machines, Import / Export, Centre de validation, Historique et Outils avancés."),
+            para("Windows et macOS organisent le travail par intention : Projet, Vue d'ensemble, Machines, Patch, Import / Export, Centre de validation, Historique et Outils avancés. La banque est accessible directement depuis Machines."),
             *bullets([
                 "La barre supérieure conserve le fichier actif, Enregistrer sous, Annuler et Rétablir.",
                 "L'inspecteur de droite affiche le contexte de la sélection sans changer de page.",
+                "Navigation, réglages et inspecteur démarrent ouverts ; une flèche toujours visible masque ou rouvre chaque zone.",
                 "Matrice, Easy patch, Liste RX vers TX et Synoptique partagent les mêmes identités stables et la même session.",
                 "Le Centre de validation sépare contrôles internes DCE et validation manuelle Dante Controller.",
                 "Un XML Dante reste le fichier d'échange officiel ; un .dceproj conserve en plus la disposition, les notes, les ressources et l'historique DCE.",
@@ -554,7 +555,7 @@ def full_guide(language: str) -> None:
         ]
         page2 = [
             para("5. Page Machines", "h1"),
-            para("La page Machines rassemble les listes rapides, les actions globales, la machine sélectionnée, ses canaux et le tableau général."),
+            para("La page Machines rassemble la banque de modèles, les listes rapides, les actions globales, la machine sélectionnée, ses canaux et le tableau général."),
             para("Machine sélectionnée", "h2"),
             *bullets([
                 "Modifiez ensemble le nom, le mode réseau, la latence et le preferred master avec Appliquer les paramètres.",
@@ -567,6 +568,7 @@ def full_guide(language: str) -> None:
             *bullets([
                 "La sélection multiple définit la cible Sélection non verrouillée. La colonne Lock protège les machines des actions globales.",
                 "Le preferred master peut être coché directement. Réduire les réglages agrandit le tableau.",
+                "Source de modèles choisit la banque personnelle ou une banque fournie ; Ajouter depuis la banque crée une instance indépendante et Gérer la banque ouvre son administration.",
             ]),
             para("Recherche, filtres et actions globales", "h2"),
             *bullets([
@@ -711,7 +713,7 @@ def full_guide(language: str) -> None:
                 [48, 122],
             ),
             para("15. Tests de non-régression", "h1"),
-            para("La suite 2026.1 exécute plus de 380 tests Core/Windows et plus de 20 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la duplication, la banque de machines, la création de projet, le format .dceproj, les profils XML, les commandes, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch, le soutien facultatif et la cohérence des traductions."),
+            para("La suite 2026.1 exécute 392 tests Core/Windows et 22 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la duplication, la banque de machines, la création de projet, le format .dceproj, les profils XML, les commandes, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch, le soutien facultatif et la cohérence des traductions."),
             para("16. Limites connues", "h1"),
             *bullets([
                 "Aucun pilotage en temps réel et aucune communication avec les appareils.",
@@ -756,7 +758,7 @@ def full_guide(language: str) -> None:
                 "Une image PNG, JPEG ou WebP facultative est copiée dans le dossier du modèle ; aucun chemin externe fragile n'est conservé.",
                 "La banque se trouve par défaut dans Documents/Dante Config Editor/Machine Bank. Son emplacement peut être choisi, ouvert, copié ou placé dans un dossier synchronisé.",
                 "Exporter la banque crée une archive vérifiée *.dce-bank.zip. Importer une banque exige un dossier neuf ou vide et ne remplace jamais l'existant.",
-                "Banques GitHub ouvre le catalogue public. DCE Generic Roles 2026.1 fournit deux rôles génériques d'essai. DCE Community Devices 2026.1 fournit 41 modèles illustrés et assainis issus de fabricants variés. Ces banques ne contiennent ni identité matérielle, ni donnée réseau, ni flow, ni subscription.",
+                "Banques GitHub ouvre le catalogue public. DCE Generic Roles 2026.1 fournit deux rôles génériques d'essai. DCE Community Devices 2026.1 fournit 41 modèles illustrés et assainis issus de fabricants variés. Les 43 modèles sont intégrés aux installateurs sans modifier la banque personnelle et ne contiennent ni identité matérielle, ni donnée réseau, ni flow, ni subscription.",
                 "L'administration permet recherche, filtres, modification, duplication, suppression confirmée et import/export d'un modèle ZIP.",
             ]),
             para("Ajouter un modèle au projet", "h2"),
@@ -1022,7 +1024,7 @@ def full_guide(language: str) -> None:
                 [
                     ["Créer un modèle", "Sélectionner la machine > Enregistrer dans la banque > remplacer les labels propres au projet par des labels génériques > renseigner les métadonnées > Enregistrer."],
                     ["Ajouter une image", "Choisir PNG, JPEG ou WebP. L'image est copiée dans le dossier du modèle ; le fichier original peut ensuite être déplacé."],
-                    ["Changer de banque", "Banque de machines > Changer de banque. Un dossier local, partagé ou synchronisé peut être utilisé."],
+                    ["Changer de banque", "Machines > Source de modèles > Gérer la banque. Un dossier local, partagé ou synchronisé peut être utilisé."],
                     ["Partager toute la banque", "Exporter la banque crée une archive *.dce-bank.zip vérifiée."],
                     ["Installer une banque", "Importer une banque puis choisir un dossier neuf ou vide. DCE ne remplace jamais silencieusement une banque existante."],
                     ["Ajouter au projet", "Sélectionner le modèle > Ajouter au projet > choisir un nom unique et les labels > confirmer."],
@@ -1034,7 +1036,7 @@ def full_guide(language: str) -> None:
                 "Modifier une machine ajoutée ne modifie jamais son modèle de banque.",
                 "Modifier le modèle ne change jamais les instances déjà ajoutées aux projets.",
                 "La version, l'empreinte, le namespace, le nombre de canaux et la version de preset sont vérifiés avant insertion.",
-                "Les banques GitHub fournies sont assainies et peuvent être installées séparément ; une banque personnelle n'est jamais remplacée.",
+                "Les 43 modèles GitHub fournis sont assainis et installés avec l'application ; une banque personnelle n'est jamais remplacée.",
             ]),
             callout("Après ajout ou création de projet, réouvrez le XML, vérifiez le Centre de validation puis importez une copie dans Dante Controller. Un rôle générique sans identité matérielle doit être contrôlé avant exploitation.", PALE_RED),
         ]
@@ -1124,7 +1126,7 @@ def full_guide(language: str) -> None:
                 "The default location is Program Files, with Start menu and desktop shortcuts.",
                 "A 2026.1 Beta installation uses its own AppId, Program Files folder, shortcuts, and local profile so it can coexist with V3.6.",
                 "2026.1 may copy V3.6 settings into its own profile but never modifies the V3.6 profile in place.",
-                "The wizard offers separate active-bank and included-bank folders. DCE Generic Roles 2026.1 and DCE Community Devices 2026.1 are optional, can be selected independently, and no existing folder is replaced.",
+                "The 43 templates from DCE Generic Roles 2026.1 and DCE Community Devices 2026.1 are bundled with the application. The wizard may also create shareable copies in a chosen folder without replacing the personal bank.",
                 "Two self-contained 2026.1 Beta DMGs are built on macOS for Apple Silicon and Intel. They include the 2026.1 banks in the Machine Banks folder, and their separate bundle can coexist with V3.6.",
                 "All four French and English PDFs are installed and remain available from the application.",
             ]),
@@ -1140,10 +1142,11 @@ def full_guide(language: str) -> None:
         ]
         beta_page = [
             para("4. 2026.1 workspace", "h1"),
-            para("Windows and macOS organize work by intent: Project, Overview, Devices, Patch, Device bank, Import / Export, Validation center, History, and Advanced tools."),
+            para("Windows and macOS organize work by intent: Project, Overview, Devices, Patch, Import / Export, Validation center, History, and Advanced tools. The bank is available directly from Devices."),
             *bullets([
                 "The top bar keeps the active file, Save as, Undo, and Redo available.",
                 "The right inspector shows selection context without changing pages.",
+                "Navigation, settings, and inspector start expanded; one persistent arrow hides or reopens each area.",
                 "Matrix, Easy patch, Rx-to-Tx list, and Synoptic share stable identities and one session.",
                 "The Validation Center separates internal DCE checks from manual Dante Controller validation.",
                 "Dante XML remains the official exchange file; a .dceproj additionally stores DCE layout, notes, assets, and history.",
@@ -1152,7 +1155,7 @@ def full_guide(language: str) -> None:
         ]
         page2 = [
             para("5. Devices page", "h1"),
-            para("The Devices page combines quick lists, global actions, the selected device, its channels, and the complete device table."),
+            para("The Devices page combines the template bank, quick lists, global actions, the selected device, its channels, and the complete device table."),
             para("Selected device", "h2"),
             *bullets([
                 "Apply the name, network mode, latency, and Preferred Master state together with Apply settings.",
@@ -1165,6 +1168,7 @@ def full_guide(language: str) -> None:
             *bullets([
                 "Multiple selection defines the Selected unlocked target. The Lock column protects devices from global actions.",
                 "Preferred Master can be toggled directly. Hide settings enlarges the table.",
+                "Template source selects the personal or a bundled bank; Add from bank creates an independent instance and Manage bank opens its administration.",
             ]),
             para("Search, filters, and global actions", "h2"),
             *bullets([
@@ -1309,7 +1313,7 @@ def full_guide(language: str) -> None:
                 [48, 122],
             ),
             para("15. Regression tests", "h1"),
-            para("The 2026.1 suite runs more than 380 Core/Windows tests and more than 20 headless Mac tests. Coverage includes XML guards, save and recovery, IPv4 interfaces, subscriptions, large presets, duplication, the device bank, project creation, .dceproj packages, XML profiles, commands, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, optional support, and translation consistency."),
+            para("The 2026.1 suite runs 392 Core/Windows tests and 22 headless Mac tests. Coverage includes XML guards, save and recovery, IPv4 interfaces, subscriptions, large presets, duplication, the device bank, project creation, .dceproj packages, XML profiles, commands, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, optional support, and translation consistency."),
             para("16. Known limitations", "h1"),
             *bullets([
                 "No real-time Dante control and no communication with devices.",
@@ -1620,7 +1624,7 @@ def full_guide(language: str) -> None:
                 [
                     ["Create a template", "Select the device > Save to device bank > replace project-specific labels with generic labels > enter metadata > Save."],
                     ["Add an image", "Choose PNG, JPEG, or WebP. The image is copied into the template folder, so the source file can later be moved."],
-                    ["Change bank", "Device bank > Change bank. You may use a local, shared, or synchronized folder."],
+                    ["Change bank", "Devices > Template source > Manage bank. You may use a local, shared, or synchronized folder."],
                     ["Share the bank", "Export bank creates a verified *.dce-bank.zip archive."],
                     ["Install a bank", "Import bank and choose a new or empty folder. DCE never silently replaces an existing bank."],
                     ["Add to project", "Select the template > Add to project > choose a unique name and labels > confirm."],
@@ -1632,7 +1636,7 @@ def full_guide(language: str) -> None:
                 "Editing an inserted device never changes its bank template.",
                 "Editing the template never changes devices already inserted into projects.",
                 "Version, checksum, namespace, channel counts, and preset version are checked before insertion.",
-                "Bundled GitHub banks are sanitized and installed separately; a personal bank is never replaced.",
+                "The 43 bundled GitHub templates are sanitized and installed with the application; a personal bank is never replaced.",
             ]),
             callout("After insertion or project creation, reopen the XML, review the Validation center, and import a copy into Dante Controller. A generic role without hardware identity must be reviewed before operation.", PALE_RED),
         ]

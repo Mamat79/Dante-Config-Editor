@@ -52,7 +52,8 @@ internal sealed partial class MachineBankDialog : Window
         Window owner,
         UiLanguage language,
         IEnumerable<string> usedDeviceNames,
-        bool canAddToProject)
+        bool canAddToProject,
+        string? initialBankPath = null)
     {
         MachineBankDialog dialog = new()
         {
@@ -61,7 +62,9 @@ internal sealed partial class MachineBankDialog : Window
             _canAddToProject = canAddToProject,
             Title = language == UiLanguage.English ? "Device bank" : "Banque de machines"
         };
-        dialog._bankPath = dialog._locationService.Load();
+        dialog._bankPath = string.IsNullOrWhiteSpace(initialBankPath)
+            ? dialog._locationService.Load()
+            : Path.GetFullPath(initialBankPath);
         dialog._repository = new MachineBankRepository(dialog._bankPath);
         dialog.FindControl<DataGrid>("TemplatesGrid")!.ItemsSource = dialog._visibleRows;
         dialog.ApplyLanguage();

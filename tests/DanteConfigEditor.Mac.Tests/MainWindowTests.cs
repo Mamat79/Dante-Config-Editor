@@ -66,8 +66,8 @@ public sealed class MainWindowTests
             Button duplicate = window.FindControl<Button>("DuplicateDeviceButton")!;
             Border toolbar = duplicate.GetLogicalAncestors().OfType<Border>().First();
 
-            Assert.Equal(1, Grid.GetRow(toolbar));
-            Assert.Equal(2, Grid.GetRow(window.FindControl<DataGrid>("DeviceGrid")!));
+            Assert.Equal(2, Grid.GetRow(toolbar));
+            Assert.Equal(3, Grid.GetRow(window.FindControl<DataGrid>("DeviceGrid")!));
             Assert.True(duplicate.IsEffectivelyVisible);
             Assert.True(window.FindControl<Button>("SaveDeviceToBankButton")!.IsEffectivelyVisible);
         }

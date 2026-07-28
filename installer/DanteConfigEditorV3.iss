@@ -59,6 +59,11 @@ Source: "{#SourceRoot}\docs\Notice_DanteConfigEditorV3_FR.pdf"; DestDir: "{app}"
 Source: "{#SourceRoot}\docs\Notice_DanteConfigEditorV3_EN.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourceRoot}\docs\SUPPORT_DCE.md"; DestDir: "{app}\docs"; Flags: ignoreversion
 Source: "{#SourceRoot}\Resources\Support\paypal-support-qr.png"; DestDir: "{app}\Resources\Support"; Flags: ignoreversion
+; Ces copies appartiennent à l'application : elles sont toujours disponibles
+; et peuvent être remplacées sans toucher aux banques personnelles.
+Source: "{#SourceRoot}\Resources\MachineBanks\Bundled\DCE Generic Roles 2026.1\*"; DestDir: "{app}\Machine Banks\DCE Generic Roles 2026.1"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#SourceRoot}\Resources\MachineBanks\Bundled\DCE Community Devices 2026.1\*"; DestDir: "{app}\Machine Banks\DCE Community Devices 2026.1"; Flags: ignoreversion recursesubdirs createallsubdirs
+; Les copies ci-dessous restent facultatives et partageables hors de Program Files.
 Source: "{#SourceRoot}\Resources\MachineBanks\Bundled\DCE Generic Roles 2026.1\*"; DestDir: "{code:GetBundledBankDestination}"; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist; Check: ShouldInstallBundledBank
 Source: "{#SourceRoot}\Resources\MachineBanks\Bundled\DCE Community Devices 2026.1\*"; DestDir: "{code:GetCommunityBankDestination}"; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist; Check: ShouldInstallCommunityBank
 
@@ -67,6 +72,9 @@ Type: files; Name: "{app}\QuickStart_DanteConfigEditorV3.pdf"
 Type: files; Name: "{app}\Notice_DanteConfigEditorV3.pdf"
 Type: files; Name: "{group}\Quick start PDF.lnk"
 Type: files; Name: "{group}\Notice PDF.lnk"
+; Seules les banques gérées dans le dossier de l'application sont rafraîchies.
+Type: filesandordirs; Name: "{app}\Machine Banks\DCE Generic Roles 2026.1"
+Type: filesandordirs; Name: "{app}\Machine Banks\DCE Community Devices 2026.1"
 
 [Icons]
 Name: "{group}\{code:GetShortcutAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"; IconFilename: "{app}\DanteEdit.ico"

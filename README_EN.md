@@ -10,10 +10,9 @@ the assistance of development agents.
 > It does not control a live Dante network and uses no Audinate SDK or API.
 > Work on a copy and review the final XML in Dante Controller before operation.
 
-V3.6 remains the stable reference. The maintainer successfully imported XML
-files edited by V3.6 into Dante Controller. The 2026.1 beta has stronger
-structural and semantic tests, but manual validation must still be recorded
-for the exact commit and preset structure being evaluated.
+The maintainer successfully imported 2026.1 output into Dante Controller.
+Structural and semantic tests complement those real imports. Reviewing the
+final file remains recommended for each new preset structure before operation.
 
 ## Documentation
 
@@ -91,9 +90,11 @@ Never import it directly into Dante Controller: export its Dante XML first.
 A bank holds reusable and shareable templates. Insertion creates an independent
 instance and does not bind a project to the source template. Hardware identity,
 IP configuration, flows, and subscriptions are not copied by default.
-`DCE Generic Roles 2026.1` and `DCE Community Devices 2026.1` never overwrite
-an existing folder. The community bank provides 41 illustrated, sanitized
-templates.
+`DCE Generic Roles 2026.1` and `DCE Community Devices 2026.1` are bundled with
+the application. Together they provide 43 templates, including 41 illustrated,
+sanitized community templates. The Devices page lets users select a bank, add
+a template to the project, or manage its contents. Updates refresh only the
+application-managed copy and never replace the personal bank.
 
 ## Main features
 
@@ -195,7 +196,7 @@ dotnet publish .\DanteConfigEditorV3.csproj -c Release -r win-x64 --self-contain
 - minor native rendering differences remain between Windows and macOS;
 - Windows installer is not Authenticode signed;
 - DMGs are not notarized;
-- manual Dante Controller validation is required for each important new preset
+- a Dante Controller review is recommended for each important new preset
   structure.
 
 ## Support DCE

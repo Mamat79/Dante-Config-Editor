@@ -10,10 +10,10 @@ par Mamat avec l’aide d’agents de développement.
 > pilote aucun réseau Dante et n’utilise ni SDK ni API Audinate. Travaillez sur
 > une copie et contrôlez le XML final dans Dante Controller avant exploitation.
 
-La V3.6 reste la référence stable. Ses XML modifiés par DCE ont été importés
-avec succès dans Dante Controller par le mainteneur. La bêta 2026.1 bénéficie
-de tests structurels et sémantiques renforcés, mais sa validation manuelle doit
-être consignée séparément pour le commit et le type de preset concernés.
+La version 2026.1 et ses XML modifiés ont été importés avec succès dans Dante
+Controller par le mainteneur. Les tests structurels et sémantiques complètent
+ces essais réels. Un contrôle du fichier final reste recommandé pour chaque
+nouvelle structure de preset avant exploitation.
 
 ## Documentation
 
@@ -95,8 +95,11 @@ Une banque contient des modèles réutilisables et partageables. Une insertion
 crée une instance indépendante ; elle ne lie pas le projet au modèle source.
 Les identités matérielles, IP, flows et subscriptions ne sont pas recopiés par
 défaut. Les banques `DCE Generic Roles 2026.1` et
-`DCE Community Devices 2026.1` sont installées sans remplacer un dossier
-existant. La banque communautaire fournit 41 modèles illustrés et assainis.
+`DCE Community Devices 2026.1` sont intégrées à l'application. Elles
+fournissent 43 modèles, dont 41 modèles communautaires illustrés et assainis.
+La page Machines permet de choisir une banque, d'ajouter un modèle au projet
+ou de gérer son contenu. Une mise à jour rafraîchit uniquement la copie gérée
+par l'application et ne remplace jamais la banque personnelle.
 
 ## Fonctions principales
 
@@ -203,8 +206,8 @@ dotnet publish .\DanteConfigEditorV3.csproj -c Release -r win-x64 --self-contain
 - légères différences de rendu natif entre Windows et macOS ;
 - installateur Windows non signé Authenticode ;
 - DMG non notariés ;
-- validation manuelle Dante Controller requise pour chaque nouvelle structure
-  de preset importante.
+- contrôle dans Dante Controller recommandé pour chaque nouvelle structure de
+  preset importante.
 
 ## Soutenir DCE
 

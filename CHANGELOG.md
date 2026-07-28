@@ -27,6 +27,12 @@ Toutes les dates utilisent le calendrier ISO. Les versions antérieures à
 - installation Windows et paquet macOS possèdent une identité 2026.1 séparée ;
 - profil local déplacé vers `%LOCALAPPDATA%\DanteConfigEditor2026.1` ;
 - catalogue de banques GitHub lu depuis `main`.
+- navigation, réglages Machines et inspecteur ouverts à chaque lancement avec
+  une flèche de repli toujours accessible ;
+- accès aux banques déplacé dans la page Machines et assistant Nouveau projet
+  rendu adaptatif ;
+- 43 modèles fournis intégrés aux installateurs Windows et macOS sans écraser
+  la banque personnelle.
 
 ### Performance
 
@@ -46,8 +52,8 @@ Les mesures complètes et leur méthode figurent dans
   atomiquement ;
 - corpus versionné exclusivement synthétique et anonymisé.
 
-La V3.6 a été testée avec succès dans Dante Controller par le mainteneur.
-**Validation manuelle Dante Controller requise pour la sortie 2026.1.**
+La 2026.1 a été testée avec succès dans Dante Controller par le mainteneur.
+La checklist manuelle reste recommandée pour chaque fichier de production.
 
 ### Distribution
 

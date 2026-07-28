@@ -19,6 +19,15 @@ namespace DanteConfigEditor.Mac;
 
 public partial class MainWindow : Window
 {
+    private sealed record MachineBankSourceChoice(
+        string Path,
+        string DisplayName,
+        int TemplateCount,
+        bool IsActive)
+    {
+        public override string ToString() => DisplayName;
+    }
+
     private static readonly FilePickerFileType XmlFileType = new("Dante XML")
     {
         Patterns = ["*.xml"],
@@ -54,6 +63,7 @@ public partial class MainWindow : Window
     private bool _darkTheme;
     private bool _editEnabled;
     private bool _initializing = true;
+    private bool _refreshingMachineBankSources;
 
     public MainWindow()
     {
@@ -106,6 +116,7 @@ public partial class MainWindow : Window
         _initializing = true;
         FindControl<ComboBox>("LanguageCombo")!.SelectedIndex = _language == UiLanguage.English ? 1 : 0;
         ApplyLanguageToVisualTree();
+        RefreshMachineBankSources();
         _initializing = false;
         InitializeSupportReminder();
     }
@@ -221,11 +232,33 @@ public partial class MainWindow : Window
 
     private async void OpenMachineBankButton_Click(object? sender, RoutedEventArgs e)
     {
+        await OpenMachineBankAsync(null);
+    }
+
+    private async void ManageMachineBankButton_Click(object? sender, RoutedEventArgs e)
+    {
+        await OpenMachineBankAsync(SelectedMachineBankPath());
+    }
+
+    private async void AddDeviceFromBankButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (!await EnsureEditableAsync())
+        {
+            return;
+        }
+
+        await OpenMachineBankAsync(SelectedMachineBankPath());
+    }
+
+    private async Task OpenMachineBankAsync(string? bankPath)
+    {
         MacMachineBankSelection? selection = await MachineBankDialog.ShowAsync(
             this,
             _language,
             _project?.Devices.Select(device => device.Name) ?? [],
-            _project is not null && _editEnabled);
+            _project is not null,
+            bankPath);
+        RefreshMachineBankSources(bankPath);
         if (selection is null || _project is null)
         {
             return;
@@ -238,6 +271,114 @@ public partial class MainWindow : Window
             L("Machine ajoutée depuis la banque.", "Device added from bank."),
             project => project.AddDeviceFromTemplate(selection.Package, selection.Options),
             selection.Options.NewName);
+    }
+
+    private void MachineBankSourceComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (!_refreshingMachineBankSources)
+        {
+            UpdateMachineBankSummary();
+        }
+    }
+
+    private string? SelectedMachineBankPath()
+    {
+        return (FindControl<ComboBox>("MachineBankSourceComboBox")?.SelectedItem as MachineBankSourceChoice)?.Path
+            ?? MachineBankLocationService.CreateDefault().Load();
+    }
+
+    private void RefreshMachineBankSources(string? preferredPath = null)
+    {
+        ComboBox? comboBox = FindControl<ComboBox>("MachineBankSourceComboBox");
+        if (comboBox is null)
+        {
+            return;
+        }
+
+        string activePath = MachineBankLocationService.CreateDefault().Load();
+        string? previousPath = preferredPath
+            ?? (comboBox.SelectedItem as MachineBankSourceChoice)?.Path;
+        List<string> paths =
+        [
+            activePath,
+            .. MachineBankDistributionService.DiscoverIncludedBankPaths()
+        ];
+
+        List<MachineBankSourceChoice> choices = [];
+        foreach (string path in paths
+                     .Select(Path.GetFullPath)
+                     .Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            int count;
+            try
+            {
+                count = new MachineBankRepository(path).List().Count;
+            }
+            catch (Exception exception)
+            {
+                DiagnosticLogService.Default.Write(
+                    "MachineBank",
+                    $"Unable to count templates in bank {path}.",
+                    exception);
+                count = 0;
+            }
+
+            bool isActive = string.Equals(path, activePath, StringComparison.OrdinalIgnoreCase);
+            string bankName = isActive
+                ? L("Ma banque active", "My active bank")
+                : Path.GetFileName(path);
+            string modelLabel = _language == UiLanguage.English
+                ? count == 1 ? "template" : "templates"
+                : count == 1 ? "modèle" : "modèles";
+            choices.Add(new MachineBankSourceChoice(
+                path,
+                $"{bankName} · {count} {modelLabel}",
+                count,
+                isActive));
+        }
+
+        _refreshingMachineBankSources = true;
+        try
+        {
+            comboBox.ItemsSource = choices;
+            comboBox.SelectedItem = choices.FirstOrDefault(choice =>
+                    !string.IsNullOrWhiteSpace(previousPath)
+                    && string.Equals(choice.Path, previousPath, StringComparison.OrdinalIgnoreCase))
+                ?? choices.FirstOrDefault(choice => choice.IsActive)
+                ?? choices.FirstOrDefault();
+        }
+        finally
+        {
+            _refreshingMachineBankSources = false;
+        }
+
+        UpdateMachineBankSummary();
+    }
+
+    private void UpdateMachineBankSummary()
+    {
+        ComboBox? comboBox = FindControl<ComboBox>("MachineBankSourceComboBox");
+        TextBlock? summary = FindControl<TextBlock>("MachineBankSummaryTextBlock");
+        if (comboBox is null || summary is null)
+        {
+            return;
+        }
+
+        if (comboBox.SelectedItem is not MachineBankSourceChoice source)
+        {
+            summary.Text = L(
+                "Aucune banque de machines n'a été trouvée.",
+                "No device bank was found.");
+            return;
+        }
+
+        int includedCount = (comboBox.ItemsSource as IEnumerable<MachineBankSourceChoice>)
+            ?.Where(choice => !choice.IsActive)
+            .Sum(choice => choice.TemplateCount) ?? 0;
+        summary.Text = L(
+            $"{source.TemplateCount} modèle(s) sélectionné(s) · {includedCount} modèle(s) fourni(s)",
+            $"{source.TemplateCount} selected template(s) · {includedCount} included template(s)");
+        ToolTip.SetTip(summary, source.Path);
     }
 
     private async void OpenRecentButton_Click(object? sender, RoutedEventArgs e)
@@ -1476,6 +1617,7 @@ public partial class MainWindow : Window
         LanguageSettingsService.Save(_language);
         ConfigureChoiceLists();
         ApplyLanguageToVisualTree();
+        RefreshMachineBankSources();
         RefreshAll(SelectedDeviceRow()?.Name);
         if (_project is not null)
         {

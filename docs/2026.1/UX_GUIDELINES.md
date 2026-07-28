@@ -19,6 +19,10 @@ Les réglages Machines sont affichés au premier lancement. Un utilisateur peut
 réduire les panneaux secondaires, mais l’application ne doit jamais démarrer
 avec ses réglages principaux masqués par défaut.
 
+Les trois poignées de repli restent visibles dans les deux états : navigation
+à gauche, réglages Machines et inspecteur à droite. Un redimensionnement de la
+fenêtre ne doit jamais replier une zone sans action explicite de l'utilisateur.
+
 ## Navigation
 
 - une section correspond à une intention métier ;

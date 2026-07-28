@@ -47,6 +47,7 @@ public partial class MainWindow : Window
     private DateTime? _lastSuccessfulSaveAt;
     private bool _navigationExpanded = true;
     private bool _inspectorExpanded = true;
+    private bool _refreshingMachineBankSources;
     private readonly LatencyChoice[] _latencies =
     [
         new("250", "0,25 ms"),
@@ -257,6 +258,18 @@ public partial class MainWindow : Window
 
     private sealed record TargetDeviceSet(DanteDevice[] Devices, int LockedSkippedCount, string ScopeLabel);
 
+    private sealed record MachineBankSourceChoice(
+        string Path,
+        string DisplayName,
+        int TemplateCount,
+        bool IsActive)
+    {
+        public override string ToString()
+        {
+            return DisplayName;
+        }
+    }
+
     public MainWindow()
     {
         InitializeComponent();
@@ -273,9 +286,9 @@ public partial class MainWindow : Window
         // Initialisation des sources de données utilisées par les contrôles.
         MigrateV36Settings();
         _language = LanguageSettingsService.Load();
-        ConfigurationEditorsGrid.Visibility = InterfaceSettingsService.LoadConfigurationEditorsExpanded()
-            ? Visibility.Visible
-            : Visibility.Collapsed;
+        // Les trois zones principales repartent ouvertes à chaque lancement.
+        // Un repli reste volontaire et limité à la session courante.
+        ConfigurationEditorsGrid.Visibility = Visibility.Visible;
         SessionRecoveryService.CleanupOld(TimeSpan.FromDays(30));
         SetupLanguageComboBox();
         LatencyComboBox.ItemsSource = _latencies;
@@ -297,6 +310,8 @@ public partial class MainWindow : Window
         DaisychainRadioButton.IsChecked = true;
         SetTheme(useLightTheme: false);
         ApplyLanguageToInterface();
+        SetNavigationExpanded(true);
+        SetInspectorExpanded(true);
         RefreshRecentFiles();
         RefreshAll();
         HomeNavigationButton.IsChecked = true;
@@ -887,15 +902,38 @@ public partial class MainWindow : Window
 
     private void OpenMachineBankButton_Click(object sender, RoutedEventArgs e)
     {
+        OpenMachineBankWindow(SelectedMachineBankPath());
+    }
+
+    private void ManageMachineBankButton_Click(object sender, RoutedEventArgs e)
+    {
+        OpenMachineBankWindow(SelectedMachineBankPath());
+    }
+
+    private void AddDeviceFromBankButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (!EnsureProjectLoaded() || !EnsureEditMode())
+        {
+            return;
+        }
+
+        OpenMachineBankWindow(SelectedMachineBankPath());
+    }
+
+    private void OpenMachineBankWindow(string? bankPath)
+    {
         MachineBankWindow window = new(
             _language,
             ThemeToggleButton.IsChecked == true,
             _project?.Devices.Select(device => device.Name) ?? [],
-            _project is not null && _editModeEnabled)
+            _project is not null && _editModeEnabled,
+            bankPath)
         {
             Owner = this
         };
-        if (window.ShowDialog() != true
+        bool accepted = window.ShowDialog() == true;
+        RefreshMachineBankSources(window.CurrentBankPath);
+        if (!accepted
             || window.SelectedPackageToAdd is null
             || window.SelectedInstanceOptions is null
             || _project is null)
@@ -914,6 +952,111 @@ public partial class MainWindow : Window
         {
             DeviceComboBox.SelectedItem = options.NewName;
         }
+    }
+
+    private void MachineBankSourceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!_refreshingMachineBankSources)
+        {
+            UpdateMachineBankSummary();
+        }
+    }
+
+    private string? SelectedMachineBankPath()
+    {
+        return (MachineBankSourceComboBox.SelectedItem as MachineBankSourceChoice)?.Path
+            ?? MachineBankLocationService.CreateDefault().Load();
+    }
+
+    private void RefreshMachineBankSources(string? preferredPath = null)
+    {
+        if (MachineBankSourceComboBox is null)
+        {
+            return;
+        }
+
+        string activePath = MachineBankLocationService.CreateDefault().Load();
+        string? previousPath = preferredPath
+            ?? (MachineBankSourceComboBox.SelectedItem as MachineBankSourceChoice)?.Path;
+        List<string> paths =
+        [
+            activePath,
+            .. MachineBankDistributionService.DiscoverIncludedBankPaths()
+        ];
+
+        List<MachineBankSourceChoice> choices = [];
+        foreach (string path in paths
+                     .Select(Path.GetFullPath)
+                     .Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            int count;
+            try
+            {
+                count = new MachineBankRepository(path).List().Count;
+            }
+            catch (Exception ex)
+            {
+                DiagnosticLogService.Default.Write(
+                    "MachineBank",
+                    $"Impossible de compter les modèles de la banque {path}.",
+                    ex);
+                count = 0;
+            }
+
+            bool isActive = string.Equals(path, activePath, StringComparison.OrdinalIgnoreCase);
+            string bankName = isActive
+                ? (_language == UiLanguage.English ? "My active bank" : "Ma banque active")
+                : Path.GetFileName(path);
+            string modelLabel = _language == UiLanguage.English
+                ? count == 1 ? "template" : "templates"
+                : count == 1 ? "modèle" : "modèles";
+            choices.Add(new MachineBankSourceChoice(
+                path,
+                $"{bankName} · {count} {modelLabel}",
+                count,
+                isActive));
+        }
+
+        _refreshingMachineBankSources = true;
+        try
+        {
+            MachineBankSourceComboBox.ItemsSource = choices;
+            MachineBankSourceComboBox.SelectedItem = choices.FirstOrDefault(choice =>
+                    !string.IsNullOrWhiteSpace(previousPath)
+                    && string.Equals(choice.Path, previousPath, StringComparison.OrdinalIgnoreCase))
+                ?? choices.FirstOrDefault(choice => choice.IsActive)
+                ?? choices.FirstOrDefault();
+        }
+        finally
+        {
+            _refreshingMachineBankSources = false;
+        }
+
+        UpdateMachineBankSummary();
+    }
+
+    private void UpdateMachineBankSummary()
+    {
+        if (MachineBankSummaryTextBlock is null)
+        {
+            return;
+        }
+
+        if (MachineBankSourceComboBox.SelectedItem is not MachineBankSourceChoice source)
+        {
+            MachineBankSummaryTextBlock.Text = _language == UiLanguage.English
+                ? "No device bank was found."
+                : "Aucune banque de machines n'a été trouvée.";
+            return;
+        }
+
+        int includedCount = (MachineBankSourceComboBox.ItemsSource as IEnumerable<MachineBankSourceChoice>)
+            ?.Where(choice => !choice.IsActive)
+            .Sum(choice => choice.TemplateCount) ?? 0;
+        MachineBankSummaryTextBlock.Text = _language == UiLanguage.English
+            ? $"Selected bank: {source.TemplateCount} template(s). {includedCount} included template(s) are also available in the menu."
+            : $"Banque sélectionnée : {source.TemplateCount} modèle(s). {includedCount} modèle(s) fourni(s) sont aussi disponibles dans le menu.";
+        MachineBankSummaryTextBlock.ToolTip = source.Path;
     }
 
     private void RedoButton_Click(object sender, RoutedEventArgs e)
@@ -1593,7 +1736,6 @@ public partial class MainWindow : Window
         ConfigurationEditorsGrid.Visibility = ConfigurationEditorsGrid.Visibility == Visibility.Visible
             ? Visibility.Collapsed
             : Visibility.Visible;
-        InterfaceSettingsService.SaveConfigurationEditorsExpanded(ConfigurationEditorsGrid.Visibility == Visibility.Visible);
         UpdateConfigurationEditorsToggleText();
     }
 
@@ -1669,10 +1811,19 @@ public partial class MainWindow : Window
         NavigationColumn.Width = _navigationExpanded
             ? new GridLength((double)FindResource("ShellNavigationExpandedWidth"))
             : new GridLength(0);
-        NavigationSplitterColumn.Width = _navigationExpanded ? new GridLength(5) : new GridLength(0);
+        NavigationSplitterColumn.Width = new GridLength(34);
+        NavigationBorder.Visibility = _navigationExpanded ? Visibility.Visible : Visibility.Collapsed;
         NavigationPanel.Visibility = _navigationExpanded ? Visibility.Visible : Visibility.Collapsed;
         NavigationSplitter.Visibility = _navigationExpanded ? Visibility.Visible : Visibility.Collapsed;
+        NavigationRevealButton.Visibility = Visibility.Visible;
+        NavigationRevealButton.Content = _navigationExpanded ? "\u2039" : "\u203A";
         NavigationToggleButton.Content = LocalizeLiteral(_navigationExpanded ? "Masquer navigation" : "Afficher navigation");
+        NavigationToggleButton.ToolTip = NavigationToggleButton.Content;
+        string action = _navigationExpanded ? "Masquer navigation" : "Afficher navigation";
+        NavigationRevealButton.ToolTip = LocalizeLiteral(action);
+        AutomationProperties.SetName(
+            NavigationRevealButton,
+            LocalizeLiteral(action));
     }
 
     private void InspectorToggleButton_Click(object sender, RoutedEventArgs e)
@@ -1686,45 +1837,42 @@ public partial class MainWindow : Window
         InspectorColumn.Width = _inspectorExpanded
             ? new GridLength((double)FindResource("ShellInspectorExpandedWidth"))
             : new GridLength(0);
-        InspectorSplitterColumn.Width = _inspectorExpanded ? new GridLength(5) : new GridLength(34);
+        InspectorSplitterColumn.Width = new GridLength(34);
         InspectorBorder.Visibility = _inspectorExpanded ? Visibility.Visible : Visibility.Collapsed;
         InspectorSplitter.Visibility = _inspectorExpanded ? Visibility.Visible : Visibility.Collapsed;
-        InspectorRevealButton.Visibility = _inspectorExpanded ? Visibility.Collapsed : Visibility.Visible;
+        InspectorRevealButton.Visibility = Visibility.Visible;
+        InspectorRevealButton.Content = _inspectorExpanded ? "\u203A" : "\u2039";
         InspectorToggleButton.Content = LocalizeLiteral(_inspectorExpanded ? "Masquer inspecteur" : "Afficher inspecteur");
         InspectorToggleButton.ToolTip = InspectorToggleButton.Content;
-        InspectorRevealButton.ToolTip = LocalizeLiteral("Afficher inspecteur");
+        string action = _inspectorExpanded ? "Masquer inspecteur" : "Afficher inspecteur";
+        InspectorRevealButton.ToolTip = LocalizeLiteral(action);
         AutomationProperties.SetName(
             InspectorRevealButton,
-            LocalizeLiteral("Afficher inspecteur"));
-        InspectorCloseButton.Content = LocalizeLiteral("Masquer");
+            LocalizeLiteral(action));
     }
 
     private void UpdateResponsiveConfigurationLayout(double width, double height)
     {
-        // Le facteur DPI ne doit jamais cacher les réglages au premier lancement.
-        // À forte mise à l'échelle Windows, WPF dispose de moins de pixels
-        // logiques. Replier les panneaux secondaires préserve les commandes
-        // centrales sans masquer les réglages du projet.
-        if (width < 1400 && _inspectorExpanded)
-        {
-            SetInspectorExpanded(false);
-        }
-
-        if (width < 1160 && _navigationExpanded)
-        {
-            SetNavigationExpanded(false);
-        }
-
+        // Les panneaux ne sont jamais repliés implicitement. Les flèches restent
+        // accessibles à toute taille afin que l'utilisateur garde le contrôle.
         UpdateConfigurationEditorsToggleText();
     }
 
     private void UpdateConfigurationEditorsToggleText()
     {
         bool collapsed = ConfigurationEditorsGrid.Visibility == Visibility.Collapsed;
-        ToggleConfigurationEditorsButton.Content = LocalizeLiteral(collapsed ? "Afficher les réglages" : "Réduire les réglages");
-        ToggleConfigurationEditorsButton.ToolTip = LocalizeLiteral(collapsed
+        string action = collapsed ? "Afficher les réglages" : "Masquer les réglages";
+        string helpText = collapsed
             ? "Affiche les panneaux de réglage de la configuration."
-            : "Masque les panneaux de réglage pour agrandir le tableau des machines.");
+            : "Masque les panneaux de réglage pour agrandir le tableau des machines.";
+        ToggleConfigurationEditorsButton.Content = collapsed ? "\u25BC" : "\u25B2";
+        ToggleConfigurationEditorsButton.ToolTip = LocalizeLiteral(action);
+        AutomationProperties.SetName(
+            ToggleConfigurationEditorsButton,
+            LocalizeLiteral(action));
+        AutomationProperties.SetHelpText(
+            ToggleConfigurationEditorsButton,
+            LocalizeLiteral(helpText));
     }
 
     private void ImportantWarningsDetailsButton_Click(object sender, RoutedEventArgs e)
@@ -4918,6 +5066,7 @@ public partial class MainWindow : Window
         LanguageLabelTextBlock.Text = T("Language.Label");
         TranslateDependencyObject(this, []);
         UpdateConfigurationEditorsToggleText();
+        RefreshMachineBankSources();
         ApplyDataGridColumnHeaders();
         RefreshPendingPatchWorkspace();
         RefreshGlobalSearchResults();
@@ -5038,6 +5187,7 @@ public partial class MainWindow : Window
             || capabilities.CanEditAudioFormat;
         DeleteDeviceButton.IsEnabled = capabilities.CanCreateDevices;
         DuplicateDeviceButton.IsEnabled = capabilities.CanCreateDevices;
+        AddDeviceFromBankButton.IsEnabled = capabilities.CanCreateDevices;
         ResetDevicePatchesButton.IsEnabled = capabilities.CanEditPatch;
         ResetDeviceRxPatchesButton.IsEnabled = capabilities.CanEditPatch;
         ResetDeviceTxPatchesButton.IsEnabled = capabilities.CanEditPatch;
@@ -5067,6 +5217,7 @@ public partial class MainWindow : Window
         yield return ApplyDeviceSettingsButton;
         yield return DeleteDeviceButton;
         yield return DuplicateDeviceButton;
+        yield return AddDeviceFromBankButton;
         yield return ResetDevicePatchesButton;
         yield return ResetDeviceRxPatchesButton;
         yield return ResetDeviceTxPatchesButton;

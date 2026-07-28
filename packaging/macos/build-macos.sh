@@ -34,6 +34,7 @@ DMG="$DIST/DanteConfigEditor2026_1_Beta_macOS_${ARCH_LABEL}.dmg"
 rm -rf "$STAGING"
 mkdir -p "$PUBLISH" "$MACOS" "$RESOURCES/Docs" "$ICONSET" "$DMG_STAGE" "$DIST"
 mkdir -p "$RESOURCES/Resources/Support"
+mkdir -p "$RESOURCES/Machine Banks"
 
 dotnet publish "$PROJECT" \
   -c Release \
@@ -55,6 +56,10 @@ fi
 cp "$ROOT/packaging/macos/Info.plist" "$CONTENTS/Info.plist"
 cp "$ROOT/Resources/Support/paypal-support-qr.png" \
   "$RESOURCES/Resources/Support/paypal-support-qr.png"
+cp -R "$ROOT/Resources/MachineBanks/Bundled/DCE Generic Roles 2026.1" \
+  "$RESOURCES/Machine Banks/"
+cp -R "$ROOT/Resources/MachineBanks/Bundled/DCE Community Devices 2026.1" \
+  "$RESOURCES/Machine Banks/"
 
 # L'icône historique est déclinée aux tailles attendues par iconutil.
 ICON_SOURCE="$ROOT/packaging/macos/DanteEdit.png"

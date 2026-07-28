@@ -46,6 +46,10 @@
                             <TextBlock x:Name="SourceLabel" Classes="muted" />
                             <ComboBox x:Name="SourceComboBox"
                                       SelectionChanged="SourceComboBox_SelectionChanged" />
+                            <TextBlock x:Name="SourceHelpText"
+                                       Classes="muted"
+                                       FontSize="12"
+                                       TextWrapping="Wrap" />
                         </StackPanel>
                         <StackPanel Spacing="4">
                             <TextBlock x:Name="DeviceNameLabel" Classes="muted" />

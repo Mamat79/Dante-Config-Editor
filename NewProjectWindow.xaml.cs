@@ -23,16 +23,15 @@ public sealed record NewProjectFormResult(
 public partial class NewProjectWindow : Window
 {
     private readonly UiLanguage _language;
-    private readonly string _bankPath;
-    private readonly MachineBankRepository _repository;
+    private readonly bool _useLightTheme;
+    private int _availableTemplateCount;
 
     public NewProjectWindow(UiLanguage language, bool useLightTheme)
     {
         InitializeComponent();
         _language = language;
+        _useLightTheme = useLightTheme;
         DialogThemeService.Apply(this, useLightTheme);
-        _bankPath = MachineBankLocationService.CreateDefault().Load();
-        _repository = new MachineBankRepository(_bankPath);
         SampleRateComboBox.ItemsSource = new[] { 44100, 48000, 88200, 96000, 176400, 192000 };
         SampleRateComboBox.SelectedItem = 48000;
         EncodingComboBox.ItemsSource = new[] { 16, 24, 32 };
@@ -58,8 +57,13 @@ public partial class NewProjectWindow : Window
         BrowsePathButton.Content = L("Choisir", "Browse");
         ProjectNameLabel.Content = L("Nom du projet", "Project name");
         DescriptionLabel.Content = L("Description", "Description");
+        ProjectGroupBox.Header = L("Projet", "Project");
         InitialDeviceGroupBox.Header = L("Première machine", "First device");
         SourceLabel.Content = L("Source", "Source");
+        OpenBanksButton.Content = L("Gérer", "Manage");
+        OpenBanksButton.ToolTip = L(
+            "Ouvre la gestion des banques de machines.",
+            "Opens device bank management.");
         DeviceNameLabel.Content = L("Nom de la machine", "Device name");
         EncodingLabel.Content = L("Encodage", "Encoding");
         LatencyLabel.Content = L("Latence", "Latency");
@@ -76,30 +80,99 @@ public partial class NewProjectWindow : Window
             new(
                 null,
                 L("Machine personnalisée", "Custom device"),
+                "DEVICE",
                 0,
                 0,
-                ProjectCreationService.PresetVersion)
+                ProjectCreationService.PresetVersion,
+                null)
         ];
-        try
+        string activeBankPath = MachineBankLocationService.CreateDefault().Load();
+        List<string> bankPaths =
+        [
+            activeBankPath,
+            .. MachineBankDistributionService.DiscoverIncludedBankPaths()
+        ];
+        HashSet<string> knownTemplates = new(StringComparer.OrdinalIgnoreCase);
+        int loadedBanks = 0;
+        foreach (string bankPath in bankPaths
+                     .Select(Path.GetFullPath)
+                     .Distinct(StringComparer.OrdinalIgnoreCase))
         {
-            choices.AddRange(_repository.List().Select(metadata =>
-                new NewProjectSourceChoice(
-                    metadata.TemplateId,
-                    $"{metadata.TemplateName} · {metadata.TxCount} TX/{metadata.RxCount} RX",
-                    metadata.TxCount,
-                    metadata.RxCount,
-                    metadata.SourcePresetVersion)));
-        }
-        catch (Exception ex)
-        {
-            DiagnosticLogService.Default.Write(
-                "MachineBank",
-                "Impossible de lire la banque dans l'assistant Nouveau projet.",
-                ex);
+            try
+            {
+                IReadOnlyList<MachineTemplateMetadata> templates =
+                    new MachineBankRepository(bankPath).List();
+                loadedBanks++;
+                string bankName = string.Equals(
+                    bankPath,
+                    activeBankPath,
+                    StringComparison.OrdinalIgnoreCase)
+                    ? L("Ma banque", "My bank")
+                    : Path.GetFileName(bankPath);
+                foreach (MachineTemplateMetadata metadata in templates)
+                {
+                    string identity = string.Join(
+                        "|",
+                        metadata.Manufacturer,
+                        metadata.Model,
+                        metadata.TemplateName,
+                        metadata.TxCount,
+                        metadata.RxCount);
+                    if (!knownTemplates.Add(identity))
+                    {
+                        continue;
+                    }
+
+                    choices.Add(new NewProjectSourceChoice(
+                        metadata.TemplateId,
+                        $"{bankName} › {metadata.TemplateName} · {metadata.TxCount} TX/{metadata.RxCount} RX",
+                        metadata.TemplateName,
+                        metadata.TxCount,
+                        metadata.RxCount,
+                        metadata.SourcePresetVersion,
+                        bankPath));
+                }
+            }
+            catch (Exception ex)
+            {
+                DiagnosticLogService.Default.Write(
+                    "MachineBank",
+                    $"Impossible de lire la banque {bankPath} dans l'assistant Nouveau projet.",
+                    ex);
+            }
         }
 
+        _availableTemplateCount = choices.Count - 1;
         SourceComboBox.ItemsSource = choices;
         SourceComboBox.SelectedIndex = 0;
+        SourceHelpTextBlock.Text = _language == UiLanguage.English
+            ? $"{_availableTemplateCount} reusable template(s) found across {loadedBanks} bank(s), including installed templates."
+            : $"{_availableTemplateCount} modèle(s) réutilisable(s) trouvé(s) dans {loadedBanks} banque(s), dont les modèles installés.";
+    }
+
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        Rect workArea = SystemParameters.WorkArea;
+        MaxWidth = Math.Max(MinWidth, workArea.Width - 32);
+        MaxHeight = Math.Max(MinHeight, workArea.Height - 32);
+        Width = Math.Min(Width, MaxWidth);
+        Height = Math.Min(Height, MaxHeight);
+    }
+
+    private void OpenBanksButton_Click(object sender, RoutedEventArgs e)
+    {
+        string activeBankPath = MachineBankLocationService.CreateDefault().Load();
+        MachineBankWindow window = new(
+            _language,
+            _useLightTheme,
+            [],
+            canAddToProject: false,
+            activeBankPath)
+        {
+            Owner = this
+        };
+        window.ShowDialog();
+        LoadSources();
     }
 
     private void BrowsePathButton_Click(object sender, RoutedEventArgs e)
@@ -128,7 +201,7 @@ public partial class NewProjectWindow : Window
         TemplateLabelsGrid.Visibility = usesTemplate ? Visibility.Visible : Visibility.Collapsed;
         if (usesTemplate && choice is not null)
         {
-            string candidate = DanteNameRules.NormalizeDeviceNamePart(choice.Display, "DEVICE");
+            string candidate = DanteNameRules.NormalizeDeviceNamePart(choice.SuggestedName, "DEVICE");
             DeviceNameTextBox.Text = candidate[..Math.Min(
                 candidate.Length,
                 DanteNameRules.MaximumNameLength)].Trim('-');
@@ -228,7 +301,8 @@ public partial class NewProjectWindow : Window
                 1000,
                 choice.TemplateId,
                 options,
-                _bankPath);
+                choice.BankPath
+                    ?? MachineBankLocationService.CreateDefault().Load());
             DialogResult = true;
             return;
         }
@@ -255,7 +329,7 @@ public partial class NewProjectWindow : Window
             (int)LatencyComboBox.SelectedItem,
             null,
             null,
-            _bankPath);
+            MachineBankLocationService.CreateDefault().Load());
         DialogResult = true;
     }
 
@@ -284,9 +358,11 @@ public partial class NewProjectWindow : Window
     private sealed record NewProjectSourceChoice(
         Guid? TemplateId,
         string Display,
+        string SuggestedName,
         int TxCount,
         int RxCount,
-        string SourcePresetVersion)
+        string SourcePresetVersion,
+        string? BankPath)
     {
         public override string ToString()
         {

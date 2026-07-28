@@ -29,7 +29,8 @@ public partial class MachineBankWindow : Window
         UiLanguage language,
         bool useLightTheme,
         IEnumerable<string> usedDeviceNames,
-        bool canAddToProject)
+        bool canAddToProject,
+        string? initialBankPath = null)
     {
         InitializeComponent();
         _language = language;
@@ -37,7 +38,9 @@ public partial class MachineBankWindow : Window
         _usedDeviceNames = usedDeviceNames.ToHashSet(StringComparer.OrdinalIgnoreCase);
         _canAddToProject = canAddToProject;
         _locationService = MachineBankLocationService.CreateDefault();
-        _bankPath = _locationService.Load();
+        _bankPath = string.IsNullOrWhiteSpace(initialBankPath)
+            ? _locationService.Load()
+            : Path.GetFullPath(initialBankPath);
         _repository = new MachineBankRepository(_bankPath);
         DialogThemeService.Apply(this, useLightTheme);
         TemplatesGrid.ItemsSource = _visibleRows;
@@ -48,6 +51,8 @@ public partial class MachineBankWindow : Window
     public MachineTemplatePackage? SelectedPackageToAdd { get; private set; }
 
     public MachineInstanceOptions? SelectedInstanceOptions { get; private set; }
+
+    public string CurrentBankPath => _bankPath;
 
     private string AllFilterLabel => L("Tous", "All");
 

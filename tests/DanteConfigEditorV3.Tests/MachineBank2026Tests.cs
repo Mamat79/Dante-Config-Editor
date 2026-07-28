@@ -12,6 +12,37 @@ namespace DanteConfigEditorV3.Tests;
 public sealed class MachineBank2026Tests
 {
     [Fact]
+    public void IncludedBankDiscoveryReturnsOnlyValidBankFolders()
+    {
+        using BankWorkspace workspace = new();
+        string alpha = workspace.Subdirectory("Alpha");
+        string ignored = workspace.Subdirectory("Ignored");
+        string zulu = workspace.Subdirectory("Zulu");
+        File.WriteAllText(Path.Combine(alpha, "bank.json"), "{}");
+        File.WriteAllText(Path.Combine(zulu, "bank.json"), "{}");
+        File.WriteAllText(Path.Combine(ignored, "readme.txt"), "not a bank");
+
+        IReadOnlyList<string> discovered =
+            MachineBankDistributionService.DiscoverIncludedBankPaths(workspace.Path);
+
+        Assert.Equal([alpha, zulu], discovered);
+    }
+
+    [Fact]
+    public void CommunityBank2026KeepsAllGeneratedDeviceTemplates()
+    {
+        string bankPath = RepositoryFile(
+            "Resources",
+            "MachineBanks",
+            "Bundled",
+            "DCE Community Devices 2026.1");
+
+        MachineBankRepository repository = new(bankPath);
+
+        Assert.Equal(41, repository.List().Count);
+    }
+
+    [Fact]
     public void NewBankUsesFormat2AndDetectsImageCorruption()
     {
         using BankWorkspace workspace = new();
@@ -281,4 +312,3 @@ public sealed class MachineBank2026Tests
         }
     }
 }
-

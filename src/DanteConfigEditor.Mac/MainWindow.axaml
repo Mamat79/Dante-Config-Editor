@@ -137,13 +137,48 @@
 
             <TabControl x:Name="MainTabs" Grid.Column="1" Margin="14">
                 <TabItem x:Name="ConfigurationTab" Header="Machines">
-                    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="12" Margin="0,12,0,0">
+                    <Grid RowDefinitions="Auto,Auto,Auto,*" RowSpacing="12" Margin="0,12,0,0">
+                        <Border Grid.Row="0" Classes="panel">
+                            <Grid ColumnDefinitions="Auto,320,Auto,Auto,*"
+                                  ColumnSpacing="8">
+                                <TextBlock Text="Banque de machines"
+                                           FontWeight="SemiBold"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,2,0" />
+                                <ComboBox x:Name="MachineBankSourceComboBox"
+                                          Grid.Column="1"
+                                          SelectionChanged="MachineBankSourceComboBox_SelectionChanged"
+                                          ToolTip.Tip="Choisit la banque utilisée par les actions de cette page." />
+                                <Button x:Name="AddDeviceFromBankButton"
+                                        Grid.Column="2"
+                                        Classes="primary"
+                                        Click="AddDeviceFromBankButton_Click"
+                                        ToolTip.Tip="Ouvre la banque sélectionnée et ajoute une machine indépendante au projet.">
+                                    Ajouter depuis la banque
+                                </Button>
+                                <Button x:Name="ManageMachineBankButton"
+                                        Grid.Column="3"
+                                        Click="ManageMachineBankButton_Click"
+                                        ToolTip.Tip="Consulte et administre la banque sélectionnée.">
+                                    Gérer la banque
+                                </Button>
+                                <TextBlock x:Name="MachineBankSummaryTextBlock"
+                                           Grid.Column="4"
+                                           Classes="muted"
+                                           VerticalAlignment="Center"
+                                           Margin="4,0,0,0"
+                                           TextWrapping="NoWrap"
+                                           TextTrimming="CharacterEllipsis"
+                                           Text="Chargement des banques de machines..." />
+                            </Grid>
+                        </Border>
+
                         <Grid x:Name="ConfigurationEditorsGrid"
-                              Grid.Row="0"
+                              Grid.Row="1"
                               ColumnDefinitions="1.05*,1.05*,0.9*"
                               ColumnSpacing="12"
-                              MinHeight="320"
-                              MaxHeight="350">
+                              MinHeight="280"
+                              MaxHeight="320">
                             <Border Grid.Column="0" Classes="panel">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <StackPanel Spacing="8">
@@ -279,7 +314,7 @@
                             </Border>
                         </Grid>
 
-                        <Border Grid.Row="1" Classes="panel">
+                        <Border Grid.Row="2" Classes="panel">
                             <WrapPanel Orientation="Horizontal"
                                        HorizontalAlignment="Left">
                                 <Button x:Name="ApplyDeviceButton"
@@ -312,7 +347,7 @@
                         </Border>
 
                         <DataGrid x:Name="DeviceGrid"
-                                  Grid.Row="2"
+                                  Grid.Row="3"
                                   AutoGenerateColumns="False"
                                   IsReadOnly="True"
                                   SelectionMode="Extended"

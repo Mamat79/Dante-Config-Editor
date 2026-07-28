@@ -30,7 +30,6 @@ internal sealed partial class NewProjectDialog : Window
 
     private UiLanguage _language;
     private string _bankPath = string.Empty;
-    private MachineBankRepository? _repository;
 
     public NewProjectDialog()
     {
@@ -52,7 +51,6 @@ internal sealed partial class NewProjectDialog : Window
                 ? "Experimental new project"
                 : "Nouveau projet expérimental"
         };
-        dialog._repository = new MachineBankRepository(dialog._bankPath);
         dialog.ConfigureChoices();
         dialog.ApplyLanguage();
         dialog.LoadSources();
@@ -106,31 +104,73 @@ internal sealed partial class NewProjectDialog : Window
             new(
                 null,
                 L("Machine personnalisée", "Custom device"),
+                "DEVICE",
                 0,
                 0,
-                ProjectCreationService.PresetVersion)
+                ProjectCreationService.PresetVersion,
+                null)
         ];
-        try
+        List<string> bankPaths =
+        [
+            _bankPath,
+            .. MachineBankDistributionService.DiscoverIncludedBankPaths()
+        ];
+        HashSet<string> knownTemplates = new(StringComparer.OrdinalIgnoreCase);
+        int loadedBanks = 0;
+        foreach (string bankPath in bankPaths
+                     .Select(Path.GetFullPath)
+                     .Distinct(StringComparer.OrdinalIgnoreCase))
         {
-            choices.AddRange(_repository!.List().Select(metadata =>
-                new MacNewProjectSourceChoice(
-                    metadata.TemplateId,
-                    $"{metadata.TemplateName} · {metadata.TxCount} TX/{metadata.RxCount} RX",
-                    metadata.TxCount,
-                    metadata.RxCount,
-                    metadata.SourcePresetVersion)));
-        }
-        catch (Exception exception)
-        {
-            DiagnosticLogService.Default.Write(
-                "MachineBank",
-                "Impossible de lire la banque dans l'assistant Nouveau projet.",
-                exception);
+            try
+            {
+                IReadOnlyList<MachineTemplateMetadata> templates =
+                    new MachineBankRepository(bankPath).List();
+                loadedBanks++;
+                string bankName = string.Equals(
+                    bankPath,
+                    _bankPath,
+                    StringComparison.OrdinalIgnoreCase)
+                    ? L("Ma banque", "My bank")
+                    : Path.GetFileName(bankPath);
+                foreach (MachineTemplateMetadata metadata in templates)
+                {
+                    string identity = string.Join(
+                        "|",
+                        metadata.Manufacturer,
+                        metadata.Model,
+                        metadata.TemplateName,
+                        metadata.TxCount,
+                        metadata.RxCount);
+                    if (!knownTemplates.Add(identity))
+                    {
+                        continue;
+                    }
+
+                    choices.Add(new MacNewProjectSourceChoice(
+                        metadata.TemplateId,
+                        $"{bankName} › {metadata.TemplateName} · {metadata.TxCount} TX/{metadata.RxCount} RX",
+                        metadata.TemplateName,
+                        metadata.TxCount,
+                        metadata.RxCount,
+                        metadata.SourcePresetVersion,
+                        bankPath));
+                }
+            }
+            catch (Exception exception)
+            {
+                DiagnosticLogService.Default.Write(
+                    "MachineBank",
+                    $"Impossible de lire la banque {bankPath} dans l'assistant Nouveau projet.",
+                    exception);
+            }
         }
 
         ComboBox source = FindControl<ComboBox>("SourceComboBox")!;
         source.ItemsSource = choices;
         source.SelectedIndex = 0;
+        FindControl<TextBlock>("SourceHelpText")!.Text = _language == UiLanguage.English
+            ? $"{choices.Count - 1} reusable template(s) found across {loadedBanks} bank(s), including installed templates."
+            : $"{choices.Count - 1} modèle(s) réutilisable(s) trouvé(s) dans {loadedBanks} banque(s), dont les modèles installés.";
     }
 
     private async void BrowsePathButton_Click(object? sender, RoutedEventArgs e)
@@ -166,7 +206,7 @@ internal sealed partial class NewProjectDialog : Window
         FindControl<Grid>("TemplateLabelsGrid")!.IsVisible = usesTemplate;
         if (usesTemplate && choice is not null)
         {
-            string candidate = DanteNameRules.NormalizeDeviceNamePart(choice.Display, "DEVICE");
+            string candidate = DanteNameRules.NormalizeDeviceNamePart(choice.SuggestedName, "DEVICE");
             FindControl<TextBox>("DeviceNameTextBox")!.Text =
                 candidate[..Math.Min(candidate.Length, DanteNameRules.MaximumNameLength)].Trim('-');
         }
@@ -271,7 +311,7 @@ internal sealed partial class NewProjectDialog : Window
                     TxLabelPrefix = useTx ? null : txPrefix,
                     RxLabelPrefix = useRx ? null : rxPrefix
                 },
-                _bankPath));
+                choice.BankPath ?? _bankPath));
             return;
         }
 
@@ -319,9 +359,11 @@ internal sealed partial class NewProjectDialog : Window
     private sealed record MacNewProjectSourceChoice(
         Guid? TemplateId,
         string Display,
+        string SuggestedName,
         int TxCount,
         int RxCount,
-        string SourcePresetVersion)
+        string SourcePresetVersion,
+        string? BankPath)
     {
         public override string ToString() => Display;
     }
