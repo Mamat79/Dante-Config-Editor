@@ -8,7 +8,7 @@ Un résultat automatisé réussi ne prouve pas la compatibilité avec Dante Cont
 
 ## Référence de travail
 
-- dépôt : `Mamat79/DanteConfigEditorV3` ;
+- dépôt : `Mamat79/Dante-Config-Editor` ;
 - branche : `main` ;
 - version : `3.07` ;
 - tag de sécurité avant promotion officielle : `safety-v3.07-beta-before-official-20260711` ;

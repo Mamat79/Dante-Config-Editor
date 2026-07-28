@@ -29,7 +29,7 @@ ROOT = Path(__file__).resolve().parent
 # française et anglaise synchronisées avec l'application et l'installateur.
 PRODUCT = "Dante Config Editor 2026.1 Beta"
 VERSION = "2026.1.0-beta.1"
-GITHUB = "github.com/Mamat79/DanteConfigEditorV3"
+GITHUB = "github.com/Mamat79/Dante-Config-Editor"
 
 INK = colors.HexColor("#172033")
 MUTED = colors.HexColor("#526070")

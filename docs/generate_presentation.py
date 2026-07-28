@@ -363,7 +363,7 @@ def make_end(language: str, cue: SubtitleCue) -> Image.Image:
     )
     draw.text(
         (WIDTH // 2, 335),
-        "github.com/Mamat79/DanteConfigEditorV3",
+        "github.com/Mamat79/Dante-Config-Editor",
         fill="#5CB3FF",
         font=font(31, True),
         anchor="ma",

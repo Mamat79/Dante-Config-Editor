@@ -67,11 +67,11 @@ Elle ne remplace pas l'empreinte d'une Release GitHub existante.
 Les trois workflows exécutés sur le commit de départ dans `main` sont réussis :
 
 - Windows CI :
-  <https://github.com/Mamat79/DanteConfigEditorV3/actions/runs/30278413211>
+  <https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30278413211>
 - macOS CI :
-  <https://github.com/Mamat79/DanteConfigEditorV3/actions/runs/30278414511>
+  <https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30278414511>
 - Machine-bank audit :
-  <https://github.com/Mamat79/DanteConfigEditorV3/actions/runs/30278413340>
+  <https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30278413340>
 
 La branche `2026.1` n'avait encore déclenché aucun workflow propre au moment du
 relevé, car elle ne contenait aucun commit différent de `main`.

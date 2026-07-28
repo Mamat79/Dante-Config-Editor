@@ -39,9 +39,9 @@ Installateur local réellement installé :
 
 GitHub Actions au commit `7a50b3c` :
 
-- [Windows CI](https://github.com/Mamat79/DanteConfigEditorV3/actions/runs/30298793379) :
+- [Windows CI](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30298793379) :
   364 tests réussis et installateur produit ;
-- [macOS CI](https://github.com/Mamat79/DanteConfigEditorV3/actions/runs/30298792909) :
+- [macOS CI](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30298792909) :
   364 tests Core et 20 tests Avalonia réussis, deux DMG produits ;
 - installateur CI : `69 767 745` octets, SHA-256
   `72b84b0e6effb03d534d2a68b94ad5119231c7a0237077081e0fe56ef6fa044b` ;
@@ -551,7 +551,7 @@ CI distante du commit officiel `9ba35639e417cfb26e5249caa6375c94faf026a7` :
 - Windows CI, run `29168999560` : réussi, tests, build, publish et artifacts inclus ;
 - macOS CI, run `29168999565` : réussi, tests Core/UI et deux DMG inclus.
 
-Release publique stable : [`v3.07`](https://github.com/Mamat79/DanteConfigEditorV3/releases/tag/v3.07), publiée le 2026-07-11 avec six assets. Les digests GitHub concordent avec les fichiers vérifiés :
+Release publique stable : [`v3.07`](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v3.07), publiée le 2026-07-11 avec six assets. Les digests GitHub concordent avec les fichiers vérifiés :
 
 - Windows : `9f052c09391a274a044b44336c86893967fa64f10c8867266353a3e0aa352ccf` ;
 - macOS Apple Silicon : `ea560fabe9a6d83da705d9529baa09c4eb74b5351dddc9407dbef40a146fb959` ;

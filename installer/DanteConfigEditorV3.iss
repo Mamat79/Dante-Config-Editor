@@ -188,7 +188,7 @@ procedure OpenGithub(Sender: TObject);
 var
   ErrorCode: Integer;
 begin
-  ShellExec('open', 'https://github.com/Mamat79/DanteConfigEditorV3', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+  ShellExec('open', 'https://github.com/Mamat79/Dante-Config-Editor', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
 end;
 
 function QueryInstallValue(AppId: String; ValueName: String; var Value: String): Boolean;

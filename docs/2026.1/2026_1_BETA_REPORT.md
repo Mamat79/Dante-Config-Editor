@@ -99,9 +99,9 @@ Résultats locaux finaux du 28 juillet 2026 :
 
 GitHub Actions de la base 2026.1 :
 
-- [Windows CI, exécution 30298793379](https://github.com/Mamat79/DanteConfigEditorV3/actions/runs/30298793379) :
+- [Windows CI, exécution 30298793379](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30298793379) :
   succès ;
-- [macOS CI, exécution 30298792909](https://github.com/Mamat79/DanteConfigEditorV3/actions/runs/30298792909) :
+- [macOS CI, exécution 30298792909](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30298792909) :
   succès ;
 - les fichiers TRX téléchargés confirment 364/364 tests Windows, 364/364 tests
   Core sur macOS et 20/20 tests Avalonia.

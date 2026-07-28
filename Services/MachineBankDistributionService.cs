@@ -3,7 +3,7 @@ namespace DanteConfigEditor.Services;
 public static class MachineBankDistributionService
 {
     public const string GitHubBanksUrl =
-        "https://github.com/Mamat79/DanteConfigEditorV3/tree/main/machine-banks";
+        "https://github.com/Mamat79/Dante-Config-Editor/tree/main/machine-banks";
 
     public const string BundledBankFolderName = "DCE Generic Roles 2026.1";
 

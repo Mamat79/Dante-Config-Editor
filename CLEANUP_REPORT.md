@@ -7,7 +7,7 @@ Tag local de sécurité : `safety-v3.07-before-validation-20260711`
 
 ## Périmètre et règles
 
-L'audit porte uniquement sur le dépôt `Mamat79/DanteConfigEditorV3`. Aucun fichier situé dans un corpus local externe n'a été déplacé ou supprimé. Aucune Release GitHub et aucun tag existant n'ont été supprimés.
+L'audit porte uniquement sur le dépôt `Mamat79/Dante-Config-Editor`. Aucun fichier situé dans un corpus local externe n'a été déplacé ou supprimé. Aucune Release GitHub et aucun tag existant n'ont été supprimés.
 
 Le nettoyage distingue :
 

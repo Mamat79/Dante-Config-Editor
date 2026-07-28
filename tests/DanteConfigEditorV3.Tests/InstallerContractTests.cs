@@ -40,7 +40,7 @@ public sealed class InstallerContractTests
         Assert.Contains("Notice_DanteConfigEditorV3_FR.pdf", installerScript, StringComparison.Ordinal);
         Assert.Contains("Notice_DanteConfigEditorV3_EN.pdf", installerScript, StringComparison.Ordinal);
         Assert.Contains("DMT_LICENSE.txt", installerScript, StringComparison.Ordinal);
-        Assert.Contains("https://github.com/Mamat79/DanteConfigEditorV3", installerScript, StringComparison.Ordinal);
+        Assert.Contains("https://github.com/Mamat79/Dante-Config-Editor", installerScript, StringComparison.Ordinal);
         Assert.Contains("SignatureLabel.Caption := 'By Mamat'", installerScript, StringComparison.Ordinal);
         Assert.Contains("SignatureAgentsLabel.Caption := 'et ses agents'", installerScript, StringComparison.Ordinal);
         string windowsWindow = File.ReadAllText(RepositoryFile("MainWindow.xaml"));
