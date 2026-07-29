@@ -9,6 +9,8 @@ Date : 2026-07-29
 - base V3.6 : `25a1e7cc0568b86a56bdf039ecce060c8eeea1ec` ;
 - commit de sécurité XML validé :
   `02765f4` ;
+- commit final de correction ergonomique :
+  `28505f72609edec09a6d4e3e4182d30b335351e9` ;
 - identité Windows : `Dante Config Editor 2026.1 Beta` ;
 - profil local : `%LOCALAPPDATA%\DanteConfigEditor2026.1` ;
 - bundle macOS : `fr.mamat.danteconfigeditor.y2026-1-beta`.
@@ -48,6 +50,9 @@ documentation ; il ne correspond pas à une reconstruction du XML Dante.
 - installation séparée des banques fournies et import manuel depuis le
   catalogue public GitHub ;
 - espace Windows 2026.1 réorganisé ;
+- liste des machines repliée au démarrage, avec flèche compacte centrée et
+  répartition verticale corrigée afin que le tableau reste visible une fois
+  déplié ;
 - Patch unifié avec RX à gauche, TX à droite et application immédiate ;
 - avertissement activé par défaut lors du remplacement d'un RX déjà patché ;
 - synchronisation Patch, Easy patch, sélections et synoptique ;
@@ -100,14 +105,14 @@ Résultats locaux finaux du 29 juillet 2026 :
 | Corpus XML local en lecture seule | 3 tests, 11 fichiers, 0 modification |
 | Build Windows Release | 0 warning, 0 erreur, 5,434 s |
 | Build macOS Release | 0 warning, 0 erreur, 1,367 s |
-| Installateur Windows GitHub | réussi, 74 221 878 octets |
-| SHA-256 installateur | `794237b4c671aa772544ea4852ff05d716916c297f36590784bb436d2e2368e6` |
+| Installateur Windows GitHub | réussi, 74 221 870 octets |
+| SHA-256 installateur | `cab38b7f717b718ae30583f56745ab22cc4fb365156726fbd4f2f24b995d7531` |
 
-GitHub Actions au commit `a973040` :
+GitHub Actions au commit `28505f7` :
 
-- [Windows CI, exécution 30426665294](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30426665294) :
+- [Windows CI, exécution 30431931407](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30431931407) :
   succès, 419 tests et installateur produit ;
-- [macOS CI, exécution 30426665296](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30426665296) :
+- [macOS CI, exécution 30431931418](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30431931418) :
   succès, 419 tests Core, 22 tests Avalonia et deux DMG produits.
 
 ## Performances
@@ -133,9 +138,9 @@ du preset ; leurs mesures présentent davantage de variabilité.
 
 | Paquet | Taille | SHA-256 |
 |---|---:|---|
-| Installateur Windows GitHub installé | 74 221 878 octets | `794237b4c671aa772544ea4852ff05d716916c297f36590784bb436d2e2368e6` |
-| DMG Apple Silicon CI | 63 431 582 octets | `2b4276e2f3f631713f50df67d29f3d534cab32b90e29d376aea095cc4e3c5789` |
-| DMG Intel CI | 65 238 181 octets | `f2555077ba8f3b39622b8f2e6cbdc6a08702236520b5c9fb06916cd8129396f4` |
+| Installateur Windows GitHub installé | 74 221 870 octets | `cab38b7f717b718ae30583f56745ab22cc4fb365156726fbd4f2f24b995d7531` |
+| DMG Apple Silicon CI | 63 431 657 octets | `3a1b6cf9d7530dfab58e986f10800054c548cc68a0276a12112d12483ad2253a` |
+| DMG Intel CI | 65 238 279 octets | `b71183628623b2e7aa8128b8d9170242ab288077fa3d2672002c22141ae9bbd0` |
 | Notice française | 1 052 955 octets | `f9a3b0f566fb70836f0e67506096c2af59a439e3e007dcb573efb07f153f1ed6` |
 | Notice anglaise | 1 005 326 octets | `344b8d40be56adb74c310558f6b8d6efcb64dfede539669c54696013bd643277` |
 | Démarrage rapide français | 44 953 octets | `9978c80f2fbc55a78d2dd2e962798b921bc6284a012a815f694af78acf86e401` |
@@ -157,6 +162,14 @@ confirme :
 - banque personnelle inchangée, avec 77 fichiers, 1 587 873 octets et aucune
   entrée ajoutée ou retirée ;
 - lancement réussi et application répondante avec la fixture représentative.
+
+Le contrôle de l'installation a confirmé le chargement de la fixture
+représentative et l'état replié initial. Les tests de contrat Windows vérifient
+la flèche compacte centrée et la répartition verticale `5* / 3*`; les tests
+Avalonia exécutent réellement le dépliage et vérifient que la grille reste dans
+la fenêtre. La capture automatisée de la fenêtre WPF installée est restée
+blanche dans l'outil de capture utilisé ; ce point est signalé comme une limite
+de l'outil et n'est pas présenté comme une validation visuelle par capture.
 
 L'installateur n'est pas signé Authenticode. Les DMG sont signés ad hoc mais
 ne sont pas notariés.
