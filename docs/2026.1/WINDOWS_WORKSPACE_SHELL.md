@@ -69,7 +69,7 @@ et 200 %.
 Le 29 juillet 2026 :
 
 - compilation Windows Release sans avertissement ;
-- `409/409` tests Core/Windows réussis ;
+- `419/419` tests Core/Windows réussis ;
 - contrôle visuel réel de l'exécutable à environ `1266 x 813` et en fenêtre
   maximisée ;
 - ouverture de la fixture anonymisée `representative-preset.xml` ;

@@ -78,6 +78,12 @@ Toutes les dates utilisent le calendrier ISO. Les versions antérieures à
 - les flèches persistantes des panneaux gauche et droit sont plus grandes ;
 - les panneaux Machines restent utilisables à `1536 x 864`, correspondant à
   l'espace logique d'un écran Full HD réglé à 125 %.
+- la liste générale des machines démarre repliée derrière une barre titrée et
+  sa flèche persistante, afin de réserver la hauteur aux réglages ;
+- les réglages Machines tiennent sans ascenseur à `1536 x 864` ; un défilement
+  de secours reste disponible aux résolutions inférieures ;
+- toutes les infobulles déclarées dans les interfaces Windows et macOS ont une
+  traduction anglaise et utilisent un affichage multilignes non tronqué.
 
 ### Performance
 

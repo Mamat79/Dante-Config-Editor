@@ -17,7 +17,7 @@ Résultats locaux depuis une restauration propre :
 - restauration application Windows : `1,402 s` ;
 - restauration tests Core/Windows : `2,003 s` ;
 - restauration tests Avalonia/macOS : `1,284 s` ;
-- 409 tests Core/Windows réussis, 0 échec, 0 ignoré ;
+- 419 tests Core/Windows réussis, 0 échec, 0 ignoré ;
 - 22 tests Avalonia/macOS sans écran réussis, 0 échec, 0 ignoré ;
 - 3 tests d'intégration locale réussis sur 11 XML réels ouverts en lecture
   seule, sans modifier ni versionner les originaux ;
@@ -50,9 +50,9 @@ Installateur GitHub réellement téléchargé puis installé :
 GitHub Actions au commit `e54b363` :
 
 - [Windows CI, exécution 30407812954](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30407812954) :
-  succès, 409 tests et installateur produit ;
+  succès, 419 tests et installateur produit ;
 - [macOS CI, exécution 30407812941](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30407812941) :
-  succès, 409 tests Core, 22 tests Avalonia et deux DMG produits ;
+  succès, 419 tests Core, 22 tests Avalonia et deux DMG produits ;
 - DMG Apple Silicon : `63 445 544` octets, SHA-256
   `01bb2a05bd1e136ee1726fec2727c6342ca69b3b8246728df98a4038f3ef6a7a` ;
 - DMG Intel : `65 251 577` octets, SHA-256

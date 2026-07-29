@@ -35,6 +35,10 @@ Audinate. It only works on offline files.
   area;
 - device settings opened at startup and collapsible through a centered arrow
   that remains accessible in both states;
+- the complete device list starts collapsed behind a titled bar and a
+  persistent arrow so settings receive the available height;
+- settings fit without a scrollbar at `1536 x 864`, with fallback scrolling
+  retained for smaller displays;
 - standard application menu on Windows and macOS with direct access to files,
   devices, views, tools, and guides;
 - light theme on first launch, followed by restoration of the last selected
@@ -46,6 +50,8 @@ Audinate. It only works on offline files.
   `samplerate`, `encoding`, `unicast_latency`, or `ipv4_address` to simulate
   an unsupported capability;
 - unavailable controls are disabled with a bilingual explanation and tooltip;
+- Windows and macOS tooltips were audited in French and English and now wrap
+  onto multiple lines instead of clipping long explanations;
 - a more compact Patch matrix, larger side-panel arrows, and Show in Patch
   opening directly on the selected device;
 - isolated 2026.1 local profile.
@@ -79,7 +85,7 @@ For the synthetic 200-device preset with 64 TX and 64 RX per device:
 
 ## Automated validation
 
-- 409 Core/Windows tests passed;
+- 419 Core/Windows tests passed;
 - 22 headless Avalonia/macOS tests passed;
 - Windows Release build completed without warnings;
 - synthetic corpus saved and semantically compared without loss;

@@ -95,7 +95,7 @@ Résultats locaux finaux du 29 juillet 2026 :
 
 | Contrôle | Résultat |
 |---|---:|
-| Tests Core/Windows | 409 réussis, 0 échec, 0 ignoré |
+| Tests Core/Windows | 419 réussis, 0 échec, 0 ignoré |
 | Tests Avalonia/macOS sans écran | 22 réussis, 0 échec, 0 ignoré |
 | Corpus XML local en lecture seule | 3 tests, 11 fichiers, 0 modification |
 | Build Windows Release | 0 warning, 0 erreur, 5,434 s |
@@ -106,9 +106,9 @@ Résultats locaux finaux du 29 juillet 2026 :
 GitHub Actions au commit `e54b363` :
 
 - [Windows CI, exécution 30407812954](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30407812954) :
-  succès, 409 tests et installateur produit ;
+  succès, 419 tests et installateur produit ;
 - [macOS CI, exécution 30407812941](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30407812941) :
-  succès, 409 tests Core, 22 tests Avalonia et deux DMG produits.
+  succès, 419 tests Core, 22 tests Avalonia et deux DMG produits.
 
 ## Performances
 

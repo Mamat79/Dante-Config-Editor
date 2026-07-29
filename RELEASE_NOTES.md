@@ -37,6 +37,10 @@ travaille uniquement sur des fichiers hors ligne.
   disponible ;
 - réglages Machines ouverts au démarrage et repliables par une flèche centrale
   qui reste accessible dans les deux états ;
+- liste générale des machines repliée au démarrage derrière une barre titrée,
+  pour privilégier les réglages ; elle se déplie avec sa flèche persistante ;
+- réglages sans ascenseur à `1536 x 864`, avec défilement de secours aux petites
+  résolutions ;
 - menu d'application standard sur Windows et macOS, avec accès direct aux
   fichiers, machines, vues, outils et notices ;
 - thème clair au premier lancement, puis restauration du dernier thème et de
@@ -49,6 +53,8 @@ travaille uniquement sur des fichiers hors ligne.
   `ipv4_address` ;
 - commandes indisponibles désactivées avec une explication et une bulle d'aide
   bilingues ;
+- infobulles Windows et macOS auditées en français et en anglais, affichées sur
+  plusieurs lignes pour éviter toute phrase tronquée ;
 - matrice Patch plus compacte, flèches latérales plus visibles et ouverture de
   « Voir dans Patch » directement sur la machine sélectionnée ;
 - profil local 2026.1 isolé.
@@ -82,7 +88,7 @@ Sur le preset synthétique de 200 machines avec 64 TX et 64 RX chacune :
 
 ## Validation automatisée
 
-- 409 tests Core/Windows réussis ;
+- 419 tests Core/Windows réussis ;
 - 22 tests Avalonia/macOS sans écran réussis ;
 - build Windows Release sans warning ;
 - corpus synthétique sauvegardé et comparé sémantiquement sans perte ;

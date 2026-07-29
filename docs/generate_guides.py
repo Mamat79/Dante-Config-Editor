@@ -568,13 +568,15 @@ def full_guide(language: str) -> None:
             para("Tableau des machines", "h2"),
             *bullets([
                 "La sélection multiple définit la cible Sélection non verrouillée. La colonne Lock protège les machines des actions globales.",
-                "Le Preferred Master peut être coché directement. La flèche centrale sous les réglages les masque ou les rouvre et agrandit le tableau.",
+                "La liste générale démarre repliée derrière la barre Liste des machines. Sa flèche persistante la déplie ; aux petites résolutions, un ascenseur de secours reste disponible.",
+                "Le Preferred Master peut être coché directement dans la liste dépliée.",
                 "Ajouter depuis la banque et Gérer les banques ouvrent directement la liste globale dédupliquée de 43 modèles avec leur origine. La banque personnelle et les banques fournies restent séparées.",
             ]),
             para("Recherche, filtres et actions globales", "h2"),
             *bullets([
                 "La recherche trouve les machines, canaux et références de patch après au moins deux caractères.",
                 "La barre Liste rapide intégrée sous Actions globales affiche les modes réseau, latences, sample rates, bits, IP fixes ou Preferred Masters sans occuper plusieurs rangées de boutons.",
+                "Les infobulles reviennent à la ligne : laissez le pointeur immobile sur une commande pour lire l'explication complète, y compris lorsqu'elle est désactivée.",
                 "Modifiées uniquement affiche les machines touchées ; Avant / après détaille chaque différence.",
                 "Choisissez toutes les machines non verrouillées, la sélection ou le filtre affiché. La cible reste visible avant l'application.",
             ]),
@@ -715,7 +717,7 @@ def full_guide(language: str) -> None:
                 [48, 122],
             ),
             para("15. Tests de non-régression", "h1"),
-            para("La suite 2026.1 exécute 409 tests Core/Windows et 22 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, le refus des balises techniques absentes, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la duplication, la banque de machines, la création de projet, le format .dceproj, les profils XML, les commandes, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch, le soutien facultatif et la cohérence des traductions."),
+            para("La suite 2026.1 exécute 419 tests Core/Windows et 22 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, le refus des balises techniques absentes, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la duplication, la banque de machines, la création de projet, le format .dceproj, les profils XML, les commandes, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch, le soutien facultatif et la cohérence des traductions."),
             para("16. Limites connues", "h1"),
             *bullets([
                 "Aucun pilotage en temps réel et aucune communication avec les appareils.",
@@ -1171,13 +1173,15 @@ def full_guide(language: str) -> None:
             para("Device table", "h2"),
             *bullets([
                 "Multiple selection defines the Selected unlocked target. The Lock column protects devices from global actions.",
-                "Preferred Master can be toggled directly. The centered arrow below the settings hides or restores them and enlarges the table.",
+                "The complete list starts collapsed behind the Device list bar. Its persistent arrow expands it; fallback scrolling remains available on small displays.",
+                "Preferred Master can be toggled directly in the expanded list.",
                 "Add from bank and Manage banks directly open the global deduplicated list of 43 templates with their source. The personal and bundled banks remain separate.",
             ]),
             para("Search, filters, and global actions", "h2"),
             *bullets([
                 "Search finds devices, channels, and subscription references after at least two characters.",
                 "The compact Quick list bar below Global actions displays network modes, latencies, sample rates, bits, static IPs, or Preferred Masters without occupying several rows of buttons.",
+                "Tooltips wrap onto multiple lines: keep the pointer still over a command to read the full explanation, including when the command is disabled.",
                 "Modified only shows changed devices; Before / after lists every difference.",
                 "Choose all unlocked, selected unlocked, or visible unlocked devices. The target remains visible before application.",
             ]),
@@ -1318,7 +1322,7 @@ def full_guide(language: str) -> None:
                 [48, 122],
             ),
             para("15. Regression tests", "h1"),
-            para("The 2026.1 suite runs 409 Core/Windows tests and 22 headless Mac tests. Coverage includes XML guards, rejection of missing technical elements, save and recovery, IPv4 interfaces, subscriptions, large presets, duplication, the device bank, project creation, .dceproj packages, XML profiles, commands, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, optional support, and translation consistency."),
+            para("The 2026.1 suite runs 419 Core/Windows tests and 22 headless Mac tests. Coverage includes XML guards, rejection of missing technical elements, save and recovery, IPv4 interfaces, subscriptions, large presets, duplication, the device bank, project creation, .dceproj packages, XML profiles, commands, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, optional support, and translation consistency."),
             para("16. Known limitations", "h1"),
             *bullets([
                 "No real-time Dante control and no communication with devices.",
