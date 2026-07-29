@@ -405,8 +405,9 @@ public sealed class PatchWorkspaceUiContractTests
             "InspectorSplitterColumn.Width = new GridLength(44)",
             codeBehind,
             StringComparison.Ordinal);
-        Assert.Equal("40", reveal.Attribute("Width")?.Value);
-        Assert.Equal("82", reveal.Attribute("MinHeight")?.Value);
+        Assert.Equal(
+            "{StaticResource PanelRevealButtonStyle}",
+            reveal.Attribute("Style")?.Value);
         Assert.Contains(
             "SetInspectorExpanded(true)",
             codeBehind,
@@ -414,7 +415,7 @@ public sealed class PatchWorkspaceUiContractTests
     }
 
     [Fact]
-    public void LeftNavigationAndMachineSettingsUsePersistentArrowHandles()
+    public void SidePanelsAndDeviceListUseConsistentPersistentArrowHandles()
     {
         string xaml = File.ReadAllText(RepositoryFile("MainWindow.xaml"));
         string codeBehind = File.ReadAllText(RepositoryFile("MainWindow.xaml.cs"));
@@ -427,6 +428,12 @@ public sealed class PatchWorkspaceUiContractTests
             NamedElement(document, xamlNamespace, "NavigationToggleButton");
         XElement settingsToggle =
             NamedElement(document, xamlNamespace, "ToggleConfigurationEditorsButton");
+        XElement deviceListToggle =
+            NamedElement(document, xamlNamespace, "ToggleDeviceListButton");
+        XElement deviceListPanel =
+            NamedElement(document, xamlNamespace, "DeviceListPanel");
+        XElement deviceListTitle =
+            NamedElement(document, xamlNamespace, "DeviceListTitleTextBlock");
         XElement settingsRegion =
             NamedElement(document, xamlNamespace, "ConfigurationEditorsRegion");
         XElement settingsScroller =
@@ -436,11 +443,8 @@ public sealed class PatchWorkspaceUiContractTests
         Assert.Equal("<", navigationReveal.Attribute("Content")?.Value);
         Assert.Equal("Collapsed", toolbarToggle.Attribute("Visibility")?.Value);
         Assert.DoesNotContain("x:Name=\"NavigationCloseButton\"", xaml, StringComparison.Ordinal);
-        Assert.Equal("▲", settingsToggle.Attribute("Content")?.Value);
+        Assert.Equal("Collapsed", settingsToggle.Attribute("Visibility")?.Value);
         Assert.Equal("1", settingsRegion.Attribute("Grid.Row")?.Value);
-        Assert.Equal("Center", settingsToggle.Attribute("HorizontalAlignment")?.Value);
-        Assert.Equal("Bottom", settingsToggle.Attribute("VerticalAlignment")?.Value);
-        Assert.Equal("5", settingsToggle.Attribute("Panel.ZIndex")?.Value);
         Assert.Equal("Auto", settingsScroller.Attribute("VerticalScrollBarVisibility")?.Value);
         Assert.Contains(
             "NavigationRevealButton.Visibility = Visibility.Visible",
@@ -450,8 +454,15 @@ public sealed class PatchWorkspaceUiContractTests
             "NavigationSplitterColumn.Width = new GridLength(44)",
             codeBehind,
             StringComparison.Ordinal);
-        Assert.Equal("40", navigationReveal.Attribute("Width")?.Value);
-        Assert.Equal("82", navigationReveal.Attribute("MinHeight")?.Value);
+        Assert.Equal(
+            "{StaticResource PanelRevealButtonStyle}",
+            navigationReveal.Attribute("Style")?.Value);
+        Assert.Equal(
+            "{StaticResource PanelRevealButtonStyle}",
+            deviceListToggle.Attribute("Style")?.Value);
+        Assert.Equal("▼", deviceListToggle.Attribute("Content")?.Value);
+        Assert.Equal("Liste des machines", deviceListTitle.Attribute("Text")?.Value);
+        Assert.Equal("Collapsed", deviceListPanel.Attribute("Visibility")?.Value);
         Assert.Contains(
             "ToggleConfigurationEditorsButton.Content = collapsed ? \"\\u25BC\" : \"\\u25B2\"",
             codeBehind,
@@ -466,6 +477,15 @@ public sealed class PatchWorkspaceUiContractTests
             StringComparison.Ordinal);
         Assert.Contains(
             "new GridLength(8, GridUnitType.Star)",
+            codeBehind,
+            StringComparison.Ordinal);
+        Assert.Contains("SetDeviceListExpanded(false)", codeBehind, StringComparison.Ordinal);
+        Assert.Contains(
+            "DeviceListRow.Height = expanded",
+            codeBehind,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "ToggleDeviceListButton.Content = expanded ? \"\\u25B2\" : \"\\u25BC\"",
             codeBehind,
             StringComparison.Ordinal);
         Assert.Contains("SetNavigationExpanded(true)", codeBehind, StringComparison.Ordinal);

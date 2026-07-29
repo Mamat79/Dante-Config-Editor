@@ -35,6 +35,10 @@ public sealed class InterfaceSettingsTests
             "SetInspectorExpanded(true)",
             mainWindow,
             StringComparison.Ordinal);
+        Assert.Contains(
+            "SetDeviceListExpanded(false)",
+            mainWindow,
+            StringComparison.Ordinal);
         Assert.DoesNotContain(
             "if (width < 1400 && _inspectorExpanded)",
             mainWindow,

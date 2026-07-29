@@ -258,10 +258,16 @@ public partial class DeviceDetailsWindow : Window
     private void ConfigureCapabilityControls()
     {
         SetCapabilityState(
-            [RedundantRadioButton, DaisychainRadioButton],
+            [RedundantRadioButton],
             _device.SupportsNetworkMode,
-            "le mode redondant",
-            "redundancy mode",
+            "le mode réseau Redondant",
+            "Redundant network mode",
+            "redundancy");
+        SetCapabilityState(
+            [DaisychainRadioButton],
+            _device.SupportsNetworkMode,
+            "le mode réseau Daisychain",
+            "Daisychain network mode",
             "redundancy");
         SetCapabilityState(
             [PreferredMasterCheckBox],
@@ -337,13 +343,13 @@ public partial class DeviceDetailsWindow : Window
         string englishSetting,
         string xmlElement)
     {
-        string help = supported
-            ? L(
-                $"{frenchSetting} est disponible pour {_device.Name}.",
-                $"{englishSetting} is available for {_device.Name}.")
-            : L(
-                $"Indisponible pour {_device.Name} : ce rôle Dante n'expose pas la balise <{xmlElement}>. DCE ne la créera pas.",
-                $"Unavailable for {_device.Name}: this Dante role does not expose <{xmlElement}>. DCE will not create it.");
+        string help = CapabilityToolTipService.ForDevice(
+            _language,
+            _device.Name,
+            supported,
+            frenchSetting,
+            englishSetting,
+            xmlElement);
 
         foreach (Control control in controls)
         {

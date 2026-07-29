@@ -50,9 +50,13 @@ public sealed class MainWindowTests
         {
             Grid editors = window.FindControl<Grid>("ConfigurationEditorsGrid")!;
             Button reveal = window.FindControl<Button>("ConfigurationEditorsRevealButton")!;
+            Grid deviceList = window.FindControl<Grid>("DeviceListPanel")!;
+            Button deviceListReveal = window.FindControl<Button>("DeviceListRevealButton")!;
             Assert.True(window.FindControl<TabItem>("ConfigurationTab")!.IsSelected);
             Assert.True(editors.IsEffectivelyVisible);
             Assert.Equal("▲", reveal.Content);
+            Assert.False(deviceList.IsVisible);
+            Assert.Equal("▼", deviceListReveal.Content);
 
             reveal.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Dispatcher.UIThread.RunJobs();
@@ -64,6 +68,11 @@ public sealed class MainWindowTests
             Dispatcher.UIThread.RunJobs();
             Assert.True(editors.IsEffectivelyVisible);
             Assert.Equal("▲", reveal.Content);
+
+            deviceListReveal.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
+            Assert.True(deviceList.IsEffectivelyVisible);
+            Assert.Equal("▲", deviceListReveal.Content);
         }
         finally
         {
@@ -78,11 +87,14 @@ public sealed class MainWindowTests
         window.Show();
         try
         {
+            window.FindControl<Button>("DeviceListRevealButton")!
+                .RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
             Button duplicate = window.FindControl<Button>("DuplicateDeviceButton")!;
             Border toolbar = duplicate.GetLogicalAncestors().OfType<Border>().First();
 
-            Assert.Equal(2, Grid.GetRow(toolbar));
-            Assert.Equal(3, Grid.GetRow(window.FindControl<DataGrid>("DeviceGrid")!));
+            Assert.Equal(0, Grid.GetRow(toolbar));
+            Assert.Equal(1, Grid.GetRow(window.FindControl<DataGrid>("DeviceGrid")!));
             Assert.True(duplicate.IsEffectivelyVisible);
             Assert.True(window.FindControl<Button>("SaveDeviceToBankButton")!.IsEffectivelyVisible);
         }
@@ -753,6 +765,10 @@ public sealed class MainWindowTests
 
             AssertControlFits(window, window.FindControl<Border>("ProjectSidebar")!);
             AssertControlFits(window, window.FindControl<TabControl>("MainTabs")!);
+            Assert.False(window.FindControl<Grid>("DeviceListPanel")!.IsVisible);
+            window.FindControl<Button>("DeviceListRevealButton")!
+                .RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Dispatcher.UIThread.RunJobs();
             AssertControlFits(window, window.FindControl<DataGrid>("DeviceGrid")!);
 
             window.FindControl<TabItem>("ExportsTab")!.IsSelected = true;

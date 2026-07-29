@@ -56,6 +56,7 @@ public partial class MainWindow : Window
     private DateTime? _lastSuccessfulSaveAt;
     private bool _navigationExpanded = true;
     private bool _inspectorExpanded = true;
+    private bool _deviceListExpanded;
     private bool _synchronizingDeviceContext;
     private string? _selectedDeviceContextStableIdentity;
     private readonly LatencyChoice[] _latencies =
@@ -329,6 +330,7 @@ public partial class MainWindow : Window
         ResetAtomicControlPanel();
         SetNavigationExpanded(true);
         SetInspectorExpanded(true);
+        SetDeviceListExpanded(false);
         RefreshRecentFiles();
         RefreshAll();
         HomeNavigationButton.IsChecked = true;
@@ -1707,6 +1709,30 @@ public partial class MainWindow : Window
             ? Visibility.Collapsed
             : Visibility.Visible;
         UpdateConfigurationEditorsToggleText();
+    }
+
+    private void ToggleDeviceListButton_Click(object sender, RoutedEventArgs e)
+    {
+        SetDeviceListExpanded(!_deviceListExpanded);
+    }
+
+    private void SetDeviceListExpanded(bool expanded)
+    {
+        _deviceListExpanded = expanded;
+        DeviceListPanel.Visibility = expanded ? Visibility.Visible : Visibility.Collapsed;
+        DeviceListRow.Height = expanded
+            ? new GridLength(1.5, GridUnitType.Star)
+            : new GridLength(0);
+
+        string action = expanded
+            ? "Masquer la liste des machines"
+            : "Afficher la liste des machines";
+        ToggleDeviceListButton.Content = expanded ? "\u25B2" : "\u25BC";
+        ToggleDeviceListButton.ToolTip = LocalizeLiteral(action);
+        AutomationProperties.SetName(ToggleDeviceListButton, LocalizeLiteral(action));
+        AutomationProperties.SetHelpText(
+            ToggleDeviceListButton,
+            LocalizeLiteral("Affiche ou masque la liste et les filtres des machines."));
     }
 
     private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -5336,22 +5362,32 @@ public partial class MainWindow : Window
         LatencyComboBox.IsEnabled = device.SupportsLatency;
         PreferredMasterCheckBox.IsEnabled = device.SupportsPreferredMaster;
 
-        string networkHelp = CapabilityHelp(
-            device,
+        string redundantHelp = CapabilityToolTipService.ForDevice(
+            _language,
+            device.Name,
             device.SupportsNetworkMode,
-            "le mode redondant",
-            "redundancy mode",
+            "le mode réseau Redondant",
+            "Redundant network mode",
             "redundancy");
-        RedundantRadioButton.ToolTip = networkHelp;
-        DaisychainRadioButton.ToolTip = networkHelp;
-        LatencyComboBox.ToolTip = CapabilityHelp(
-            device,
+        string daisychainHelp = CapabilityToolTipService.ForDevice(
+            _language,
+            device.Name,
+            device.SupportsNetworkMode,
+            "le mode réseau Daisychain",
+            "Daisychain network mode",
+            "redundancy");
+        RedundantRadioButton.ToolTip = redundantHelp;
+        DaisychainRadioButton.ToolTip = daisychainHelp;
+        LatencyComboBox.ToolTip = CapabilityToolTipService.ForDevice(
+            _language,
+            device.Name,
             device.SupportsLatency,
             "la latence unicast",
             "unicast latency",
             "unicast_latency");
-        PreferredMasterCheckBox.ToolTip = CapabilityHelp(
-            device,
+        PreferredMasterCheckBox.ToolTip = CapabilityToolTipService.ForDevice(
+            _language,
+            device.Name,
             device.SupportsPreferredMaster,
             "Preferred Master",
             "Preferred Master",
@@ -5390,25 +5426,6 @@ public partial class MainWindow : Window
             : _language == UiLanguage.English
                 ? $"Unavailable for this Dante role: {string.Join(", ", unavailable)}. DCE preserves the XML and does not create missing technical tags."
                 : $"Non pris en charge par ce rôle Dante : {string.Join(", ", unavailable)}. DCE préserve le XML et ne crée pas les balises techniques absentes.";
-    }
-
-    private string CapabilityHelp(
-        DanteDevice device,
-        bool supported,
-        string frenchSetting,
-        string englishSetting,
-        string xmlElement)
-    {
-        if (supported)
-        {
-            return _language == UiLanguage.English
-                ? $"{englishSetting} is available for {device.Name}."
-                : $"{frenchSetting} est disponible pour {device.Name}.";
-        }
-
-        return _language == UiLanguage.English
-            ? $"Unavailable for {device.Name}: this Dante role does not expose the <{xmlElement}> setting. DCE will not create it."
-            : $"Indisponible pour {device.Name} : ce rôle Dante n'expose pas la balise <{xmlElement}>. DCE ne la créera pas.";
     }
 
     private void RefreshRecentFiles()
@@ -5512,6 +5529,7 @@ public partial class MainWindow : Window
         LanguageLabelTextBlock.Text = T("Language.Label");
         TranslateDependencyObject(this, []);
         UpdateConfigurationEditorsToggleText();
+        SetDeviceListExpanded(_deviceListExpanded);
         ApplyDataGridColumnHeaders();
         RefreshPendingPatchWorkspace();
         RefreshGlobalSearchResults();
@@ -5690,41 +5708,57 @@ public partial class MainWindow : Window
         bool hasEncoding,
         bool hasPreferredMaster)
     {
-        string networkHelp = GlobalCapabilityHelp(
+        string redundantHelp = CapabilityToolTipService.ForTarget(
+            _language,
             hasNetworkMode,
-            "le mode redondant",
-            "redundancy mode",
+            "le mode Redondant",
+            "Redundant mode",
             "redundancy");
-        SetCapabilityToolTip(
-            networkHelp,
-            ApplyAllNetworkButton,
-            GlobalRedundantRadioButton,
-            GlobalDaisychainRadioButton);
-        string ipHelp = GlobalCapabilityHelp(
+        string networkButtonHelp = CapabilityToolTipService.ForTarget(
+            _language,
+            hasNetworkMode,
+            "le mode réseau choisi",
+            "the selected network mode",
+            "redundancy");
+        SetCapabilityToolTip(networkButtonHelp, ApplyAllNetworkButton);
+        SetCapabilityToolTip(redundantHelp, GlobalRedundantRadioButton);
+        string daisychainHelp = CapabilityToolTipService.ForTarget(
+            _language,
+            hasNetworkMode,
+            "le mode Daisychain",
+            "Daisychain mode",
+            "redundancy");
+        SetCapabilityToolTip(daisychainHelp, GlobalDaisychainRadioButton);
+        string ipHelp = CapabilityToolTipService.ForTarget(
+            _language,
             hasIp,
             "la configuration IPv4",
             "IPv4 configuration",
             "ipv4_address");
         SetCapabilityToolTip(ipHelp, ApplyAllIpAutoButton, ApplyAllIpStaticButton);
-        string latencyHelp = GlobalCapabilityHelp(
+        string latencyHelp = CapabilityToolTipService.ForTarget(
+            _language,
             hasLatency,
             "la latence unicast",
             "unicast latency",
             "unicast_latency");
         SetCapabilityToolTip(latencyHelp, ApplyAllLatencyButton, GlobalLatencyComboBox);
-        string sampleRateHelp = GlobalCapabilityHelp(
+        string sampleRateHelp = CapabilityToolTipService.ForTarget(
+            _language,
             hasSampleRate,
             "la fréquence d'échantillonnage",
             "sample rate",
             "samplerate");
         SetCapabilityToolTip(sampleRateHelp, ApplyAllSampleRateButton, GlobalSampleRateComboBox);
-        string encodingHelp = GlobalCapabilityHelp(
+        string encodingHelp = CapabilityToolTipService.ForTarget(
+            _language,
             hasEncoding,
             "l'encodage",
             "encoding",
             "encoding");
         SetCapabilityToolTip(encodingHelp, ApplyAllEncodingButton, GlobalEncodingComboBox);
-        string preferredMasterHelp = GlobalCapabilityHelp(
+        string preferredMasterHelp = CapabilityToolTipService.ForTarget(
+            _language,
             hasPreferredMaster,
             "Preferred Master",
             "Preferred Master",
@@ -5742,24 +5776,6 @@ public partial class MainWindow : Window
             control.ToolTip = help;
             ToolTipService.SetShowOnDisabled(control, true);
         }
-    }
-
-    private string GlobalCapabilityHelp(
-        bool available,
-        string frenchSetting,
-        string englishSetting,
-        string xmlElement)
-    {
-        if (available)
-        {
-            return _language == UiLanguage.English
-                ? $"Applies {englishSetting} only to target devices that expose this setting."
-                : $"Applique {frenchSetting} uniquement aux machines de la cible qui exposent ce paramètre.";
-        }
-
-        return _language == UiLanguage.English
-            ? $"Unavailable: no device in this preset exposes <{xmlElement}>. DCE will not create it."
-            : $"Indisponible : aucune machine de ce preset n'expose <{xmlElement}>. DCE ne créera pas cette balise.";
     }
 
     private IEnumerable<Control> EditableControls()

@@ -10,6 +10,8 @@
         WindowState="Maximized"
         SizeChanged="Window_SizeChanged"
         PreviewKeyDown="Window_PreviewKeyDown"
+        ToolTipService.InitialShowDelay="450"
+        ToolTipService.ShowDuration="30000"
         Loaded="Window_Loaded">
     <Window.Resources>
         <converters:ChannelSeriesHandleVisibilityConverter x:Key="ChannelSeriesHandleVisibilityConverter" />
@@ -39,6 +41,12 @@
                        VerticalAlignment="Center" />
         </DataTemplate>
 
+        <DataTemplate x:Key="WrappingToolTipContentTemplate">
+            <TextBlock Text="{Binding}"
+                       MaxWidth="440"
+                       TextWrapping="Wrap" />
+        </DataTemplate>
+
         <!-- Styles globaux de l'application. Les couleurs changent via SetTheme dans MainWindow.xaml.cs. -->
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
@@ -49,6 +57,17 @@
             <Setter Property="Foreground" Value="{DynamicResource MutedTextBrush}" />
             <Setter Property="Padding" Value="0,8,0,4" />
             <Setter Property="ContentTemplate" Value="{StaticResource WrappingLabelContentTemplate}" />
+        </Style>
+
+        <Style TargetType="{x:Type ToolTip}">
+            <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderLineBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="9,6" />
+            <Setter Property="MaxWidth" Value="480" />
+            <Setter Property="ContentTemplate"
+                    Value="{StaticResource WrappingToolTipContentTemplate}" />
         </Style>
 
         <DataTemplate x:Key="WhiteListTextTemplate">
@@ -119,6 +138,28 @@
                     <Setter Property="Cursor" Value="Arrow" />
                 </Trigger>
             </Style.Triggers>
+        </Style>
+
+        <Style x:Key="PanelRevealButtonStyle"
+               TargetType="{x:Type Button}"
+               BasedOn="{StaticResource SecondaryButtonStyle}">
+            <Setter Property="Width" Value="40" />
+            <Setter Property="MinWidth" Value="40" />
+            <Setter Property="Height" Value="40" />
+            <Setter Property="MinHeight" Value="40" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+
+        <Style x:Key="ConfigurationSecondaryButtonStyle"
+               TargetType="{x:Type Button}"
+               BasedOn="{StaticResource SecondaryButtonStyle}">
+            <Setter Property="Padding" Value="9,5" />
+            <Setter Property="MinHeight" Value="30" />
+            <Setter Property="Margin" Value="0,0,6,5" />
+            <Setter Property="FontSize" Value="11" />
         </Style>
 
         <Style TargetType="{x:Type Menu}">
@@ -1006,13 +1047,8 @@
                     Visibility="Visible"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Width="40"
-                    MinHeight="82"
-                    Padding="6,16"
-                    FontSize="18"
-                    FontWeight="Bold"
                     Panel.ZIndex="2"
-                    Style="{StaticResource SecondaryButtonStyle}"
+                    Style="{StaticResource PanelRevealButtonStyle}"
                     Click="NavigationToggleButton_Click"
                     ToolTip="Masquer navigation"
                     AutomationProperties.Name="Masquer navigation"
@@ -1030,7 +1066,7 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition x:Name="ConfigurationEditorsRow" Height="8*" />
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="1.5*" />
+                                <RowDefinition x:Name="DeviceListRow" Height="0" />
                             </Grid.RowDefinitions>
 
                             <Border Grid.Row="0"
@@ -1063,10 +1099,35 @@
 
                             <Grid x:Name="ConfigurationEditorsRegion" Grid.Row="1">
                                 <ScrollViewer x:Name="ConfigurationEditorsScrollViewer"
-                                              Margin="0,0,0,14"
+                                              Margin="0,0,0,8"
                                               VerticalScrollBarVisibility="Auto"
                                               HorizontalScrollBarVisibility="Disabled">
                             <Grid x:Name="ConfigurationEditorsGrid">
+                                <Grid.Resources>
+                                    <Style TargetType="{x:Type Button}"
+                                           BasedOn="{StaticResource {x:Type Button}}">
+                                        <Setter Property="Padding" Value="9,5" />
+                                        <Setter Property="MinHeight" Value="30" />
+                                        <Setter Property="Margin" Value="0,0,6,5" />
+                                        <Setter Property="FontSize" Value="11" />
+                                    </Style>
+                                    <Style TargetType="{x:Type Label}"
+                                           BasedOn="{StaticResource {x:Type Label}}">
+                                        <Setter Property="Padding" Value="0,5,0,2" />
+                                    </Style>
+                                    <Style TargetType="{x:Type CheckBox}"
+                                           BasedOn="{StaticResource {x:Type CheckBox}}">
+                                        <Setter Property="Margin" Value="0,4,0,4" />
+                                    </Style>
+                                    <Style TargetType="{x:Type RadioButton}"
+                                           BasedOn="{StaticResource {x:Type RadioButton}}">
+                                        <Setter Property="Margin" Value="0,4,10,4" />
+                                    </Style>
+                                    <Style TargetType="{x:Type TextBox}"
+                                           BasedOn="{StaticResource {x:Type TextBox}}">
+                                        <Setter Property="Padding" Value="7,4" />
+                                    </Style>
+                                </Grid.Resources>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1.1*" />
                                     <ColumnDefinition Width="1.05*" />
@@ -1148,7 +1209,7 @@
                                             <Button x:Name="OpenDeviceDetailsButton"
                                                     Grid.Column="1"
                                                     Content="Détail machine"
-                                                    Style="{StaticResource SecondaryButtonStyle}"
+                                                    Style="{StaticResource ConfigurationSecondaryButtonStyle}"
                                                     ToolTip="Ouvre tous les réglages de la machine : IP automatique ou fixe, formats audio et noms des canaux."
                                                     Click="OpenDeviceDetailsButton_Click" />
                                         </Grid>
@@ -1159,22 +1220,22 @@
                                                      Columns="2" Margin="0,2,0,0">
                                             <Button x:Name="ResetDeviceRxPatchesButton"
                                                     Content="Reset RX"
-                                                    Style="{StaticResource SecondaryButtonStyle}"
+                                                    Style="{StaticResource ConfigurationSecondaryButtonStyle}"
                                                     ToolTip="Déconnecte seulement les entrées RX de la machine sélectionnée."
                                                     Click="ResetDeviceRxPatchesButton_Click" />
                                             <Button x:Name="ResetDeviceTxPatchesButton"
                                                     Content="Reset TX"
-                                                    Style="{StaticResource SecondaryButtonStyle}"
+                                                    Style="{StaticResource ConfigurationSecondaryButtonStyle}"
                                                     ToolTip="Supprime seulement les patchs qui utilisent les TX de la machine sélectionnée."
                                                     Click="ResetDeviceTxPatchesButton_Click" />
                                             <Button x:Name="ResetDevicePatchesButton"
                                                     Content="Reset RX/TX"
-                                                    Style="{StaticResource SecondaryButtonStyle}"
+                                                    Style="{StaticResource ConfigurationSecondaryButtonStyle}"
                                                     ToolTip="Déconnecte les RX de la machine et supprime les patchs qui utilisent ses TX."
                                                     Click="ResetDevicePatchesButton_Click" />
                                             <Button x:Name="DeleteDeviceButton"
                                                     Content="Supprimer"
-                                                    Style="{StaticResource SecondaryButtonStyle}"
+                                                    Style="{StaticResource ConfigurationSecondaryButtonStyle}"
                                                     ToolTip="Supprime la machine et nettoie les patchs qui lui sont associés."
                                                     Click="DeleteDeviceButton_Click" />
                                          </UniformGrid>
@@ -1185,12 +1246,12 @@
                                                       Margin="0,2,0,0">
                                              <Button x:Name="DuplicateDeviceButton"
                                                      Content="Dupliquer"
-                                                     Style="{StaticResource SecondaryButtonStyle}"
+                                                     Style="{StaticResource ConfigurationSecondaryButtonStyle}"
                                                      ToolTip="Crée un rôle générique indépendant sans recopier l'identité matérielle."
                                                      Click="DuplicateDeviceButton_Click" />
                                              <Button x:Name="SaveDeviceToBankButton"
                                                      Content="Enregistrer dans la banque"
-                                                     Style="{StaticResource SecondaryButtonStyle}"
+                                                     Style="{StaticResource ConfigurationSecondaryButtonStyle}"
                                                      ToolTip="Crée un modèle réutilisable et partageable à partir de cette machine."
                                                      Click="SaveDeviceToBankButton_Click" />
                                          </UniformGrid>
@@ -1260,7 +1321,7 @@
                                                 <TextBox x:Name="BatchRenameStartTextBox" Text="1" />
                                             </StackPanel>
                                         </Grid>
-                                        <Button x:Name="BatchRenameButton" Content="Renommer la série" Style="{StaticResource SecondaryButtonStyle}" Click="BatchRenameButton_Click" />
+                                        <Button x:Name="BatchRenameButton" Content="Renommer la série" Style="{StaticResource ConfigurationSecondaryButtonStyle}" Click="BatchRenameButton_Click" />
                                     </StackPanel>
                                 </GroupBox>
 
@@ -1296,7 +1357,7 @@
                                                         <Label Content="Latence globale" />
                                                         <ComboBox x:Name="GlobalLatencyComboBox" ToolTip="La valeur affichée est en ms. Le XML conserve la valeur brute Dante." />
                                                         <Button x:Name="ApplyAllLatencyButton" Content="Appliquer la latence à tous" Click="ApplyAllLatencyButton_Click" ToolTip="Applique la latence à la cible choisie après prévisualisation." />
-                                                        <Button x:Name="ResetAllChannelsButton" Content="Réinitialiser tous les canaux" Style="{StaticResource SecondaryButtonStyle}" Click="ResetAllChannelsButton_Click" ToolTip="Réinitialise les noms de canaux TX/RX de la cible choisie, en respectant les verrous." />
+                                                        <Button x:Name="ResetAllChannelsButton" Content="Réinitialiser tous les canaux" Style="{StaticResource ConfigurationSecondaryButtonStyle}" Click="ResetAllChannelsButton_Click" ToolTip="Réinitialise les noms de canaux TX/RX de la cible choisie, en respectant les verrous." />
                                                     </StackPanel>
 
                                                     <StackPanel Grid.Column="1">
@@ -1412,7 +1473,7 @@
                                                             MinHeight="28"
                                                             Padding="9,4"
                                                             Margin="0"
-                                                            Style="{StaticResource SecondaryButtonStyle}"
+                                                            Style="{StaticResource ConfigurationSecondaryButtonStyle}"
                                                             Click="ShowQuickListButton_Click"
                                                             ToolTip="Affiche la liste de contrôle sélectionnée." />
                                                 </Grid>
@@ -1427,6 +1488,7 @@
                                     Panel.ZIndex="5"
                                     Content="&#x25B2;"
                                     Style="{StaticResource SecondaryButtonStyle}"
+                                    Visibility="Collapsed"
                                     Width="48"
                                     MinWidth="48"
                                     Height="26"
@@ -1441,6 +1503,38 @@
                             </Grid>
 
                             <Border Grid.Row="2"
+                                    Background="{DynamicResource SurfaceBrush}"
+                                    BorderBrush="{DynamicResource BorderLineBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="6"
+                                    Padding="6"
+                                    Margin="0,0,0,10">
+                                <DockPanel LastChildFill="True">
+                                    <Button x:Name="ToggleDeviceListButton"
+                                            DockPanel.Dock="Right"
+                                            Content="&#x25BC;"
+                                            Style="{StaticResource PanelRevealButtonStyle}"
+                                            Click="ToggleDeviceListButton_Click"
+                                            ToolTip="Afficher la liste des machines"
+                                            AutomationProperties.Name="Afficher la liste des machines"
+                                            AutomationProperties.HelpText="Affiche ou masque la liste et les filtres des machines." />
+                                    <TextBlock x:Name="DeviceListTitleTextBlock"
+                                               Text="Liste des machines"
+                                               FontWeight="SemiBold"
+                                               VerticalAlignment="Center"
+                                               Margin="6,0,12,0" />
+                                </DockPanel>
+                            </Border>
+
+                            <Grid x:Name="DeviceListPanel"
+                                  Grid.Row="3"
+                                  Visibility="Collapsed">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                            <Border Grid.Row="0"
                                     Background="{DynamicResource SurfaceBrush}"
                                     BorderBrush="{DynamicResource BorderLineBrush}"
                                     BorderThickness="1"
@@ -1494,7 +1588,7 @@
                             </Border>
 
                             <DataGrid x:Name="DeviceGrid"
-                                      Grid.Row="3"
+                                      Grid.Row="1"
                                       MinHeight="160"
                                       SelectionMode="Extended"
                                       SelectionUnit="FullRow"
@@ -1549,6 +1643,7 @@
                                     <DataGridTextColumn Header="RX" Binding="{Binding RxCount}" Width="0.7*" />
                                 </DataGrid.Columns>
                             </DataGrid>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </TabItem>
@@ -3092,13 +3187,8 @@
                     Visibility="Visible"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Width="40"
-                    MinHeight="82"
-                    Padding="6,16"
-                    FontSize="18"
-                    FontWeight="Bold"
                     Panel.ZIndex="2"
-                    Style="{StaticResource SecondaryButtonStyle}"
+                    Style="{StaticResource PanelRevealButtonStyle}"
                     Click="InspectorToggleButton_Click"
                     ToolTip="Masquer inspecteur"
                     AutomationProperties.Name="Masquer inspecteur"

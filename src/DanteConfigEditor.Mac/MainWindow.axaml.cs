@@ -64,6 +64,7 @@ public partial class MainWindow : Window
     private bool _editEnabled;
     private bool _initializing = true;
     private bool _configurationEditorsExpanded = true;
+    private bool _deviceListExpanded;
     private AtomicPanelStage _atomicPanelStage = AtomicPanelStage.Safe;
 
     public MainWindow()
@@ -80,6 +81,7 @@ public partial class MainWindow : Window
         Closing += MainWindow_Closing;
         ConfigureChoiceLists();
         SetConfigurationEditorsExpanded(true);
+        SetDeviceListExpanded(false);
         RefreshRecentFiles();
         ApplyTheme();
         RefreshAll();
@@ -523,6 +525,28 @@ public partial class MainWindow : Window
             expanded
                 ? L("Masquer les réglages", "Hide settings")
                 : L("Afficher les réglages", "Show settings"));
+    }
+
+    private void DeviceListRevealButton_Click(object? sender, RoutedEventArgs e)
+    {
+        SetDeviceListExpanded(!_deviceListExpanded);
+    }
+
+    private void SetDeviceListExpanded(bool expanded)
+    {
+        _deviceListExpanded = expanded;
+        FindControl<Grid>("DeviceListPanel")!.IsVisible = expanded;
+        FindControl<Grid>("ConfigurationPageGrid")!.RowDefinitions[3].Height = expanded
+            ? new GridLength(1.5, GridUnitType.Star)
+            : new GridLength(0);
+
+        Button revealButton = FindControl<Button>("DeviceListRevealButton")!;
+        revealButton.Content = expanded ? "▲" : "▼";
+        ToolTip.SetTip(
+            revealButton,
+            expanded
+                ? L("Masquer la liste des machines", "Hide device list")
+                : L("Afficher la liste des machines", "Show device list"));
     }
 
     private async void ApplyDeviceButton_Click(object? sender, RoutedEventArgs e)
@@ -2402,6 +2426,7 @@ public partial class MainWindow : Window
         FindControl<MenuItem>("ThemeMenuItem")!.Header =
             _darkTheme ? L("Thème clair", "Light theme") : L("Thème sombre", "Dark theme");
         SetConfigurationEditorsExpanded(_configurationEditorsExpanded);
+        SetDeviceListExpanded(_deviceListExpanded);
         UpdateAtomicControlPanelState();
     }
 

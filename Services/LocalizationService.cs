@@ -1127,6 +1127,7 @@ public static class LocalizationService
         Add(map, "Importez des labels JSON/CSV, DMT XLSX/ODS, A&H CSV ou Yamaha CL/QL ZIP/CSV.", "Import JSON/CSV labels, DMT XLSX/ODS, A&H CSV, or Yamaha CL/QL ZIP/CSV.");
         Add(map, "Exportez en générique ou créez une copie d'un modèle DMT, A&H ou Yamaha.", "Export a generic file or create a copy of a DMT, A&H, or Yamaha template.");
         Add(map, "Détecte les formats génériques, DMT, A&H et Yamaha, puis prévisualise les labels avant de les appliquer aux machines Dante.", "Detects generic, DMT, A&H, and Yamaha formats, then previews labels before applying them to Dante devices.");
+        Add(map, "Construit la liste des renommages sans modifier le XML.", "Builds the rename list without changing the XML.");
         Add(map, "Exporte les labels TX/RX et ne modifie jamais les modèles DMT, A&H ou Yamaha originaux.", "Exports Tx/Rx labels and never modifies the original DMT, A&H, or Yamaha templates.");
         Add(map, "Compatibilité DMT dLive / Avantis - ouvrir le projet", "DMT dLive / Avantis compatibility - open project");
         Add(map, "Ouvre la page GitHub de dLive MIDI Tools par togrupe, dont les modèles dLive et Avantis sont compatibles.", "Opens the dLive MIDI Tools GitHub page by togrupe, whose dLive and Avantis templates are supported.");
@@ -1181,6 +1182,13 @@ public static class LocalizationService
         Add(map, "Easy patch / Matrice", "Easy patch / Matrix");
         Add(map, "Consultez chaque RX et sa source actuelle, ou ouvrez l’atelier pour patcher dans la matrice.", "Review each Rx channel and its current source, or open the workspace to patch in the matrix.");
         Add(map, "Ouvre Easy patch et la matrice. Chaque action y est appliquée immédiatement.", "Opens Easy patch and the matrix. Every action is applied immediately.");
+        Add(map, "Coché : demande confirmation avant de remplacer la source actuelle d'un RX.", "Checked: asks for confirmation before replacing an Rx channel's current source.");
+        Add(map, "Inverser les machines TX et RX sans modifier le patch", "Swap Tx and Rx devices without changing the patch");
+        Add(map, "Cliquez pour renommer le canal RX ; Entrée valide, Échap annule.", "Click to rename the Rx channel; Enter confirms, Esc cancels.");
+        Add(map, "Cliquez pour renommer le canal TX ; Entrée valide, Échap annule.", "Click to rename the Tx channel; Enter confirms, Esc cancels.");
+        Add(map, "Applique immédiatement la sélection et les éventuels changements déjà ajoutés au lot.", "Immediately applies the selection and any changes already added to the batch.");
+        Add(map, "Applique immédiatement la plage et les éventuels changements déjà ajoutés au lot.", "Immediately applies the range and any changes already added to the batch.");
+        Add(map, "Cliquez d'abord sur le premier point TX/RX de la grille, choisissez le nombre, puis appliquez la série 1:1.", "First click the initial Tx/Rx point in the matrix, choose the count, then apply the 1:1 series.");
         Add(map, "Affecte immédiatement la source TX choisie au RX sélectionné.", "Immediately assigns the selected Tx source to the selected Rx channel.");
         Add(map, "Déconnecte immédiatement le RX sélectionné.", "Immediately disconnects the selected Rx channel.");
         Add(map, "Ouvre l'onglet Easy patch.", "Opens the Easy patch tab.");
@@ -1267,6 +1275,8 @@ public static class LocalizationService
         Add(map, "Zoom", "Zoom");
         Add(map, "Zoom arrière", "Zoom out");
         Add(map, "Zoom avant", "Zoom in");
+        Add(map, "Réduire le zoom", "Zoom out");
+        Add(map, "Augmenter le zoom", "Zoom in");
         Add(map, "Revenir à la taille réelle", "Return to actual size");
         Add(map, "Ajuster", "Fit");
         Add(map, "Afficher tout le synoptique", "Fit the entire synoptic");
@@ -1495,11 +1505,16 @@ public static class LocalizationService
         Add(map, "Masquer inspecteur", "Hide inspector");
         Add(map, "Afficher inspecteur", "Show inspector");
         Add(map, "Masquer les réglages", "Hide settings");
+        Add(map, "Liste des machines", "Device list");
+        Add(map, "Afficher la liste des machines", "Show device list");
+        Add(map, "Masquer la liste des machines", "Hide device list");
+        Add(map, "Affiche ou masque la liste et les filtres des machines.", "Shows or hides the device list and filters.");
         Add(map, "Vue d'ensemble", "Overview");
         Add(map, "Machines", "Devices");
         Add(map, "Ajouter depuis la banque", "Add from bank");
         Add(map, "Gérer les banques", "Manage banks");
         Add(map, "Ouvre la vue globale des banques et ajoute une nouvelle machine indépendante au projet.", "Opens the global bank view and adds a new independent device to the project.");
+        Add(map, "Ouvre la vue globale des banques et ajoute une machine indépendante au projet.", "Opens the global bank view and adds an independent device to the project.");
         Add(map, "Ouvre la vue globale pour rechercher, filtrer et administrer les banques de machines.", "Opens the global view to search, filter, and manage device banks.");
         Add(map, "Synoptique", "Synoptic");
         Add(map, "Centre de validation", "Validation center");
@@ -1507,6 +1522,7 @@ public static class LocalizationService
         Add(map, "Outils avancés", "Advanced tools");
         Add(map, "Affiche ou masque la navigation principale.", "Shows or hides the main navigation.");
         Add(map, "Crée un nouveau projet hors ligne à partir d'une structure prise en charge.", "Creates a new offline project from a supported structure.");
+        Add(map, "Ajoute les machines d'un autre XML au projet ouvert.", "Adds devices from another XML file to the open project.");
         Add(map, "Enregistre le projet courant. Pour un XML ouvert, une nouvelle destination est demandée.", "Saves the current project. An open XML file requires a new destination.");
         Add(map, "Enregistre sous un nouveau nom avec une sauvegarde de sécurité.", "Saves under a new name with a safety backup.");
         Add(map, "Rétablit la dernière action annulée lorsque la session 2026.1 le permet.", "Redoes the last undone action when the 2026.1 session supports it.");
@@ -1546,6 +1562,7 @@ public static class LocalizationService
         Add(map, "Dernières modifications", "Latest changes");
         Add(map, "La banque stocke des modèles réutilisables dans un dossier lisible et partageable. L'ouverture reste séparée pendant sa migration vers le shell 2026.1.", "The library stores reusable templates in a readable, shareable folder. It remains a separate window while it is migrated into the 2026.1 shell.");
         Add(map, "Ouvre l'administration, l'import, l'export et la migration de la banque.", "Opens library administration, import, export, and migration.");
+        Add(map, "Ouvre la gestion des banques de machines.", "Opens device bank management.");
         Add(map, "Aucun projet", "No project");
         Add(map, "Chargez un projet ou sélectionnez une machine pour afficher ses propriétés.", "Load a project or select a device to display its properties.");
         Add(map, "Aucun projet chargé", "No project loaded");
@@ -1558,6 +1575,8 @@ public static class LocalizationService
         Add(map, "Filtre le Patch autour de la machine sélectionnée.", "Filters Patch around the selected device.");
         Add(map, "Identité technique", "Technical identity");
         Add(map, "Informations avancées conservées par le XML.", "Advanced information retained by the XML.");
+        Add(map, "Place la machine plus haut.", "Moves the device up.");
+        Add(map, "Place la machine plus bas.", "Moves the device down.");
 
         return map;
     }
