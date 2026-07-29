@@ -99,6 +99,24 @@ bank, and the `Bank` column identifies each template's source. Bundled
 templates remain read-only and may be duplicated into the personal bank.
 Updates never replace that personal bank.
 
+### Merging two XML files and role identity
+
+`Add XML to project` keeps the first XML as the baseline and imports compatible
+roles from the second file. DCE compares both names and the technical
+`device_id` / `process_id` pair.
+
+- **Import unique only** reuses the role already present when the same
+  technical identity is found. Imported subscriptions are redirected to its
+  current name.
+- **Automatic or manual rename** retains a second independent role. DCE makes
+  it generic by removing hardware identity, network interfaces, multicast
+  flows, and the Preferred Master state inherited from the other project.
+- DCE never creates a fake `device_id`. Dante Controller can then assign the
+  role to the original device or another compatible device.
+
+This distinction merges two installations without producing two roles with
+the same hardware identity and without losing recognized patch references.
+
 ## Main features
 
 - open, inspect, compare, and merge XML files;

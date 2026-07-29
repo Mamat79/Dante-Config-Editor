@@ -553,6 +553,29 @@ def full_guide(language: str) -> None:
             ]),
             callout("Toutes les captures de cette notice sont générées avec l'interface 2026.1, un preset synthétique anonymisé et la banque publique assainie. Aucun XML de production n'est utilisé.", PALE_BLUE),
         ]
+        guided_workflows = [
+            para("Choisir le bon parcours", "h1"),
+            para("DCE conserve le XML ouvert comme base de travail. Choisissez ensuite la commande selon votre objectif ; les parcours ci-dessous évitent de confondre rôle Dante, modèle de banque et appareil physique."),
+            data_table(
+                ["Objectif", "Point de départ", "Parcours recommandé"],
+                [
+                    ["Contrôler ou corriger un preset", "Projet > Ouvrir un XML Dante", "Vue d'ensemble > Machines ou Patch > Centre de validation > Enregistrer sous."],
+                    ["Fusionner deux installations", "Ouvrir le XML principal", "Ajouter un XML au projet > résoudre les conflits > contrôler les références > Enregistrer sous."],
+                    ["Réutiliser un type de machine", "Machine du projet", "Enregistrer dans la banque > rendre les labels génériques > Ajouter depuis la banque dans un autre projet."],
+                    ["Créer une copie dans le projet", "Machine du projet", "Dupliquer > choisir un nom unique > conserver uniquement les propriétés utiles."],
+                    ["Préparer un projet hors ligne", "Projet > Nouveau projet", "Choisir un premier rôle > ajouter des rôles depuis la banque > patcher > valider > enregistrer."],
+                ],
+                [48, 48, 74],
+            ),
+            para("Rôle, modèle et appareil réel", "h2"),
+            *bullets([
+                "Un rôle Dante est une place dans un preset. Dante Controller peut l'affecter à l'appareil d'origine ou à un autre appareil compatible.",
+                "Un modèle de banque est un rôle assaini et réutilisable : il ne contient ni device_id matériel, ni IP, ni référence vers le projet source.",
+                "Dupliquer ou renommer un conflit d'identité crée un rôle hors ligne générique ; DCE n'invente jamais un faux identifiant matériel.",
+                "La validation DCE protège la structure XML. L'affectation finale des rôles et le contrôle du matériel se font dans Dante Controller.",
+            ]),
+            callout("Conseil : gardez le XML exporté par Dante Controller intact, travaillez sur une copie et utilisez Enregistrer sous pour chaque scénario important.", PALE_GREEN),
+        ]
         page2 = [
             para("5. Page Machines", "h1"),
             para("La page Machines rassemble les actions globales, une liste de contrôle compacte, la machine sélectionnée, ses canaux, le tableau général et l'accès aux banques."),
@@ -645,9 +668,10 @@ def full_guide(language: str) -> None:
             ),
             para("10. Ajouter un XML au projet", "h1"),
             *bullets([
-                "Les machines dont le nom est unique sont toujours importées.",
-                "Seuls les doublons sont proposés au renommage automatique ou manuel.",
-                "Les patchs importés suivent les nouveaux noms des machines renommées.",
+                "DCE compare les noms et les identités techniques avant de modifier le projet ouvert.",
+                "Importer uniques seulement conserve le rôle déjà présent lorsqu'il représente la même identité et redirige vers lui les subscriptions importées.",
+                "Un renommage automatique ou manuel conserve un second rôle, mais le rend générique : son instance_id/device_id matériel n'est pas copié.",
+                "Les patchs importés suivent le nom final choisi ou le rôle existant réutilisé.",
             ]),
             para("11. IP et formats audio", "h1"),
             *bullets([
@@ -717,7 +741,7 @@ def full_guide(language: str) -> None:
                 [48, 122],
             ),
             para("15. Tests de non-régression", "h1"),
-            para("La suite 2026.1 exécute 419 tests Core/Windows et 22 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, le refus des balises techniques absentes, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la duplication, la banque de machines, la création de projet, le format .dceproj, les profils XML, les commandes, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch, le soutien facultatif et la cohérence des traductions."),
+            para("La suite 2026.1 exécute 422 tests Core/Windows et 22 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, le refus des balises techniques absentes, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la fusion avec réutilisation d'identité ou rôle générique, la duplication, la banque de machines, la création de projet, le format .dceproj, les profils XML, les commandes, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch, le soutien facultatif et la cohérence des traductions."),
             para("16. Limites connues", "h1"),
             *bullets([
                 "Aucun pilotage en temps réel et aucune communication avec les appareils.",
@@ -972,26 +996,31 @@ def full_guide(language: str) -> None:
         ]
         merge_detailed = [
             para("Ajouter un autre XML au projet ouvert", "h1"),
-            para("Cette commande fusionne des machines déjà décrites dans un second preset. Elle est différente d'un ajout depuis la banque : le second XML conserve sa structure de machine et ses patchs internes compatibles."),
+            para("Cette commande fusionne les rôles décrits dans un second preset. Elle est différente d'un ajout depuis la banque : le second XML conserve sa structure compatible et ses subscriptions internes, tandis que DCE protège les identités matérielles qui ne peuvent pas être dupliquées."),
             data_table(
                 ["Étape", "Ce que fait DCE"],
                 [
                     ["1. Ouvrir le projet principal", "Ce XML reste la base de la session et de la sauvegarde."],
                     ["2. Ajouter XML au projet", "DCE charge et valide le second fichier sans modifier son original."],
                     ["3. Vérifier le format", "Version de preset et namespace doivent être identiques."],
-                    ["4. Gérer les doublons", "Seuls les noms déjà utilisés sont proposés : ignorer, suffixe automatique personnalisé ou noms manuels."],
-                    ["5. Adapter les références", "Les subscriptions importées suivent les machines du second XML qui ont été renommées."],
-                    ["6. Contrôler", "Le résultat indique machines ajoutées, renommées et doublons ignorés."],
+                    ["4. Détecter les conflits", "DCE signale un nom déjà utilisé ou une même paire device_id/process_id, même si les noms diffèrent."],
+                    ["5. Choisir le résultat", "Réutiliser le rôle existant, ou renommer pour créer un second rôle générique indépendant."],
+                    ["6. Adapter les références", "Les subscriptions importées suivent le rôle réutilisé ou le nouveau nom choisi."],
+                    ["7. Contrôler", "Le bilan sépare rôles ajoutés, réutilisés, renommés et ignorés."],
                 ],
                 [50, 120],
             ),
             Spacer(1, 3 * mm),
-            callout("Les machines dont le nom ne crée aucun conflit sont toujours ajoutées. Le suffixe automatique est normalisé sans parenthèses.", PALE_GREEN),
+            callout("<b>Importer uniques seulement :</b> si la même identité technique existe déjà, DCE garde le rôle courant et redirige vers son nom les subscriptions du second XML. <b>Renommer :</b> DCE importe un rôle générique sans recopier instance_id/device_id, interface réseau, flow multicast ni Preferred Master.", PALE_GREEN),
             *bullets([
+                "DCE ne génère pas de faux EUI-64. Une nouvelle identité matérielle appartient à l'appareil réel auquel Dante Controller affectera le rôle.",
+                "Le nouveau rôle générique conserve la structure compatible, les labels, les réglages de rôle et les subscriptions qui peuvent être résolues dans le projet fusionné.",
+                "Le suffixe automatique est personnalisable et normalisé sans parenthèses.",
                 "Un XML invalide, une version différente ou un namespace différent bloque toute la fusion.",
                 "Un nom final déjà utilisé bloque l'opération au lieu de produire un doublon ambigu.",
                 "La fusion est annulable. Utilisez ensuite le Centre de validation et Avant / après avant Enregistrer sous.",
             ]),
+            para("Cette logique suit le principe des presets Dante : un rôle sauvegardé peut être affecté dans Dante Controller à l'appareil d'origine ou à un autre appareil compatible. Documentation Audinate : dev.audinate.com/GA/dante-controller/userguide/webhelp/content/applying_presets.htm", "small"),
         ]
         bank_concept_page = [
             para("Comprendre la banque de machines", "h1"),
@@ -1158,6 +1187,29 @@ def full_guide(language: str) -> None:
             ]),
             callout("Every screenshot in this guide is generated with the 2026.1 interface, an anonymized synthetic preset, and the sanitized public bank. No production XML is used.", PALE_BLUE),
         ]
+        guided_workflows = [
+            para("Choose the right workflow", "h1"),
+            para("DCE keeps the open XML as the working baseline. Choose the command that matches your goal; the workflows below separate Dante roles, bank templates, and physical devices."),
+            data_table(
+                ["Goal", "Start", "Recommended workflow"],
+                [
+                    ["Review or correct a preset", "Project > Open Dante XML", "Overview > Devices or Patch > Validation center > Save as."],
+                    ["Merge two installations", "Open the main XML", "Add XML to project > resolve conflicts > review references > Save as."],
+                    ["Reuse a device type", "Device in the project", "Save to device bank > make labels generic > Add from bank in another project."],
+                    ["Create a copy in this project", "Device in the project", "Duplicate > choose a unique name > retain only the required properties."],
+                    ["Prepare an offline project", "Project > New project", "Choose an initial role > add bank roles > patch > validate > save."],
+                ],
+                [48, 48, 74],
+            ),
+            para("Role, template, and physical device", "h2"),
+            *bullets([
+                "A Dante role is a position in a preset. Dante Controller can assign it to the original device or to another compatible device.",
+                "A bank template is a sanitized reusable role: it contains no hardware device_id, IP address, or reference to the source project.",
+                "Duplicating a role or renaming an identity conflict creates a generic offline role; DCE never invents a fake hardware identifier.",
+                "DCE validation protects XML structure. Final role assignment and hardware checks take place in Dante Controller.",
+            ]),
+            callout("Recommendation: keep the XML exported by Dante Controller unchanged, work on a copy, and use Save as for every significant scenario.", PALE_GREEN),
+        ]
         page2 = [
             para("5. Devices page", "h1"),
             para("The Devices page combines the template bank, quick lists, global actions, the selected device, its channels, and the complete device table."),
@@ -1250,9 +1302,10 @@ def full_guide(language: str) -> None:
             ),
             para("10. Add XML to project", "h1"),
             *bullets([
-                "Devices with unique names are always imported.",
-                "Only conflicting names are offered for automatic or manual rename.",
-                "Imported subscriptions follow renamed imported devices.",
+                "DCE compares names and technical identities before changing the open project.",
+                "Import unique only retains the existing role when it represents the same identity and redirects imported subscriptions to it.",
+                "Automatic or manual rename retains a second role but makes it generic: its hardware instance_id/device_id is not copied.",
+                "Imported subscriptions follow the final selected name or the reused existing role.",
             ]),
             para("11. IP and audio formats", "h1"),
             *bullets([
@@ -1322,7 +1375,7 @@ def full_guide(language: str) -> None:
                 [48, 122],
             ),
             para("15. Regression tests", "h1"),
-            para("The 2026.1 suite runs 419 Core/Windows tests and 22 headless Mac tests. Coverage includes XML guards, rejection of missing technical elements, save and recovery, IPv4 interfaces, subscriptions, large presets, duplication, the device bank, project creation, .dceproj packages, XML profiles, commands, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, optional support, and translation consistency."),
+            para("The 2026.1 suite runs 422 Core/Windows tests and 22 headless Mac tests. Coverage includes XML guards, rejection of missing technical elements, save and recovery, IPv4 interfaces, subscriptions, large presets, merge reuse and generic-role handling, duplication, the device bank, project creation, .dceproj packages, XML profiles, commands, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, optional support, and translation consistency."),
             para("16. Known limitations", "h1"),
             *bullets([
                 "No real-time Dante control and no communication with devices.",
@@ -1577,26 +1630,31 @@ def full_guide(language: str) -> None:
         ]
         merge_detailed = [
             para("Add another XML file to the open project", "h1"),
-            para("This command merges devices already described by a second preset. It differs from adding from the bank: the second XML retains its compatible device structure and internal subscriptions."),
+            para("This command merges roles described by a second preset. It differs from adding from the bank: the second XML retains its compatible role structure and internal subscriptions, while DCE protects hardware identities that cannot be duplicated."),
             data_table(
                 ["Step", "What DCE does"],
                 [
                     ["1. Open the main project", "This XML remains the session and save baseline."],
                     ["2. Add XML to project", "DCE loads and validates the second file without modifying its original."],
                     ["3. Verify format", "Preset version and namespace must match."],
-                    ["4. Resolve duplicates", "Only used names are offered: skip, custom automatic suffix, or manual names."],
-                    ["5. Adapt references", "Imported subscriptions follow renamed devices from the second XML."],
-                    ["6. Review", "The result reports added, renamed, and skipped duplicate devices."],
+                    ["4. Detect conflicts", "DCE reports a used name or the same device_id/process_id pair, even when names differ."],
+                    ["5. Choose the result", "Reuse the existing role, or rename to create a second independent generic role."],
+                    ["6. Adapt references", "Imported subscriptions follow the reused role or the selected new name."],
+                    ["7. Review", "The result separates added, reused, renamed, and skipped roles."],
                 ],
                 [50, 120],
             ),
             Spacer(1, 3 * mm),
-            callout("Devices whose names do not conflict are always added. The automatic suffix is normalized without parentheses.", PALE_GREEN),
+            callout("<b>Import unique only:</b> when the same technical identity already exists, DCE keeps the current role and redirects second-XML subscriptions to its name. <b>Rename:</b> DCE imports a generic role without copying instance_id/device_id, network interfaces, multicast flows, or Preferred Master.", PALE_GREEN),
             *bullets([
+                "DCE does not generate fake EUI-64 values. A new hardware identity belongs to the physical device to which Dante Controller assigns the role.",
+                "The generic role retains compatible structure, labels, role settings, and subscriptions that can be resolved in the merged project.",
+                "The automatic suffix is customizable and normalized without parentheses.",
                 "Invalid XML, a different preset version, or a different namespace blocks the complete merge.",
                 "A final name that is already used blocks the operation instead of producing an ambiguous duplicate.",
                 "The merge can be undone. Review the Validation center and Before / after before Save as.",
             ]),
+            para("This follows the Dante preset model: a saved role can be assigned in Dante Controller to its original device or another compatible device. Audinate documentation: dev.audinate.com/GA/dante-controller/userguide/webhelp/content/applying_presets.htm", "small"),
         ]
         bank_concept_page = [
             para("Understand the device bank", "h1"),
@@ -1733,6 +1791,7 @@ def full_guide(language: str) -> None:
         cover_page(language),
         page1,
         workspace_page,
+        guided_workflows,
         screen_map,
         visual_overview,
         page2,

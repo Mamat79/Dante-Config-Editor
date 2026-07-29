@@ -54,6 +54,14 @@ Audinate. It only works on offline files.
   onto multiple lines instead of clipping long explanations;
 - a more compact Patch matrix, larger side-panel arrows, and Show in Patch
   opening directly on the selected device;
+- corrected XML merge when two presets contain the same
+  `device_id` / `process_id` pair: explicit reuse of the existing role or
+  creation of an independent generic role after rename, with no fake hardware
+  identifier;
+- second-XML subscriptions redirected to the reused existing role or the
+  selected new name;
+- reorganized French and English full guides around bank, new-project, XML
+  merge, patch, rename, and synoptic workflows;
 - isolated 2026.1 local profile.
 
 ## XML fidelity
@@ -85,7 +93,7 @@ For the synthetic 200-device preset with 64 TX and 64 RX per device:
 
 ## Automated validation
 
-- 419 Core/Windows tests passed;
+- 422 Core/Windows tests passed;
 - 22 headless Avalonia/macOS tests passed;
 - Windows Release build completed without warnings;
 - synthetic corpus saved and semantically compared without loss;

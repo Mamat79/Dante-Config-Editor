@@ -14,6 +14,12 @@ Toutes les dates utilisent le calendrier ISO. Les versions antérieures à
   niveau l'installation 2026.1 existante ;
 - vidéo de présentation réorganisée pour expliquer les principaux écrans et
   parcours en français et en anglais.
+- fusion de deux XML corrigée lorsque des rôles partagent la même identité
+  technique : le rôle courant peut être réutilisé, ou le rôle importé peut
+  devenir générique après renommage sans recevoir de faux `device_id` ;
+- subscriptions importées remappées vers le rôle réutilisé ou le nouveau nom ;
+- notices complètes FR/EN enrichies avec des parcours guidés pour la banque,
+  le nouveau projet, la fusion, le patch, le renommage et le synoptique.
 
 ## [2026.1.0-beta.1] - 2026-07-27
 
@@ -120,7 +126,7 @@ La checklist manuelle reste recommandée pour chaque fichier de production.
 
 ### Distribution
 
-- Windows : `DanteConfigEditor2026_1_Beta_Installer.exe` ;
+- Windows : `DanteConfigEditor2026_1_Installer.exe` ;
 - macOS Apple Silicon et Intel : DMG autonomes dédiés ;
-- Release bêta : <https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.1> ;
-- aucune fusion automatique dans `main`.
+- Release officielle : <https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.1> ;
+- branche officielle : `main`.

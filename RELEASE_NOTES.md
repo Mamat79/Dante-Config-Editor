@@ -57,6 +57,15 @@ travaille uniquement sur des fichiers hors ligne.
   plusieurs lignes pour éviter toute phrase tronquée ;
 - matrice Patch plus compacte, flèches latérales plus visibles et ouverture de
   « Voir dans Patch » directement sur la machine sélectionnée ;
+- fusion XML corrigée lorsque deux presets contiennent la même paire
+  `device_id` / `process_id` : réutilisation explicite du rôle existant ou
+  création d'un rôle générique indépendant après renommage, sans faux
+  identifiant matériel ;
+- subscriptions du second XML redirigées vers le rôle existant réutilisé ou
+  vers le nouveau nom choisi ;
+- notice complète française et anglaise réorganisée autour de parcours guidés
+  pour la banque, le nouveau projet, la fusion XML, le patch, le renommage et
+  le synoptique ;
 - profil local 2026.1 isolé.
 
 ## Fidélité XML
@@ -88,7 +97,7 @@ Sur le preset synthétique de 200 machines avec 64 TX et 64 RX chacune :
 
 ## Validation automatisée
 
-- 419 tests Core/Windows réussis ;
+- 422 tests Core/Windows réussis ;
 - 22 tests Avalonia/macOS sans écran réussis ;
 - build Windows Release sans warning ;
 - corpus synthétique sauvegardé et comparé sémantiquement sans perte ;

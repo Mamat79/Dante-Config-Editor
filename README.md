@@ -103,6 +103,26 @@ banque ; la colonne `Banque` indique l'origine de chaque modèle. Les modèles
 fournis restent en lecture seule et peuvent être dupliqués dans la banque
 personnelle. Une mise à jour ne remplace jamais cette dernière.
 
+### Fusion de deux XML et identité des rôles
+
+`Ajouter un XML au projet` conserve le premier XML comme base et importe les
+rôles compatibles du second. DCE compare à la fois les noms et la paire
+technique `device_id` / `process_id`.
+
+- **Importer uniques seulement** réutilise le rôle déjà présent lorsque la même
+  identité technique est rencontrée. Les subscriptions importées sont
+  redirigées vers son nom courant.
+- **Renommer automatiquement ou manuellement** conserve un second rôle
+  indépendant. DCE le rend générique en retirant l’identité matérielle,
+  l’interface réseau, les flows multicast et le Preferred Master provenant de
+  l’autre projet.
+- DCE ne fabrique jamais de faux `device_id`. Dante Controller peut ensuite
+  affecter ce rôle à l’appareil d’origine ou à un autre appareil compatible.
+
+Cette distinction permet de fusionner deux installations sans produire deux
+rôles portant la même identité matérielle et sans perdre les références de
+patch reconnues.
+
 ## Fonctions principales
 
 - ouverture, analyse, comparaison et fusion de XML ;
