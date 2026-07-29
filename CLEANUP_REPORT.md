@@ -1,5 +1,22 @@
 # Rapport de nettoyage
 
+## Promotion dans `main` - 2026-07-29
+
+La version 2026.1 a été intégrée à `main` par avance rapide, sans conflit ni
+réécriture d'historique. L'audit complémentaire a confirmé que les notices,
+captures, vidéos et archives 2026.1 encore suivies sont les fichiers actifs.
+
+Le nettoyage de promotion retire uniquement :
+
+- les déclencheurs CI propres à l'ancienne branche de travail `2026.1` ;
+- les mentions indiquant à tort que la version n'était pas intégrée à `main`.
+
+Les petites banques V3.6 conservées sous `Resources` restent nécessaires aux
+tests de lecture et de migration. Les rapports historiques restent utiles pour
+la traçabilité. La Release et le tag `v3.6.1`, ainsi que tous leurs
+téléchargements, sont conservés et restent accessibles indépendamment de
+`main`.
+
 ## Déplacement et nettoyage final - 2026-07-29
 
 Le dépôt de travail a été déplacé vers son emplacement définitif :

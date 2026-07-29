@@ -8,8 +8,8 @@ Ce document complète les notes utilisateur
 ## Périmètre
 
 - base : V3.6 stabilisée au commit `25a1e7c` ;
-- branche : `2026.1` ;
-- aucune fusion automatique dans `main` ;
+- branche publiée : `main` ;
+- ancienne branche de travail `2026.1` supprimable après validation de `main` ;
 - Release bêta conservée sous le tag `v2026.1` ;
 - installation côte à côte avec la V3.6.
 

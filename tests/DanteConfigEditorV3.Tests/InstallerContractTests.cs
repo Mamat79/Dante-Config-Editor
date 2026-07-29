@@ -141,12 +141,13 @@ public sealed class InstallerContractTests
     }
 
     [Fact]
-    public void WindowsWorkflowPublishesSelfContained2026BetaArtifacts()
+    public void WindowsWorkflowPublishesSelfContained2026BetaArtifactsFromMain()
     {
         string workflow = File.ReadAllText(RepositoryFile(".github", "workflows", "windows-ci.yml"));
         string bankAudit = File.ReadAllText(RepositoryFile(".github", "workflows", "machine-bank-audit.yml"));
 
-        Assert.Contains("- \"2026.1\"", workflow, StringComparison.Ordinal);
+        Assert.Contains("- main", workflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("- \"2026.1\"", workflow, StringComparison.Ordinal);
         Assert.Contains("--self-contained true", workflow, StringComparison.Ordinal);
         Assert.Contains("DanteConfigEditor2026-1-Beta-win-x64", workflow, StringComparison.Ordinal);
         Assert.Contains("DCE-2026.1-Beta-Windows-Installer", workflow, StringComparison.Ordinal);
@@ -187,7 +188,7 @@ public sealed class InstallerContractTests
         Assert.Contains("shasum -a 256 \"$DMG_NAME\"", packaging, StringComparison.Ordinal);
         Assert.Contains("branches:", workflow, StringComparison.Ordinal);
         Assert.Contains("- main", workflow, StringComparison.Ordinal);
-        Assert.Contains("- \"2026.1\"", workflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("- \"2026.1\"", workflow, StringComparison.Ordinal);
         Assert.Contains("DanteConfigEditor2026_1_Beta_macOS_AppleSilicon.dmg", workflow, StringComparison.Ordinal);
         Assert.Contains("DanteConfigEditor2026_1_Beta_macOS_Intel.dmg", workflow, StringComparison.Ordinal);
         Assert.Contains("workflow_dispatch:", workflow, StringComparison.Ordinal);

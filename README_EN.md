@@ -5,7 +5,7 @@
 A local, offline Dante Controller preset XML editor developed by Mamat with
 the assistance of development agents.
 
-> **Status: beta on branch `2026.1`.**
+> **Status: beta published from the `main` branch.**
 > DCE is an unofficial third-party tool and is not affiliated with Audinate.
 > It does not control a live Dante network and uses no Audinate SDK or API.
 > Work on a copy and review the final XML in Dante Controller before operation.

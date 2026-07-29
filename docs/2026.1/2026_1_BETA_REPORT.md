@@ -5,19 +5,22 @@ Date : 2026-07-29
 ## Références
 
 - version : `2026.1.0-beta.1` ;
-- branche : `2026.1` ;
+- branche publiée : `main` ;
 - base V3.6 : `25a1e7cc0568b86a56bdf039ecce060c8eeea1ec` ;
 - commit de sécurité XML validé :
   `02765f4` ;
 - commit final de correction ergonomique :
   `30aa7216fe24e6e056edad823fd2cbd5f1e7f4cd` ;
+- commit de promotion initiale dans `main` :
+  `8c5c796658f4eb7a0dca80ccce5bff70a39cb207` ;
 - identité Windows : `Dante Config Editor 2026.1 Beta` ;
 - profil local : `%LOCALAPPDATA%\DanteConfigEditor2026.1` ;
 - bundle macOS : `fr.mamat.danteconfigeditor.y2026-1-beta`.
 
-La branche n'est pas fusionnée dans `main`. La prérelease GitHub `v2026.1`
-reste distincte de la V3.6 stable et conserve une identité d'installation
-séparée.
+Le développement 2026.1 est intégré à `main`. La prérelease GitHub `v2026.1`
+reste distincte de la V3.6.1 stable et conserve une identité d'installation
+séparée. Le tag et la Release `v3.6.1`, avec leurs téléchargements propres,
+restent accessibles.
 
 ## Audit et architecture
 

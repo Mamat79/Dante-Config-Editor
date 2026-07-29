@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - "2026.1"
       - "agent/**"
   pull_request:
     branches:
