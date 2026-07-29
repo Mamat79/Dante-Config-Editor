@@ -884,20 +884,33 @@ public partial class PatchWorkspaceView : UserControl
         Grid panel = new()
         {
             Width = 28 * _matrixZoom,
-            Height = 126 * _matrixZoom,
+            Height = 106 * _matrixZoom,
+            VerticalAlignment = VerticalAlignment.Top,
             Tag = source
         };
+        panel.RowDefinitions.Add(new RowDefinition
+        {
+            Height = new GridLength(Math.Max(4, 6 * _matrixZoom))
+        });
+        panel.RowDefinitions.Add(new RowDefinition
+        {
+            Height = new GridLength(1, GridUnitType.Star)
+        });
+        panel.RowDefinitions.Add(new RowDefinition
+        {
+            Height = new GridLength(Math.Max(17, 20 * _matrixZoom))
+        });
         Button label = new()
         {
             Content = source.Display,
             Tag = source,
-            Width = 112 * _matrixZoom,
+            Width = 88 * _matrixZoom,
             FontSize = Math.Max(8, 10 * _matrixZoom),
             FontWeight = FontWeights.SemiBold,
             Cursor = _renameChannelAction is null ? Cursors.Arrow : Cursors.IBeam,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 10 * _matrixZoom, 0, 24 * _matrixZoom),
+            Margin = new Thickness(0),
             Padding = new Thickness(0),
             Background = Brushes.Transparent,
             BorderBrush = Brushes.Transparent,
@@ -907,6 +920,7 @@ public partial class PatchWorkspaceView : UserControl
             IsEnabled = _renameChannelAction is not null
         };
         label.Click += MatrixTxHeader_Click;
+        Grid.SetRow(label, 1);
         panel.Children.Add(label);
 
         Button destinationsButton = new()
@@ -923,6 +937,7 @@ public partial class PatchWorkspaceView : UserControl
             Foreground = (Brush)FindResource("TextBrush"),
             BorderBrush = (Brush)FindResource("BorderLineBrush"),
             BorderThickness = new Thickness(1),
+            RenderTransform = new TranslateTransform(0, -10 * _matrixZoom),
             Cursor = navigation.CanNavigate ? Cursors.Hand : Cursors.Arrow,
             IsEnabled = navigation.CanNavigate,
             ToolTip = BuildDestinationNavigationToolTip(source, navigation)
@@ -933,6 +948,7 @@ public partial class PatchWorkspaceView : UserControl
             destinationsButton,
             BuildDestinationNavigationAutomationName(source, navigation));
         Panel.SetZIndex(destinationsButton, 3);
+        Grid.SetRow(destinationsButton, 2);
         panel.Children.Add(destinationsButton);
 
         Thumb series = BuildMatrixSeriesThumb(source, Cursors.SizeWE);
@@ -941,6 +957,7 @@ public partial class PatchWorkspaceView : UserControl
         // En colonne TX, la poignée reste près du libellé et la flèche de
         // navigation borde la matrice, sous le nom du canal.
         series.VerticalAlignment = VerticalAlignment.Top;
+        Grid.SetRow(series, 0);
         panel.Children.Add(series);
 
         ToolTipService.SetToolTip(panel, L(

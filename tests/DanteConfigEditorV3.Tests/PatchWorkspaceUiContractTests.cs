@@ -779,6 +779,22 @@ public sealed class PatchWorkspaceUiContractTests
             "series.VerticalAlignment = VerticalAlignment.Top",
             txHeader,
             StringComparison.Ordinal);
+        Assert.Contains(
+            "Grid.SetRow(series, 0)",
+            txHeader,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "Grid.SetRow(label, 1)",
+            txHeader,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "Grid.SetRow(destinationsButton, 2)",
+            txHeader,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "RenderTransform = new TranslateTransform(0, -10 * _matrixZoom)",
+            txHeader,
+            StringComparison.Ordinal);
 
         Assert.Contains(
             "VerticalAlignment = Avalonia.Layout.VerticalAlignment.Bottom",
