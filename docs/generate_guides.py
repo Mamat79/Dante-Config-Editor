@@ -519,7 +519,7 @@ def full_guide(language: str) -> None:
     french = language == "FR"
     if french:
         page1 = [
-            para("1. Installation et démarrage", "h1"),
+            para("1. Démarrer en sécurité", "h1"),
             callout("<b>Important :</b> cette application est un outil tiers non officiel Audinate. Elle édite des XML hors ligne, sans connexion au réseau Dante ni API Audinate. Conservez l'original et validez le fichier généré dans Dante Controller avant toute utilisation en production."),
             para("L'installateur Windows x64 contient l'application et le runtime .NET 8 nécessaire. Il n'est normalement pas nécessaire d'installer .NET séparément."),
             *bullets([
@@ -530,18 +530,18 @@ def full_guide(language: str) -> None:
                 "Deux DMG 2026.1 autonomes sont construits sur macOS pour Apple Silicon et Intel. Ils contiennent les banques 2026.1 dans le dossier Machine Banks ; leur bundle distinct peut cohabiter avec la V3.6.",
                 "Les quatre notices PDF françaises et anglaises sont installées et restent accessibles depuis l'application.",
             ]),
-            para("2. Principes de sécurité", "h1"),
+            para("Principes de sécurité", "h2"),
             *bullets([
                 "Travaillez sur une copie du XML exporté et utilisez Enregistrer sous.",
                 "Le garde-fou suit les machines par identité technique stable, bloque les chemins inconnus et protège les Dante Id, mediaType et instance_id.",
                 "Sauvegarde sécurisée : DCE valide d'abord un fichier temporaire. Le fichier source et toute destination existante reçoivent une copie dans DanteConfigEditor_Backups avant le remplacement.",
                 "L'import réussi dans Dante Controller constitue la validation finale avant exploitation.",
             ]),
-            para("3. Ouvrir un projet", "h1"),
+            para("Ouvrir ou créer un projet", "h2"),
             para("Cliquez sur Ouvrir XML, sélectionnez le fichier, puis contrôlez les compteurs de machines, canaux TX/RX et patchs actifs. Les XML avec namespace par défaut sont pris en charge. Le premier lancement utilise le thème clair ; le dernier thème et la dernière langue choisis sont ensuite restaurés automatiquement."),
         ]
         workspace_page = [
-            para("4. Espace de travail 2026.1", "h1"),
+            para("2. Projet et réglages généraux", "h1"),
             para("Windows et macOS organisent le travail par intention : Projet, Vue d'ensemble, Machines, Patch, Import / Export, Centre de validation, Historique et Outils avancés. La banque est accessible directement depuis Machines."),
             *bullets([
                 "La barre supérieure conserve le fichier actif, Enregistrer sous, Annuler et Rétablir.",
@@ -577,7 +577,7 @@ def full_guide(language: str) -> None:
             callout("Conseil : gardez le XML exporté par Dante Controller intact, travaillez sur une copie et utilisez Enregistrer sous pour chaque scénario important.", PALE_GREEN),
         ]
         page2 = [
-            para("5. Page Machines", "h1"),
+            para("3. Réglages par machine et canaux", "h1"),
             para("La page Machines rassemble les actions globales, une liste de contrôle compacte, la machine sélectionnée, ses canaux, le tableau général et l'accès aux banques."),
             para("Machine sélectionnée", "h2"),
             *bullets([
@@ -604,14 +604,14 @@ def full_guide(language: str) -> None:
                 "Choisissez toutes les machines non verrouillées, la sélection ou le filtre affiché. La cible reste visible avant l'application.",
             ]),
         ]
-        page3 = [
-            para("6. Alertes navigables", "h1"),
+        general_settings_page = [
+            para("Réglages généraux, alertes et profils", "h1"),
             para("Le bandeau Points à vérifier signale les mélanges redondant/daisychain, IP fixes, sample rates multiples et encodages multiples."),
             *bullets([
                 "Cliquez sur Voir les machines, choisissez l'alerte puis examinez les devices filtrés.",
                 "Après correction, vérifiez que l'alerte disparaît et consultez le Centre de validation.",
             ]),
-            para("7. Profils rapides", "h1"),
+            para("Profils rapides", "h2"),
             data_table(
                 ["Profil", "Réglages appliqués"],
                 [
@@ -626,7 +626,9 @@ def full_guide(language: str) -> None:
             ),
             Spacer(1, 2 * mm),
             callout("Vérifiez que chaque matériel accepte la sample rate, les bits, la latence et le mode demandés.", PALE_RED),
-            para("8. Récupération automatique", "h1"),
+        ]
+        recovery_page = [
+            para("Récupération automatique", "h1"),
             para("Après une modification, l'application attend brièvement puis écrit la récupération en arrière-plan, sans bloquer l'interface ni remplacer le XML source."),
             *bullets([
                 "À la prochaine ouverture du même XML, choisissez de restaurer ou d'abandonner la session.",
@@ -634,8 +636,8 @@ def full_guide(language: str) -> None:
                 "La copie disparaît après sauvegarde ou retour à l'original ; celles de plus de 30 jours sont nettoyées.",
             ]),
         ]
-        page4 = [
-            para("9. Canaux et patchs", "h1"),
+        channel_patch_page = [
+            para("Canaux et principes de patch", "h1"),
             *bullets([
                 "Les canaux TX/RX peuvent être renommés individuellement ou par plage avec {00}, {000}, {n} et {device}.",
                 "Le renommage d'un TX met à jour tous les alias de subscription reconnus dans le projet.",
@@ -666,14 +668,18 @@ def full_guide(language: str) -> None:
                 ],
                 [50, 35, 85],
             ),
-            para("10. Ajouter un XML au projet", "h1"),
+        ]
+        merge_summary_page = [
+            para("Ajouter un XML au projet", "h1"),
             *bullets([
                 "DCE compare les noms et les identités techniques avant de modifier le projet ouvert.",
                 "Importer uniques seulement conserve le rôle déjà présent lorsqu'il représente la même identité et redirige vers lui les subscriptions importées.",
                 "Un renommage automatique ou manuel conserve un second rôle, mais le rend générique : son instance_id/device_id matériel n'est pas copié.",
                 "Les patchs importés suivent le nom final choisi ou le rôle existant réutilisé.",
             ]),
-            para("11. IP et formats audio", "h1"),
+        ]
+        network_audio_page = [
+            para("IP et formats audio", "h1"),
             *bullets([
                 "L'IP automatique ou fixe est réglable machine par machine ou globalement.",
                 "Seule l'interface IPv4 principale, network=0 si elle existe, est ciblée. Une interface secondaire n'est pas modifiée.",
@@ -682,7 +688,9 @@ def full_guide(language: str) -> None:
                 "Les actions globales ignorent les machines sans balise compatible et indiquent le nombre de machines écartées.",
             ]),
             callout("Un mauvais réglage peut rendre une machine injoignable ou incompatible. Contrôlez les capacités réelles du matériel.", PALE_RED),
-            para("12. Validation, comparaison et Import / Export", "h1"),
+        ]
+        export_validation_page = [
+            para("Validation, comparaison et Import / Export", "h1"),
             *bullets([
                 "Le Centre de validation regroupe statistiques, erreurs, avertissements, patchs libres/locaux et compatibilité.",
                 "La comparaison XML affiche les différences dans un tableau.",
@@ -718,8 +726,8 @@ def full_guide(language: str) -> None:
             callout("Avant utilisation, ouvrez toujours le fichier généré dans DMT, dLive Director, Avantis Director ou Yamaha CL/QL Editor et vérifiez les labels et le modèle ciblé.", PALE_RED),
             para("Les classeurs DMT inclus proviennent du projet MIT dLive MIDI Tools de Tobias Grupe. Le fichier DMT_LICENSE.txt est fourni avec l'application.", "small"),
         ]
-        page5 = [
-            para("13. Atomic Bomb : créer un exercice", "h1"),
+        advanced_page = [
+            para("Atomic Bomb : créer un exercice", "h1"),
             *bullets([
                 "Ouvrez Outils avancés puis Atomic Bomb. Décochez les catégories à épargner ; toutes sont sélectionnées par défaut. Tournez la clé : le capot s'ouvre automatiquement. Appuyez ensuite sur ARM, LOCK et FIRE. FIRE applique immédiatement l'exercice.",
                 "La copie en mémoire reçoit des noms uniques mythologiques, audio ou humoristiques, ainsi qu'un mélange de patchs, modes réseau, Preferred Master, latences, sample rates, encodages et IP principales.",
@@ -728,7 +736,9 @@ def full_guide(language: str) -> None:
                 "Utilisez Enregistrer sous pour remettre le preset aux stagiaires, puis vérifiez son import dans l'outil Dante officiel approprié.",
             ]),
             callout("Ce mode sert uniquement à la formation hors ligne. Il ne dérègle aucun appareil et ne communique pas avec le réseau Dante.", PALE_RED),
-            para("14. Sauvegarde et validation finale", "h1"),
+        ]
+        final_validation_page = [
+            para("Sauvegarde et validation finale", "h1"),
             para("Utilisez Enregistrer sous. Le XML temporaire est relu, le garde-fou vérifie les changements, puis DCE remplace la destination. Une erreur avant ce remplacement laisse l'ancienne destination intacte."),
             data_table(
                 ["Contrôle", "Action recommandée"],
@@ -740,9 +750,11 @@ def full_guide(language: str) -> None:
                 ],
                 [48, 122],
             ),
-            para("15. Tests de non-régression", "h1"),
-            para("La suite 2026.1 exécute 422 tests Core/Windows et 22 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, le refus des balises techniques absentes, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la fusion avec réutilisation d'identité ou rôle générique, la duplication, la banque de machines, la création de projet, le format .dceproj, les profils XML, les commandes, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch, le soutien facultatif et la cohérence des traductions."),
-            para("16. Limites connues", "h1"),
+        ]
+        technical_reference_page = [
+            para("Tests de non-régression", "h1"),
+            para("La suite 2026.1 exécute 430 tests Core/Windows et 22 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, le refus des balises techniques absentes, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la fusion avec réutilisation d'identité ou rôle générique, la duplication, la banque de machines, la création de projet, le format .dceproj, les profils XML, les commandes, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch, le soutien facultatif et la cohérence des traductions."),
+            para("Limites connues", "h1"),
             *bullets([
                 "Aucun pilotage en temps réel et aucune communication avec les appareils.",
                 "Aucun SDK/API Audinate et aucun contournement de protocole propriétaire.",
@@ -756,13 +768,13 @@ def full_guide(language: str) -> None:
                 "Les rôles génériques dupliqués ou ajoutés depuis la banque n'emportent aucun identifiant matériel instance_id/device_id ; seule une importation réelle dans Dante Controller peut confirmer leur utilisation avec une version donnée.",
                 "Nouveau projet produit une structure minimale au format 3.0.0. Contrôlez toujours le fichier final dans Dante Controller avant exploitation.",
             ]),
-            para("17. Aide et informations", "h1"),
+            para("Aide et informations", "h1"),
             para(
                 f"Quick start et Notice complète ouvrent automatiquement le PDF français ou anglais selon la langue active. "
                 f"Projet public : {GITHUB} - Crédit : By Mamat et ses agents.",
                 "small",
             ),
-            para("18. Soutenir DCE", "h1"),
+            para("Soutenir DCE", "h1"),
             para("Dante Config Editor reste entièrement gratuit et toutes ses fonctions sont disponibles sans contribution."),
             *bullets([
                 "Le bouton Soutenir DCE se trouve dans le bandeau supérieur et les informations d'aide restent accessibles depuis Historique.",
@@ -926,7 +938,7 @@ def full_guide(language: str) -> None:
             callout("<b>Important :</b> le nombre final est un suffixe de label. DCE ne renumérote jamais les Dante Id techniques.", PALE_GREEN),
         ]
         visual_patch = [
-            para("Patch : lire et corriger précisément une subscription", "h1"),
+            para("4. Patch : lire et corriger précisément une subscription", "h1"),
             para("Chaque ligne représente un RX et sa source TX. Patch est la vue la plus précise pour filtrer, vérifier une source locale ou externe, remplacer une subscription ou la supprimer."),
             *screenshot(
                 language,
@@ -998,7 +1010,7 @@ def full_guide(language: str) -> None:
             ]),
         ]
         merge_detailed = [
-            para("Ajouter un autre XML au projet ouvert", "h1"),
+            para("5. Composer un projet : ajouter un autre XML", "h1"),
             para("Cette commande fusionne les rôles décrits dans un second preset. Elle est différente d'un ajout depuis la banque : le second XML conserve sa structure compatible et ses subscriptions internes, tandis que DCE protège les identités matérielles qui ne peuvent pas être dupliquées."),
             data_table(
                 ["Étape", "Ce que fait DCE"],
@@ -1078,7 +1090,7 @@ def full_guide(language: str) -> None:
             callout("Après ajout ou création de projet, réouvrez le XML, vérifiez le Centre de validation puis importez une copie dans Dante Controller. Un rôle générique sans identité matérielle doit être contrôlé avant exploitation.", PALE_RED),
         ]
         visual_labels = [
-            para("Import / Export de labels", "h1"),
+            para("6. Import / Export de labels", "h1"),
             para("L'onglet Labels centralise les échanges génériques, DMT, Allen & Heath et Yamaha. Les formats natifs sont créés depuis les modèles inclus ; DCE ne demande pas de choisir un fichier modèle externe."),
             *screenshot(
                 language,
@@ -1115,7 +1127,7 @@ def full_guide(language: str) -> None:
             ]),
         ]
         visual_health = [
-            para("Contrôler avant d'enregistrer", "h1"),
+            para("7. Contrôler, enregistrer et récupérer", "h1"),
             para("Le Centre de validation sépare les erreurs bloquantes, les avertissements et les informations. Lisez la ligne complète : elle précise la catégorie, l'élément concerné, la cause et le chemin XML."),
             *screenshot(
                 language,
@@ -1138,7 +1150,7 @@ def full_guide(language: str) -> None:
             ]),
         ]
         visual_atomic = [
-            para("Atomic Bomb : préparer un exercice, jamais un réseau réel", "h1"),
+            para("8. Outils avancés : préparer un exercice Atomic Bomb", "h1"),
             *screenshot(
                 language,
                 "atomic-bomb",
@@ -1156,7 +1168,7 @@ def full_guide(language: str) -> None:
         ]
     else:
         page1 = [
-            para("1. Installation and startup", "h1"),
+            para("1. Start safely", "h1"),
             callout("<b>Important:</b> this is a third-party tool, not an official Audinate product. It edits XML files offline without connecting to a Dante network or using an Audinate API. Keep the original and validate the generated file in Dante Controller before production use."),
             para("The Windows x64 installer includes the application and the required .NET 8 runtime. A separate .NET installation is normally not required."),
             *bullets([
@@ -1167,18 +1179,18 @@ def full_guide(language: str) -> None:
                 "Two self-contained 2026.1 DMGs are built on macOS for Apple Silicon and Intel. They include the 2026.1 banks in the Machine Banks folder, and their separate bundle can coexist with V3.6.",
                 "All four French and English PDFs are installed and remain available from the application.",
             ]),
-            para("2. Safety principles", "h1"),
+            para("Safety principles", "h2"),
             *bullets([
                 "Work on a copy of the exported XML and use Save as.",
                 "The guard tracks devices by stable technical identity, blocks unknown paths, and protects Dante IDs, mediaType, and instance_id.",
                 "Safe saving: DCE validates a temporary file first. The source and any existing destination receive a copy in DanteConfigEditor_Backups before replacement.",
                 "A successful import into Dante Controller is the final validation before operation.",
             ]),
-            para("3. Open a project", "h1"),
+            para("Open or create a project", "h2"),
             para("Click Open XML, choose the file, then review device, TX/RX channel, and active subscription counts. XML files with a default namespace are supported. The first launch uses the light theme; the last selected theme and language are then restored automatically."),
         ]
         workspace_page = [
-            para("4. 2026.1 workspace", "h1"),
+            para("2. Project and general settings", "h1"),
             para("Windows and macOS organize work by intent: Project, Overview, Devices, Patch, Import / Export, Validation center, History, and Advanced tools. The bank is available directly from Devices."),
             *bullets([
                 "The top bar keeps the active file, Save as, Undo, and Redo available.",
@@ -1214,7 +1226,7 @@ def full_guide(language: str) -> None:
             callout("Recommendation: keep the XML exported by Dante Controller unchanged, work on a copy, and use Save as for every significant scenario.", PALE_GREEN),
         ]
         page2 = [
-            para("5. Devices page", "h1"),
+            para("3. Per-device settings and channels", "h1"),
             para("The Devices page combines the template bank, quick lists, global actions, the selected device, its channels, and the complete device table."),
             para("Selected device", "h2"),
             *bullets([
@@ -1241,14 +1253,14 @@ def full_guide(language: str) -> None:
                 "Choose all unlocked, selected unlocked, or visible unlocked devices. The target remains visible before application.",
             ]),
         ]
-        page3 = [
-            para("6. Navigable alerts", "h1"),
+        general_settings_page = [
+            para("General settings, alerts, and profiles", "h1"),
             para("The Items to check banner reports mixed redundant/daisychain modes, static IPs, multiple sample rates, and multiple bit depths."),
             *bullets([
                 "Click Show devices, choose an alert, then review the filtered devices.",
                 "After correcting an item, verify that the alert disappears and review the Validation center.",
             ]),
-            para("7. Quick profiles", "h1"),
+            para("Quick profiles", "h2"),
             data_table(
                 ["Profile", "Applied settings"],
                 [
@@ -1263,7 +1275,9 @@ def full_guide(language: str) -> None:
             ),
             Spacer(1, 2 * mm),
             callout("Verify that every device supports the requested sample rate, bit depth, latency, and network mode.", PALE_RED),
-            para("8. Automatic recovery", "h1"),
+        ]
+        recovery_page = [
+            para("Automatic recovery", "h1"),
             para("After a change, the application waits briefly and writes recovery data in the background without blocking the interface or replacing the source XML."),
             *bullets([
                 "When reopening the same XML, choose whether to restore or discard the previous session.",
@@ -1271,8 +1285,8 @@ def full_guide(language: str) -> None:
                 "The copy is deleted after saving or reverting; copies older than 30 days are cleaned automatically.",
             ]),
         ]
-        page4 = [
-            para("9. Channels and subscriptions", "h1"),
+        channel_patch_page = [
+            para("Channels and patching principles", "h1"),
             *bullets([
                 "TX/RX channels can be renamed individually or by range with {00}, {000}, {n}, and {device}.",
                 "Renaming a Tx channel updates every recognized subscription alias in the project.",
@@ -1303,14 +1317,18 @@ def full_guide(language: str) -> None:
                 ],
                 [50, 35, 85],
             ),
-            para("10. Add XML to project", "h1"),
+        ]
+        merge_summary_page = [
+            para("Add XML to project", "h1"),
             *bullets([
                 "DCE compares names and technical identities before changing the open project.",
                 "Import unique only retains the existing role when it represents the same identity and redirects imported subscriptions to it.",
                 "Automatic or manual rename retains a second role but makes it generic: its hardware instance_id/device_id is not copied.",
                 "Imported subscriptions follow the final selected name or the reused existing role.",
             ]),
-            para("11. IP and audio formats", "h1"),
+        ]
+        network_audio_page = [
+            para("IP and audio formats", "h1"),
             *bullets([
                 "Automatic or static IP is editable per device or through a global action.",
                 "Only the primary IPv4 interface, network=0 when available, is targeted. A secondary interface is not changed.",
@@ -1319,7 +1337,9 @@ def full_guide(language: str) -> None:
                 "Global actions skip devices without the compatible element and report how many devices were excluded.",
             ]),
             callout("Incorrect settings can make a device unreachable or incompatible. Verify actual hardware capabilities.", PALE_RED),
-            para("12. Validation, comparison, and Import / Export", "h1"),
+        ]
+        export_validation_page = [
+            para("Validation, comparison, and Import / Export", "h1"),
             *bullets([
                 "The Validation center combines statistics, errors, warnings, free/local subscriptions, and compatibility checks.",
                 "XML comparison displays differences in a table.",
@@ -1355,8 +1375,8 @@ def full_guide(language: str) -> None:
             callout("Before use, always open the generated file in DMT, dLive Director, Avantis Director, or Yamaha CL/QL Editor and verify labels and the selected model.", PALE_RED),
             para("Bundled DMT workbooks come from Tobias Grupe's MIT-licensed dLive MIDI Tools project. DMT_LICENSE.txt is included with the application.", "small"),
         ]
-        page5 = [
-            para("13. Atomic Bomb: create an exercise", "h1"),
+        advanced_page = [
+            para("Atomic Bomb: create an exercise", "h1"),
             *bullets([
                 "Open Advanced tools, then Atomic Bomb. Clear the categories you want to spare; all are selected by default. Turn the key: the cover opens automatically. Then press ARM, LOCK, and FIRE in order. FIRE applies the exercise immediately.",
                 "The in-memory copy receives unique mythological, audio-themed, or playful names plus a mixture of subscriptions, network modes, Preferred Master states, latencies, sample rates, encodings, and primary IP settings.",
@@ -1365,7 +1385,9 @@ def full_guide(language: str) -> None:
                 "Use Save as to provide the trainee preset, then verify its import in the appropriate official Dante tool.",
             ]),
             callout("This mode is only for offline training. It does not alter any device or communicate with the Dante network.", PALE_RED),
-            para("14. Save and final validation", "h1"),
+        ]
+        final_validation_page = [
+            para("Save and final validation", "h1"),
             para("Use Save as. The temporary XML is reloaded, protected changes are checked, and DCE then replaces the destination. A failure before that replacement leaves the previous destination intact."),
             data_table(
                 ["Check", "Recommended action"],
@@ -1377,9 +1399,11 @@ def full_guide(language: str) -> None:
                 ],
                 [48, 122],
             ),
-            para("15. Regression tests", "h1"),
-            para("The 2026.1 suite runs 422 Core/Windows tests and 22 headless Mac tests. Coverage includes XML guards, rejection of missing technical elements, save and recovery, IPv4 interfaces, subscriptions, large presets, merge reuse and generic-role handling, duplication, the device bank, project creation, .dceproj packages, XML profiles, commands, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, optional support, and translation consistency."),
-            para("16. Known limitations", "h1"),
+        ]
+        technical_reference_page = [
+            para("Regression tests", "h1"),
+            para("The 2026.1 suite runs 430 Core/Windows tests and 22 headless Mac tests. Coverage includes XML guards, rejection of missing technical elements, save and recovery, IPv4 interfaces, subscriptions, large presets, merge reuse and generic-role handling, duplication, the device bank, project creation, .dceproj packages, XML profiles, commands, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, optional support, and translation consistency."),
+            para("Known limitations", "h1"),
             *bullets([
                 "No real-time Dante control and no communication with devices.",
                 "No Audinate SDK/API and no proprietary protocol bypass.",
@@ -1393,13 +1417,13 @@ def full_guide(language: str) -> None:
                 "Generic roles duplicated or added from the bank carry no hardware instance_id/device_id. Only an actual Dante Controller import can confirm their use with a given version.",
                 "New project writes a minimal 3.0.0 structure. Always review the final file in Dante Controller before operation.",
             ]),
-            para("17. Help and information", "h1"),
+            para("Help and information", "h1"),
             para(
                 f"Quick start and Full guide automatically open the French or English PDF for the active language. "
                 f"Public project: {GITHUB} - Credit: By Mamat et ses agents.",
                 "small",
             ),
-            para("18. Support DCE", "h1"),
+            para("Support DCE", "h1"),
             para("Dante Config Editor remains completely free, and every feature is available without contributing."),
             *bullets([
                 "The Support DCE button is available in the top banner, while help information remains accessible from History.",
@@ -1563,7 +1587,7 @@ def full_guide(language: str) -> None:
             callout("<b>Important:</b> the trailing number belongs to the label. DCE never renumbers technical Dante IDs.", PALE_GREEN),
         ]
         visual_patch = [
-            para("Patch: inspect and correct a subscription precisely", "h1"),
+            para("4. Patch: inspect and correct a subscription precisely", "h1"),
             para("Every row represents one Rx channel and its Tx source. Patch is the most precise view for filtering, reviewing local or external sources, replacing a subscription, or removing it."),
             *screenshot(
                 language,
@@ -1635,7 +1659,7 @@ def full_guide(language: str) -> None:
             ]),
         ]
         merge_detailed = [
-            para("Add another XML file to the open project", "h1"),
+            para("5. Build a project: add another XML file", "h1"),
             para("This command merges roles described by a second preset. It differs from adding from the bank: the second XML retains its compatible role structure and internal subscriptions, while DCE protects hardware identities that cannot be duplicated."),
             data_table(
                 ["Step", "What DCE does"],
@@ -1715,7 +1739,7 @@ def full_guide(language: str) -> None:
             callout("After insertion or project creation, reopen the XML, review the Validation center, and import a copy into Dante Controller. A generic role without hardware identity must be reviewed before operation.", PALE_RED),
         ]
         visual_labels = [
-            para("Label Import / Export", "h1"),
+            para("6. Label Import / Export", "h1"),
             para("The Labels tab centralizes generic, DMT, Allen & Heath, and Yamaha exchange. Native files are created from bundled templates; DCE does not ask for an external template file."),
             *screenshot(
                 language,
@@ -1752,7 +1776,7 @@ def full_guide(language: str) -> None:
             ]),
         ]
         visual_health = [
-            para("Review before saving", "h1"),
+            para("7. Review, save, and recover", "h1"),
             para("The Validation center separates blocking errors, warnings, and information. Read the complete row: it identifies the category, affected item, cause, and XML path."),
             *screenshot(
                 language,
@@ -1775,7 +1799,7 @@ def full_guide(language: str) -> None:
             ]),
         ]
         visual_atomic = [
-            para("Atomic Bomb: prepare an exercise, never a live network", "h1"),
+            para("8. Advanced tools: prepare an Atomic Bomb exercise", "h1"),
             *screenshot(
                 language,
                 "atomic-bomb",
@@ -1792,34 +1816,197 @@ def full_guide(language: str) -> None:
             callout("Atomic Bomb does not communicate with any device. The exercise file must still be reviewed in Dante Controller before distribution to trainees.", PALE_RED),
         ]
 
+    if french:
+        guide_order_page = [
+            para("Parcours de la notice", "h1"),
+            para("La notice suit désormais l'ordre normal d'un travail hors ligne. Chaque chapitre indique l'écran à ouvrir, l'action à effectuer et les contrôles à réaliser avant de passer au suivant."),
+            data_table(
+                ["Étape", "Sujet", "Résultat attendu"],
+                [
+                    ["1", "Démarrage", "Installer, ouvrir ou créer un projet sans toucher à l'original."],
+                    ["2", "Réglages généraux", "Lire le projet, cibler les machines et appliquer des profils."],
+                    ["3", "Réglages par machine", "Modifier identité, réseau, audio et labels RX/TX."],
+                    ["4", "Patch", "Lire, créer, suivre ou retirer les subscriptions."],
+                    ["5", "Composition du projet", "Fusionner un XML, dupliquer et utiliser les banques."],
+                    ["6", "Import / Export", "Échanger les labels, rapports, patchbooks et synoptiques."],
+                    ["7", "Validation", "Comparer, enregistrer, récupérer et contrôler le XML."],
+                    ["8", "Outils avancés", "Créer un exercice Atomic Bomb et accéder à l'aide."],
+                ],
+                [14, 47, 109],
+            ),
+            Spacer(1, 3 * mm),
+            callout("Les captures utilisent un preset synthétique anonymisé. Les numéros et repères ajoutés aux images sont uniquement pédagogiques.", PALE_BLUE),
+        ]
+        layout_visual_page = [
+            para("Adapter l'espace de travail", "h1"),
+            para("Les volets de navigation, de réglages, de liste et d'inspection démarrent ouverts. Les flèches restent visibles lorsqu'un volet est replié afin de pouvoir le rouvrir immédiatement."),
+            *screenshot(
+                language,
+                "devices-collapsed-sidebars",
+                "Exemple avec les volets latéraux repliés : la zone centrale gagne de la place sans perdre les commandes de réouverture.",
+                crop=(0, 175, 1904, 965),
+                maximum_height=102,
+            ),
+        ]
+        matrix_targeting_page = [
+            para("Suivre une liaison directement dans la matrice", "h1"),
+            *screenshot(
+                language,
+                "patch",
+                "Les poignées de recopie restent près des labels. Les flèches de ciblage bordent la grille : celle d'un RX retrouve sa source TX ; celle d'un TX liste ses destinations RX.",
+                crop=(275, 250, 1540, 690),
+                maximum_height=96,
+            ),
+            *bullets([
+                "Sur une ligne RX, utilisez la flèche placée juste avant la grille pour afficher la machine TX source et surligner le croisement.",
+                "Sous un label TX, utilisez la flèche placée juste au-dessus de la grille pour choisir une destination RX.",
+                "La petite poignée reste au contact du label uniquement lorsque ce label se termine par un numéro prolongeable.",
+            ]),
+        ]
+        bank_visual_page = [
+            para("Administrer les banques de machines", "h1"),
+            *screenshot(
+                language,
+                "device-bank",
+                "Recherche et filtres à gauche, aperçu du modèle et de ses labels à droite, actions d'ajout et d'échange en bas.",
+                maximum_height=112,
+            ),
+        ]
+        new_project_visual_page = [
+            para("Créer un nouveau projet hors ligne", "h1"),
+            *screenshot(
+                language,
+                "new-project",
+                "Choisissez la destination, le nom du projet et un premier rôle personnalisé ou issu d'une banque.",
+                maximum_height=108,
+            ),
+            callout("La création de projet reste un parcours hors ligne. Réouvrez le XML, contrôlez le Centre de validation puis vérifiez son import dans Dante Controller.", PALE_RED),
+        ]
+        support_visual_page = [
+            para("Aide, crédits et soutien facultatif", "h1"),
+            *screenshot(
+                language,
+                "support",
+                "Le soutien est entièrement facultatif. Toutes les fonctions de DCE restent accessibles sans contribution.",
+                maximum_height=104,
+            ),
+        ]
+    else:
+        guide_order_page = [
+            para("How to use this guide", "h1"),
+            para("The guide now follows the normal offline workflow. Each chapter identifies the screen to open, the action to perform, and the checks to complete before moving on."),
+            data_table(
+                ["Step", "Topic", "Expected result"],
+                [
+                    ["1", "Startup", "Install, open, or create a project without altering the original."],
+                    ["2", "General settings", "Review the project, target devices, and apply profiles."],
+                    ["3", "Per-device settings", "Edit identity, network, audio, and Rx/Tx labels."],
+                    ["4", "Patch", "Inspect, create, trace, or remove subscriptions."],
+                    ["5", "Project composition", "Merge XML, duplicate devices, and use banks."],
+                    ["6", "Import / Export", "Exchange labels, reports, patchbooks, and synoptics."],
+                    ["7", "Validation", "Compare, save, recover, and review the XML."],
+                    ["8", "Advanced tools", "Create an Atomic Bomb exercise and access help."],
+                ],
+                [14, 47, 109],
+            ),
+            Spacer(1, 3 * mm),
+            callout("Screenshots use an anonymized synthetic preset. Numbers and markers added to images are for guidance only.", PALE_BLUE),
+        ]
+        layout_visual_page = [
+            para("Adapt the workspace", "h1"),
+            para("Navigation, settings, device list, and inspector panes start expanded. Their arrows remain visible when collapsed so every pane can be reopened immediately."),
+            *screenshot(
+                language,
+                "devices-collapsed-sidebars",
+                "Example with both side panes collapsed: the central workspace grows while the reopen controls remain available.",
+                crop=(0, 175, 1904, 965),
+                maximum_height=102,
+            ),
+        ]
+        matrix_targeting_page = [
+            para("Trace a connection directly in the matrix", "h1"),
+            *screenshot(
+                language,
+                "patch",
+                "Fill handles stay next to labels. Targeting arrows border the grid: an Rx arrow finds its Tx source, while a Tx arrow lists its Rx destinations.",
+                crop=(275, 250, 1540, 690),
+                maximum_height=96,
+            ),
+            *bullets([
+                "On an Rx row, use the arrow immediately before the grid to display the source Tx device and highlight the crosspoint.",
+                "Below a Tx label, use the arrow immediately above the grid to choose an Rx destination.",
+                "The small fill handle remains next to the label and appears only when that label ends with an extendable number.",
+            ]),
+        ]
+        bank_visual_page = [
+            para("Manage device banks", "h1"),
+            *screenshot(
+                language,
+                "device-bank",
+                "Search and filters on the left, template and label preview on the right, add and exchange actions at the bottom.",
+                maximum_height=112,
+            ),
+        ]
+        new_project_visual_page = [
+            para("Create a new offline project", "h1"),
+            *screenshot(
+                language,
+                "new-project",
+                "Choose the destination, project name, and a first custom role or bank template.",
+                maximum_height=108,
+            ),
+            callout("Project creation remains an offline workflow. Reopen the XML, review the Validation center, then verify its import in Dante Controller.", PALE_RED),
+        ]
+        support_visual_page = [
+            para("Help, credits, and optional support", "h1"),
+            *screenshot(
+                language,
+                "support",
+                "Support is entirely optional. Every DCE feature remains available without contributing.",
+                maximum_height=104,
+            ),
+        ]
+
     story: list = []
     pages = [
         cover_page(language),
+        guide_order_page,
         page1,
         workspace_page,
-        guided_workflows,
         screen_map,
+        guided_workflows,
+        layout_visual_page,
         visual_overview,
+        general_settings_page,
+        profiles_detailed,
         page2,
         visual_device,
-        profiles_detailed,
-        page3,
+        network_audio_page,
         renaming_detailed,
         series_detailed,
+        channel_patch_page,
         visual_patch,
         easy_patch_detailed,
         easy_patch_workflows,
-        page4,
+        matrix_targeting_page,
+        merge_summary_page,
         merge_detailed,
-        visual_labels,
-        label_page,
         bank_concept_page,
+        bank_visual_page,
         bank_workflow_page,
         bank_page,
+        new_project_visual_page,
+        visual_labels,
+        label_page,
         visual_synoptic,
+        export_validation_page,
         visual_health,
+        final_validation_page,
+        recovery_page,
         visual_atomic,
-        page5,
+        advanced_page,
+        technical_reference_page,
+        support_visual_page,
     ]
     for index, page in enumerate(pages):
         if index:

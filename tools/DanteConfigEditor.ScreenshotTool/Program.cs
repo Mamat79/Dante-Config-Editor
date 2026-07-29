@@ -376,6 +376,7 @@ internal static class Program
             XDocument document = XDocument.Load(
                 source,
                 LoadOptions.PreserveWhitespace);
+            PrepareScreenshotLabels(document);
             if (language == UiLanguage.English && document.Root is not null)
             {
                 XElement? name = document.Root
@@ -400,6 +401,68 @@ internal static class Program
         }
 
         public string Path { get; }
+
+        private static void PrepareScreenshotLabels(XDocument document)
+        {
+            XElement? firstDevice = document
+                .Descendants()
+                .FirstOrDefault(element => element.Name.LocalName == "device");
+            if (firstDevice is null)
+            {
+                return;
+            }
+
+            Dictionary<string, string> renamedTx = new(StringComparer.Ordinal);
+            int txNumber = 1;
+            foreach (XElement txChannel in firstDevice
+                         .Elements()
+                         .Where(element => element.Name.LocalName == "txchannel"))
+            {
+                XElement? label = txChannel
+                    .Elements()
+                    .FirstOrDefault(element =>
+                        element.Name.LocalName is "label" or "name");
+                if (label is null)
+                {
+                    continue;
+                }
+
+                string oldLabel = label.Value;
+                string newLabel = $"PROGRAM {txNumber:00}";
+                renamedTx[oldLabel] = newLabel;
+                label.Value = newLabel;
+                txNumber++;
+            }
+
+            foreach (XElement subscribedChannel in document
+                         .Descendants()
+                         .Where(element =>
+                             element.Name.LocalName == "subscribed_channel"))
+            {
+                if (renamedTx.TryGetValue(
+                        subscribedChannel.Value,
+                        out string? newLabel))
+                {
+                    subscribedChannel.Value = newLabel;
+                }
+            }
+
+            int rxNumber = 1;
+            foreach (XElement rxChannel in document
+                         .Descendants()
+                         .Where(element => element.Name.LocalName == "rxchannel"))
+            {
+                XElement? name = rxChannel
+                    .Elements()
+                    .FirstOrDefault(element =>
+                        element.Name.LocalName is "name" or "label");
+                if (name is not null)
+                {
+                    name.Value = $"INPUT {rxNumber:00}";
+                    rxNumber++;
+                }
+            }
+        }
 
         public void Dispose()
         {
