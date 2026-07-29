@@ -5,7 +5,7 @@ namespace DanteConfigEditorV3.Tests;
 public sealed class InstallerContractTests
 {
     [Fact]
-    public void Installer2026BetaUsesAnIndependentIdentityAndPreservesV36()
+    public void Installer2026UsesAnIndependentIdentityAndPreservesV36()
     {
         string script = File.ReadAllText(RepositoryFile("installer", "DanteConfigEditorV3.iss"));
 
@@ -13,9 +13,9 @@ public sealed class InstallerContractTests
         Assert.DoesNotContain("A11FA3C8-3461-46CA-AC61-6A14316E8DBB", script, StringComparison.Ordinal);
         Assert.DoesNotContain("76E68F80-5C89-4415-A090-370CA60EB3AD", script, StringComparison.Ordinal);
         Assert.DoesNotContain("RunLegacyUninstaller", script, StringComparison.Ordinal);
-        Assert.Contains("DefaultDirName={autopf}\\Dante Config Editor 2026.1 Beta", script, StringComparison.Ordinal);
-        Assert.Contains("DefaultGroupName=Dante Config Editor 2026.1 Beta", script, StringComparison.Ordinal);
-        Assert.Contains("OutputBaseFilename=DanteConfigEditor2026_1_Beta_Installer", script, StringComparison.Ordinal);
+        Assert.Contains("DefaultDirName={autopf}\\Dante Config Editor 2026.1", script, StringComparison.Ordinal);
+        Assert.Contains("DefaultGroupName=Dante Config Editor 2026.1", script, StringComparison.Ordinal);
+        Assert.Contains("OutputBaseFilename=DanteConfigEditor2026_1_Installer", script, StringComparison.Ordinal);
         Assert.Contains("UsePreviousAppDir=yes", script, StringComparison.Ordinal);
         Assert.DoesNotContain("{commonprograms}\\Dante Config Editor V3.6", script, StringComparison.Ordinal);
         Assert.DoesNotContain("{commondesktop}\\DCE V3.6.lnk", script, StringComparison.Ordinal);
@@ -24,6 +24,10 @@ public sealed class InstallerContractTests
         Assert.Contains("replace/update", script, StringComparison.Ordinal);
         Assert.Contains("HKLM", script, StringComparison.Ordinal);
         Assert.Contains("HKCU", script, StringComparison.Ordinal);
+        Assert.Contains("IsLegacyBetaInstallPath", script, StringComparison.Ordinal);
+        Assert.Contains("LegacyBetaInstallDir", script, StringComparison.Ordinal);
+        Assert.Contains("DCE 2026.1 Beta.lnk", script, StringComparison.Ordinal);
+        Assert.Contains("DelTree(LegacyBetaInstallDir", script, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -61,7 +65,7 @@ public sealed class InstallerContractTests
         Assert.Contains("Assert-RepositoryPath", buildScript, StringComparison.Ordinal);
         Assert.Contains("Remove-GeneratedPath", buildScript, StringComparison.Ordinal);
         Assert.Contains("Get-FileHash", buildScript, StringComparison.Ordinal);
-        Assert.Contains("DanteConfigEditor2026_1_Beta_Installer.exe", buildScript, StringComparison.Ordinal);
+        Assert.Contains("DanteConfigEditor2026_1_Installer.exe", buildScript, StringComparison.Ordinal);
         Assert.Contains("Build-BundledMachineBanks.ps1", buildScript, StringComparison.Ordinal);
         Assert.Contains("CreateInputDirPage", installerScript, StringComparison.Ordinal);
         Assert.Contains("BankOptionsPage.Values[0]", installerScript, StringComparison.Ordinal);
@@ -136,12 +140,12 @@ public sealed class InstallerContractTests
         Assert.Contains("CommonDesktopDirectory", upgradeScript, StringComparison.Ordinal);
         Assert.Contains("raccourci Bureau manquant", upgradeScript, StringComparison.Ordinal);
         Assert.Contains("StableInstallRecords", upgradeScript, StringComparison.Ordinal);
-        Assert.Contains("DanteConfigEditor2026_1_Beta_Installer.exe", upgradeScript, StringComparison.Ordinal);
+        Assert.Contains("DanteConfigEditor2026_1_Installer.exe", upgradeScript, StringComparison.Ordinal);
         Assert.Contains("C893F4F8-5ED3-4C2E-AAD8-024F9DCB4A1D", upgradeScript, StringComparison.Ordinal);
     }
 
     [Fact]
-    public void WindowsWorkflowPublishesSelfContained2026BetaArtifactsFromMain()
+    public void WindowsWorkflowPublishesSelfContained2026ArtifactsFromMain()
     {
         string workflow = File.ReadAllText(RepositoryFile(".github", "workflows", "windows-ci.yml"));
         string bankAudit = File.ReadAllText(RepositoryFile(".github", "workflows", "machine-bank-audit.yml"));
@@ -149,9 +153,9 @@ public sealed class InstallerContractTests
         Assert.Contains("- main", workflow, StringComparison.Ordinal);
         Assert.DoesNotContain("- \"2026.1\"", workflow, StringComparison.Ordinal);
         Assert.Contains("--self-contained true", workflow, StringComparison.Ordinal);
-        Assert.Contains("DanteConfigEditor2026-1-Beta-win-x64", workflow, StringComparison.Ordinal);
-        Assert.Contains("DCE-2026.1-Beta-Windows-Installer", workflow, StringComparison.Ordinal);
-        Assert.Contains("DanteConfigEditor2026_1_Beta_Installer.exe", workflow, StringComparison.Ordinal);
+        Assert.Contains("DanteConfigEditor2026-1-win-x64", workflow, StringComparison.Ordinal);
+        Assert.Contains("DCE-2026.1-Windows-Installer", workflow, StringComparison.Ordinal);
+        Assert.Contains("DanteConfigEditor2026_1_Installer.exe", workflow, StringComparison.Ordinal);
         Assert.Contains("schedule:", bankAudit, StringComparison.Ordinal);
         Assert.Contains("Build-BundledMachineBanks.ps1", bankAudit, StringComparison.Ordinal);
         Assert.Contains("git diff --exit-code", bankAudit, StringComparison.Ordinal);
@@ -172,25 +176,25 @@ public sealed class InstallerContractTests
     }
 
     [Fact]
-    public void Beta2026HasDedicatedMacPackagingMetadata()
+    public void Release2026HasDedicatedMacPackagingMetadata()
     {
         string project = File.ReadAllText(RepositoryFile("src", "DanteConfigEditor.Mac", "DanteConfigEditor.Mac.csproj"));
         string plist = File.ReadAllText(RepositoryFile("packaging", "macos", "Info.plist"));
         string packaging = File.ReadAllText(RepositoryFile("packaging", "macos", "build-macos.sh"));
         string workflow = File.ReadAllText(RepositoryFile(".github", "workflows", "macos-ci.yml"));
 
-        Assert.Contains("<InformationalVersion>2026.1.0-beta.1</InformationalVersion>", project, StringComparison.Ordinal);
-        Assert.Contains("<string>Dante Config Editor 2026.1 Beta</string>", plist, StringComparison.Ordinal);
-        Assert.Contains("<string>fr.mamat.danteconfigeditor.y2026-1-beta</string>", plist, StringComparison.Ordinal);
+        Assert.Contains("<InformationalVersion>2026.1.0</InformationalVersion>", project, StringComparison.Ordinal);
+        Assert.Contains("<string>Dante Config Editor 2026.1</string>", plist, StringComparison.Ordinal);
+        Assert.Contains("<string>fr.mamat.danteconfigeditor.y2026-1</string>", plist, StringComparison.Ordinal);
         Assert.Contains("<string>2026.1.0</string>", plist, StringComparison.Ordinal);
-        Assert.Contains("Dante Config Editor 2026.1 Beta.app", packaging, StringComparison.Ordinal);
-        Assert.Contains("DanteConfigEditor2026_1_Beta_macOS_", packaging, StringComparison.Ordinal);
+        Assert.Contains("Dante Config Editor 2026.1.app", packaging, StringComparison.Ordinal);
+        Assert.Contains("DanteConfigEditor2026_1_macOS_", packaging, StringComparison.Ordinal);
         Assert.Contains("shasum -a 256 \"$DMG_NAME\"", packaging, StringComparison.Ordinal);
         Assert.Contains("branches:", workflow, StringComparison.Ordinal);
         Assert.Contains("- main", workflow, StringComparison.Ordinal);
         Assert.DoesNotContain("- \"2026.1\"", workflow, StringComparison.Ordinal);
-        Assert.Contains("DanteConfigEditor2026_1_Beta_macOS_AppleSilicon.dmg", workflow, StringComparison.Ordinal);
-        Assert.Contains("DanteConfigEditor2026_1_Beta_macOS_Intel.dmg", workflow, StringComparison.Ordinal);
+        Assert.Contains("DanteConfigEditor2026_1_macOS_AppleSilicon.dmg", workflow, StringComparison.Ordinal);
+        Assert.Contains("DanteConfigEditor2026_1_macOS_Intel.dmg", workflow, StringComparison.Ordinal);
         Assert.Contains("workflow_dispatch:", workflow, StringComparison.Ordinal);
     }
 

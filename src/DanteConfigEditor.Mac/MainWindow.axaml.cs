@@ -1492,7 +1492,7 @@ public partial class MainWindow : Window
         if (path is null) return;
         try
         {
-            ReportExportService.ExportPdf(path, "Dante Config Editor 2026.1 Beta", _project.BuildReportText(_language));
+            ReportExportService.ExportPdf(path, "Dante Config Editor 2026.1", _project.BuildReportText(_language));
             SetStatus(LocalizationService.Text(_language, "Status.PdfExported"));
         }
         catch (Exception exception)
@@ -1580,7 +1580,7 @@ public partial class MainWindow : Window
             L("À propos de DCE", "About DCE"),
             L(
                 """
-                Dante Config Editor 2026.1 Beta
+                Dante Config Editor 2026.1
 
                 Éditeur hors ligne de fichiers XML Dante Controller.
                 Projet tiers non officiel, sans affiliation avec Audinate.
@@ -1590,7 +1590,7 @@ public partial class MainWindow : Window
                 -------[]--
                 """,
                 """
-                Dante Config Editor 2026.1 Beta
+                Dante Config Editor 2026.1
 
                 Offline Dante Controller XML editor.
                 Unofficial third-party project, not affiliated with Audinate.
@@ -2433,7 +2433,7 @@ public partial class MainWindow : Window
         RefreshLiteralComboSelection("DeviceFilterCombo");
         RefreshLiteralComboSelection("PatchStatusCombo");
 
-        Title = L("Dante Config Editor 2026.1 Beta - macOS", "Dante Config Editor 2026.1 Beta - macOS");
+        Title = L("Dante Config Editor 2026.1 - macOS", "Dante Config Editor 2026.1 - macOS");
         FindControl<Button>("ThemeButton")!.Content = _darkTheme ? L("Thème clair", "Light theme") : L("Thème sombre", "Dark theme");
         FindControl<MenuItem>("ThemeMenuItem")!.Header =
             _darkTheme ? L("Thème clair", "Light theme") : L("Thème sombre", "Dark theme");

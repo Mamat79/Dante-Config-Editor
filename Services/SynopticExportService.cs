@@ -529,7 +529,7 @@ public static class SynopticExportService
         labelsLayer.Add(
             SvgText(svgNamespace, 34, diagram.Height - 30, summary, 11, "#526070"),
             SvgText(svgNamespace, diagram.Width - 34, diagram.Height - 30,
-                "Dante Config Editor 2026.1 Beta - By Mamat et ses agents  -------[]--", 10, "#718096", anchor: "end"));
+                "Dante Config Editor 2026.1 - By Mamat et ses agents  -------[]--", 10, "#718096", anchor: "end"));
 
         root.Add(backgroundLayer, locationsLayer, cablesLayer, devicesLayer, labelsLayer);
         XDocument document = new(new XDeclaration("1.0", "UTF-8", null), root);

@@ -1,4 +1,4 @@
-# Version macOS - 2026.1 Beta
+# Version macOS - 2026.1
 
 La version macOS utilise Avalonia et compile le même moteur XML, les mêmes
 services de projet, la même validation et les mêmes migrations que la version
@@ -9,16 +9,16 @@ par pixel du shell WPF Windows.
 
 Deux DMG autonomes sont produits :
 
-- `DanteConfigEditor2026_1_Beta_macOS_AppleSilicon.dmg` pour les Mac Apple
+- `DanteConfigEditor2026_1_macOS_AppleSilicon.dmg` pour les Mac Apple
   Silicon ;
-- `DanteConfigEditor2026_1_Beta_macOS_Intel.dmg` pour les Mac Intel 64 bits.
+- `DanteConfigEditor2026_1_macOS_Intel.dmg` pour les Mac Intel 64 bits.
 
 Le runtime .NET 8, les notices FR/EN et les banques publiques assainies sont
 inclus. L'utilisateur ouvre le DMG puis glisse
-`Dante Config Editor 2026.1 Beta` vers `Applications`.
+`Dante Config Editor 2026.1` vers `Applications`.
 
-L'identifiant du bundle bêta est
-`fr.mamat.danteconfigeditor.y2026-1-beta`. Il reste distinct de la V3.6.
+L'identifiant du bundle est
+`fr.mamat.danteconfigeditor.y2026-1`. Il reste distinct de la V3.6.
 
 ## Construction vérifiée
 

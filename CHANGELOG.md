@@ -3,6 +3,18 @@
 Toutes les dates utilisent le calendrier ISO. Les versions antérieures à
 2026.1 sont conservées dans [CHANGELOG_V3.md](CHANGELOG_V3.md).
 
+## [2026.1.0] - 2026-07-29
+
+### Modifié
+
+- promotion de 2026.1 en version officielle sans changer son périmètre métier ;
+- suppression de la mention Beta dans l'application, les notices, les
+  installateurs, les paquets macOS et la présentation ;
+- noms de paquets simplifiés, tout en conservant l'AppId Windows pour mettre à
+  niveau l'installation 2026.1 existante ;
+- vidéo de présentation réorganisée pour expliquer les principaux écrans et
+  parcours en français et en anglais.
+
 ## [2026.1.0-beta.1] - 2026-07-27
 
 ### Ajouté

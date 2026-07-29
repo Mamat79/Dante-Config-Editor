@@ -1,12 +1,12 @@
-# Dante Config Editor 2026.1 Beta
+# Dante Config Editor 2026.1
 
 [Notes de version françaises](RELEASE_NOTES.md)
 
 ## Status
 
-`2026.1.0-beta.1` is a progressive rebuild of DCE on top of the stabilized
-V3.6 baseline. It does not replace V3.6: applications, shortcuts, installer
-identities, and local profiles are separate.
+`2026.1.0` is the official release produced by the progressive rebuild of DCE
+on top of the stabilized V3.6 baseline. V3.6.1 remains available as a
+historical release; installer identities and local profiles are separate.
 
 DCE remains an unofficial third-party tool and is not affiliated with
 Audinate. It only works on offline files.
@@ -60,7 +60,7 @@ Audinate. It only works on offline files.
 
 The original document remains the source of truth. DCE performs targeted
 mutations and preserves unknown nodes, attributes, namespaces, ordering, and
-values. Saving uses a temporary file, reload, validation, backup, and atomic
+values. Saving uses a temporary file, reload, validation, backup, and safe
 replacement. A technical element missing from the original role is never
 added to simulate an unproven capability.
 
@@ -92,15 +92,16 @@ For the synthetic 200-device preset with 64 TX and 64 RX per device:
 - 11 local XML files checked read-only by integration tests without modifying
   their originals.
 
-Final delivery counts are recorded in the beta report.
+Detailed preparation checks remain recorded in the dated technical reports
+under `docs/2026.1`.
 
 ## Installation
 
 ### Windows
 
-`DanteConfigEditor2026_1_Beta_Installer.exe` includes the .NET 8 runtime and
+`DanteConfigEditor2026_1_Installer.exe` includes the .NET 8 runtime and
 bilingual guides. Its default folder is
-`C:\Program Files\Dante Config Editor 2026.1 Beta\`.
+`C:\Program Files\Dante Config Editor 2026.1\`.
 All 43 bundled templates are installed in the application folder without
 replacing the personal bank.
 

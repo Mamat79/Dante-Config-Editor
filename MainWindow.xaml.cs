@@ -1936,7 +1936,7 @@ public partial class MainWindow : Window
     {
         string message = _language == UiLanguage.English
             ? """
-              Dante Config Editor 2026.1 Beta
+              Dante Config Editor 2026.1
 
               Offline Dante Controller XML editor.
               Unofficial third-party project, not affiliated with Audinate.
@@ -1946,7 +1946,7 @@ public partial class MainWindow : Window
               -------[]--
               """
             : """
-              Dante Config Editor 2026.1 Beta
+              Dante Config Editor 2026.1
 
               Éditeur hors ligne de fichiers XML Dante Controller.
               Projet tiers non officiel, sans affiliation avec Audinate.

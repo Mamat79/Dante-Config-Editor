@@ -1,8 +1,8 @@
-#define MyAppName "Dante Config Editor 2026.1 Beta"
-#define MyAppVersion "2026.1.0-beta.1"
+#define MyAppName "Dante Config Editor 2026.1"
+#define MyAppVersion "2026.1.0"
 #define MyAppPublisher "Mamat"
 #define MyAppExeName "DanteConfigEditorV3.exe"
-#define MyAppShortcutName "DCE 2026.1 Beta"
+#define MyAppShortcutName "DCE 2026.1"
 #define SourceRoot ".."
 
 [Setup]
@@ -10,12 +10,12 @@ AppId={{C893F4F8-5ED3-4C2E-AAD8-024F9DCB4A1D}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
-DefaultDirName={autopf}\Dante Config Editor 2026.1 Beta
-DefaultGroupName=Dante Config Editor 2026.1 Beta
+DefaultDirName={autopf}\Dante Config Editor 2026.1
+DefaultGroupName=Dante Config Editor 2026.1
 DisableProgramGroupPage=no
 AllowNoIcons=yes
 OutputDir={#SourceRoot}\dist
-OutputBaseFilename=DanteConfigEditor2026_1_Beta_Installer
+OutputBaseFilename=DanteConfigEditor2026_1_Installer
 SetupIconFile={#SourceRoot}\DanteEdit.ico
 Compression=lzma2
 SolidCompression=yes
@@ -23,12 +23,12 @@ WizardStyle=modern
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 PrivilegesRequired=admin
-; La Beta possède une identité distincte et ne modifie aucune installation V3.6.
+; La génération 2026.1 possède une identité distincte et ne modifie aucune installation V3.6.
 UsedUserAreasWarning=no
 UninstallDisplayIcon={app}\{#MyAppExeName}
 VersionInfoVersion=2026.1.0.0
 VersionInfoCompany={#MyAppPublisher}
-VersionInfoDescription=Dante Config Editor 2026.1 Beta installer
+VersionInfoDescription=Dante Config Editor 2026.1 installer
 VersionInfoProductName={#MyAppName}
 SetupLogging=yes
 CloseApplications=yes
@@ -90,7 +90,7 @@ Name: "{group}\Désinstaller {code:GetShortcutAppName}"; Filename: "{uninstallex
 Name: "{autodesktop}\{code:GetShortcutAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"; IconFilename: "{app}\DanteEdit.ico"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,Dante Config Editor 2026.1 Beta}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,Dante Config Editor 2026.1}"; Flags: nowait postinstall skipifsilent
 Filename: "{app}\RELEASE_NOTES.md"; Description: "Ouvrir les notes de version"; Flags: postinstall shellexec unchecked skipifsilent; Check: IsFrenchLanguage
 Filename: "{app}\RELEASE_NOTES_EN.md"; Description: "Open the release notes"; Flags: postinstall shellexec unchecked skipifsilent; Check: IsEnglishLanguage
 Filename: "{app}\QuickStart_DanteConfigEditorV3_FR.pdf"; Description: "Ouvrir le démarrage rapide en français"; Flags: postinstall shellexec unchecked skipifsilent; Check: IsFrenchLanguage
@@ -105,6 +105,7 @@ var
   GithubLabel: TNewStaticText;
   ExistingInstallDir: String;
   ExistingInstallVersion: String;
+  LegacyBetaInstallDir: String;
   BankDirectoriesPage: TInputDirWizardPage;
   BankOptionsPage: TInputOptionWizardPage;
   BundledBankDestination: String;
@@ -250,8 +251,24 @@ begin
   end;
 end;
 
+function IsLegacyBetaInstallPath(Path: String): Boolean;
+begin
+  Result := (Path <> '')
+    and (CompareText(
+      ExtractFileName(RemoveBackslashUnlessRoot(Path)),
+      'Dante Config Editor 2026.1 Beta') = 0);
+end;
+
 procedure InitializeWizard();
 begin
+  LegacyBetaInstallDir := '';
+  if IsLegacyBetaInstallPath(ExistingInstallDir) then
+  begin
+    LegacyBetaInstallDir := ExistingInstallDir;
+    WizardForm.DirEdit.Text := ExpandConstant(
+      '{autopf}\Dante Config Editor 2026.1');
+  end;
+
   if ActiveLanguage = 'english' then
   begin
     BankDirectoriesPage := CreateInputDirPage(
@@ -481,6 +498,21 @@ begin
   if CurStep = ssPostInstall then
   begin
     SaveMachineBankLocation();
+    if (LegacyBetaInstallDir <> '')
+      and (CompareText(
+        RemoveBackslashUnlessRoot(LegacyBetaInstallDir),
+        RemoveBackslashUnlessRoot(ExpandConstant('{app}'))) <> 0) then
+    begin
+      { Le nouveau paquet est écrit avant de retirer l'ancien dossier bêta. }
+      DelTree(LegacyBetaInstallDir, True, True, True);
+      DelTree(
+        ExpandConstant('{commonprograms}\Dante Config Editor 2026.1 Beta'),
+        True,
+        True,
+        True);
+      DeleteFile(ExpandConstant('{userdesktop}\DCE 2026.1 Beta.lnk'));
+      DeleteFile(ExpandConstant('{commondesktop}\DCE 2026.1 Beta.lnk'));
+    end;
   end;
 end;
 

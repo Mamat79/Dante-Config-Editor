@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:converters="clr-namespace:DanteConfigEditor.Converters"
-        Title="Dante Config Editor 2026.1 Beta"
+        Title="Dante Config Editor 2026.1"
         Width="1280"
         Height="820"
         MinWidth="1120"
@@ -685,7 +685,7 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Margin="0,0,18,0" VerticalAlignment="Center">
-                         <TextBlock Text="Dante Config Editor 2026.1 Beta"
+                         <TextBlock Text="Dante Config Editor 2026.1"
                                     FontSize="20"
                                     FontWeight="SemiBold"
                                     TextWrapping="NoWrap" />
@@ -1736,7 +1736,7 @@
                                                      Style="{StaticResource PatchModeButtonStyle}"
                                                      Visibility="Collapsed"
                                                      Checked="PatchWorkspaceModeButton_Checked"
-                                                     ToolTip="Contrôle les lots préparés avant leur application atomique."
+                                                     ToolTip="Contrôle les lots préparés avant de les appliquer en une seule opération."
                                                      AutomationProperties.Name="Modifications Patch en attente" />
                                     </StackPanel>
                                 </ScrollViewer>
@@ -3040,7 +3040,7 @@
                                     <TextBlock x:Name="RecoveryAvailabilityTextBlock"
                                                Text="Aucune récupération en attente détectée."
                                                Style="{StaticResource ShellCaptionStyle}" />
-                                    <TextBlock Text="DCE travaille hors ligne sur des fichiers. Une sauvegarde de sécurité est conservée lors des remplacements atomiques."
+                                    <TextBlock Text="DCE travaille hors ligne sur des fichiers. Une copie de sécurité est conservée avant le remplacement du fichier."
                                                Style="{StaticResource ShellCaptionStyle}"
                                                Margin="0,8,0,0" />
                                 </StackPanel>

@@ -1,11 +1,11 @@
-# Dante Config Editor 2026.1 Beta
+# Dante Config Editor 2026.1
 
 [Documentation française](README.md)
 
 A local, offline Dante Controller preset XML editor developed by Mamat with
 the assistance of development agents.
 
-> **Status: beta published from the `main` branch.**
+> **Status: official release published from the `main` branch.**
 > DCE is an unofficial third-party tool and is not affiliated with Audinate.
 > It does not control a live Dante network and uses no Audinate SDK or API.
 > Work on a copy and review the final XML in Dante Controller before operation.
@@ -77,7 +77,7 @@ identity. A few controls retain their native platform rendering.
 XML remains the file intended for Dante Controller. DCE performs targeted
 changes to the original document to preserve unknown nodes, attributes,
 namespaces, values, and extensions. Saving uses a temporary file, reload,
-validation, backup, and atomic destination replacement.
+validation, backup, and safe destination replacement.
 
 ### `.dceproj` project
 
@@ -114,7 +114,7 @@ Updates never replace that personal bank.
 - JSON, CSV, DMT XLSX/ODS, A&H dLive/Avantis, and Yamaha CL/QL label exchange;
 - TXT/PDF reports, patchbooks, and before/after comparison;
 - SVG/PDF synoptic with locations and grouped cables;
-- automatic recovery and atomic saving;
+- automatic recovery and safe saving;
 - French/English UI and light/dark themes;
 - light theme on first launch, then restoration of the last selected theme and
   language;
@@ -163,29 +163,29 @@ Automated coverage includes:
 
 These tests do not replace final import in Dante Controller.
 
-## Install the beta
+## Install DCE 2026.1
 
-The [DCE 2026.1 Beta Release](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.1)
+The [DCE 2026.1 Release](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.1)
 contains the Windows and macOS installers, guides, videos, and bundled banks.
 GitHub Actions also retains branch artifacts after a successful run.
 
 ### Windows 11 x64
 
-Artifact: `DCE-2026.1-Beta-Windows-Installer`
+Artifact: `DCE-2026.1-Windows-Installer`
 
-File: `DanteConfigEditor2026_1_Beta_Installer.exe`
+File: `DanteConfigEditor2026_1_Installer.exe`
 
 The self-contained installer includes .NET 8 and the French/English guides.
 Its default folder is
-`C:\Program Files\Dante Config Editor 2026.1 Beta\`. Its AppId, shortcuts, and
+`C:\Program Files\Dante Config Editor 2026.1\`. Its AppId, shortcuts, and
 `%LOCALAPPDATA%\DanteConfigEditor2026.1` profile are separate from V3.6.
-Uninstalling the beta does not remove XML files, projects, banks, or the V3.6
+Uninstalling DCE 2026.1 does not remove XML files, projects, banks, or the V3.6
 profile.
 
 ### macOS
 
-- `DanteConfigEditor2026_1_Beta_macOS_AppleSilicon.dmg`
-- `DanteConfigEditor2026_1_Beta_macOS_Intel.dmg`
+- `DanteConfigEditor2026_1_macOS_AppleSilicon.dmg`
+- `DanteConfigEditor2026_1_macOS_Intel.dmg`
 
 The .NET runtime is bundled. Packages are ad hoc signed but not notarized by
 Apple, so the first launch may require an explicit Open action from Finder.

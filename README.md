@@ -1,11 +1,11 @@
-# Dante Config Editor 2026.1 Beta
+# Dante Config Editor 2026.1
 
 [English documentation](README_EN.md)
 
 Éditeur local et hors ligne de presets XML pour Dante Controller, développé
 par Mamat avec l’aide d’agents de développement.
 
-> **Statut : bêta publiée depuis la branche principale `main`.**
+> **Statut : version officielle publiée depuis la branche principale `main`.**
 > DCE est un outil tiers non officiel, sans affiliation avec Audinate. Il ne
 > pilote aucun réseau Dante et n’utilise ni SDK ni API Audinate. Travaillez sur
 > une copie et contrôlez le XML final dans Dante Controller avant exploitation.
@@ -80,7 +80,7 @@ Le XML reste le fichier destiné à Dante Controller. DCE modifie le document
 d’origine de manière ciblée afin de conserver les nœuds, attributs,
 namespaces, valeurs et extensions inconnues. La sauvegarde utilise un fichier
 temporaire, une relecture, une validation, une copie de sécurité puis un
-remplacement atomique.
+remplacement sécurisé de la destination.
 
 ### Projet `.dceproj`
 
@@ -119,7 +119,7 @@ personnelle. Une mise à jour ne remplace jamais cette dernière.
   Yamaha CL/QL ;
 - rapports TXT/PDF, patchbooks et comparaison avant/après ;
 - synoptique SVG/PDF avec emplacements et câbles regroupés ;
-- récupération automatique et sauvegardes atomiques ;
+- récupération automatique et sauvegardes sécurisées ;
 - interface française/anglaise et thèmes clair/sombre ;
 - premier lancement en thème clair, puis restauration du dernier thème et de
   la dernière langue choisis ;
@@ -171,29 +171,29 @@ Les tests automatisés couvrent notamment :
 
 Ces tests ne remplacent pas l’import final dans Dante Controller.
 
-## Installer la bêta
+## Installer DCE 2026.1
 
-La [Release DCE 2026.1 Beta](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.1)
+La [Release DCE 2026.1](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.1)
 regroupe les installateurs Windows et macOS, les notices, les vidéos et les
 banques fournies. Les workflows GitHub Actions conservent également leurs
 artefacts après un run réussi.
 
 ### Windows 11 x64
 
-Artefact : `DCE-2026.1-Beta-Windows-Installer`
+Artefact : `DCE-2026.1-Windows-Installer`
 
-Fichier : `DanteConfigEditor2026_1_Beta_Installer.exe`
+Fichier : `DanteConfigEditor2026_1_Installer.exe`
 
 L’installateur autonome inclut .NET 8 et les notices FR/EN. Le dossier proposé
-est `C:\Program Files\Dante Config Editor 2026.1 Beta\`. L’AppId, les
+est `C:\Program Files\Dante Config Editor 2026.1\`. L’AppId, les
 raccourcis et le profil `%LOCALAPPDATA%\DanteConfigEditor2026.1` sont distincts
-de la V3.6. Désinstaller la bêta ne supprime ni XML, ni projet, ni banque, ni
+de la V3.6. Désinstaller DCE 2026.1 ne supprime ni XML, ni projet, ni banque, ni
 profil V3.6.
 
 ### macOS
 
-- `DanteConfigEditor2026_1_Beta_macOS_AppleSilicon.dmg`
-- `DanteConfigEditor2026_1_Beta_macOS_Intel.dmg`
+- `DanteConfigEditor2026_1_macOS_AppleSilicon.dmg`
+- `DanteConfigEditor2026_1_macOS_Intel.dmg`
 
 Le runtime .NET est inclus. Les bundles sont signés ad hoc mais ne sont pas
 notariés par Apple. Au premier lancement, macOS peut donc demander une

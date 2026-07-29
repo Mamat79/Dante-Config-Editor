@@ -16,7 +16,7 @@ namespace DanteConfigEditor.Mac.Tests;
 public sealed class MainWindowTests
 {
     [AvaloniaFact]
-    public void Beta2026VersionIsShownInMacApplication()
+    public void Release2026VersionIsShownInMacApplication()
     {
         string version = typeof(MainWindow).Assembly
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
@@ -26,8 +26,8 @@ public sealed class MainWindowTests
         try
         {
             ApplyLanguage(window, UiLanguage.English);
-            Assert.Equal("2026.1.0-beta.1", version);
-            Assert.Equal("Dante Config Editor 2026.1 Beta - macOS", window.Title);
+            Assert.Equal("2026.1.0", version);
+            Assert.Equal("Dante Config Editor 2026.1 - macOS", window.Title);
             Assert.Equal("Add XML", LocalizationService.TranslateLiteral(UiLanguage.English, "Ajouter XML"));
             Assert.Equal("Device or channel", LocalizationService.TranslateLiteral(UiLanguage.English, "Machine ou canal"));
             Assert.Equal("All", LocalizationService.TranslateLiteral(UiLanguage.English, "Toutes"));

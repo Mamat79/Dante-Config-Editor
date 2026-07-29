@@ -1,6 +1,6 @@
 param(
     [string]$InstallerPath = "",
-    [string]$ExpectedVersion = "2026.1.0-beta.1",
+    [string]$ExpectedVersion = "2026.1.0",
     [switch]$AllowCustomInstallLocation
 )
 
@@ -8,7 +8,7 @@ $ErrorActionPreference = "Stop"
 
 $root = Split-Path $PSScriptRoot -Parent
 if ([string]::IsNullOrWhiteSpace($InstallerPath)) {
-    $InstallerPath = Join-Path $root "dist\DanteConfigEditor2026_1_Beta_Installer.exe"
+    $InstallerPath = Join-Path $root "dist\DanteConfigEditor2026_1_Installer.exe"
 }
 
 $installer = (Resolve-Path -LiteralPath $InstallerPath -ErrorAction Stop).Path
@@ -24,7 +24,7 @@ $targetRegistryPaths = @(
 )
 
 # La V3.6 reste la version stable installée en parallèle. Le test vérifie que
-# l'installation et la mise à niveau 2026.1 Beta ne modifient jamais son entrée.
+# l'installation et la mise à niveau 2026.1 ne modifient jamais son entrée.
 $stableRegistryPaths = @(
     "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{A11FA3C8-3461-46CA-AC61-6A14316E8DBB}_is1",
     "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{A11FA3C8-3461-46CA-AC61-6A14316E8DBB}_is1"
@@ -115,7 +115,7 @@ function Assert-InstalledState {
 
     $targetRecords = @(Get-TargetInstallRecords)
     if ($targetRecords.Count -ne 1) {
-        throw "$Step : une seule entrée 2026.1 Beta était attendue, trouvé $($targetRecords.Count)."
+        throw "$Step : une seule entrée 2026.1 était attendue, trouvé $($targetRecords.Count)."
     }
 
     $record = $targetRecords[0]
@@ -152,14 +152,14 @@ function Assert-InstalledState {
         }
     }
 
-    $shortcut = Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonPrograms)) "Dante Config Editor 2026.1 Beta\DCE 2026.1 Beta.lnk"
+    $shortcut = Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonPrograms)) "Dante Config Editor 2026.1\DCE 2026.1.lnk"
     if (-not (Test-Path -LiteralPath $shortcut)) {
         throw "$Step : raccourci Menu Démarrer manquant : $shortcut"
     }
 
     $desktopShortcutCandidates = @(
-        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::DesktopDirectory)) "DCE 2026.1 Beta.lnk"),
-        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonDesktopDirectory)) "DCE 2026.1 Beta.lnk")
+        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::DesktopDirectory)) "DCE 2026.1.lnk"),
+        (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::CommonDesktopDirectory)) "DCE 2026.1.lnk")
     ) | Select-Object -Unique
     if (-not ($desktopShortcutCandidates | Where-Object { Test-Path -LiteralPath $_ })) {
         throw "$Step : raccourci Bureau manquant. Chemins vérifiés : $($desktopShortcutCandidates -join ', ')"
@@ -171,7 +171,7 @@ function Assert-InstalledState {
 $stableSnapshotBefore = @(Get-StableSnapshot)
 $targetInstallRecordsBefore = @(Get-TargetInstallRecords).Count
 
-Invoke-InstallerPass -Name "Installation 2026.1 Beta"
+Invoke-InstallerPass -Name "Installation 2026.1"
 $firstRecord = Assert-InstalledState -Step "Après le premier passage"
 Assert-StableInstallUnchanged -Step "Après le premier passage" -ExpectedSnapshot $stableSnapshotBefore
 

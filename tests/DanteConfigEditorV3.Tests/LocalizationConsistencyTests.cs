@@ -11,8 +11,8 @@ public sealed class LocalizationConsistencyTests
     private static readonly HashSet<string> LanguageNeutralLiterals = new(StringComparer.Ordinal)
     {
         "#", "-", "+", "<", "−", "↑", "↓", "↕", "↗", "0", "1", "10", "100 %", "0.0.0.0", "192.168.1", "255.255.255.0",
-        "0 device - 0 TX - 0 RX", "-------[]--", "ATOMIC", "Atomic Bomb", "BOMB", "By Mamat", "et ses agents", "Dante Config Editor 2026.1 Beta",
-        "Daisychain", "Dante Config Editor 2026.1 Beta - macOS", "Dante Id",
+        "0 device - 0 TX - 0 RX", "-------[]--", "ATOMIC", "Atomic Bomb", "BOMB", "By Mamat", "et ses agents", "Dante Config Editor 2026.1",
+        "Daisychain", "Dante Config Editor 2026.1 - macOS", "Dante Id",
         "Device", "Easy patch", "Patchbook", "Preferred master", "Preferred Master", "RX", "TX",
         "TX device", "TX Dante Id", "TX/RX", "Type"
     };

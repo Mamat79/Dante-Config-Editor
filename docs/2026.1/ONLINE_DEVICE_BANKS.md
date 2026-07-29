@@ -1,6 +1,6 @@
 # Banques locales et catalogue GitHub
 
-## État livré dans 2026.1 Beta
+## État livré dans 2026.1
 
 L'installateur Windows permet déjà de choisir séparément :
 

@@ -1,12 +1,12 @@
-# Dante Config Editor 2026.1 Beta
+# Dante Config Editor 2026.1
 
 [English release notes](RELEASE_NOTES_EN.md)
 
 ## Statut
 
-`2026.1.0-beta.1` est une refondation progressive de DCE à partir de la V3.6
-stabilisée. Elle ne remplace pas la V3.6 : les applications, raccourcis,
-identifiants d’installation et profils locaux sont distincts.
+`2026.1.0` est la version officielle issue de la refondation progressive de
+DCE à partir de la V3.6 stabilisée. La V3.6.1 reste disponible comme version
+historique ; les identités d’installation et les profils locaux sont distincts.
 
 DCE reste un outil tiers non officiel, sans affiliation avec Audinate. Il
 travaille uniquement sur des fichiers hors ligne.
@@ -64,7 +64,7 @@ travaille uniquement sur des fichiers hors ligne.
 Le document original reste la source. DCE effectue des mutations ciblées et
 conserve les nœuds, attributs, namespaces, ordre et valeurs inconnues. Une
 sauvegarde utilise un temporaire, une relecture, une validation, une copie de
-sécurité et un remplacement atomique. Une balise technique absente du rôle
+sécurité et un remplacement sécurisé. Une balise technique absente du rôle
 d'origine n'est jamais ajoutée pour simuler une capacité non démontrée.
 
 Le corpus automatisé couvre notamment les presets partiels, TX ou RX seuls,
@@ -95,15 +95,16 @@ Sur le preset synthétique de 200 machines avec 64 TX et 64 RX chacune :
 - 11 XML locaux contrôlés en lecture seule par les tests d'intégration, sans
   modification des originaux.
 
-Les nombres finaux de l’artefact livré sont consignés dans le rapport bêta.
+Les validations détaillées de la phase de préparation restent consignées dans
+les rapports techniques datés du dossier `docs/2026.1`.
 
 ## Installation
 
 ### Windows
 
-`DanteConfigEditor2026_1_Beta_Installer.exe` inclut le runtime .NET 8 et les
+`DanteConfigEditor2026_1_Installer.exe` inclut le runtime .NET 8 et les
 notices bilingues. Le dossier proposé est
-`C:\Program Files\Dante Config Editor 2026.1 Beta\`.
+`C:\Program Files\Dante Config Editor 2026.1\`.
 Les 43 modèles fournis sont intégrés dans le dossier de l'application, sans
 remplacer la banque personnelle.
 

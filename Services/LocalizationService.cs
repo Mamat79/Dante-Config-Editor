@@ -1208,7 +1208,7 @@ public static class LocalizationService
         Add(map, "Affecte des sélections et des plages RX/TX dans le même moteur de Patch.", "Assigns Rx/Tx selections and ranges through the same Patch engine.");
         Add(map, "Affiche chaque RX et sa source TX courante.", "Shows each Rx and its current Tx source.");
         Add(map, "Filtre la liste Patch sur la machine actuellement sélectionnée.", "Filters the Patch list to the currently selected device.");
-        Add(map, "Contrôle les lots préparés avant leur application atomique.", "Reviews prepared batches before their atomic application.");
+        Add(map, "Contrôle les lots préparés avant de les appliquer en une seule opération.", "Reviews prepared batches before applying them as a single operation.");
         Add(map, "Les clics directs sont appliqués immédiatement. Cette liste contient seulement les lots explicitement préparés.", "Direct clicks are applied immediately. This list only contains explicitly prepared batches.");
         Add(map, "Liste des modifications Patch en attente", "Pending Patch changes list");
         Add(map, "Source actuelle", "Current source");
@@ -1459,7 +1459,7 @@ public static class LocalizationService
         Add(map, "Les changements de patch seront appliqués avec les autres réglages de cette fenêtre.", "Patch changes will be applied with the other settings in this window.");
 
         // Shell Windows 2026.1.
-        Add(map, "Dante Config Editor 2026.1 Beta", "Dante Config Editor 2026.1 Beta");
+        Add(map, "Dante Config Editor 2026.1", "Dante Config Editor 2026.1");
         Add(map, "Fichier", "File");
         Add(map, "Édition", "Edit");
         Add(map, "Affichage", "View");
@@ -1549,7 +1549,7 @@ public static class LocalizationService
         Add(map, "Ouvrir le fichier sélectionné", "Open selected file");
         Add(map, "Récupération et sécurité", "Recovery and safety");
         Add(map, "Aucune récupération en attente détectée.", "No pending recovery was detected.");
-        Add(map, "DCE travaille hors ligne sur des fichiers. Une sauvegarde de sécurité est conservée lors des remplacements atomiques.", "DCE works offline on files. A safety backup is retained during atomic replacements.");
+        Add(map, "DCE travaille hors ligne sur des fichiers. Une copie de sécurité est conservée avant le remplacement du fichier.", "DCE works offline on files. A safety backup is kept before the destination file is replaced.");
         Add(map, "Chargez un XML pour analyser rapidement sa configuration.", "Load an XML file to quickly inspect its configuration.");
         Add(map, "Subscriptions", "Subscriptions");
         Add(map, "Erreurs / avertissements", "Errors / warnings");

@@ -1,4 +1,4 @@
-# Limites connues - 2026.1 Beta
+# Limites connues - 2026.1
 
 ## Compatibilité Dante
 
@@ -31,7 +31,7 @@
 - Le support Yamaha cible `InName.csv` dans les packages CL/QL observés. Les autres fichiers du ZIP sont conservés, mais une structure future différente peut être refusée.
 - Les imports et exports de labels ne configurent pas directement une console : ils créent des fichiers à importer ensuite avec les outils du fabricant.
 - Le fichier ouvert doit être sauvegardé sous un nouveau nom avant toute écriture. Le nouveau chemin devient ensuite la référence de session.
-- Une sauvegarde atomique protège la destination contre les échecs testés, mais ne remplace pas une sauvegarde externe du projet.
+- La sauvegarde sécurisée protège la destination contre les échecs testés, mais ne remplace pas une sauvegarde externe du projet.
 - La récupération automatique est temporisée. Une coupure immédiate après une modification peut survenir avant l'écriture de la copie de récupération.
 - La pile d'annulation conserve au maximum 10 états XML pour limiter l'usage mémoire.
 - Les gros presets restent traités en mémoire ; les mesures synthétiques actuelles sont publiées dans `TESTING.md`.
@@ -57,7 +57,7 @@
 
 - L'installateur Windows est autonome pour Windows x64 et inclut .NET 8. Les architectures Windows ARM64 et x86 ne sont pas distribuées.
 - L'installateur Windows n'est pas signé avec un certificat Authenticode public. Vérifier le SHA-256 publié avant distribution ; Windows peut afficher un avertissement de réputation.
-- La 2026.1 Beta est produite pour Windows x64, macOS Apple Silicon et macOS Intel. Windows ARM64 et x86 ne sont pas distribués.
+- La version 2026.1 est produite pour Windows x64, macOS Apple Silicon et macOS Intel. Windows ARM64 et x86 ne sont pas distribués.
 - Les DMG macOS sont signés ad hoc, sans certificat Apple Developer ID ni notarisation. Gatekeeper peut demander un clic droit puis `Ouvrir` au premier lancement.
 - Le moteur XML et les services principaux sont partagés, mais l'interface Avalonia macOS n'est pas une reproduction pixel par pixel du nouvel espace de travail WPF Windows.
 - Les tests Avalonia sans écran ne remplacent pas une validation manuelle sur plusieurs modèles de Mac, ni un contrôle VoiceOver réel.
@@ -65,9 +65,9 @@
 
 ## Statut de la version
 
-La V3.6 reste la base stable de `main`. La 2026.1 Beta est isolée dans la
-branche `2026.1`, avec une identité d'installation, un profil et une
-prérelease GitHub distincts. Dante Config Editor reste un outil tiers non
-officiel Audinate. Toujours travailler sur une copie, lire le rapport
-avant/après et valider les structures de preset importantes dans Dante
-Controller avant une utilisation terrain.
+La version 2026.1 est la version officielle publiée depuis `main`. La V3.6.1
+reste disponible comme version historique avec une identité d'installation et
+un profil distincts. Dante Config Editor reste un outil tiers non officiel
+Audinate. Toujours travailler sur une copie, lire le rapport avant/après et
+valider les structures de preset importantes dans Dante Controller avant une
+utilisation terrain.
