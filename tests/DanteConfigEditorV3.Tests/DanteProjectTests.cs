@@ -1,6 +1,7 @@
 using DanteConfigEditor.Models;
 using DanteConfigEditor.Services;
 using System.Reflection;
+using System.Xml.Linq;
 
 namespace DanteConfigEditorV3.Tests;
 
@@ -165,6 +166,120 @@ public sealed class DanteProjectTests
         Assert.NotNull(project.FindDevice("DEVICE-D"));
         Assert.Contains(project.BuildDeviceChangeRows(), row => row.DeviceName == "DEVICE-D" && row.Status == "Ajoutée");
         Assert.False(project.ValidateXmlChangeGuard().HasErrors);
+    }
+
+    [Fact]
+    public void MergeReusesDevicesWithTheSameTechnicalIdentity()
+    {
+        using TestWorkspace workspace = new("representative-preset.xml");
+        DanteProject project = DanteProject.Load(workspace.SourcePath);
+
+        Assert.Equal(3, project.FindDuplicateDeviceNamesInXml(workspace.SourcePath).Count);
+        Assert.Equal(3, project.BuildAutomaticDuplicateRenameMap(workspace.SourcePath).Count);
+
+        DanteMergeResult result = project.MergeDevicesFromXml(
+            workspace.SourcePath,
+            new Dictionary<string, string>());
+
+        Assert.Equal(0, result.ImportedDeviceCount);
+        Assert.Equal(0, result.RenamedDeviceCount);
+        Assert.Equal(0, result.SkippedDuplicateDeviceCount);
+        Assert.Equal(3, result.ReusedDeviceCount);
+        Assert.Equal("DEVICE-A", result.ReusedDevices["DEVICE-A"]);
+        Assert.Equal("DEVICE-B", result.ReusedDevices["DEVICE-B"]);
+        Assert.Equal("DEVICE-C", result.ReusedDevices["DEVICE-C"]);
+        Assert.Equal(3, project.Devices.Count);
+        Assert.False(project.Validate().HasErrors);
+        Assert.False(project.ValidateXmlChangeGuard().HasErrors);
+    }
+
+    [Fact]
+    public void MergeCanImportARepeatedTechnicalDeviceAsAnIndependentGenericRole()
+    {
+        using TestWorkspace workspace = new("representative-preset.xml");
+        DanteProject project = DanteProject.Load(workspace.SourcePath);
+        IReadOnlyDictionary<string, string> renameMap =
+            project.BuildAutomaticDuplicateRenameMap(workspace.SourcePath, "Import");
+
+        DanteMergeResult result = project.MergeDevicesFromXml(workspace.SourcePath, renameMap);
+
+        Assert.Equal(3, result.ImportedDeviceCount);
+        Assert.Equal(3, result.RenamedDeviceCount);
+        Assert.Equal(0, result.ReusedDeviceCount);
+        Assert.Equal(6, project.Devices.Count);
+        foreach (string importedName in renameMap.Values)
+        {
+            DanteDevice importedRole = Assert.IsType<DanteDevice>(project.FindDevice(importedName));
+            Assert.True(importedRole.IsGenericRole);
+            Assert.Empty(importedRole.TechnicalDeviceId);
+        }
+
+        Assert.False(project.Validate().HasErrors);
+        Assert.False(project.ValidateXmlChangeGuard().HasErrors);
+
+        string outputPath = Path.Combine(workspace.DirectoryPath, "merged-generic-roles.xml");
+        project.SaveAs(outputPath);
+        DanteProject reloaded = DanteProject.Load(outputPath);
+        Assert.Equal(6, reloaded.Devices.Count);
+        Assert.False(reloaded.Validate().HasErrors);
+    }
+
+    [Fact]
+    public void MergeRedirectsImportedSubscriptionsToTheExistingTechnicalDevice()
+    {
+        using TestWorkspace workspace = new("representative-preset.xml");
+        string mergePath = workspace.CopyFixture("merge-preset.xml");
+        XDocument mergeDocument = XDocument.Load(mergePath, LoadOptions.PreserveWhitespace);
+        XElement[] importedDevices = mergeDocument.Root!.Elements()
+            .Where(element => element.Name.LocalName == "device")
+            .ToArray();
+        XElement reusedDevice = importedDevices[0];
+        XElement importedDevice = importedDevices[1];
+
+        reusedDevice.Elements().First(element => element.Name.LocalName == "name").Value = "DEVICE-A-REMOTE";
+        reusedDevice.Elements().First(element => element.Name.LocalName == "friendly_name").Value = "DEVICE-A-REMOTE";
+        XElement instanceId = reusedDevice.Elements().First(element => element.Name.LocalName == "instance_id");
+        instanceId.Elements().First(element => element.Name.LocalName == "device_id").Value = "001DC1FFFE000001";
+        instanceId.Elements().First(element => element.Name.LocalName == "process_id").Value = "0";
+
+        XElement importedRx = importedDevice.Elements().First(element => element.Name.LocalName == "rxchannel");
+        importedRx.Elements().First(element => element.Name.LocalName == "subscribed_device").Value = "DEVICE-A-REMOTE";
+        importedRx.Elements().First(element => element.Name.LocalName == "subscribed_channel").Value = "PROGRAM L";
+        mergeDocument.Save(mergePath, SaveOptions.DisableFormatting);
+
+        DanteProject project = DanteProject.Load(workspace.SourcePath);
+        Assert.Contains(
+            "DEVICE-A-REMOTE",
+            project.FindDuplicateDeviceNamesInXml(mergePath));
+        Assert.Contains(
+            "DEVICE-A-REMOTE",
+            project.BuildAutomaticDuplicateRenameMap(mergePath, "Import").Keys);
+        DanteMergeResult result = project.MergeDevicesFromXml(
+            mergePath,
+            new Dictionary<string, string>());
+
+        Assert.Equal(1, result.ImportedDeviceCount);
+        Assert.Equal(1, result.ReusedDeviceCount);
+        Assert.Equal("DEVICE-A", result.ReusedDevices["DEVICE-A-REMOTE"]);
+        Assert.Null(project.FindDevice("DEVICE-A-REMOTE"));
+        Assert.NotNull(project.FindDevice("DEVICE-D"));
+        Assert.Contains(
+            project.PatchMatrix.Subscriptions,
+            subscription => subscription.RxDevice == "DEVICE-D"
+                && subscription.ResolvedTxDeviceName == "DEVICE-A"
+                && subscription.TxChannelName == "PROGRAM L");
+        Assert.False(project.Validate().HasErrors);
+        Assert.False(project.ValidateXmlChangeGuard().HasErrors);
+
+        string outputPath = Path.Combine(workspace.DirectoryPath, "merged-identity.xml");
+        project.SaveAs(outputPath);
+        DanteProject reloaded = DanteProject.Load(outputPath);
+        Assert.False(reloaded.Validate().HasErrors);
+        Assert.Contains(
+            reloaded.PatchMatrix.Subscriptions,
+            subscription => subscription.RxDevice == "DEVICE-D"
+                && subscription.ResolvedTxDeviceName == "DEVICE-A"
+                && subscription.TxChannelName == "PROGRAM L");
     }
 
     [Fact]

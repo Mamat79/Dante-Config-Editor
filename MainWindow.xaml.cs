@@ -5821,12 +5821,18 @@ public partial class MainWindow : Window
     private string BuildMergeResultLog(string path, DanteMergeResult result)
     {
         string details = _language == UiLanguage.English
-            ? $"XML import: {Path.GetFileName(path)} - {result.ImportedDeviceCount} device(s) imported, {result.RenamedDeviceCount} renamed, {result.SkippedDuplicateDeviceCount} duplicate(s) skipped."
-            : $"Import XML : {Path.GetFileName(path)} - {result.ImportedDeviceCount} machine(s) importée(s), {result.RenamedDeviceCount} renommée(s), {result.SkippedDuplicateDeviceCount} doublon(s) ignoré(s).";
+            ? $"XML import: {Path.GetFileName(path)} - {result.ImportedDeviceCount} device(s) imported, {result.ReusedDeviceCount} existing technical device(s) reused, {result.RenamedDeviceCount} renamed, {result.SkippedDuplicateDeviceCount} name duplicate(s) skipped."
+            : $"Import XML : {Path.GetFileName(path)} - {result.ImportedDeviceCount} machine(s) importée(s), {result.ReusedDeviceCount} identité(s) technique(s) existante(s) réutilisée(s), {result.RenamedDeviceCount} renommée(s), {result.SkippedDuplicateDeviceCount} doublon(s) de nom ignoré(s).";
 
         if (result.RenamedDevices.Count > 0)
         {
             details += " " + string.Join(", ", result.RenamedDevices.Select(item => $"{item.Key} -> {item.Value}"));
+        }
+
+        if (result.ReusedDevices.Count > 0)
+        {
+            details += (_language == UiLanguage.English ? " Reused: " : " Réutilisées : ")
+                + string.Join(", ", result.ReusedDevices.Select(item => $"{item.Key} -> {item.Value}"));
         }
 
         return details;
@@ -5835,8 +5841,8 @@ public partial class MainWindow : Window
     private string BuildMergeResultStatus(DanteMergeResult result)
     {
         return _language == UiLanguage.English
-            ? $"XML added: {result.ImportedDeviceCount} imported, {result.RenamedDeviceCount} renamed, {result.SkippedDuplicateDeviceCount} skipped."
-            : $"XML ajouté : {result.ImportedDeviceCount} importée(s), {result.RenamedDeviceCount} renommée(s), {result.SkippedDuplicateDeviceCount} ignorée(s).";
+            ? $"XML added: {result.ImportedDeviceCount} imported, {result.ReusedDeviceCount} reused, {result.RenamedDeviceCount} renamed, {result.SkippedDuplicateDeviceCount} skipped."
+            : $"XML ajouté : {result.ImportedDeviceCount} importée(s), {result.ReusedDeviceCount} réutilisée(s), {result.RenamedDeviceCount} renommée(s), {result.SkippedDuplicateDeviceCount} ignorée(s).";
     }
 
     private bool RunProjectAction(string successMessage, Action action, string? confirmationMessage = null)

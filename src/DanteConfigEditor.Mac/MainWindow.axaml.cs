@@ -376,8 +376,8 @@ public partial class MainWindow : Window
             RefreshAll();
             ScheduleRecovery();
             SetStatus(L(
-                $"{mergeResult.ImportedDeviceCount} machine(s) importée(s), {mergeResult.RenamedDeviceCount} renommée(s).",
-                $"{mergeResult.ImportedDeviceCount} device(s) imported, {mergeResult.RenamedDeviceCount} renamed."));
+                $"{mergeResult.ImportedDeviceCount} machine(s) importée(s), {mergeResult.ReusedDeviceCount} réutilisée(s), {mergeResult.RenamedDeviceCount} renommée(s).",
+                $"{mergeResult.ImportedDeviceCount} device(s) imported, {mergeResult.ReusedDeviceCount} reused, {mergeResult.RenamedDeviceCount} renamed."));
         }
         catch (Exception exception)
         {
