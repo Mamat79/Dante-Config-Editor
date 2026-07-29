@@ -10,7 +10,7 @@ Date : 2026-07-29
 - commit de sécurité XML validé :
   `02765f4` ;
 - commit final de correction ergonomique :
-  `28505f72609edec09a6d4e3e4182d30b335351e9` ;
+  `30aa7216fe24e6e056edad823fd2cbd5f1e7f4cd` ;
 - identité Windows : `Dante Config Editor 2026.1 Beta` ;
 - profil local : `%LOCALAPPDATA%\DanteConfigEditor2026.1` ;
 - bundle macOS : `fr.mamat.danteconfigeditor.y2026-1-beta`.
@@ -50,9 +50,9 @@ documentation ; il ne correspond pas à une reconstruction du XML Dante.
 - installation séparée des banques fournies et import manuel depuis le
   catalogue public GitHub ;
 - espace Windows 2026.1 réorganisé ;
-- liste des machines repliée au démarrage, avec flèche compacte centrée et
-  répartition verticale corrigée afin que le tableau reste visible une fois
-  déplié ;
+- liste des machines repliée au démarrage, avec flèche compacte centrée ; une
+  fois dépliée, la grille occupe toute la hauteur disponible et restitue les
+  réglages dans leur état précédent lorsqu'elle est refermée ;
 - Patch unifié avec RX à gauche, TX à droite et application immédiate ;
 - avertissement activé par défaut lors du remplacement d'un RX déjà patché ;
 - synchronisation Patch, Easy patch, sélections et synoptique ;
@@ -105,14 +105,14 @@ Résultats locaux finaux du 29 juillet 2026 :
 | Corpus XML local en lecture seule | 3 tests, 11 fichiers, 0 modification |
 | Build Windows Release | 0 warning, 0 erreur, 5,434 s |
 | Build macOS Release | 0 warning, 0 erreur, 1,367 s |
-| Installateur Windows GitHub | réussi, 74 221 870 octets |
-| SHA-256 installateur | `cab38b7f717b718ae30583f56745ab22cc4fb365156726fbd4f2f24b995d7531` |
+| Installateur Windows GitHub | réussi, 74 222 465 octets |
+| SHA-256 installateur | `8cb27c432adb34d45b6b83c74147ebc5b05d61416fb604b00806de6f077503b7` |
 
-GitHub Actions au commit `28505f7` :
+GitHub Actions au commit `30aa721` :
 
-- [Windows CI, exécution 30431931407](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30431931407) :
+- [Windows CI, exécution 30434168531](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30434168531) :
   succès, 419 tests et installateur produit ;
-- [macOS CI, exécution 30431931418](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30431931418) :
+- [macOS CI, exécution 30434167263](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30434167263) :
   succès, 419 tests Core, 22 tests Avalonia et deux DMG produits.
 
 ## Performances
@@ -138,9 +138,9 @@ du preset ; leurs mesures présentent davantage de variabilité.
 
 | Paquet | Taille | SHA-256 |
 |---|---:|---|
-| Installateur Windows GitHub installé | 74 221 870 octets | `cab38b7f717b718ae30583f56745ab22cc4fb365156726fbd4f2f24b995d7531` |
-| DMG Apple Silicon CI | 63 431 657 octets | `3a1b6cf9d7530dfab58e986f10800054c548cc68a0276a12112d12483ad2253a` |
-| DMG Intel CI | 65 238 279 octets | `b71183628623b2e7aa8128b8d9170242ab288077fa3d2672002c22141ae9bbd0` |
+| Installateur Windows GitHub | 74 222 465 octets | `8cb27c432adb34d45b6b83c74147ebc5b05d61416fb604b00806de6f077503b7` |
+| DMG Apple Silicon CI | 63 431 643 octets | `d099f868d63624c354d6953bd4e07dd4322b3cb5e63a317f47a6d66c481b8541` |
+| DMG Intel CI | 65 238 307 octets | `5719db32796daaefbb81442d0de38f52a680c4607a3b08ae7bba3c59133551d7` |
 | Notice française | 1 052 955 octets | `f9a3b0f566fb70836f0e67506096c2af59a439e3e007dcb573efb07f153f1ed6` |
 | Notice anglaise | 1 005 326 octets | `344b8d40be56adb74c310558f6b8d6efcb64dfede539669c54696013bd643277` |
 | Démarrage rapide français | 44 953 octets | `9978c80f2fbc55a78d2dd2e962798b921bc6284a012a815f694af78acf86e401` |
@@ -156,6 +156,8 @@ confirme :
 - installation dans
   `C:\Program Files\Dante Config Editor 2026.1 Beta\` ;
 - version `2026.1.0-beta.1`, fichier `2026.1.0.0` ;
+- exécutable installé : 72 710 378 octets, SHA-256
+  `d87f8695ba4929b298c3f3283ecf4ce84b4b82c26009f88e5fd48e4873052a61` ;
 - une seule inscription bêta après mise à niveau ;
 - raccourcis Bureau et menu Démarrer présents ;
 - 41 modèles communautaires et 2 rôles génériques installés ;
@@ -163,13 +165,14 @@ confirme :
   entrée ajoutée ou retirée ;
 - lancement réussi et application répondante avec la fixture représentative.
 
-Le contrôle de l'installation a confirmé le chargement de la fixture
+Le contrôle de l'installation précédente a confirmé le chargement de la fixture
 représentative et l'état replié initial. Les tests de contrat Windows vérifient
-la flèche compacte centrée et la répartition verticale `5* / 3*`; les tests
-Avalonia exécutent réellement le dépliage et vérifient que la grille reste dans
-la fenêtre. La capture automatisée de la fenêtre WPF installée est restée
-blanche dans l'outil de capture utilisé ; ce point est signalé comme une limite
-de l'outil et n'est pas présenté comme une validation visuelle par capture.
+la flèche compacte centrée et l'affectation de toute la hauteur restante à la
+liste ; les tests Avalonia exécutent réellement le dépliage, contrôlent que la
+zone des réglages passe à zéro et que la grille reste dans la fenêtre. La
+capture automatisée de la fenêtre WPF installée est restée blanche dans l'outil
+de capture utilisé ; ce point est signalé comme une limite de l'outil et n'est
+pas présenté comme une validation visuelle par capture.
 
 L'installateur n'est pas signé Authenticode. Les DMG sont signés ad hoc mais
 ne sont pas notariés.
