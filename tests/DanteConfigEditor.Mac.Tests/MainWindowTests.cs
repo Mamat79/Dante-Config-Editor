@@ -77,9 +77,9 @@ public sealed class MainWindowTests
             Assert.True(deviceList.IsEffectivelyVisible);
             Assert.Equal("▲", deviceListReveal.Content);
             RowDefinitions rows = window.FindControl<Grid>("ConfigurationPageGrid")!.RowDefinitions;
-            Assert.Equal(5, rows[1].Height.Value);
-            Assert.Equal(GridUnitType.Star, rows[1].Height.GridUnitType);
-            Assert.Equal(3, rows[3].Height.Value);
+            Assert.Equal(0, rows[1].Height.Value);
+            Assert.Equal(GridUnitType.Pixel, rows[1].Height.GridUnitType);
+            Assert.Equal(1, rows[3].Height.Value);
             Assert.Equal(GridUnitType.Star, rows[3].Height.GridUnitType);
         }
         finally
@@ -100,10 +100,14 @@ public sealed class MainWindowTests
             Dispatcher.UIThread.RunJobs();
             Button duplicate = window.FindControl<Button>("DuplicateDeviceButton")!;
             Border toolbar = duplicate.GetLogicalAncestors().OfType<Border>().First();
+            RowDefinitions rows = window.FindControl<Grid>("ConfigurationPageGrid")!.RowDefinitions;
 
             Assert.Equal(0, Grid.GetRow(toolbar));
             Assert.Equal(1, Grid.GetRow(window.FindControl<DataGrid>("DeviceGrid")!));
             Assert.True(duplicate.IsEffectivelyVisible);
+            Assert.Equal(new GridLength(0), rows[1].Height);
+            Assert.True(rows[3].Height.IsStar);
+            Assert.Equal(1, rows[3].Height.Value);
             Assert.True(window.FindControl<Button>("SaveDeviceToBankButton")!.IsEffectivelyVisible);
         }
         finally

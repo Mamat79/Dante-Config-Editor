@@ -1867,11 +1867,13 @@ public partial class MainWindow : Window
     private void UpdateConfigurationEditorsToggleText()
     {
         bool collapsed = ConfigurationEditorsGrid.Visibility == Visibility.Collapsed;
-        ConfigurationEditorsRow.Height = collapsed
-            ? GridLength.Auto
-            : new GridLength(_deviceListExpanded ? 5 : 8, GridUnitType.Star);
+        ConfigurationEditorsRow.Height = _deviceListExpanded
+            ? new GridLength(0)
+            : collapsed
+                ? GridLength.Auto
+                : new GridLength(8, GridUnitType.Star);
         DeviceListRow.Height = _deviceListExpanded
-            ? new GridLength(3, GridUnitType.Star)
+            ? new GridLength(1, GridUnitType.Star)
             : new GridLength(0);
         SettingsPanelsMenuItem.IsChecked = !collapsed;
         string action = collapsed ? "Afficher les réglages" : "Masquer les réglages";

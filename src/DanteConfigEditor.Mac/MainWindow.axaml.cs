@@ -551,11 +551,13 @@ public partial class MainWindow : Window
     private void UpdateConfigurationWorkspaceRows()
     {
         RowDefinitions rows = FindControl<Grid>("ConfigurationPageGrid")!.RowDefinitions;
-        rows[1].Height = _configurationEditorsExpanded
-            ? new GridLength(_deviceListExpanded ? 5 : 8, GridUnitType.Star)
-            : new GridLength(1, GridUnitType.Auto);
+        rows[1].Height = _deviceListExpanded
+            ? new GridLength(0)
+            : _configurationEditorsExpanded
+                ? new GridLength(1, GridUnitType.Star)
+                : new GridLength(1, GridUnitType.Auto);
         rows[3].Height = _deviceListExpanded
-            ? new GridLength(3, GridUnitType.Star)
+            ? new GridLength(1, GridUnitType.Star)
             : new GridLength(0);
     }
 

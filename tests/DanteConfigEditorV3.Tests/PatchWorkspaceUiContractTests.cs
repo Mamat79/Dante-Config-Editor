@@ -476,17 +476,21 @@ public sealed class PatchWorkspaceUiContractTests
             "ConfigurationEditorsGrid.Visibility = Visibility.Visible",
             codeBehind,
             StringComparison.Ordinal);
-        Assert.Contains(
-            "ConfigurationEditorsRow.Height = collapsed",
-            codeBehind,
-            StringComparison.Ordinal);
         Assert.Contains("SetDeviceListExpanded(false)", codeBehind, StringComparison.Ordinal);
         Assert.Contains(
-            "new GridLength(_deviceListExpanded ? 5 : 8, GridUnitType.Star)",
+            "ConfigurationEditorsRow.Height = _deviceListExpanded",
             codeBehind,
             StringComparison.Ordinal);
         Assert.Contains(
-            "new GridLength(3, GridUnitType.Star)",
+            "? new GridLength(0)",
+            codeBehind,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "DeviceListRow.Height = _deviceListExpanded",
+            codeBehind,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "? new GridLength(1, GridUnitType.Star)",
             codeBehind,
             StringComparison.Ordinal);
         Assert.Contains(
