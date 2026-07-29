@@ -100,14 +100,14 @@ Résultats locaux finaux du 29 juillet 2026 :
 | Corpus XML local en lecture seule | 3 tests, 11 fichiers, 0 modification |
 | Build Windows Release | 0 warning, 0 erreur, 5,434 s |
 | Build macOS Release | 0 warning, 0 erreur, 1,367 s |
-| Installateur Windows GitHub | réussi, 74 220 239 octets |
-| SHA-256 installateur | `5cc6fcc8eebe77a37af0edc8d15ba63e6da892a19ddbd564563405dd727c6aac` |
+| Installateur Windows GitHub | réussi, 74 221 878 octets |
+| SHA-256 installateur | `794237b4c671aa772544ea4852ff05d716916c297f36590784bb436d2e2368e6` |
 
-GitHub Actions au commit `e54b363` :
+GitHub Actions au commit `a973040` :
 
-- [Windows CI, exécution 30407812954](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30407812954) :
+- [Windows CI, exécution 30426665294](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30426665294) :
   succès, 419 tests et installateur produit ;
-- [macOS CI, exécution 30407812941](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30407812941) :
+- [macOS CI, exécution 30426665296](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30426665296) :
   succès, 419 tests Core, 22 tests Avalonia et deux DMG produits.
 
 ## Performances
@@ -133,13 +133,17 @@ du preset ; leurs mesures présentent davantage de variabilité.
 
 | Paquet | Taille | SHA-256 |
 |---|---:|---|
-| Installateur Windows GitHub installé | 74 220 239 octets | `5cc6fcc8eebe77a37af0edc8d15ba63e6da892a19ddbd564563405dd727c6aac` |
-| DMG Apple Silicon CI | 63 445 544 octets | `01bb2a05bd1e136ee1726fec2727c6342ca69b3b8246728df98a4038f3ef6a7a` |
-| DMG Intel CI | 65 251 577 octets | `863a21eba92e6ce7d603c4c540a5d20a798abfda56cb624862ebc6a1a121ea76` |
+| Installateur Windows GitHub installé | 74 221 878 octets | `794237b4c671aa772544ea4852ff05d716916c297f36590784bb436d2e2368e6` |
+| DMG Apple Silicon CI | 63 431 582 octets | `2b4276e2f3f631713f50df67d29f3d534cab32b90e29d376aea095cc4e3c5789` |
+| DMG Intel CI | 65 238 181 octets | `f2555077ba8f3b39622b8f2e6cbdc6a08702236520b5c9fb06916cd8129396f4` |
+| Notice française | 1 052 955 octets | `f9a3b0f566fb70836f0e67506096c2af59a439e3e007dcb573efb07f153f1ed6` |
+| Notice anglaise | 1 005 326 octets | `344b8d40be56adb74c310558f6b8d6efcb64dfede539669c54696013bd643277` |
+| Démarrage rapide français | 44 953 octets | `9978c80f2fbc55a78d2dd2e962798b921bc6284a012a815f694af78acf86e401` |
+| Quick Start anglais | 44 229 octets | `07785ea32fb66254d895cdc8122accea687d505356eb436439e79a6ef19d3fab` |
 
-Les trois paquets et leurs sommes sont publiés dans la prérelease `v2026.1`.
-Les huit fichiers remplacés ont été retéléchargés depuis leur URL publique et
-comparés à leurs sources : huit correspondances SHA-256 sur huit.
+Les trois paquets, leurs sommes et les quatre PDF sont publiés dans la
+prérelease `v2026.1`. Les vidéos, sous-titres et banques restent attachés sans
+modification.
 
 L'installateur Windows local a été exécuté en mise à niveau. Le contrôle
 confirme :

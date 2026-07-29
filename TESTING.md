@@ -6,7 +6,7 @@ Périmètre :
 
 - version conservée : `2026.1.0-beta.1` ;
 - branche : `2026.1` ;
-- commit de code validé : `02765f4` ;
+- commit de code validé : `a973040` ;
 - capacités techniques déduites uniquement des balises déjà présentes dans
   chaque rôle Dante ;
 - matrice Patch compactée et navigation « Voir dans Patch » corrigée ;
@@ -32,36 +32,37 @@ Résultats locaux depuis une restauration propre :
 Installateur GitHub réellement téléchargé puis installé :
 
 - fichier : `DanteConfigEditor2026_1_Beta_Installer.exe` ;
-- taille : `74 220 239` octets ;
+- taille : `74 221 878` octets ;
 - SHA-256 :
-  `5CC6FCC8EEBE77A37AF0EDC8D15BA63E6DA892A19DDBD564563405DD727C6AAC` ;
+  `794237B4C671AA772544EA4852FF05D716916C297F36590784BB436D2E2368E6` ;
 - installation silencieuse réussie avec le code `0` dans
   `C:\Program Files\Dante Config Editor 2026.1 Beta` ;
 - raccourcis Bureau et menu Démarrer présents ;
 - entrée de désinstallation unique présente ;
 - exécutable installé lancé avec la fixture représentative, répondant et
   déclaré en `2026.1.0-beta.1` ;
+- exécutable installé : `72 710 331` octets, SHA-256
+  `9C31100AB46CBE899CEE859EC924A99A2F84FD8C9FA931A1588C58ED5DF4FDFC` ;
 - 41 modèles communautaires et 2 rôles génériques installés ;
 - banque personnelle inchangée avant/après installation : 77 fichiers,
   1 587 873 octets, aucune entrée ajoutée ou retirée, empreinte d'inventaire
   SHA-256 identique
-  `3b64b07d2cb8ee379e8beaec5df56d13b00707a4a2c89ad674423b7778db313e`.
+  `af594fbed9dea8a0d61eb568f12611a0d1ea07ab8d4dadc6d5330686a7d856bc`.
 
-GitHub Actions au commit `e54b363` :
+GitHub Actions au commit `a973040` :
 
-- [Windows CI, exécution 30407812954](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30407812954) :
+- [Windows CI, exécution 30426665294](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30426665294) :
   succès, 419 tests et installateur produit ;
-- [macOS CI, exécution 30407812941](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30407812941) :
+- [macOS CI, exécution 30426665296](https://github.com/Mamat79/Dante-Config-Editor/actions/runs/30426665296) :
   succès, 419 tests Core, 22 tests Avalonia et deux DMG produits ;
-- DMG Apple Silicon : `63 445 544` octets, SHA-256
-  `01bb2a05bd1e136ee1726fec2727c6342ca69b3b8246728df98a4038f3ef6a7a` ;
-- DMG Intel : `65 251 577` octets, SHA-256
-  `863a21eba92e6ce7d603c4c540a5d20a798abfda56cb624862ebc6a1a121ea76`.
+- DMG Apple Silicon : `63 431 582` octets, SHA-256
+  `2b4276e2f3f631713f50df67d29f3d534cab32b90e29d376aea095cc4e3c5789` ;
+- DMG Intel : `65 238 181` octets, SHA-256
+  `f2555077ba8f3b39622b8f2e6cbdc6a08702236520b5c9fb06916cd8129396f4`.
 
-Les huit fichiers remplacés dans la prérelease `v2026.1` ont été retéléchargés
-depuis leur URL publique puis comparés à leurs sources : huit correspondances
-SHA-256 sur huit. Les vidéos, sous-titres, Quick Start et banques déjà publiés
-sont restés inchangés.
+Les trois paquets, leurs trois fichiers de sommes et les quatre PDF ont été
+remplacés dans la prérelease `v2026.1`. Les vidéos, sous-titres et banques déjà
+publiés sont restés inchangés.
 
 ## Validation de maintenance 2026.1 Beta du 2026-07-28
 
