@@ -748,6 +748,49 @@ public sealed class PatchWorkspaceUiContractTests
     }
 
     [Fact]
+    public void PatchMatrixNavigationArrowsBorderTheGridAndSeriesHandlesStayByLabels()
+    {
+        string windowsCode = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml.cs"));
+        string macCode = File.ReadAllText(RepositoryFile(
+            "src",
+            "DanteConfigEditor.Mac",
+            "PatchWorkspaceDialog.axaml.cs"));
+        string columns = ExtractMethod(windowsCode, "private void BuildMatrixColumns()");
+        string txHeader = ExtractMethod(
+            windowsCode,
+            "private FrameworkElement BuildMatrixHeader(PatchSourceDescriptor source)");
+
+        Assert.Contains(
+            "rxSeries.SetValue(FrameworkElement.MarginProperty, new Thickness(0, 0, 26, 0))",
+            columns,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "locateSource.SetValue(FrameworkElement.MarginProperty, new Thickness(0))",
+            columns,
+            StringComparison.Ordinal);
+        Assert.True(
+            columns.IndexOf("rxPanel.AppendChild(rxSeries)", StringComparison.Ordinal)
+            < columns.IndexOf("rxPanel.AppendChild(locateSource)", StringComparison.Ordinal));
+        Assert.Contains(
+            "VerticalAlignment = VerticalAlignment.Bottom",
+            txHeader,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "series.VerticalAlignment = VerticalAlignment.Top",
+            txHeader,
+            StringComparison.Ordinal);
+
+        Assert.Contains(
+            "VerticalAlignment = Avalonia.Layout.VerticalAlignment.Bottom",
+            macCode,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right",
+            macCode,
+            StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void PatchMatrixKeepsHeadersFixedAndUsesIncrementalRowUpdates()
     {
         string xaml = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml"));

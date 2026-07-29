@@ -785,7 +785,7 @@ public partial class PatchWorkspaceView : UserControl
         FrameworkElementFactory rxName = new(typeof(TextBox));
         rxName.SetBinding(TextBox.TextProperty, new Binding("Target.ChannelName") { Mode = BindingMode.OneWay });
         rxName.SetBinding(FrameworkElement.TagProperty, new Binding("Target"));
-        rxName.SetValue(FrameworkElement.MarginProperty, new Thickness(44, 0, 44, 0));
+        rxName.SetValue(FrameworkElement.MarginProperty, new Thickness(44, 0, 48, 0));
         rxName.SetValue(Control.PaddingProperty, new Thickness(2, 0, 2, 0));
         rxName.SetValue(Control.BorderThicknessProperty, new Thickness(0));
         rxName.SetValue(Control.BackgroundProperty, Brushes.Transparent);
@@ -797,6 +797,21 @@ public partial class PatchWorkspaceView : UserControl
         rxName.AddHandler(UIElement.GotKeyboardFocusEvent, new KeyboardFocusChangedEventHandler(MatrixInlineTextBox_GotKeyboardFocus));
         rxName.AddHandler(UIElement.LostKeyboardFocusEvent, new KeyboardFocusChangedEventHandler(InlineChannelNameTextBox_LostKeyboardFocus));
         rxPanel.AppendChild(rxName);
+
+        // La poignée reste au contact du nom. La flèche de navigation occupe
+        // seule le bord droit, immédiatement contre la grille de patch.
+        FrameworkElementFactory rxSeries = BuildMatrixSeriesThumbFactory("Target", Cursors.SizeNS);
+        rxSeries.SetValue(FrameworkElement.HorizontalAlignmentProperty, HorizontalAlignment.Right);
+        rxSeries.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Center);
+        rxSeries.SetValue(FrameworkElement.MarginProperty, new Thickness(0, 0, 26, 0));
+        rxSeries.SetValue(Panel.ZIndexProperty, 2);
+        rxSeries.SetBinding(
+            UIElement.VisibilityProperty,
+            new Binding("Target.CanExtendNameSeries")
+            {
+                Converter = new BooleanToVisibilityConverter()
+            });
+        rxPanel.AppendChild(rxSeries);
 
         FrameworkElementFactory locateSource = new(typeof(Button));
         locateSource.SetValue(ContentControl.ContentProperty, "→");
@@ -812,29 +827,19 @@ public partial class PatchWorkspaceView : UserControl
             new Binding("SourceNavigationAutomationName"));
         locateSource.SetValue(FrameworkElement.WidthProperty, 22d);
         locateSource.SetValue(FrameworkElement.HeightProperty, 20d);
-        locateSource.SetValue(FrameworkElement.MarginProperty, new Thickness(0, 0, 20, 0));
+        locateSource.SetValue(FrameworkElement.MarginProperty, new Thickness(0));
         locateSource.SetValue(FrameworkElement.HorizontalAlignmentProperty, HorizontalAlignment.Right);
         locateSource.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Center);
         locateSource.SetValue(Control.PaddingProperty, new Thickness(0));
         locateSource.SetValue(Control.BackgroundProperty, (Brush)FindResource("SurfaceAltBrush"));
         locateSource.SetValue(Control.ForegroundProperty, (Brush)FindResource("TextBrush"));
         locateSource.SetValue(Control.BorderBrushProperty, (Brush)FindResource("BorderLineBrush"));
-        locateSource.SetValue(Panel.ZIndexProperty, 2);
+        locateSource.SetValue(Panel.ZIndexProperty, 3);
         locateSource.SetValue(ToolTipService.ShowOnDisabledProperty, true);
         locateSource.AddHandler(
             ButtonBase.ClickEvent,
             new RoutedEventHandler(MatrixRxSourceButton_Click));
         rxPanel.AppendChild(locateSource);
-
-        FrameworkElementFactory rxSeries = BuildMatrixSeriesThumbFactory("Target", Cursors.SizeNS);
-        rxSeries.SetValue(FrameworkElement.HorizontalAlignmentProperty, HorizontalAlignment.Right);
-        rxSeries.SetBinding(
-            UIElement.VisibilityProperty,
-            new Binding("Target.CanExtendNameSeries")
-            {
-                Converter = new BooleanToVisibilityConverter()
-            });
-        rxPanel.AppendChild(rxSeries);
 
         MatrixGrid.Columns.Add(new DataGridTemplateColumn
         {
@@ -892,7 +897,7 @@ public partial class PatchWorkspaceView : UserControl
             Cursor = _renameChannelAction is null ? Cursors.Arrow : Cursors.IBeam,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 14 * _matrixZoom, 0, 10 * _matrixZoom),
+            Margin = new Thickness(0, 10 * _matrixZoom, 0, 24 * _matrixZoom),
             Padding = new Thickness(0),
             Background = Brushes.Transparent,
             BorderBrush = Brushes.Transparent,
@@ -913,7 +918,7 @@ public partial class PatchWorkspaceView : UserControl
             Padding = new Thickness(0),
             Margin = new Thickness(0),
             HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Top,
+            VerticalAlignment = VerticalAlignment.Bottom,
             Background = (Brush)FindResource("SurfaceAltBrush"),
             Foreground = (Brush)FindResource("TextBrush"),
             BorderBrush = (Brush)FindResource("BorderLineBrush"),
@@ -933,7 +938,9 @@ public partial class PatchWorkspaceView : UserControl
         Thumb series = BuildMatrixSeriesThumb(source, Cursors.SizeWE);
         series.Visibility = source.CanExtendNameSeries ? Visibility.Visible : Visibility.Collapsed;
         series.HorizontalAlignment = HorizontalAlignment.Stretch;
-        series.VerticalAlignment = VerticalAlignment.Bottom;
+        // En colonne TX, la poignée reste près du libellé et la flèche de
+        // navigation borde la matrice, sous le nom du canal.
+        series.VerticalAlignment = VerticalAlignment.Top;
         panel.Children.Add(series);
 
         ToolTipService.SetToolTip(panel, L(
