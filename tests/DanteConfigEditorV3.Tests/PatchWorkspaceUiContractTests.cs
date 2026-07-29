@@ -458,8 +458,13 @@ public sealed class PatchWorkspaceUiContractTests
             "{StaticResource PanelRevealButtonStyle}",
             navigationReveal.Attribute("Style")?.Value);
         Assert.Equal(
-            "{StaticResource PanelRevealButtonStyle}",
+            "{StaticResource SecondaryButtonStyle}",
             deviceListToggle.Attribute("Style")?.Value);
+        Assert.Equal("1", deviceListToggle.Attribute("Grid.Column")?.Value);
+        Assert.Equal("48", deviceListToggle.Attribute("Width")?.Value);
+        Assert.Equal("26", deviceListToggle.Attribute("Height")?.Value);
+        Assert.Equal("Center", deviceListToggle.Attribute("HorizontalAlignment")?.Value);
+        Assert.Null(deviceListToggle.Attribute("DockPanel.Dock"));
         Assert.Equal("▼", deviceListToggle.Attribute("Content")?.Value);
         Assert.Equal("Liste des machines", deviceListTitle.Attribute("Text")?.Value);
         Assert.Equal("Collapsed", deviceListPanel.Attribute("Visibility")?.Value);
@@ -475,13 +480,13 @@ public sealed class PatchWorkspaceUiContractTests
             "ConfigurationEditorsRow.Height = collapsed",
             codeBehind,
             StringComparison.Ordinal);
-        Assert.Contains(
-            "new GridLength(8, GridUnitType.Star)",
-            codeBehind,
-            StringComparison.Ordinal);
         Assert.Contains("SetDeviceListExpanded(false)", codeBehind, StringComparison.Ordinal);
         Assert.Contains(
-            "DeviceListRow.Height = expanded",
+            "new GridLength(_deviceListExpanded ? 5 : 8, GridUnitType.Star)",
+            codeBehind,
+            StringComparison.Ordinal);
+        Assert.Contains(
+            "new GridLength(3, GridUnitType.Star)",
             codeBehind,
             StringComparison.Ordinal);
         Assert.Contains(

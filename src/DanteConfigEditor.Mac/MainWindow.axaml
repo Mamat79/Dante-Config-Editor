@@ -427,7 +427,7 @@
                                 ToolTip.Tip="Masquer les réglages" />
 
                         <Border Grid.Row="2" Classes="panel" Padding="6">
-                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="8">
                                 <TextBlock x:Name="DeviceListTitleText"
                                            Text="Liste des machines"
                                            FontWeight="SemiBold"
@@ -435,7 +435,15 @@
                                            Margin="6,0,0,0" />
                                 <Button x:Name="DeviceListRevealButton"
                                         Grid.Column="1"
-                                        Classes="panelReveal"
+                                        Width="48"
+                                        MinWidth="48"
+                                        Height="26"
+                                        MinHeight="26"
+                                        Padding="8,2"
+                                        Margin="0"
+                                        FontSize="12"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
                                         Content="▼"
                                         Click="DeviceListRevealButton_Click"
                                         ToolTip.Tip="Afficher la liste des machines" />

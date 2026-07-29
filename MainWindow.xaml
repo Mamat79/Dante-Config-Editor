@@ -1509,21 +1509,36 @@
                                     CornerRadius="6"
                                     Padding="6"
                                     Margin="0,0,0,10">
-                                <DockPanel LastChildFill="True">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
                                     <Button x:Name="ToggleDeviceListButton"
-                                            DockPanel.Dock="Right"
+                                            Grid.Column="1"
                                             Content="&#x25BC;"
-                                            Style="{StaticResource PanelRevealButtonStyle}"
+                                            Style="{StaticResource SecondaryButtonStyle}"
+                                            Width="48"
+                                            MinWidth="48"
+                                            Height="26"
+                                            MinHeight="26"
+                                            Padding="8,2"
+                                            Margin="0"
+                                            FontSize="12"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
                                             Click="ToggleDeviceListButton_Click"
                                             ToolTip="Afficher la liste des machines"
                                             AutomationProperties.Name="Afficher la liste des machines"
                                             AutomationProperties.HelpText="Affiche ou masque la liste et les filtres des machines." />
                                     <TextBlock x:Name="DeviceListTitleTextBlock"
+                                               Grid.Column="0"
                                                Text="Liste des machines"
                                                FontWeight="SemiBold"
                                                VerticalAlignment="Center"
                                                Margin="6,0,12,0" />
-                                </DockPanel>
+                                </Grid>
                             </Border>
 
                             <Grid x:Name="DeviceListPanel"

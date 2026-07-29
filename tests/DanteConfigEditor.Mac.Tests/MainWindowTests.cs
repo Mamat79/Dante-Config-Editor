@@ -57,6 +57,9 @@ public sealed class MainWindowTests
             Assert.Equal("▲", reveal.Content);
             Assert.False(deviceList.IsVisible);
             Assert.Equal("▼", deviceListReveal.Content);
+            Assert.Equal(1, Grid.GetColumn(deviceListReveal));
+            Assert.Equal(48, deviceListReveal.Width);
+            Assert.Equal(26, deviceListReveal.Height);
 
             reveal.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Dispatcher.UIThread.RunJobs();
@@ -73,6 +76,11 @@ public sealed class MainWindowTests
             Dispatcher.UIThread.RunJobs();
             Assert.True(deviceList.IsEffectivelyVisible);
             Assert.Equal("▲", deviceListReveal.Content);
+            RowDefinitions rows = window.FindControl<Grid>("ConfigurationPageGrid")!.RowDefinitions;
+            Assert.Equal(5, rows[1].Height.Value);
+            Assert.Equal(GridUnitType.Star, rows[1].Height.GridUnitType);
+            Assert.Equal(3, rows[3].Height.Value);
+            Assert.Equal(GridUnitType.Star, rows[3].Height.GridUnitType);
         }
         finally
         {

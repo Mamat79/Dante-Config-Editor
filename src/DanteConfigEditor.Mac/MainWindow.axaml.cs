@@ -517,6 +517,7 @@ public partial class MainWindow : Window
     {
         _configurationEditorsExpanded = expanded;
         FindControl<Grid>("ConfigurationEditorsGrid")!.IsVisible = expanded;
+        UpdateConfigurationWorkspaceRows();
 
         Button revealButton = FindControl<Button>("ConfigurationEditorsRevealButton")!;
         revealButton.Content = expanded ? "▲" : "▼";
@@ -536,9 +537,7 @@ public partial class MainWindow : Window
     {
         _deviceListExpanded = expanded;
         FindControl<Grid>("DeviceListPanel")!.IsVisible = expanded;
-        FindControl<Grid>("ConfigurationPageGrid")!.RowDefinitions[3].Height = expanded
-            ? new GridLength(1.5, GridUnitType.Star)
-            : new GridLength(0);
+        UpdateConfigurationWorkspaceRows();
 
         Button revealButton = FindControl<Button>("DeviceListRevealButton")!;
         revealButton.Content = expanded ? "▲" : "▼";
@@ -547,6 +546,17 @@ public partial class MainWindow : Window
             expanded
                 ? L("Masquer la liste des machines", "Hide device list")
                 : L("Afficher la liste des machines", "Show device list"));
+    }
+
+    private void UpdateConfigurationWorkspaceRows()
+    {
+        RowDefinitions rows = FindControl<Grid>("ConfigurationPageGrid")!.RowDefinitions;
+        rows[1].Height = _configurationEditorsExpanded
+            ? new GridLength(_deviceListExpanded ? 5 : 8, GridUnitType.Star)
+            : new GridLength(1, GridUnitType.Auto);
+        rows[3].Height = _deviceListExpanded
+            ? new GridLength(3, GridUnitType.Star)
+            : new GridLength(0);
     }
 
     private async void ApplyDeviceButton_Click(object? sender, RoutedEventArgs e)

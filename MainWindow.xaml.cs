@@ -1720,9 +1720,7 @@ public partial class MainWindow : Window
     {
         _deviceListExpanded = expanded;
         DeviceListPanel.Visibility = expanded ? Visibility.Visible : Visibility.Collapsed;
-        DeviceListRow.Height = expanded
-            ? new GridLength(1.5, GridUnitType.Star)
-            : new GridLength(0);
+        UpdateConfigurationEditorsToggleText();
 
         string action = expanded
             ? "Masquer la liste des machines"
@@ -1871,7 +1869,10 @@ public partial class MainWindow : Window
         bool collapsed = ConfigurationEditorsGrid.Visibility == Visibility.Collapsed;
         ConfigurationEditorsRow.Height = collapsed
             ? GridLength.Auto
-            : new GridLength(8, GridUnitType.Star);
+            : new GridLength(_deviceListExpanded ? 5 : 8, GridUnitType.Star);
+        DeviceListRow.Height = _deviceListExpanded
+            ? new GridLength(3, GridUnitType.Star)
+            : new GridLength(0);
         SettingsPanelsMenuItem.IsChecked = !collapsed;
         string action = collapsed ? "Afficher les réglages" : "Masquer les réglages";
         string helpText = collapsed
