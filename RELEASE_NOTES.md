@@ -60,6 +60,9 @@ travaille uniquement sur des fichiers hors ligne.
 - navigation croisée dans la matrice : le bouton d’un RX affiche et surligne
   sa source TX ; le bouton d’un TX liste toutes ses destinations RX et ouvre
   celle choisie ;
+- poignées de recopie conservées au contact des labels et flèches de ciblage
+  déplacées contre la grille, avec un en-tête TX stable en thème clair comme
+  en thème sombre ;
 - matrice Patch détachable dans une grande fenêtre indépendante qui conserve
   les sélecteurs RX/TX, FLIP, Patch 1:1 et le zoom ;
 - fusion XML corrigée lorsque deux presets contiennent la même paire
@@ -68,9 +71,9 @@ travaille uniquement sur des fichiers hors ligne.
   identifiant matériel ;
 - subscriptions du second XML redirigées vers le rôle existant réutilisé ou
   vers le nouveau nom choisi ;
-- notice complète française et anglaise réorganisée autour de parcours guidés
-  pour la banque, le nouveau projet, la fusion XML, le patch, le renommage et
-  le synoptique ;
+- notices complètes française et anglaise réorganisées en 38 pages autour du
+  parcours réel : réglages généraux, réglages par machine, patch, composition
+  du projet, exports, validation et outils avancés, avec davantage de captures ;
 - profil local 2026.1 isolé.
 
 ## Fidélité XML
@@ -102,7 +105,7 @@ Sur le preset synthétique de 200 machines avec 64 TX et 64 RX chacune :
 
 ## Validation automatisée
 
-- 429 tests Core/Windows réussis ;
+- 430 tests Core/Windows réussis ;
 - 22 tests Avalonia/macOS sans écran réussis ;
 - build Windows Release sans warning ;
 - corpus synthétique sauvegardé et comparé sémantiquement sans perte ;

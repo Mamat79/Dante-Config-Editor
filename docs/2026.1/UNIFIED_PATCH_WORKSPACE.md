@@ -121,7 +121,7 @@ Le 29 juillet 2026 :
 - cohérence visuelle en thèmes sombre et clair ;
 - captures `1920 x 1024` et `1536 x 864`, cette dernière représentant l'espace
   logique d'un écran Full HD à 125 % ;
-- 429 tests Core/Windows et 22 tests macOS réussis, dont les résolutions de
+- 430 tests Core/Windows et 22 tests macOS réussis, dont les résolutions de
   source locale/externe, destinations multiples, références ambiguës et
   absence de mutation XML.
 

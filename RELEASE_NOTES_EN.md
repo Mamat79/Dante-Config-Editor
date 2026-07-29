@@ -57,6 +57,8 @@ Audinate. It only works on offline files.
 - cross-navigation in the matrix: an Rx button locates and highlights its Tx
   source, while a Tx button lists every Rx destination and opens the selected
   one;
+- fill handles remain next to channel labels while targeting arrows now border
+  the grid, with a stable Tx header in both light and dark themes;
 - a detachable Patch matrix in a large independent window retaining the Rx/Tx
   selectors, FLIP, Patch 1:1, and zoom;
 - corrected XML merge when two presets contain the same
@@ -65,8 +67,9 @@ Audinate. It only works on offline files.
   identifier;
 - second-XML subscriptions redirected to the reused existing role or the
   selected new name;
-- reorganized French and English full guides around bank, new-project, XML
-  merge, patch, rename, and synoptic workflows;
+- reorganized 38-page French and English full guides following the actual
+  workflow: general settings, per-device settings, patch, project composition,
+  exports, validation, and advanced tools, with additional screenshots;
 - isolated 2026.1 local profile.
 
 ## XML fidelity
@@ -98,7 +101,7 @@ For the synthetic 200-device preset with 64 TX and 64 RX per device:
 
 ## Automated validation
 
-- 429 Core/Windows tests passed;
+- 430 Core/Windows tests passed;
 - 22 headless Avalonia/macOS tests passed;
 - Windows Release build completed without warnings;
 - synthetic corpus saved and semantically compared without loss;
