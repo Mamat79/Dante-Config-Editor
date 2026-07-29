@@ -35,6 +35,35 @@ L'option « M'avertir si le RX est déjà patché » est cochée par défaut. Si
 est décochée, un remplacement reste explicite dans la grille mais ne déclenche
 plus la confirmation.
 
+## Navigation entre les liaisons
+
+La matrice permet de suivre une liaison sans rechercher manuellement les deux
+machines :
+
+- le bouton placé sur une ligne RX retrouve sa source TX, sélectionne la
+  machine émettrice, fait défiler la grille et surligne le croisement ;
+- le bouton placé sous un en-tête TX affiche toutes ses destinations RX ;
+- lorsqu'un TX alimente plusieurs RX, l'utilisateur choisit la destination à
+  afficher avant que la machine réceptrice et le croisement soient
+  sélectionnés ;
+- une source libre, absente, ambiguë ou incomplète produit un message précis
+  et n'entraîne aucune modification du projet.
+
+Cette navigation est strictement en lecture seule. Elle résout les
+subscriptions du projet et les changements encore présents dans la session,
+mais ne crée ni ne supprime aucun patch.
+
+## Matrice détachée
+
+Sous Windows, **Détacher la matrice** ouvre une grande fenêtre indépendante.
+Elle conserve les sélecteurs RX/TX, FLIP, Patch 1:1, le zoom, les
+renommages et l'application immédiate. La fenêtre réutilise le même projet et
+la même session que la vue intégrée ; une action reste donc synchronisée dans
+les deux affichages.
+
+Sous macOS, l'espace Patch est déjà présenté dans une fenêtre dédiée et offre
+les mêmes commandes de navigation RX/TX.
+
 ## Identités et synchronisation
 
 Chaque commande de patch conserve :
@@ -81,13 +110,20 @@ Le 29 juillet 2026 :
   `representative-preset.xml` ;
 - contrôle à environ `1266 x 813`, avec la bannière de soutien visible ;
 - première ligne RX visible dans la matrice ;
+- navigation d'un RX de `DEVICE-B` vers la source
+  `DEVICE-A / 001 - PROGRAM L` ;
+- affichage des deux destinations RX de cette source puis ouverture de la
+  destination locale choisie ;
+- ouverture de la matrice détachée avec RX, TX, FLIP, Patch 1:1 et zoom ;
 - déconnexion directe d'une cellule ;
 - Annuler puis Rétablir depuis la barre supérieure ;
 - cohérence visuelle en français et en anglais ;
 - cohérence visuelle en thèmes sombre et clair ;
 - captures `1920 x 1024` et `1536 x 864`, cette dernière représentant l'espace
   logique d'un écran Full HD à 125 % ;
-- tests automatisés de session stable, rebase, lots atomiques et contrats UI.
+- 429 tests Core/Windows et 22 tests macOS réussis, dont les résolutions de
+  source locale/externe, destinations multiples, références ambiguës et
+  absence de mutation XML.
 
 ## Limites actuelles
 

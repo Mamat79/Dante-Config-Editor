@@ -57,6 +57,11 @@ travaille uniquement sur des fichiers hors ligne.
   plusieurs lignes pour éviter toute phrase tronquée ;
 - matrice Patch plus compacte, flèches latérales plus visibles et ouverture de
   « Voir dans Patch » directement sur la machine sélectionnée ;
+- navigation croisée dans la matrice : le bouton d’un RX affiche et surligne
+  sa source TX ; le bouton d’un TX liste toutes ses destinations RX et ouvre
+  celle choisie ;
+- matrice Patch détachable dans une grande fenêtre indépendante qui conserve
+  les sélecteurs RX/TX, FLIP, Patch 1:1 et le zoom ;
 - fusion XML corrigée lorsque deux presets contiennent la même paire
   `device_id` / `process_id` : réutilisation explicite du rôle existant ou
   création d'un rôle générique indépendant après renommage, sans faux
@@ -97,7 +102,7 @@ Sur le preset synthétique de 200 machines avec 64 TX et 64 RX chacune :
 
 ## Validation automatisée
 
-- 422 tests Core/Windows réussis ;
+- 429 tests Core/Windows réussis ;
 - 22 tests Avalonia/macOS sans écran réussis ;
 - build Windows Release sans warning ;
 - corpus synthétique sauvegardé et comparé sémantiquement sans perte ;

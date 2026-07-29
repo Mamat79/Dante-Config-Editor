@@ -123,6 +123,9 @@ the same hardware identity and without losing recognized patch references.
 - direct or series device, RX, and TX renaming;
 - recognized subscription updates after TX renaming;
 - table, selection, matrix, drag, and 1:1 patch workflows;
+- cross-navigation in the matrix to locate an Rx source or select one of a Tx
+  channel's destinations;
+- detachable matrix in a large window retaining Rx, Tx, FLIP, 1:1, and zoom;
 - FLIP of the currently displayed RX/TX roles in Easy Patch;
 - targeted latency, audio format, network, and Preferred Master changes;
 - profiles and global actions on an unlocked selection;

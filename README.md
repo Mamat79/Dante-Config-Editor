@@ -129,6 +129,10 @@ patch reconnues.
 - renommage direct ou en série des machines, RX et TX ;
 - mise à jour des subscriptions reconnues après renommage d’un TX ;
 - patch par tableau, sélection, grille, glissement et série 1:1 ;
+- navigation croisée dans la matrice : retrouver la source d’un RX ou choisir
+  l’une des destinations d’un TX ;
+- matrice détachable dans une grande fenêtre conservant RX, TX, FLIP, 1:1 et
+  zoom ;
 - FLIP des rôles RX/TX affichés dans Easy Patch ;
 - modification ciblée des latences, formats audio, réseau et Preferred Master ;
 - profils et actions globales sur une sélection non verrouillée ;

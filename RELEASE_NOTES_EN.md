@@ -54,6 +54,11 @@ Audinate. It only works on offline files.
   onto multiple lines instead of clipping long explanations;
 - a more compact Patch matrix, larger side-panel arrows, and Show in Patch
   opening directly on the selected device;
+- cross-navigation in the matrix: an Rx button locates and highlights its Tx
+  source, while a Tx button lists every Rx destination and opens the selected
+  one;
+- a detachable Patch matrix in a large independent window retaining the Rx/Tx
+  selectors, FLIP, Patch 1:1, and zoom;
 - corrected XML merge when two presets contain the same
   `device_id` / `process_id` pair: explicit reuse of the existing role or
   creation of an independent generic role after rename, with no fake hardware
@@ -93,7 +98,7 @@ For the synthetic 200-device preset with 64 TX and 64 RX per device:
 
 ## Automated validation
 
-- 422 Core/Windows tests passed;
+- 429 Core/Windows tests passed;
 - 22 headless Avalonia/macOS tests passed;
 - Windows Release build completed without warnings;
 - synthetic corpus saved and semantically compared without loss;

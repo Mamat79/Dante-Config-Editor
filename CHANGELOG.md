@@ -20,6 +20,10 @@ Toutes les dates utilisent le calendrier ISO. Les versions antérieures à
 - subscriptions importées remappées vers le rôle réutilisé ou le nouveau nom ;
 - notices complètes FR/EN enrichies avec des parcours guidés pour la banque,
   le nouveau projet, la fusion, le patch, le renommage et le synoptique.
+- navigation directe depuis un RX vers sa source TX et depuis un TX vers
+  chacune de ses destinations RX dans la matrice ;
+- matrice détachable dans une grande fenêtre conservant les sélecteurs, FLIP,
+  Patch 1:1 et le zoom.
 
 ## [2026.1.0-beta.1] - 2026-07-27
 
