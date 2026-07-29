@@ -27,8 +27,8 @@ from reportlab.platypus import (
 ROOT = Path(__file__).resolve().parent
 # Les quatre PDF sont générés depuis une source unique pour garder les versions
 # française et anglaise synchronisées avec l'application et l'installateur.
-PRODUCT = "Dante Config Editor 2026.1 Beta"
-VERSION = "2026.1.0-beta.1"
+PRODUCT = "Dante Config Editor 2026.1"
+VERSION = "2026.1.0"
 GITHUB = "github.com/Mamat79/Dante-Config-Editor"
 
 INK = colors.HexColor("#172033")
@@ -416,9 +416,9 @@ def quick_start(language: str) -> None:
         else "Quick start - offline editing of Dante XML files"
     )
     warning = (
-        "<b>Outil tiers non officiel Audinate.</b> Cette version 2026.1 est une bêta et peut encore contenir des bugs. Travaillez sur une copie et validez toujours le XML final par un import dans l'outil Dante officiel adapté avant toute utilisation réelle."
+        "<b>Outil tiers non officiel Audinate.</b> Travaillez sur une copie et validez toujours le XML final par un import dans l'outil Dante officiel adapté avant toute utilisation réelle."
         if french
-        else "<b>Third-party tool, not an official Audinate product.</b> Version 2026.1 is a beta and may still contain bugs. Work on a copy and always validate the final XML by importing it into the appropriate official Dante tool before real use."
+        else "<b>Third-party tool, not an official Audinate product.</b> Work on a copy and always validate the final XML by importing it into the appropriate official Dante tool before real use."
     )
     steps = (
         [
@@ -426,7 +426,7 @@ def quick_start(language: str) -> None:
             ("Contrôler les alertes", "Affichez les machines concernées et vérifiez chaque point signalé."),
             ("Modifier", "Utilisez Machines, Matrice, Easy patch, Liste RX vers TX ou les actions globales. Verrouillez les machines à exclure."),
             ("Vérifier", "Utilisez Modifiées uniquement puis Avant / après. Les changements techniques inconnus sont bloqués."),
-            ("Enregistrer sous", "Choisissez un nouveau nom. La destination est remplacée atomiquement et sauvegardée si elle existait."),
+            ("Enregistrer sous", "Choisissez un nouveau nom. DCE valide d'abord un fichier temporaire, conserve une copie de sécurité, puis remplace la destination."),
             ("Tester l'import", "Importez le résultat dans Dante Controller sur une copie de travail avant toute intervention terrain."),
         ]
         if french
@@ -435,7 +435,7 @@ def quick_start(language: str) -> None:
             ("Review alerts", "Show affected devices and verify every reported item."),
             ("Edit", "Use Devices, Matrix, Easy patch, Rx-to-Tx list, or global actions. Lock devices that must be excluded."),
             ("Review", "Use Modified only and Before / after. Unknown technical changes are blocked."),
-            ("Save as", "Choose a new name. The destination is replaced atomically and backed up when it already exists."),
+            ("Save as", "Choose a new name. DCE validates a temporary file first, keeps a safety backup, and then replaces the destination."),
             ("Test the import", "Import the result into Dante Controller on a working copy before any field operation."),
         ]
     )
@@ -520,27 +520,27 @@ def full_guide(language: str) -> None:
     if french:
         page1 = [
             para("1. Installation et démarrage", "h1"),
-            callout("<b>Important :</b> cette application est un outil tiers non officiel Audinate. La 2026.1 est une version bêta et peut encore contenir des bugs. Elle édite des XML hors ligne, sans connexion au réseau Dante ni API Audinate. Conservez l'original et validez le fichier généré dans Dante Controller avant toute utilisation en production."),
+            callout("<b>Important :</b> cette application est un outil tiers non officiel Audinate. Elle édite des XML hors ligne, sans connexion au réseau Dante ni API Audinate. Conservez l'original et validez le fichier généré dans Dante Controller avant toute utilisation en production."),
             para("L'installateur Windows x64 contient l'application et le runtime .NET 8 nécessaire. Il n'est normalement pas nécessaire d'installer .NET séparément."),
             *bullets([
                 "L'installation proposée par défaut se trouve dans Program Files et crée des raccourcis dans le menu Démarrer et sur le Bureau.",
-                "Une installation 2026.1 Beta utilise son propre AppId, son dossier Program Files, ses raccourcis et son profil local afin de cohabiter avec la V3.6.",
+                "Une installation 2026.1 utilise son propre AppId, son dossier Program Files, ses raccourcis et son profil local afin de cohabiter avec la V3.6.",
                 "La 2026.1 peut copier les réglages V3.6 vers son profil, mais ne modifie jamais le profil V3.6 en place.",
                 "Les 43 modèles de DCE Generic Roles 2026.1 et DCE Community Devices 2026.1 sont intégrés à l'application. L'assistant peut aussi en créer des copies partageables dans un dossier choisi, sans remplacer la banque personnelle.",
-                "Deux DMG 2026.1 Beta autonomes sont construits sur macOS pour Apple Silicon et Intel. Ils contiennent les banques 2026.1 dans le dossier Machine Banks ; leur bundle distinct peut cohabiter avec la V3.6.",
+                "Deux DMG 2026.1 autonomes sont construits sur macOS pour Apple Silicon et Intel. Ils contiennent les banques 2026.1 dans le dossier Machine Banks ; leur bundle distinct peut cohabiter avec la V3.6.",
                 "Les quatre notices PDF françaises et anglaises sont installées et restent accessibles depuis l'application.",
             ]),
             para("2. Principes de sécurité", "h1"),
             *bullets([
                 "Travaillez sur une copie du XML exporté et utilisez Enregistrer sous.",
                 "Le garde-fou suit les machines par identité technique stable, bloque les chemins inconnus et protège les Dante Id, mediaType et instance_id.",
-                "La destination est remplacée atomiquement. Le fichier source et toute destination existante reçoivent une copie dans DanteConfigEditor_Backups.",
+                "Sauvegarde sécurisée : DCE valide d'abord un fichier temporaire. Le fichier source et toute destination existante reçoivent une copie dans DanteConfigEditor_Backups avant le remplacement.",
                 "L'import réussi dans Dante Controller constitue la validation finale avant exploitation.",
             ]),
             para("3. Ouvrir un projet", "h1"),
             para("Cliquez sur Ouvrir XML, sélectionnez le fichier, puis contrôlez les compteurs de machines, canaux TX/RX et patchs actifs. Les XML avec namespace par défaut sont pris en charge. Le premier lancement utilise le thème clair ; le dernier thème et la dernière langue choisis sont ensuite restaurés automatiquement."),
         ]
-        beta_page = [
+        workspace_page = [
             para("4. Espace de travail 2026.1", "h1"),
             para("Windows et macOS organisent le travail par intention : Projet, Vue d'ensemble, Machines, Patch, Import / Export, Centre de validation, Historique et Outils avancés. La banque est accessible directement depuis Machines."),
             *bullets([
@@ -687,7 +687,7 @@ def full_guide(language: str) -> None:
                 "Choisissez TX ou RX, les machines, le premier canal et le nombre. Une machine sans TX mais avec des RX bascule automatiquement sur RX.",
                 "Choisissez le format natif correspondant au modèle réel. Les machines sans canal dans le sens choisi ne peuvent pas être cochées.",
                 "Contrôlez l'aperçu. Activez l'adaptation ASCII/8 caractères uniquement si la destination l'exige, puis cliquez sur Exporter.",
-                "DCE ouvre directement Enregistrer sous. La destination est écrite atomiquement et un échec ne détruit pas un fichier existant.",
+                "DCE ouvre directement Enregistrer sous. Le résultat est validé dans un fichier temporaire avant de remplacer la destination ; un échec ne détruit donc pas un fichier existant.",
             ]),
             callout("À l'import, DCE affiche le format détecté, la version source, les listes, machines, canaux, lignes ignorées, labels vides, doublons et avertissements. Appliquer exige au moins un changement sans erreur. Après un second chargement identique, le bouton reste volontairement désactivé et DCE indique que les labels correspondent déjà."),
             callout("Les exports JSON/CSV de DMT 2.14.0-RC1 sont vérifiés sur des fixtures produites avec les exporteurs DMT au commit 3c34052. Les classeurs XLSX/ODS restent fondés sur la feuille Channels des modèles DMT observés."),
@@ -705,7 +705,7 @@ def full_guide(language: str) -> None:
             ]),
             callout("Ce mode sert uniquement à la formation hors ligne. Il ne dérègle aucun appareil et ne communique pas avec le réseau Dante.", PALE_RED),
             para("14. Sauvegarde et validation finale", "h1"),
-            para("Utilisez Enregistrer sous. Le XML temporaire est relu, le garde-fou vérifie les changements, puis la destination est remplacée atomiquement. Une erreur avant le remplacement laisse l'ancienne destination intacte."),
+            para("Utilisez Enregistrer sous. Le XML temporaire est relu, le garde-fou vérifie les changements, puis DCE remplace la destination. Une erreur avant ce remplacement laisse l'ancienne destination intacte."),
             data_table(
                 ["Contrôle", "Action recommandée"],
                 [
@@ -775,7 +775,7 @@ def full_guide(language: str) -> None:
             para("Nouveau projet hors ligne", "h2"),
             *bullets([
                 "Nouveau projet crée une structure minimale 3.0.0 vide ou contenant un premier rôle issu de la banque.",
-                "Le fichier existant n'est jamais écrasé silencieusement. L'écriture passe par un temporaire puis par validation et remplacement atomique.",
+                "Le fichier existant n'est jamais écrasé silencieusement. DCE crée et valide d'abord un fichier temporaire, puis remplace la destination.",
                 "Réouvrez le XML dans DCE, consultez le Centre de validation, puis effectuez un import de contrôle dans Dante Controller.",
             ]),
             callout("Les journaux techniques sont accessibles depuis Historique. Ils expliquent les échecs d'import, de validation, de banque et d'export sans modifier le projet.", PALE_GREEN),
@@ -1125,27 +1125,27 @@ def full_guide(language: str) -> None:
     else:
         page1 = [
             para("1. Installation and startup", "h1"),
-            callout("<b>Important:</b> this is a third-party tool, not an official Audinate product. Version 2026.1 is a beta and may still contain bugs. It edits XML files offline without connecting to a Dante network or using an Audinate API. Keep the original and validate the generated file in Dante Controller before production use."),
+            callout("<b>Important:</b> this is a third-party tool, not an official Audinate product. It edits XML files offline without connecting to a Dante network or using an Audinate API. Keep the original and validate the generated file in Dante Controller before production use."),
             para("The Windows x64 installer includes the application and the required .NET 8 runtime. A separate .NET installation is normally not required."),
             *bullets([
                 "The default location is Program Files, with Start menu and desktop shortcuts.",
-                "A 2026.1 Beta installation uses its own AppId, Program Files folder, shortcuts, and local profile so it can coexist with V3.6.",
+                "A 2026.1 installation uses its own AppId, Program Files folder, shortcuts, and local profile so it can coexist with V3.6.",
                 "2026.1 may copy V3.6 settings into its own profile but never modifies the V3.6 profile in place.",
                 "The 43 templates from DCE Generic Roles 2026.1 and DCE Community Devices 2026.1 are bundled with the application. The wizard may also create shareable copies in a chosen folder without replacing the personal bank.",
-                "Two self-contained 2026.1 Beta DMGs are built on macOS for Apple Silicon and Intel. They include the 2026.1 banks in the Machine Banks folder, and their separate bundle can coexist with V3.6.",
+                "Two self-contained 2026.1 DMGs are built on macOS for Apple Silicon and Intel. They include the 2026.1 banks in the Machine Banks folder, and their separate bundle can coexist with V3.6.",
                 "All four French and English PDFs are installed and remain available from the application.",
             ]),
             para("2. Safety principles", "h1"),
             *bullets([
                 "Work on a copy of the exported XML and use Save as.",
                 "The guard tracks devices by stable technical identity, blocks unknown paths, and protects Dante IDs, mediaType, and instance_id.",
-                "The destination is replaced atomically. The source and any existing destination receive a copy in DanteConfigEditor_Backups.",
+                "Safe saving: DCE validates a temporary file first. The source and any existing destination receive a copy in DanteConfigEditor_Backups before replacement.",
                 "A successful import into Dante Controller is the final validation before operation.",
             ]),
             para("3. Open a project", "h1"),
             para("Click Open XML, choose the file, then review device, TX/RX channel, and active subscription counts. XML files with a default namespace are supported. The first launch uses the light theme; the last selected theme and language are then restored automatically."),
         ]
-        beta_page = [
+        workspace_page = [
             para("4. 2026.1 workspace", "h1"),
             para("Windows and macOS organize work by intent: Project, Overview, Devices, Patch, Import / Export, Validation center, History, and Advanced tools. The bank is available directly from Devices."),
             *bullets([
@@ -1292,7 +1292,7 @@ def full_guide(language: str) -> None:
                 "Choose TX or RX, devices, first channel, and count. A device with RX but no TX automatically switches to RX.",
                 "Choose the native format matching the real model. Devices without channels in the selected direction cannot be checked.",
                 "Review the preview. Enable ASCII/eight-character adaptation only when required, then choose Export.",
-                "DCE opens Save as directly. Output is written atomically, so a failed export does not destroy an existing file.",
+                "DCE opens Save as directly. Output is validated in a temporary file before the destination is replaced, so a failed export does not destroy an existing file.",
             ]),
             callout("During import, DCE reports the detected format, source version, lists, devices, channels, ignored rows, empty labels, duplicates, and warnings. Apply requires at least one error-free change. After loading the same labels again, the button intentionally remains disabled and DCE states that the labels already match."),
             callout("DMT 2.14.0-RC1 JSON/CSV exports are checked with fixtures generated by the DMT exporters at commit 3c34052. XLSX/ODS support continues to target the Channels sheet from observed DMT workbooks."),
@@ -1310,7 +1310,7 @@ def full_guide(language: str) -> None:
             ]),
             callout("This mode is only for offline training. It does not alter any device or communicate with the Dante network.", PALE_RED),
             para("14. Save and final validation", "h1"),
-            para("Use Save as. The temporary XML is reloaded, protected changes are checked, and the destination is replaced atomically. A failure before replacement leaves the previous destination intact."),
+            para("Use Save as. The temporary XML is reloaded, protected changes are checked, and DCE then replaces the destination. A failure before that replacement leaves the previous destination intact."),
             data_table(
                 ["Check", "Recommended action"],
                 [
@@ -1380,7 +1380,7 @@ def full_guide(language: str) -> None:
             para("New offline project", "h2"),
             *bullets([
                 "New project writes a minimal 3.0.0 structure, either empty or with one initial role from the bank.",
-                "An existing file is never overwritten silently. Writing uses a temporary file followed by validation and atomic replacement.",
+                "An existing file is never overwritten silently. DCE creates and validates a temporary file before replacing the destination.",
                 "Reopen the XML in DCE, review the Validation center, then perform a control import into Dante Controller.",
             ]),
             callout("Technical logs are available from History. They explain import, validation, bank, and export failures without changing the project.", PALE_GREEN),
@@ -1732,7 +1732,7 @@ def full_guide(language: str) -> None:
     pages = [
         cover_page(language),
         page1,
-        beta_page,
+        workspace_page,
         screen_map,
         visual_overview,
         page2,

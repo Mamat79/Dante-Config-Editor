@@ -16,7 +16,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 ROOT = Path(__file__).resolve().parent
 MEDIA = ROOT / "media"
 CAPTURES = MEDIA / "2026.1"
-VERSION = "2026.1 Beta"
+VERSION = "2026.1"
 
 WIDTH = 1920
 HEIGHT = 1080
@@ -55,21 +55,25 @@ class SceneSpec:
 
 
 SCENES = (
-    SceneSpec("intro", "Dante Config Editor 2026.1 Beta", "Dante Config Editor 2026.1 Beta", kind="intro"),
-    SceneSpec("workspace", "Un espace de travail unifié", "One unified workspace", "overview.png"),
-    SceneSpec("patch", "Patch immédiat", "Immediate patching", "patch.png"),
-    SceneSpec("replacement", "Remplacement contrôlé", "Controlled replacement", "patch.png"),
+    SceneSpec("intro", "Dante Config Editor 2026.1", "Dante Config Editor 2026.1", kind="intro"),
+    SceneSpec("overview", "Vue d'ensemble", "Overview", "overview.png"),
+    SceneSpec("devices", "Machines et canaux", "Devices and channels", "devices.png"),
+    SceneSpec("workspace", "Un espace de travail adaptable", "An adaptable workspace", "devices-collapsed-sidebars.png"),
+    SceneSpec("matrix", "Matrice de patch", "Patch matrix", "patch.png"),
+    SceneSpec("easy-patch", "Easy Patch", "Easy Patch", "easy-patch.png"),
+    SceneSpec("patch-list", "Liste RX vers TX", "Rx-to-Tx list", "patch-list.png"),
     SceneSpec("renaming", "Renommages cohérents", "Consistent renaming", "devices.png"),
     SceneSpec("device-bank", "Banques de machines", "Device banks", "device-bank.png"),
-    SceneSpec("projects", "Projets et profils", "Projects and profiles", "devices.png"),
-    SceneSpec("validation", "Validation avant sauvegarde", "Validation before saving", "validation.png"),
-    SceneSpec("synoptic", "Synoptique interactif", "Interactive synoptic", "synoptic.png"),
+    SceneSpec("projects", "Nouveau projet et fusion", "New project and merge", "new-project.png"),
     SceneSpec("labels", "Import et export de labels", "Channel label exchange", "labels.png"),
+    SceneSpec("synoptic", "Synoptique interactif", "Interactive synoptic", "synoptic.png"),
+    SceneSpec("validation", "Validation avant sauvegarde", "Validation before saving", "validation.png"),
+    SceneSpec("atomic", "Atomic Bomb", "Atomic Bomb", "atomic-bomb.png"),
     SceneSpec("platforms", "Windows et macOS", "Windows and macOS", kind="platforms"),
     SceneSpec("support", "Un projet gratuit", "A free project", "support.png"),
     SceneSpec("thanks", "Merci aux contributeurs", "Thanks to the contributors", kind="thanks"),
     SceneSpec("caution", "Un outil tiers prudent", "A cautious third-party tool", "validation.png"),
-    SceneSpec("end", "Dante Config Editor 2026.1 Beta", "Dante Config Editor 2026.1 Beta", kind="end"),
+    SceneSpec("end", "Dante Config Editor 2026.1", "Dante Config Editor 2026.1", kind="end"),
 )
 
 
@@ -267,7 +271,7 @@ def make_intro(language: str, cue: SubtitleCue) -> Image.Image:
     draw_brand(draw)
     draw.text(
         (WIDTH // 2, 105),
-        "Dante Config Editor 2026.1 Beta",
+        "Dante Config Editor 2026.1",
         fill="#F7FAFF",
         font=font(53, True),
         anchor="ma",
@@ -356,7 +360,7 @@ def make_end(language: str, cue: SubtitleCue) -> Image.Image:
     draw_brand(draw)
     draw.text(
         (WIDTH // 2, 230),
-        "Dante Config Editor 2026.1 Beta",
+        "Dante Config Editor 2026.1",
         fill="#F7FAFF",
         font=font(60, True),
         anchor="ma",
