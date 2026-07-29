@@ -131,6 +131,8 @@ public partial class MainWindow : Window
     private DanteProject? _project;
     private DanteProject? _easyPatchProject;
     private PatchWorkspaceView? _easyPatchWorkspace;
+    private DanteProject? _detachedPatchProject;
+    private PatchWorkspaceWindow? _detachedPatchWindow;
     private UnifiedPatchSession? _unifiedPatchSession;
     private PatchWorkspaceDisplayMode _patchWorkspaceDisplayMode = PatchWorkspaceDisplayMode.Matrix;
     private AtomicPanelStage _atomicPanelStage = AtomicPanelStage.Safe;
@@ -2807,6 +2809,14 @@ public partial class MainWindow : Window
             return;
         }
 
+        if (_detachedPatchWindow is not null
+            && !ReferenceEquals(_detachedPatchProject, _project))
+        {
+            _detachedPatchWindow.Close();
+            _detachedPatchWindow = null;
+            _detachedPatchProject = null;
+        }
+
         if (_project is null)
         {
             _easyPatchProject = null;
@@ -2880,6 +2890,7 @@ public partial class MainWindow : Window
             workspace.DirectApplyRequested += EasyPatchWorkspace_DirectApplyRequested;
             workspace.InlineChannelNavigationRequested += EasyPatchWorkspace_InlineChannelNavigationRequested;
             workspace.DeviceFocusChanged += EasyPatchWorkspace_DeviceFocusChanged;
+            workspace.DetachRequested += EasyPatchWorkspace_DetachRequested;
             _easyPatchProject = _project;
             _easyPatchWorkspace = workspace;
             EasyPatchHost.Content = workspace;
@@ -2904,6 +2915,51 @@ public partial class MainWindow : Window
             _easyPatchWorkspace = null;
             ShowEasyPatchPlaceholder(exception.Message);
         }
+    }
+
+    private void EasyPatchWorkspace_DetachRequested(
+        object? sender,
+        PatchDetachRequestedEventArgs e)
+    {
+        if (_project is null)
+        {
+            return;
+        }
+
+        if (_detachedPatchWindow is { IsLoaded: true })
+        {
+            if (_detachedPatchWindow.WindowState == WindowState.Minimized)
+            {
+                _detachedPatchWindow.WindowState = WindowState.Normal;
+            }
+
+            _detachedPatchWindow.Activate();
+            return;
+        }
+
+        PatchWorkspaceWindow window = new(
+            _language,
+            _project,
+            ThemeToggleButton.IsChecked == true,
+            e.TxDeviceName,
+            e.RxDeviceName,
+            immediateMode: true,
+            renameChannelAction: RenameEasyPatchChannel,
+            extendChannelSeriesAction: ExtendEasyPatchChannelSeries,
+            warnOnExistingPatch: e.WarnOnExistingPatch)
+        {
+            Owner = this
+        };
+        window.DirectApplyRequested += EasyPatchWorkspace_DirectApplyRequested;
+        window.DeviceFocusChanged += EasyPatchWorkspace_DeviceFocusChanged;
+        window.Closed += (_, _) =>
+        {
+            _detachedPatchWindow = null;
+            _detachedPatchProject = null;
+        };
+        _detachedPatchProject = _project;
+        _detachedPatchWindow = window;
+        window.Show();
     }
 
     private void EasyPatchWorkspace_InlineChannelNavigationRequested(

@@ -6,6 +6,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using DanteConfigEditor.Models;
 using DanteConfigEditor.Services;
@@ -24,6 +25,7 @@ public sealed partial class PatchWorkspaceDialog : Window
     private UiLanguage _language = UiLanguage.French;
     private DanteProject _project = null!;
     private PatchWorkspaceSession _session = null!;
+    private PatchNavigationService _navigation = null!;
     private Func<IReadOnlyList<PatchEditRequest>, Task>? _immediateApply;
     private readonly HashSet<string> _ambiguousSourceNames = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<MatrixCellKey, PatchMatrixCell> _matrixCells = [];
@@ -36,6 +38,7 @@ public sealed partial class PatchWorkspaceDialog : Window
     private bool _dragInProgress;
     private double _matrixZoom = 1.0;
     private bool _initializing = true;
+    private int _navigationHighlightGeneration;
 
     internal int MatrixBuildCount { get; private set; }
 
@@ -61,6 +64,7 @@ public sealed partial class PatchWorkspaceDialog : Window
         _language = language;
         _project = project ?? throw new ArgumentNullException(nameof(project));
         _session = new PatchWorkspaceSession(project.PatchMatrix.Subscriptions);
+        _navigation = new PatchNavigationService(project, _session);
         _immediateApply = immediateApply;
 
         FindControl<ListBox>("TxChannelList")!.SelectionChanged += TxChannelList_SelectionChanged;
@@ -298,8 +302,36 @@ public sealed partial class PatchWorkspaceDialog : Window
             header.FontSize = Math.Max(9, 12 * _matrixZoom);
             header.TextAlignment = TextAlignment.Center;
             header.TextTrimming = TextTrimming.CharacterEllipsis;
+            header.Margin = new Thickness(4, 3, 4, 22);
             ToolTip.SetTip(header, source.FullDisplay);
             AutomationProperties.SetName(header, source.FullDisplay);
+
+            PatchDestinationNavigationResult destinations =
+                _navigation.FindDestinations(source);
+            Button destinationButton = new()
+            {
+                Content = "↓",
+                Tag = source,
+                Width = 24,
+                Height = 20,
+                Padding = new Thickness(0),
+                Margin = new Thickness(0, 0, 0, 2),
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Bottom,
+                IsEnabled = destinations.CanNavigate
+            };
+            destinationButton.Click += MatrixTxDestinationsButton_Click;
+            ToolTip.SetTip(
+                destinationButton,
+                BuildDestinationNavigationToolTip(source, destinations));
+            AutomationProperties.SetName(
+                destinationButton,
+                BuildDestinationNavigationAutomationName(
+                    source,
+                    destinations));
+            Grid.SetRow(destinationButton, 0);
+            Grid.SetColumn(destinationButton, sourceIndex);
+            txHeaders.Children.Add(destinationButton);
         }
 
         for (int targetIndex = 0; targetIndex < targets.Length; targetIndex++)
@@ -316,9 +348,37 @@ public sealed partial class PatchWorkspaceDialog : Window
                 0,
                 FontWeight.Normal,
                 assignment.IsPending);
+            rxHeader.Margin = new Thickness(8, 4, 38, 4);
             ToolTip.SetTip(rxHeader, target.FullDisplay);
             AutomationProperties.SetName(rxHeader, target.FullDisplay);
             _matrixRxHeaders[targetIndex] = rxHeader;
+
+            PatchSourceNavigationResult sourceNavigation =
+                _navigation.FindSource(target);
+            Button sourceButton = new()
+            {
+                Content = "→",
+                Tag = target,
+                Width = 26,
+                Height = 24,
+                Padding = new Thickness(0),
+                Margin = new Thickness(0, 0, 7, 0),
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right,
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+                IsEnabled = sourceNavigation.CanNavigate
+            };
+            sourceButton.Click += MatrixRxSourceButton_Click;
+            ToolTip.SetTip(
+                sourceButton,
+                BuildSourceNavigationToolTip(target, sourceNavigation));
+            AutomationProperties.SetName(
+                sourceButton,
+                BuildSourceNavigationAutomationName(
+                    target,
+                    sourceNavigation));
+            Grid.SetRow(sourceButton, targetIndex);
+            Grid.SetColumn(sourceButton, 0);
+            rxHeaders.Children.Add(sourceButton);
 
             for (int sourceIndex = 0; sourceIndex < sources.Length; sourceIndex++)
             {
@@ -753,8 +813,232 @@ public sealed partial class PatchWorkspaceDialog : Window
 
         await _immediateApply(edits);
         _session = new PatchWorkspaceSession(_project.PatchMatrix.Subscriptions);
+        _navigation = new PatchNavigationService(_project, _session);
         RefreshSourceChannels();
         RefreshTargetRows();
+    }
+
+    private void MatrixRxSourceButton_Click(object? sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+        if (sender is not Button { Tag: PatchTargetDescriptor target })
+        {
+            return;
+        }
+
+        PatchSourceNavigationResult result = _navigation.FindSource(target);
+        if (!result.CanNavigate)
+        {
+            SetInfo(BuildSourceNavigationToolTip(target, result), warning: true);
+            return;
+        }
+
+        NavigateToMatrixConnection(result.Source!, target);
+    }
+
+    private async void MatrixTxDestinationsButton_Click(
+        object? sender,
+        RoutedEventArgs e)
+    {
+        e.Handled = true;
+        if (sender is not Button { Tag: PatchSourceDescriptor source })
+        {
+            return;
+        }
+
+        PatchDestinationNavigationResult result =
+            _navigation.FindDestinations(source);
+        if (!result.CanNavigate)
+        {
+            SetInfo(
+                BuildDestinationNavigationToolTip(source, result),
+                warning: true);
+            return;
+        }
+
+        PatchTargetDescriptor? destination =
+            await ShowDestinationPickerAsync(source, result);
+        if (destination is not null)
+        {
+            NavigateToMatrixConnection(source, destination);
+        }
+    }
+
+    private async Task<PatchTargetDescriptor?> ShowDestinationPickerAsync(
+        PatchSourceDescriptor source,
+        PatchDestinationNavigationResult result)
+    {
+        PatchTargetDescriptor? selected = null;
+        ListBox destinations = new()
+        {
+            ItemsSource = result.Destinations
+                .Select(target => new PatchDestinationChoice(target))
+                .ToArray(),
+            MinHeight = 120
+        };
+        TextBlock title = new()
+        {
+            Text = L(
+                $"Destinations RX de {source.Display} ({result.Destinations.Count})",
+                $"Rx destinations for {source.Display} ({result.Destinations.Count})"),
+            FontSize = 18,
+            FontWeight = FontWeight.SemiBold
+        };
+        TextBlock hint = new()
+        {
+            Text = L(
+                "Cliquez sur une destination pour l'afficher dans la grille.",
+                "Click a destination to show it in the matrix."),
+            Classes = { "muted" },
+            TextWrapping = TextWrapping.Wrap
+        };
+        StackPanel content = new()
+        {
+            Margin = new Thickness(18),
+            Spacing = 10
+        };
+        content.Children.Add(title);
+        content.Children.Add(destinations);
+        content.Children.Add(hint);
+        if (result.AmbiguousReferenceCount > 0)
+        {
+            string ambiguousWarning = result.AmbiguousReferenceCount == 1
+                ? L(
+                    "1 référence ambiguë n'est pas listée.",
+                    "1 ambiguous reference is not listed.")
+                : L(
+                    $"{result.AmbiguousReferenceCount} références ambiguës ne sont pas listées.",
+                    $"{result.AmbiguousReferenceCount} ambiguous references are not listed.");
+            content.Children.Add(new TextBlock
+            {
+                Text = ambiguousWarning,
+                Foreground = ResourceBrush("WarningBrush"),
+                TextWrapping = TextWrapping.Wrap
+            });
+        }
+
+        Window picker = new()
+        {
+            Title = L("Choisir une destination RX", "Choose an Rx destination"),
+            Width = 540,
+            Height = Math.Min(
+                600,
+                Math.Max(260, 170 + result.Destinations.Count * 34)),
+            MinWidth = 420,
+            MinHeight = 240,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            Content = content
+        };
+        destinations.SelectionChanged += (_, _) =>
+        {
+            if (destinations.SelectedItem is PatchDestinationChoice choice)
+            {
+                selected = choice.Target;
+                picker.Close();
+            }
+        };
+        await picker.ShowDialog(this);
+        return selected;
+    }
+
+    private void NavigateToMatrixConnection(
+        PatchSourceDescriptor source,
+        PatchTargetDescriptor target)
+    {
+        ComboBox txCombo = FindControl<ComboBox>("TxDeviceCombo")!;
+        ComboBox rxCombo = FindControl<ComboBox>("RxDeviceCombo")!;
+        string? txDeviceName = FindDeviceName(
+            txCombo.ItemsSource?.OfType<string>() ?? [],
+            source.DeviceName);
+        string? rxDeviceName = FindDeviceName(
+            rxCombo.ItemsSource?.OfType<string>() ?? [],
+            target.DeviceName);
+        if (txDeviceName is null || rxDeviceName is null)
+        {
+            SetInfo(
+                L(
+                    "La machine liée n'est plus disponible dans la matrice.",
+                    "The linked device is no longer available in the matrix."),
+                warning: true);
+            return;
+        }
+
+        _initializing = true;
+        txCombo.SelectedItem = txDeviceName;
+        rxCombo.SelectedItem = rxDeviceName;
+        _initializing = false;
+        RefreshSourceChannels();
+        RefreshTargetRows();
+        FindControl<TabControl>("PatchModeTabs")!.SelectedItem =
+            FindControl<TabItem>("MatrixTab");
+        Dispatcher.UIThread.Post(
+            () => ScrollToAndHighlightConnection(source, target),
+            DispatcherPriority.Loaded);
+    }
+
+    private void ScrollToAndHighlightConnection(
+        PatchSourceDescriptor source,
+        PatchTargetDescriptor target)
+    {
+        int sourceIndex = _visibleSources
+            .Select((candidate, index) => (candidate, index))
+            .Where(item =>
+                item.candidate.DanteId == source.DanteId
+                && string.Equals(
+                    item.candidate.DeviceName,
+                    source.DeviceName,
+                    StringComparison.OrdinalIgnoreCase))
+            .Select(item => item.index)
+            .DefaultIfEmpty(-1)
+            .First();
+        int targetIndex = _visibleTargets
+            .Select((candidate, index) => (candidate, index))
+            .Where(item =>
+                item.candidate.DanteId == target.DanteId
+                && string.Equals(
+                    item.candidate.DeviceName,
+                    target.DeviceName,
+                    StringComparison.OrdinalIgnoreCase))
+            .Select(item => item.index)
+            .DefaultIfEmpty(-1)
+            .First();
+        if (sourceIndex < 0
+            || targetIndex < 0
+            || !_matrixCells.TryGetValue(
+                new MatrixCellKey(sourceIndex, targetIndex),
+                out PatchMatrixCell? cell))
+        {
+            SetInfo(
+                L(
+                    "La liaison existe, mais son canal n'est pas visible dans cette matrice.",
+                    "The subscription exists, but its channel is not visible in this matrix."),
+                warning: true);
+            return;
+        }
+
+        FindControl<ScrollViewer>("MatrixBodyScrollViewer")!.Offset =
+            new Vector(
+                Math.Max(0, sourceIndex * 92d * _matrixZoom),
+                Math.Max(0, targetIndex * 38d * _matrixZoom));
+        HighlightNavigationButton(cell.Button);
+        SetInfo(L(
+            $"Liaison affichée : {source.FullDisplay} → {target.FullDisplay}.",
+            $"Subscription shown: {source.FullDisplay} → {target.FullDisplay}."));
+    }
+
+    private async void HighlightNavigationButton(Button button)
+    {
+        int generation = ++_navigationHighlightGeneration;
+        button.BorderBrush = ResourceBrush("WarningBrush");
+        button.BorderThickness = new Thickness(3);
+        await Task.Delay(1800);
+        if (generation != _navigationHighlightGeneration)
+        {
+            return;
+        }
+
+        button.BorderBrush = ResourceBrush("PanelBorderBrush");
+        button.BorderThickness = new Thickness(1);
     }
 
     private async Task<PatchConflictResolution> ChooseConflictResolutionAsync(PatchBatchPreview preview)
@@ -1292,6 +1576,81 @@ public sealed partial class PatchWorkspaceDialog : Window
             : L($"Affecter {source.FullDisplay} vers {target.FullDisplay}", $"Assign {source.FullDisplay} to {target.FullDisplay}");
     }
 
+    private string BuildSourceNavigationToolTip(
+        PatchTargetDescriptor target,
+        PatchSourceNavigationResult result)
+    {
+        return result.Status switch
+        {
+            PatchNavigationStatus.Found => L(
+                $"Afficher la source TX de {target.Display} : {result.Source!.FullDisplay}.",
+                $"Show the Tx source for {target.Display}: {result.Source!.FullDisplay}."),
+            PatchNavigationStatus.Free => L(
+                $"Le canal {target.Display} est libre.",
+                $"Channel {target.Display} is free."),
+            PatchNavigationStatus.MissingDevice => L(
+                $"La machine TX référencée « {result.RequestedDeviceName} » n'existe pas dans ce projet.",
+                $"Referenced Tx device “{result.RequestedDeviceName}” is not present in this project."),
+            PatchNavigationStatus.MissingChannel => L(
+                $"Le canal TX référencé « {result.RequestedChannelName} » est introuvable sur {result.RequestedDeviceName}.",
+                $"Referenced Tx channel “{result.RequestedChannelName}” was not found on {result.RequestedDeviceName}."),
+            PatchNavigationStatus.AmbiguousChannel => L(
+                $"Plusieurs TX de {result.RequestedDeviceName} portent le nom « {result.RequestedChannelName} ». Renommez-les pour naviguer sans ambiguïté.",
+                $"Several Tx channels on {result.RequestedDeviceName} are named “{result.RequestedChannelName}”. Rename them for unambiguous navigation."),
+            _ => L("Aucune source TX exploitable.", "No usable Tx source.")
+        };
+    }
+
+    private string BuildSourceNavigationAutomationName(
+        PatchTargetDescriptor target,
+        PatchSourceNavigationResult result)
+    {
+        return result.CanNavigate
+            ? L(
+                $"Afficher la source TX du canal {target.Display}",
+                $"Show the Tx source for channel {target.Display}")
+            : BuildSourceNavigationToolTip(target, result);
+    }
+
+    private string BuildDestinationNavigationToolTip(
+        PatchSourceDescriptor source,
+        PatchDestinationNavigationResult result)
+    {
+        return result.Status switch
+        {
+            PatchNavigationStatus.Found when result.Destinations.Count == 1 => L(
+                $"Afficher la destination RX de {source.Display}.",
+                $"Show the Rx destination for {source.Display}."),
+            PatchNavigationStatus.Found => L(
+                $"Afficher les {result.Destinations.Count} destinations RX de {source.Display}.",
+                $"Show the {result.Destinations.Count} Rx destinations for {source.Display}."),
+            PatchNavigationStatus.NoDestinations => L(
+                $"Le canal {source.Display} n'alimente aucun RX dans ce projet.",
+                $"Channel {source.Display} does not feed any Rx channel in this project."),
+            PatchNavigationStatus.AmbiguousChannel => L(
+                $"Les destinations de {source.Display} sont ambiguës car plusieurs TX portent le même nom.",
+                $"Destinations for {source.Display} are ambiguous because several Tx channels share the same name."),
+            PatchNavigationStatus.MissingDevice => L(
+                $"La machine TX {source.DeviceName} n'existe plus dans le projet.",
+                $"Tx device {source.DeviceName} is no longer present in the project."),
+            PatchNavigationStatus.MissingChannel => L(
+                $"Le canal TX {source.Display} n'existe plus dans le projet.",
+                $"Tx channel {source.Display} is no longer present in the project."),
+            _ => L("Aucune destination RX exploitable.", "No usable Rx destination.")
+        };
+    }
+
+    private string BuildDestinationNavigationAutomationName(
+        PatchSourceDescriptor source,
+        PatchDestinationNavigationResult result)
+    {
+        return result.CanNavigate
+            ? L(
+                $"Afficher les destinations RX du canal {source.Display}",
+                $"Show the Rx destinations for channel {source.Display}")
+            : BuildDestinationNavigationToolTip(source, result);
+    }
+
     private static string? FindDeviceName(IEnumerable<string> names, string? requested)
     {
         return names.FirstOrDefault(name => string.Equals(name, requested, StringComparison.OrdinalIgnoreCase));
@@ -1339,6 +1698,11 @@ public sealed partial class PatchWorkspaceDialog : Window
         }
 
         public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
+    }
+
+    private sealed record PatchDestinationChoice(PatchTargetDescriptor Target)
+    {
+        public override string ToString() => Target.FullDisplay;
     }
 
     private sealed class PatchMatrixCell(

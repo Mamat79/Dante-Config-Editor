@@ -711,6 +711,43 @@ public sealed class PatchWorkspaceUiContractTests
     }
 
     [Fact]
+    public void PatchMatrixNavigatesBetweenRxSourcesAndTxDestinations()
+    {
+        string windowsXaml = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml"));
+        string windowsCode = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml.cs"));
+        string mainWindowCode = File.ReadAllText(RepositoryFile("MainWindow.xaml.cs"));
+        string detachedWindowCode = File.ReadAllText(RepositoryFile("PatchWorkspaceWindow.xaml.cs"));
+        string macCode = File.ReadAllText(RepositoryFile(
+            "src",
+            "DanteConfigEditor.Mac",
+            "PatchWorkspaceDialog.axaml.cs"));
+
+        Assert.Contains("x:Name=\"DetachMatrixButton\"", windowsXaml, StringComparison.Ordinal);
+        Assert.Contains("MatrixRxSourceButton_Click", windowsCode, StringComparison.Ordinal);
+        Assert.Contains("MatrixTxDestinationsButton_Click", windowsCode, StringComparison.Ordinal);
+        Assert.Contains("ShowDestinationPicker", windowsCode, StringComparison.Ordinal);
+        Assert.Contains("ScrollToAndHighlightConnection", windowsCode, StringComparison.Ordinal);
+        Assert.Contains("BuildSourceNavigationToolTip", windowsCode, StringComparison.Ordinal);
+        Assert.Contains("BuildDestinationNavigationToolTip", windowsCode, StringComparison.Ordinal);
+        Assert.Contains("DetachRequested?.Invoke", windowsCode, StringComparison.Ordinal);
+        Assert.Contains(
+            "workspace.DetachRequested += EasyPatchWorkspace_DetachRequested",
+            mainWindowCode,
+            StringComparison.Ordinal);
+        Assert.Contains("immediateMode: true", mainWindowCode, StringComparison.Ordinal);
+        Assert.Contains("allowDetach: false", detachedWindowCode, StringComparison.Ordinal);
+        Assert.Contains("if (_immediateMode)", detachedWindowCode, StringComparison.Ordinal);
+        Assert.Contains("_workspace.ShowMatrixMode()", detachedWindowCode, StringComparison.Ordinal);
+
+        Assert.Contains("MatrixRxSourceButton_Click", macCode, StringComparison.Ordinal);
+        Assert.Contains("MatrixTxDestinationsButton_Click", macCode, StringComparison.Ordinal);
+        Assert.Contains("ShowDestinationPickerAsync", macCode, StringComparison.Ordinal);
+        Assert.Contains("ScrollToAndHighlightConnection", macCode, StringComparison.Ordinal);
+        Assert.Contains("BuildSourceNavigationAutomationName", macCode, StringComparison.Ordinal);
+        Assert.Contains("BuildDestinationNavigationAutomationName", macCode, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void PatchMatrixKeepsHeadersFixedAndUsesIncrementalRowUpdates()
     {
         string xaml = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml"));
