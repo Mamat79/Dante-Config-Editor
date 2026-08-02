@@ -351,6 +351,50 @@ public sealed class PatchAssignmentPlannerTests
     }
 
     [Fact]
+    public void DeviceSelectionSwapRejectsTheSameDeviceOnBothSides()
+    {
+        PatchDeviceSelectionSwapResult result = PatchDeviceSelectionSwapper.TrySwap(
+            "CONSOLE",
+            "CONSOLE",
+            ["CONSOLE", "STAGEBOX"],
+            ["CONSOLE", "STAGEBOX"]);
+
+        Assert.False(result.Success);
+        Assert.Contains("deux machines différentes", result.ErrorMessage, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void InitialPatchSelectionUsesADistinctReversiblePairWhenAvailable()
+    {
+        PatchDeviceSelectionPair pair = PatchDeviceSelectionSwapper.ResolveInitialPair(
+            preferredTxDevice: "CONSOLE",
+            preferredRxDevice: null,
+            txCapableDevices: ["CONSOLE", "STAGEBOX", "TX-ONLY"],
+            rxCapableDevices: ["CONSOLE", "STAGEBOX", "RX-ONLY"]);
+
+        Assert.Equal("CONSOLE", pair.TxDeviceName);
+        Assert.Equal("STAGEBOX", pair.RxDeviceName);
+        Assert.True(PatchDeviceSelectionSwapper.TrySwap(
+            pair.TxDeviceName,
+            pair.RxDeviceName,
+            ["CONSOLE", "STAGEBOX", "TX-ONLY"],
+            ["CONSOLE", "STAGEBOX", "RX-ONLY"]).Success);
+    }
+
+    [Fact]
+    public void InitialPatchSelectionPreservesAnExplicitSameDevicePair()
+    {
+        PatchDeviceSelectionPair pair = PatchDeviceSelectionSwapper.ResolveInitialPair(
+            preferredTxDevice: "CONSOLE",
+            preferredRxDevice: "CONSOLE",
+            txCapableDevices: ["CONSOLE", "STAGEBOX"],
+            rxCapableDevices: ["CONSOLE", "STAGEBOX"]);
+
+        Assert.Equal("CONSOLE", pair.TxDeviceName);
+        Assert.Equal("CONSOLE", pair.RxDeviceName);
+    }
+
+    [Fact]
     public void DeviceSelectionSwapRespectsALockedRxSelector()
     {
         PatchDeviceSelectionSwapResult result = PatchDeviceSelectionSwapper.TrySwap(

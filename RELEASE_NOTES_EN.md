@@ -22,6 +22,9 @@ Audinate. It only works on offline files.
 - batch insertion of 1 to 100 devices from the bank, with a name preview,
   whole-batch XML validation, one Undo action, and a bank window that stays open
   for consecutive insertions;
+- fixed `FLIP TX/RX` in the matrix: DCE now selects two distinct devices when
+  a valid swap is possible and explains why an identical or non-reversible pair
+  cannot be swapped;
 
 - Domain, DanteXml, Application, and Infrastructure separation;
 - central session, transactional commands, Undo/Redo, and history;

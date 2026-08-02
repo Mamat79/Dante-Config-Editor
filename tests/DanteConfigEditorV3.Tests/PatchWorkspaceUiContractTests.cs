@@ -31,6 +31,7 @@ public sealed class PatchWorkspaceUiContractTests
         Assert.Contains("x:Name=\"SwapDeviceSelectionButton\"", xaml, StringComparison.Ordinal);
         Assert.Contains("Content=\"FLIP TX ⇄ RX\"", xaml, StringComparison.Ordinal);
         Assert.Contains("Style=\"{StaticResource FlipButtonStyle}\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("PatchDeviceSelectionSwapper.ResolveInitialPair", codeBehind, StringComparison.Ordinal);
         Assert.Contains("<Setter Property=\"Background\" Value=\"{DynamicResource WarningBrush}\"", xaml, StringComparison.Ordinal);
         Assert.Contains("x:Name=\"RangeCapacityTextBlock\"", xaml, StringComparison.Ordinal);
         Assert.Contains("PlanOneToOne", codeBehind, StringComparison.Ordinal);

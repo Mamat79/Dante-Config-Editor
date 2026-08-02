@@ -22,6 +22,9 @@ travaille uniquement sur des fichiers hors ligne.
 - ajout en lot de 1 à 100 machines depuis la banque, avec aperçu des noms,
   validation XML globale, une seule action Annuler et maintien de la fenêtre
   Banque ouverte pour enchaîner les insertions ;
+- correction de `FLIP TX/RX` dans la matrice : DCE choisit deux machines
+  distinctes lorsqu'une inversion est possible et explique désormais pourquoi
+  une paire identique ou non inversable ne peut pas être échangée ;
 
 - séparation Domain, DanteXml, Application et Infrastructure ;
 - session centrale, commandes transactionnelles, Annuler/Rétablir et historique ;

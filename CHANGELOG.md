@@ -19,6 +19,9 @@ Toutes les dates utilisent le calendrier ISO. Les versions antérieures à
 
 ### Modifié
 
+- la matrice initialise maintenant RX et TX avec deux machines distinctes
+  lorsqu'une inversion valide est possible ; `FLIP TX/RX` signale clairement
+  une sélection identique au lieu d'annoncer un succès sans effet visible ;
 - la fenêtre Banque reste ouverte après un ajout afin d'enchaîner plusieurs
   modèles sans la rouvrir ;
 - l'ajout depuis une banque accepte désormais de 1 à 100 instances en une seule

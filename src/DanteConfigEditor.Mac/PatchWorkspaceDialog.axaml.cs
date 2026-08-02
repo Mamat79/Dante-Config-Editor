@@ -116,8 +116,13 @@ public sealed partial class PatchWorkspaceDialog : Window
         ComboBox rxCombo = FindControl<ComboBox>("RxDeviceCombo")!;
         txCombo.ItemsSource = txDevices;
         rxCombo.ItemsSource = rxDevices;
-        txCombo.SelectedItem = FindDeviceName(txDevices, initialTxDeviceName) ?? txDevices.FirstOrDefault();
-        rxCombo.SelectedItem = FindDeviceName(rxDevices, initialRxDeviceName) ?? rxDevices.FirstOrDefault();
+        PatchDeviceSelectionPair initialPair = PatchDeviceSelectionSwapper.ResolveInitialPair(
+            initialTxDeviceName,
+            initialRxDeviceName,
+            txDevices,
+            rxDevices);
+        txCombo.SelectedItem = initialPair.TxDeviceName;
+        rxCombo.SelectedItem = initialPair.RxDeviceName;
     }
 
     private void SwapDeviceSelectionButton_Click(object? sender, RoutedEventArgs e)
@@ -1670,6 +1675,11 @@ public sealed partial class PatchWorkspaceDialog : Window
         }
         if (french.Contains("Sélectionnez", StringComparison.OrdinalIgnoreCase))
         {
+            if (french.Contains("deux machines différentes", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Select two different devices: the same device is displayed as both Tx and Rx.";
+            }
+
             return "Select a Tx device and an Rx device before swapping them.";
         }
         return "The selected devices cannot be swapped because one of them does not support the required channel direction.";
