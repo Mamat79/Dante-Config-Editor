@@ -1,4 +1,5 @@
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -69,7 +70,7 @@ public sealed class OnlineUpdateServicesTests
         using UpdateWorkspace workspace = new();
         byte[] installer = [0x44, 0x43, 0x45, 0x21];
         string hash = Convert.ToHexString(SHA256.HashData(installer));
-        string installerName = "DanteConfigEditor2026_1_1_Installer.exe";
+        string installerName = CurrentPlatformInstallerName();
         string releaseJson = Release(installerName, installer.Length, hash);
         using HttpClient client = new(new RouteHandler(request =>
         {
@@ -104,7 +105,7 @@ public sealed class OnlineUpdateServicesTests
     {
         using UpdateWorkspace workspace = new();
         byte[] installer = [0x44, 0x43, 0x45, 0x21];
-        string installerName = "DanteConfigEditor2026_1_1_Installer.exe";
+        string installerName = CurrentPlatformInstallerName();
         string releaseJson = Release(installerName, installer.Length, new string('0', 64));
         using HttpClient client = new(new RouteHandler(request =>
         {
@@ -179,6 +180,24 @@ public sealed class OnlineUpdateServicesTests
             },
             expected_hash_for_test = hash
         });
+
+    private static string CurrentPlatformInstallerName()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return "DanteConfigEditor2026_1_1_Installer.exe";
+        }
+
+        if (OperatingSystem.IsMacOS())
+        {
+            string architecture = RuntimeInformation.ProcessArchitecture == Architecture.Arm64
+                ? "AppleSilicon"
+                : "Intel";
+            return $"DanteConfigEditor2026_1_1_macOS_{architecture}.dmg";
+        }
+
+        throw new PlatformNotSupportedException("Le test de mise à jour cible Windows et macOS.");
+    }
 
     private static HttpResponseMessage JsonResponse(string content) =>
         new(HttpStatusCode.OK)
