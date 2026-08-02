@@ -49,41 +49,71 @@ public sealed partial class DanteProject
         MachineTemplatePackage template,
         MachineInstanceOptions options)
     {
+        return AddDevicesFromTemplate(
+            template,
+            new MachineInstanceBatchRequest
+            {
+                Options = options,
+                Quantity = 1
+            })[0];
+    }
+
+    public IReadOnlyList<MachineCloneResult> AddDevicesFromTemplate(
+        MachineTemplatePackage template,
+        MachineInstanceBatchRequest request)
+    {
         ArgumentNullException.ThrowIfNull(template);
-        ArgumentNullException.ThrowIfNull(options);
-        string newName = ValidateNewRoleName(options.NewName);
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(request.Options);
         EnsureTemplateVersionIsCompatible(template);
 
-        MachineRoleCreation creation = MachineRoleInstantiationService.CreateFromTemplate(
-            template.TemplateDocument.Root
-                ?? throw new InvalidOperationException("Le modèle de machine ne contient pas de racine <device>."),
-            new MachineInstanceOptions
-            {
-                NewName = newName,
-                UseTemplateTxLabels = options.UseTemplateTxLabels,
-                UseTemplateRxLabels = options.UseTemplateRxLabels,
-                TxLabelPrefix = options.TxLabelPrefix,
-                RxLabelPrefix = options.RxLabelPrefix
-            });
-        RebaseDanteNamespace(
-            creation.DeviceElement,
-            template.TemplateDocument.Root!.Name.Namespace,
-            Document.Root!.Name.Namespace);
+        IReadOnlyList<string> newNames = MachineInstanceNameService.BuildNames(
+            request.Options.NewName,
+            request.Quantity,
+            Devices.Select(device => device.Name));
+        XElement templateRoot = template.TemplateDocument.Root
+            ?? throw new InvalidOperationException("Le modèle de machine ne contient pas de racine <device>.");
+        List<MachineRoleCreation> creations = new(newNames.Count);
 
-        EnsureStructuralCandidateIsValid([creation.DeviceElement]);
-        Document.Root!.Add(creation.DeviceElement);
-        AuthorizeAddedDevice(creation.DeviceElement);
+        foreach (string newName in newNames)
+        {
+            MachineRoleCreation creation = MachineRoleInstantiationService.CreateFromTemplate(
+                templateRoot,
+                new MachineInstanceOptions
+                {
+                    NewName = newName,
+                    UseTemplateTxLabels = request.Options.UseTemplateTxLabels,
+                    UseTemplateRxLabels = request.Options.UseTemplateRxLabels,
+                    TxLabelPrefix = request.Options.TxLabelPrefix,
+                    RxLabelPrefix = request.Options.RxLabelPrefix
+                });
+            RebaseDanteNamespace(
+                creation.DeviceElement,
+                templateRoot.Name.Namespace,
+                Document.Root!.Name.Namespace);
+            creations.Add(creation);
+        }
+
+        // Le lot entier est validé avant la première modification du document.
+        EnsureStructuralCandidateIsValid(creations.Select(creation => creation.DeviceElement).ToArray());
+        foreach (MachineRoleCreation creation in creations)
+        {
+            Document.Root!.Add(creation.DeviceElement);
+            AuthorizeAddedDevice(creation.DeviceElement);
+        }
+
         RegisterChange(
             "Machine ajoutée depuis la banque",
-            $"{template.Metadata.TemplateName} -> {newName}; {creation.TxCount} TX, {creation.RxCount} RX");
+            $"{template.Metadata.TemplateName} -> {string.Join(", ", newNames)}; {creations.Count} machine(s)");
 
-        return new MachineCloneResult(
-            template.Metadata.TemplateName,
-            newName,
-            creation.TxCount,
-            creation.RxCount,
-            creation.CopiedSubscriptionCount,
-            IsGenericRole: true);
+        return creations.Select((creation, index) => new MachineCloneResult(
+                template.Metadata.TemplateName,
+                newNames[index],
+                creation.TxCount,
+                creation.RxCount,
+                creation.CopiedSubscriptionCount,
+                IsGenericRole: true))
+            .ToArray();
     }
 
     private string ValidateNewRoleName(string? proposedName)

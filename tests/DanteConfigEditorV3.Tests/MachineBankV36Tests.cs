@@ -120,6 +120,96 @@ public sealed class MachineBankV36Tests
     }
 
     [Fact]
+    public void BatchNameGenerationDefaultsToOneExactName()
+    {
+        IReadOnlyList<string> names = MachineInstanceNameService.BuildNames(
+            "RIO-STAGE",
+            1,
+            ["OTHER"]);
+
+        Assert.Equal(["RIO-STAGE"], names);
+    }
+
+    [Fact]
+    public void BatchNameGenerationCreatesPredictableUniqueSeries()
+    {
+        IReadOnlyList<string> names = MachineInstanceNameService.BuildNames(
+            "RIO-STAGE",
+            4,
+            ["OTHER"]);
+
+        Assert.Equal(["RIO-STAGE", "RIO-STAGE-2", "RIO-STAGE-3", "RIO-STAGE-4"], names);
+    }
+
+    [Fact]
+    public void AddingSeveralTemplatesIsValidatedAsOneXmlBatch()
+    {
+        using TestWorkspace workspace = new();
+        DanteProject project = DanteProject.Load(workspace.SourcePath);
+        MachineTemplatePackage package = MachineTemplateService.CreateFromDevice(
+            project.FindDevice("DEVICE-A")!,
+            project.PresetVersion,
+            new MachineTemplateCreateRequest
+            {
+                TemplateName = "Reusable batch"
+            });
+
+        IReadOnlyList<MachineCloneResult> results = project.AddDevicesFromTemplate(
+            package,
+            new MachineInstanceBatchRequest
+            {
+                Quantity = 3,
+                Options = new MachineInstanceOptions
+                {
+                    NewName = "BANK-BATCH"
+                }
+            });
+
+        Assert.Equal(["BANK-BATCH", "BANK-BATCH-2", "BANK-BATCH-3"], results.Select(result => result.NewName));
+        Assert.All(results, result => Assert.True(project.FindDevice(result.NewName)!.IsGenericRole));
+        Assert.Equal(6, project.Devices.Count);
+        Assert.False(project.Validate().HasErrors);
+        Assert.False(project.ValidateXmlChangeGuard().HasErrors);
+
+        string outputPath = Path.Combine(workspace.DirectoryPath, "batch-output.xml");
+        project.SaveAs(outputPath);
+        DanteProject reloaded = DanteProject.Load(outputPath);
+        Assert.All(results, result => Assert.NotNull(reloaded.FindDevice(result.NewName)));
+        Assert.False(reloaded.Validate().HasErrors);
+    }
+
+    [Fact]
+    public void BatchConflictLeavesProjectDocumentUntouched()
+    {
+        using TestWorkspace workspace = new();
+        DanteProject project = DanteProject.Load(workspace.SourcePath);
+        MachineTemplatePackage package = MachineTemplateService.CreateFromDevice(
+            project.FindDevice("DEVICE-A")!,
+            project.PresetVersion,
+            new MachineTemplateCreateRequest
+            {
+                TemplateName = "Conflict batch"
+            });
+        string before = project.Document.ToString(SaveOptions.DisableFormatting);
+
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() =>
+            project.AddDevicesFromTemplate(
+                package,
+                new MachineInstanceBatchRequest
+                {
+                    Quantity = 2,
+                    Options = new MachineInstanceOptions
+                    {
+                        NewName = "DEVICE-A"
+                    }
+                }));
+
+        Assert.Contains("DEVICE-A", error.Message, StringComparison.Ordinal);
+        Assert.Equal(before, project.Document.ToString(SaveOptions.DisableFormatting));
+        Assert.Equal(3, project.Devices.Count);
+    }
+
+    [Fact]
     public void RepositoryCopiesOptionalImageIntoTemplateDirectory()
     {
         using TestWorkspace workspace = new();

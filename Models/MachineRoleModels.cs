@@ -32,6 +32,15 @@ public sealed class MachineInstanceOptions
     public string? RxLabelPrefix { get; init; }
 }
 
+public sealed class MachineInstanceBatchRequest
+{
+    public const int MaximumQuantity = 100;
+
+    public required MachineInstanceOptions Options { get; init; }
+
+    public int Quantity { get; init; } = 1;
+}
+
 public sealed record MachineCloneResult(
     string SourceName,
     string NewName,
