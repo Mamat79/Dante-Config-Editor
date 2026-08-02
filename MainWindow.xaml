@@ -10,6 +10,7 @@
         WindowState="Maximized"
         SizeChanged="Window_SizeChanged"
         PreviewKeyDown="Window_PreviewKeyDown"
+        Icon="Icon3.ico"
         ToolTipService.InitialShowDelay="450"
         ToolTipService.ShowDuration="30000"
         Loaded="Window_Loaded">
@@ -683,11 +684,43 @@
                      tronqué plutôt que replié, afin de ne jamais agrandir la barre. -->
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <StackPanel Margin="0,0,18,0" VerticalAlignment="Center">
+                    <StackPanel Grid.Column="0"
+                                Width="210"
+                                Margin="0,0,24,0"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Center">
+                        <Image Width="48"
+                               Height="48"
+                               Margin="0,0,10,0"
+                               Source="/Resources/Branding/silemio-logo.png"
+                               Stretch="Uniform" />
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="SiLeMI/O"
+                                       FontSize="22"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextBrush}"
+                                       TextWrapping="NoWrap" />
+                            <TextBlock Text="By Mamat"
+                                       Margin="2,1,0,0"
+                                       FontSize="10"
+                                       Foreground="{DynamicResource MutedTextBrush}"
+                                       TextWrapping="NoWrap" />
+                            <TextBlock Text="-------[]--"
+                                       Margin="2,0,0,0"
+                                       FontFamily="Consolas"
+                                       FontSize="8"
+                                       Foreground="{DynamicResource MutedTextBrush}"
+                                       Opacity="0.76"
+                                       TextWrapping="NoWrap" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Margin="0,0,18,0" VerticalAlignment="Center">
                          <TextBlock Text="Dante Config Editor 2026.1.1"
                                     FontSize="20"
                                     FontWeight="SemiBold"
@@ -720,7 +753,7 @@
                         </WrapPanel>
                     </StackPanel>
 
-                    <WrapPanel Grid.Column="1" VerticalAlignment="Center">
+                    <WrapPanel Grid.Column="2" VerticalAlignment="Center">
                          <TextBlock x:Name="DirtyStateTextBlock"
                                     Text="Non modifié"
                                     TextWrapping="NoWrap"
@@ -3323,8 +3356,8 @@
             </Border>
         </Grid>
 
-        <!-- Une grille dédiée garantit que le crédit reste visible à droite.
-             Le StatusBar natif compressait son dernier élément sur deux lignes. -->
+        <!-- La barre d'état reste compacte ; l'identité visuelle est portée par
+             le bandeau supérieur afin de ne pas dupliquer la signature. -->
         <Border Grid.Row="3"
                 MinHeight="34"
                 Background="{DynamicResource SurfaceBrush}"
@@ -3332,11 +3365,6 @@
                 BorderThickness="0,1,0,0"
                 Padding="4,2,8,2">
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock x:Name="StatusTextBlock"
                                Text="Prêt"
@@ -3356,26 +3384,6 @@
                                VerticalAlignment="Center" />
                 </StackPanel>
 
-                <StackPanel Grid.Column="1"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center">
-                    <TextBlock Text="By Mamat"
-                               FontSize="11"
-                               Foreground="{DynamicResource MutedTextBrush}"
-                               TextAlignment="Right"
-                               Opacity="0.82" />
-                    <TextBlock Text="et ses agents"
-                               FontSize="8"
-                               Foreground="{DynamicResource MutedTextBrush}"
-                               TextAlignment="Right"
-                               Opacity="0.68" />
-                    <TextBlock Text="-------[]--"
-                               FontSize="7"
-                               FontFamily="Consolas"
-                               Foreground="{DynamicResource MutedTextBrush}"
-                               TextAlignment="Right"
-                               Opacity="0.52" />
-                </StackPanel>
             </Grid>
         </Border>
     </Grid>

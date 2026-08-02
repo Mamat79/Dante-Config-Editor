@@ -38,6 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <AvaloniaResource Include="..\..\Resources\Branding\silemio-logo.png" Link="Assets\silemio-logo.png" />
     <AvaloniaResource Include="..\..\Resources\Support\paypal-support-qr.png" Link="Assets\paypal-support-qr.png" />
     <None Include="..\..\docs\QuickStart_DanteConfigEditorV3_FR.pdf" Link="Docs\QuickStart_DanteConfigEditorV3_FR.pdf" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\docs\QuickStart_DanteConfigEditorV3_EN.pdf" Link="Docs\QuickStart_DanteConfigEditorV3_EN.pdf" CopyToOutputDirectory="PreserveNewest" />

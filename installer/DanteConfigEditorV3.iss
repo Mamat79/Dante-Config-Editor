@@ -16,7 +16,7 @@ DisableProgramGroupPage=no
 AllowNoIcons=yes
 OutputDir={#SourceRoot}\dist
 OutputBaseFilename=DanteConfigEditor2026_1_1_Installer
-SetupIconFile={#SourceRoot}\DanteEdit.ico
+SetupIconFile={#SourceRoot}\Icon3.ico
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
@@ -45,7 +45,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "{#SourceRoot}\dist\installer_payload\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourceRoot}\DanteEdit.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#SourceRoot}\Icon3.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourceRoot}\README.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourceRoot}\README_EN.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourceRoot}\CHANGELOG.md"; DestDir: "{app}"; Flags: ignoreversion
@@ -77,7 +77,7 @@ Type: filesandordirs; Name: "{app}\Machine Banks\DCE Generic Roles 2026.1"
 Type: filesandordirs; Name: "{app}\Machine Banks\DCE Community Devices 2026.1"
 
 [Icons]
-Name: "{group}\{code:GetShortcutAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"; IconFilename: "{app}\DanteEdit.ico"
+Name: "{group}\{code:GetShortcutAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"; IconFilename: "{app}\Icon3.ico"
 Name: "{group}\Documentation - Français"; Filename: "{app}\README.md"
 Name: "{group}\Documentation - English"; Filename: "{app}\README_EN.md"
 Name: "{group}\Démarrage rapide - Français"; Filename: "{app}\QuickStart_DanteConfigEditorV3_FR.pdf"
@@ -87,7 +87,7 @@ Name: "{group}\Full user guide - English"; Filename: "{app}\Notice_DanteConfigEd
 Name: "{group}\Notes de version - Français"; Filename: "{app}\RELEASE_NOTES.md"
 Name: "{group}\Release notes - English"; Filename: "{app}\RELEASE_NOTES_EN.md"
 Name: "{group}\Désinstaller {code:GetShortcutAppName}"; Filename: "{uninstallexe}"
-Name: "{autodesktop}\{code:GetShortcutAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"; IconFilename: "{app}\DanteEdit.ico"; Tasks: desktopicon
+Name: "{autodesktop}\{code:GetShortcutAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"; IconFilename: "{app}\Icon3.ico"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,Dante Config Editor 2026.1}"; Flags: nowait postinstall skipifsilent
