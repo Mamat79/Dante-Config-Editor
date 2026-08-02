@@ -1,4 +1,4 @@
-"""Monte la notice visuelle française depuis des captures réelles de DCE."""
+"""Monte une notice visuelle DCE depuis des captures réelles et un SRT local."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ import hashlib
 import shutil
 import subprocess
 import tempfile
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -15,8 +15,8 @@ from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parent
 MEDIA = ROOT / "media"
-SRT = MEDIA / "dce-2026-1-guide-visuel-fr-subtitles.srt"
 DEFAULT_RAW = ROOT.parent.parent / "Video Drafts" / "2026.1.1" / "raw"
+DEFAULT_SUBTITLES = DEFAULT_RAW.parent / "subtitles" / "dce-2026-1-guide-visuel-fr-subtitles.srt"
 DEFAULT_OUTPUT = MEDIA / "dce-2026-1-guide-visuel-fr.mp4"
 
 WIDTH = 1920
@@ -58,6 +58,14 @@ SEGMENTS = (
 )
 
 
+def localized_segments(language: str) -> tuple[Segment, ...]:
+    intro = "Notice visuelle complète" if language == "fr" else "Complete visual guide"
+    return tuple(
+        replace(segment, subtitle=intro) if segment.name == "00-intro" else segment
+        for segment in SEGMENTS
+    )
+
+
 def run(command: list[str]) -> None:
     print(" ".join(command))
     subprocess.run(command, check=True)
@@ -70,13 +78,18 @@ def font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont:
     return ImageFont.truetype(str(path), size)
 
 
-def make_title_card(path: Path, title: str, subtitle: str) -> None:
+def make_title_card(path: Path, title: str, subtitle: str, language: str) -> None:
     image = Image.new("RGB", (WIDTH, HEIGHT), "#111827")
     draw = ImageDraw.Draw(image)
     draw.rectangle((0, 0, WIDTH, 12), fill="#2F8AF0")
     draw.text((WIDTH // 2, 425), title, fill="#F8FAFC", font=font(68, True), anchor="mm")
     draw.text((WIDTH // 2, 520), subtitle, fill="#AFC7E8", font=font(34), anchor="mm")
-    draw.text((WIDTH // 2, 915), "DCE travaille hors ligne sur des fichiers XML Dante.", fill="#7F93B2", font=font(24), anchor="mm")
+    footer = (
+        "DCE travaille hors ligne sur des fichiers XML Dante."
+        if language == "fr"
+        else "DCE works offline with Dante XML files."
+    )
+    draw.text((WIDTH // 2, 915), footer, fill="#7F93B2", font=font(24), anchor="mm")
     image.save(path)
 
 
@@ -93,11 +106,11 @@ def video_filter(segment: Segment) -> str:
     return f"setpts={ratio:.8f}*PTS,{common}"
 
 
-def render_segment(segment: Segment, raw_dir: Path, output: Path, card: Path) -> None:
+def render_segment(segment: Segment, raw_dir: Path, output: Path, card: Path, language: str) -> None:
     if segment.source is None:
         if not segment.title or not segment.subtitle:
             raise ValueError(f"Carte incomplète : {segment.name}")
-        make_title_card(card, segment.title, segment.subtitle)
+        make_title_card(card, segment.title, segment.subtitle, language)
         run([
             "ffmpeg", "-hide_banner", "-loglevel", "warning", "-y",
             "-loop", "1", "-i", str(card), "-t", str(segment.target_duration),
@@ -137,24 +150,27 @@ def verify_duration(path: Path, expected: float) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--raw-dir", type=Path, default=DEFAULT_RAW)
+    parser.add_argument("--srt", type=Path, default=DEFAULT_SUBTITLES)
+    parser.add_argument("--language", choices=("fr", "en"), default="fr")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args()
 
-    if not SRT.exists():
-        raise FileNotFoundError(f"Sous-titres manquants : {SRT}")
+    if not args.srt.exists():
+        raise FileNotFoundError(f"Sous-titres manquants : {args.srt}")
     args.output.parent.mkdir(parents=True, exist_ok=True)
     ffmpeg = shutil.which("ffmpeg")
     ffprobe = shutil.which("ffprobe")
     if not ffmpeg or not ffprobe:
         raise FileNotFoundError("ffmpeg et ffprobe doivent être disponibles dans PATH")
 
-    expected_duration = sum(segment.target_duration for segment in SEGMENTS)
+    segments = localized_segments(args.language)
+    expected_duration = sum(segment.target_duration for segment in segments)
     with tempfile.TemporaryDirectory(prefix="dce-visual-guide-") as temp_name:
         temp = Path(temp_name)
         rendered: list[Path] = []
-        for index, segment in enumerate(SEGMENTS):
+        for index, segment in enumerate(segments):
             output = temp / f"{index:02d}-{segment.name}.mp4"
-            render_segment(segment, args.raw_dir, output, temp / f"card-{index:02d}.png")
+            render_segment(segment, args.raw_dir, output, temp / f"card-{index:02d}.png", args.language)
             rendered.append(output)
 
         concat_file = temp / "concat.txt"
@@ -170,7 +186,7 @@ def main() -> None:
         ])
 
         subtitle_filter = (
-            f"subtitles=filename='{escape_subtitle_path(SRT)}':"
+            f"subtitles=filename='{escape_subtitle_path(args.srt)}':"
             "force_style='FontName=Segoe UI,FontSize=9,PrimaryColour=&H00FFFFFF,"
             "OutlineColour=&H00101828,BorderStyle=1,Outline=1,Shadow=0,"
             "Alignment=2,MarginL=24,MarginR=24,MarginV=22'"
