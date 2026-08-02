@@ -451,8 +451,8 @@ $catalog = [ordered]@{
             sha256 = $communityArchiveHash
             minimumDceVersion = "2026.1"
             language = "fr-en"
-            descriptionFr = "Quarante et un modèles illustrés et assainis, sans identité matérielle, réseau, flow ni abonnement."
-            descriptionEn = "Forty-one illustrated sanitized templates without hardware identity, network settings, flows, or subscriptions."
+            descriptionFr = "Quarante-trois modèles illustrés et assainis, sans identité matérielle, réseau, flow ni abonnement."
+            descriptionEn = "Forty-three illustrated sanitized templates without hardware identity, network settings, flows, or subscriptions."
         }
     )
 }
