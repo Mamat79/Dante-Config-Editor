@@ -30,6 +30,7 @@ jobs:
     outputs:
       tag: ${{ steps.resolve.outputs.tag }}
       make_latest: ${{ steps.resolve.outputs.make_latest }}
+      skip_release: ${{ steps.resolve.outputs.skip_release }}
 
     steps:
       - name: Checkout repository and tags
@@ -61,9 +62,15 @@ jobs:
           git fetch --force --tags origin
           git rev-parse --verify "refs/tags/${tag}^{commit}" >/dev/null
 
+          skip_release=false
           if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            echo "Release $tag already exists. Refusing to overwrite it." >&2
-            exit 1
+            if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
+              echo "Release $tag already exists. Keeping its assets unchanged."
+              skip_release=true
+            else
+              echo "Release $tag already exists. Refusing to overwrite it." >&2
+              exit 1
+            fi
           fi
 
           make_latest=false
@@ -88,10 +95,12 @@ jobs:
 
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "make_latest=$make_latest" >> "$GITHUB_OUTPUT"
+          echo "skip_release=$skip_release" >> "$GITHUB_OUTPUT"
 
   windows:
     name: Build Windows installer
     needs: prepare
+    if: needs.prepare.outputs.skip_release != 'true'
     runs-on: windows-latest
     timeout-minutes: 30
 
@@ -134,6 +143,7 @@ jobs:
   macos:
     name: Build macOS packages
     needs: prepare
+    if: needs.prepare.outputs.skip_release != 'true'
     runs-on: macos-latest
     timeout-minutes: 40
 
