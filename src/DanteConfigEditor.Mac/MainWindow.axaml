@@ -6,7 +6,7 @@
         d:DesignWidth="1500"
         d:DesignHeight="930"
         x:Class="DanteConfigEditor.Mac.MainWindow"
-        Title="Dante Config Editor 2026.1.1 - macOS"
+        Title="Dante Config Editor"
         Width="1500"
         Height="930"
         MinWidth="1120"
@@ -123,44 +123,33 @@
                     </MenuItem>
                 </Menu>
 
-                <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto,Auto,120,Auto" ColumnSpacing="10">
-                    <StackPanel Grid.Column="0" Width="210" Margin="0,0,14,0" Orientation="Horizontal" VerticalAlignment="Center">
+                <Grid Grid.Row="1" ColumnDefinitions="*,Auto,Auto,120,Auto" ColumnSpacing="10">
+                    <Grid Grid.Column="0" Margin="0,0,14,0" ColumnDefinitions="Auto,*" VerticalAlignment="Center">
                         <Image Width="48"
                                Height="48"
                                Margin="0,0,10,0"
                                Source="avares://DanteConfigEditorV3.Mac/Assets/silemio-logo.png"
                                Stretch="Uniform" />
-                        <StackPanel VerticalAlignment="Center">
-                            <TextBlock Text="SiLeMI/O"
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock x:Name="ProductTitleTextBlock"
+                                       Text="Dante Config Editor"
                                        FontSize="22"
                                        FontWeight="SemiBold"
                                        Foreground="{DynamicResource AppTextBrush}"
                                        TextWrapping="NoWrap" />
-                            <TextBlock Text="By Mamat"
-                                       Margin="2,1,0,0"
-                                       FontSize="10"
+                            <TextBlock x:Name="FilePathText"
                                        Classes="muted"
-                                       TextWrapping="NoWrap" />
-                            <TextBlock Text="-------[]--"
-                                       Margin="2,0,0,0"
-                                       FontFamily="Menlo,Consolas,monospace"
-                                       FontSize="8"
-                                       Classes="muted"
-                                       Opacity="0.76"
-                                       TextWrapping="NoWrap" />
+                                       Text="Aucun fichier ouvert"
+                                       TextTrimming="CharacterEllipsis" />
                         </StackPanel>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                        <TextBlock Text="Dante Config Editor 2026.1.1" FontSize="20" FontWeight="Bold" />
-                        <TextBlock x:Name="FilePathText" Classes="muted" Text="Aucun fichier ouvert" TextTrimming="CharacterEllipsis" />
-                    </StackPanel>
-                    <TextBlock x:Name="DirtyStateText" Grid.Column="2" VerticalAlignment="Center" Foreground="{DynamicResource MutedTextBrush}" Text="Non modifié" />
-                    <TextBlock Grid.Column="3" VerticalAlignment="Center" Text="Langue" Classes="muted" />
-                    <ComboBox x:Name="LanguageCombo" Grid.Column="4" SelectionChanged="LanguageCombo_SelectionChanged">
+                    </Grid>
+                    <TextBlock x:Name="DirtyStateText" Grid.Column="1" VerticalAlignment="Center" Foreground="{DynamicResource MutedTextBrush}" Text="Non modifié" />
+                    <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="Langue" Classes="muted" />
+                    <ComboBox x:Name="LanguageCombo" Grid.Column="3" SelectionChanged="LanguageCombo_SelectionChanged">
                         <ComboBoxItem Tag="fr">Français</ComboBoxItem>
                         <ComboBoxItem Tag="en">English</ComboBoxItem>
                     </ComboBox>
-                    <Button x:Name="ThemeButton" Grid.Column="5" Click="ThemeButton_Click">Thème clair</Button>
+                    <Button x:Name="ThemeButton" Grid.Column="4" Click="ThemeButton_Click">Thème clair</Button>
                 </Grid>
 
                 <WrapPanel Grid.Row="2">
@@ -1165,11 +1154,40 @@
                 Background="{DynamicResource PanelBrush}"
                 BorderBrush="{DynamicResource PanelBorderBrush}"
                 BorderThickness="0,1,0,0"
-                Padding="8,4">
-            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                MinHeight="42"
+                Padding="8,3">
+            <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="12">
                 <TextBlock x:Name="StatusText" Text="Prêt" />
                 <TextBlock x:Name="ModeText" Grid.Column="1" Text="Mode : Lecture seule" Classes="muted" />
                 <TextBlock x:Name="CountText" Grid.Column="2" Text="0 device - 0 TX - 0 RX" Classes="muted" />
+                <StackPanel x:Name="BrandSignaturePanel"
+                            Grid.Column="3"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            Margin="6,0,0,0">
+                    <Image Width="30"
+                           Height="30"
+                           Margin="0,0,7,0"
+                           Source="avares://DanteConfigEditorV3.Mac/Assets/silemio-logo.png"
+                           Stretch="Uniform"
+                           Opacity="0.82" />
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="SiLeMI/O"
+                                   FontSize="10"
+                                   FontWeight="SemiBold"
+                                   TextWrapping="NoWrap" />
+                        <TextBlock Text="By Mamat"
+                                   FontSize="8"
+                                   Classes="muted"
+                                   TextWrapping="NoWrap" />
+                        <TextBlock Text="-------[]--"
+                                   FontFamily="Menlo,Consolas,monospace"
+                                   FontSize="7"
+                                   Classes="muted"
+                                   Opacity="0.76"
+                                   TextWrapping="NoWrap" />
+                    </StackPanel>
+                </StackPanel>
             </Grid>
         </Border>
     </Grid>

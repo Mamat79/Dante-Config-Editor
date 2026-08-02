@@ -2044,6 +2044,7 @@ public partial class MainWindow : Window
               Offline Dante Controller XML editor.
               Unofficial third-party project, not affiliated with Audinate.
 
+              SiLeMI/O
               By Mamat
               et ses agents
               -------[]--
@@ -2054,6 +2055,7 @@ public partial class MainWindow : Window
               Éditeur hors ligne de fichiers XML Dante Controller.
               Projet tiers non officiel, sans affiliation avec Audinate.
 
+              SiLeMI/O
               By Mamat
               et ses agents
               -------[]--
@@ -6309,6 +6311,7 @@ public partial class MainWindow : Window
             SetBrush("DangerBrush", "#B91C1C");
             SetBrush("WarningBrush", "#A16207");
             SetBrush("SuccessBrush", "#047857");
+            SetMenuBrushes("#FFFFFF", "#1D4ED8", "#6B7280", "#111827");
         }
         else
         {
@@ -6323,12 +6326,36 @@ public partial class MainWindow : Window
             SetBrush("DangerBrush", "#D64545");
             SetBrush("WarningBrush", "#E0A52B");
             SetBrush("SuccessBrush", "#2E9D62");
+            SetMenuBrushes("#171D2B", "#2F80ED", "#738097", "#F6F8FB");
         }
+    }
+
+    private void SetMenuBrushes(
+        string background,
+        string highlight,
+        string disabledText,
+        string text)
+    {
+        SetBrush("MenuPopupBrush", background);
+        SetBrush("MenuHoverBrush", highlight);
+        SetBrush("MenuDisabledTextBrush", disabledText);
+
+        // Les sous-menus WPF vivent dans un Popup séparé et consultent encore
+        // les couleurs système. Les fournir ici évite le texte clair sur le
+        // fond blanc natif de Windows en thème sombre.
+        Resources[SystemColors.MenuBrushKey] = CreateBrush(background);
+        Resources[SystemColors.MenuTextBrushKey] = CreateBrush(text);
+        Resources[SystemColors.GrayTextBrushKey] = CreateBrush(disabledText);
     }
 
     private void SetBrush(string key, string hex)
     {
-        Resources[key] = new SolidColorBrush((Color)ColorConverter.ConvertFromString(hex));
+        Resources[key] = CreateBrush(hex);
+    }
+
+    private static SolidColorBrush CreateBrush(string hex)
+    {
+        return new SolidColorBrush((Color)ColorConverter.ConvertFromString(hex));
     }
 
     private static bool Contains(string value, string search)

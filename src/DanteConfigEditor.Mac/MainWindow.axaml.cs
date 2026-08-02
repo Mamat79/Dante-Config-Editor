@@ -1681,6 +1681,7 @@ public partial class MainWindow : Window
                 Éditeur hors ligne de fichiers XML Dante Controller.
                 Projet tiers non officiel, sans affiliation avec Audinate.
 
+                SiLeMI/O
                 By Mamat
                 et ses agents
                 -------[]--
@@ -1691,6 +1692,7 @@ public partial class MainWindow : Window
                 Offline Dante Controller XML editor.
                 Unofficial third-party project, not affiliated with Audinate.
 
+                SiLeMI/O
                 By Mamat
                 et ses agents
                 -------[]--
@@ -2529,7 +2531,7 @@ public partial class MainWindow : Window
         RefreshLiteralComboSelection("DeviceFilterCombo");
         RefreshLiteralComboSelection("PatchStatusCombo");
 
-        Title = L("Dante Config Editor 2026.1.1 - macOS", "Dante Config Editor 2026.1.1 - macOS");
+        Title = "Dante Config Editor";
         FindControl<Button>("ThemeButton")!.Content = _darkTheme ? L("Thème clair", "Light theme") : L("Thème sombre", "Dark theme");
         FindControl<MenuItem>("ThemeMenuItem")!.Header =
             _darkTheme ? L("Thème clair", "Light theme") : L("Thème sombre", "Dark theme");

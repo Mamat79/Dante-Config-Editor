@@ -48,6 +48,26 @@
             <Setter Property="MaxWidth" Value="440" />
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
+        <Style Selector="Menu">
+            <Setter Property="Background" Value="{DynamicResource PanelBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
+        </Style>
+        <Style Selector="MenuItem">
+            <Setter Property="Background" Value="{DynamicResource PanelBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
+        </Style>
+        <Style Selector="MenuItem:pointerover">
+            <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style Selector="MenuItem:disabled">
+            <Setter Property="Foreground" Value="{DynamicResource MutedTextBrush}" />
+            <Setter Property="Opacity" Value="0.66" />
+        </Style>
+        <Style Selector="ContextMenu">
+            <Setter Property="Background" Value="{DynamicResource PanelBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource AppTextBrush}" />
+        </Style>
         <Style Selector="Button.primary">
             <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
             <Setter Property="Foreground" Value="White" />

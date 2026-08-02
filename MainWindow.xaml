@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:converters="clr-namespace:DanteConfigEditor.Converters"
-        Title="Dante Config Editor 2026.1.1"
+        Title="Dante Config Editor"
         Width="1280"
         Height="820"
         MinWidth="1120"
@@ -27,6 +27,12 @@
         <SolidColorBrush x:Key="DangerBrush" Color="#D64545" />
         <SolidColorBrush x:Key="WarningBrush" Color="#D69E2E" />
         <SolidColorBrush x:Key="SuccessBrush" Color="#2E9D62" />
+        <SolidColorBrush x:Key="MenuPopupBrush" Color="#171D2B" />
+        <SolidColorBrush x:Key="MenuHoverBrush" Color="#2F80ED" />
+        <SolidColorBrush x:Key="MenuDisabledTextBrush" Color="#738097" />
+        <SolidColorBrush x:Key="{x:Static SystemColors.MenuBrushKey}" Color="#171D2B" />
+        <SolidColorBrush x:Key="{x:Static SystemColors.MenuTextBrushKey}" Color="#F6F8FB" />
+        <SolidColorBrush x:Key="{x:Static SystemColors.GrayTextBrushKey}" Color="#738097" />
 
         <DataTemplate x:Key="WrappingButtonContentTemplate">
             <TextBlock Text="{Binding}"
@@ -169,10 +175,30 @@
         </Style>
 
         <Style TargetType="{x:Type MenuItem}">
-            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Background" Value="{DynamicResource MenuPopupBrush}" />
             <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
             <Setter Property="Padding" Value="9,6" />
             <Setter Property="FontWeight" Value="SemiBold" />
+            <Style.Triggers>
+                <Trigger Property="IsHighlighted" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource MenuHoverBrush}" />
+                    <Setter Property="Foreground" Value="White" />
+                </Trigger>
+                <Trigger Property="IsSubmenuOpen" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource MenuHoverBrush}" />
+                    <Setter Property="Foreground" Value="White" />
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="{DynamicResource MenuDisabledTextBrush}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="{x:Type ContextMenu}">
+            <Setter Property="Background" Value="{DynamicResource MenuPopupBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderLineBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
         </Style>
 
         <Style x:Key="AtomicSequenceButtonStyle"
@@ -684,76 +710,59 @@
                      tronqué plutôt que replié, afin de ne jamais agrandir la barre. -->
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Column="0"
-                                Width="210"
-                                Margin="0,0,24,0"
-                                Orientation="Horizontal"
-                                VerticalAlignment="Center">
+                    <Grid Grid.Column="0"
+                          Margin="0,0,18,0"
+                          VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
                         <Image Width="48"
                                Height="48"
                                Margin="0,0,10,0"
                                Source="/Resources/Branding/silemio-logo.png"
                                Stretch="Uniform" />
-                        <StackPanel VerticalAlignment="Center">
-                            <TextBlock Text="SiLeMI/O"
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock x:Name="ProductTitleTextBlock"
+                                       Text="Dante Config Editor"
                                        FontSize="22"
                                        FontWeight="SemiBold"
                                        Foreground="{DynamicResource TextBrush}"
                                        TextWrapping="NoWrap" />
-                            <TextBlock Text="By Mamat"
-                                       Margin="2,1,0,0"
-                                       FontSize="10"
+                            <TextBlock x:Name="FilePathTextBlock"
+                                       Text="Aucun fichier ouvert"
                                        Foreground="{DynamicResource MutedTextBrush}"
-                                       TextWrapping="NoWrap" />
-                            <TextBlock Text="-------[]--"
-                                       Margin="2,0,0,0"
-                                       FontFamily="Consolas"
-                                       FontSize="8"
-                                       Foreground="{DynamicResource MutedTextBrush}"
-                                       Opacity="0.76"
-                                       TextWrapping="NoWrap" />
+                                       FontSize="12"
+                                       TextWrapping="NoWrap"
+                                       TextTrimming="CharacterEllipsis"
+                                       ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" />
+                            <WrapPanel Margin="0,3,0,0">
+                                <TextBlock x:Name="DocumentKindTextBlock"
+                                           Text="XML Dante"
+                                           Foreground="{DynamicResource MutedTextBrush}"
+                                           FontSize="11"
+                                           Margin="0,0,12,0"
+                                           TextWrapping="NoWrap" />
+                                <TextBlock x:Name="ProfileTextBlock"
+                                           Text="Profil : non détecté"
+                                           Foreground="{DynamicResource MutedTextBrush}"
+                                           FontSize="11"
+                                           Margin="0,0,12,0"
+                                           TextWrapping="NoWrap" />
+                                <TextBlock x:Name="LastSavedTextBlock"
+                                           Text="Pas encore enregistré"
+                                           Foreground="{DynamicResource MutedTextBrush}"
+                                           FontSize="11"
+                                           TextWrapping="NoWrap" />
+                            </WrapPanel>
                         </StackPanel>
-                    </StackPanel>
+                    </Grid>
 
-                    <StackPanel Grid.Column="1" Margin="0,0,18,0" VerticalAlignment="Center">
-                         <TextBlock Text="Dante Config Editor 2026.1.1"
-                                    FontSize="20"
-                                    FontWeight="SemiBold"
-                                    TextWrapping="NoWrap" />
-                        <TextBlock x:Name="FilePathTextBlock"
-                                   Text="Aucun fichier ouvert"
-                                   Foreground="{DynamicResource MutedTextBrush}"
-                                   FontSize="12"
-                                   TextWrapping="NoWrap"
-                                    TextTrimming="CharacterEllipsis"
-                                    ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" />
-                        <WrapPanel Margin="0,3,0,0">
-                            <TextBlock x:Name="DocumentKindTextBlock"
-                                       Text="XML Dante"
-                                       Foreground="{DynamicResource MutedTextBrush}"
-                                       FontSize="11"
-                                       Margin="0,0,12,0"
-                                       TextWrapping="NoWrap" />
-                            <TextBlock x:Name="ProfileTextBlock"
-                                       Text="Profil : non détecté"
-                                       Foreground="{DynamicResource MutedTextBrush}"
-                                       FontSize="11"
-                                       Margin="0,0,12,0"
-                                       TextWrapping="NoWrap" />
-                            <TextBlock x:Name="LastSavedTextBlock"
-                                       Text="Pas encore enregistré"
-                                       Foreground="{DynamicResource MutedTextBrush}"
-                                       FontSize="11"
-                                       TextWrapping="NoWrap" />
-                        </WrapPanel>
-                    </StackPanel>
-
-                    <WrapPanel Grid.Column="2" VerticalAlignment="Center">
+                    <WrapPanel Grid.Column="1" VerticalAlignment="Center">
                          <TextBlock x:Name="DirtyStateTextBlock"
                                     Text="Non modifié"
                                     TextWrapping="NoWrap"
@@ -3356,16 +3365,20 @@
             </Border>
         </Grid>
 
-        <!-- La barre d'état reste compacte ; l'identité visuelle est portée par
-             le bandeau supérieur afin de ne pas dupliquer la signature. -->
+        <!-- Le nom du produit reste prioritaire en haut. La marque auteur est
+             volontairement réduite à une signature discrète dans le pied. -->
         <Border Grid.Row="3"
-                MinHeight="34"
+                MinHeight="42"
                 Background="{DynamicResource SurfaceBrush}"
                 BorderBrush="{DynamicResource BorderLineBrush}"
                 BorderThickness="0,1,0,0"
                 Padding="4,2,8,2">
             <Grid>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock x:Name="StatusTextBlock"
                                Text="Prêt"
                                Foreground="{DynamicResource MutedTextBrush}"
@@ -3384,6 +3397,35 @@
                                VerticalAlignment="Center" />
                 </StackPanel>
 
+                <StackPanel x:Name="BrandSignaturePanel"
+                            Grid.Column="1"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            Margin="14,0,0,0">
+                    <Image Width="30"
+                           Height="30"
+                           Margin="0,0,7,0"
+                           Source="/Resources/Branding/silemio-logo.png"
+                           Stretch="Uniform"
+                           Opacity="0.82" />
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="SiLeMI/O"
+                                   FontSize="10"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextBrush}"
+                                   TextWrapping="NoWrap" />
+                        <TextBlock Text="By Mamat"
+                                   FontSize="8"
+                                   Foreground="{DynamicResource MutedTextBrush}"
+                                   TextWrapping="NoWrap" />
+                        <TextBlock Text="-------[]--"
+                                   FontFamily="Consolas"
+                                   FontSize="7"
+                                   Foreground="{DynamicResource MutedTextBrush}"
+                                   Opacity="0.76"
+                                   TextWrapping="NoWrap" />
+                    </StackPanel>
+                </StackPanel>
             </Grid>
         </Border>
     </Grid>
