@@ -40,6 +40,10 @@ docs/media/v3.3/
 docs/media/v*/
 docs/media/dce-v*-presentation-*
 
+# Les longues notices video sont publiees comme assets de Release. Le script,
+# le SRT et l'empreinte restent versionnes pour rendre le rendu reproductible.
+docs/media/dce-2026-1-guide-visuel-*.mp4
+
 # OS files
 Thumbs.db
 Desktop.ini

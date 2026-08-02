@@ -13,6 +13,8 @@ Audinate. It only works on offline files.
 
 ## Main changes
 
+- complete 11 min 12 sec French visual guide based on real application
+  recordings, with burned-in subtitles and a separate SRT file;
 - automatic checks for newer Releases, with no visible error while offline,
   plus a manual check from the Help menu;
 - download of the matching Windows or macOS installer, SHA-256 verification,

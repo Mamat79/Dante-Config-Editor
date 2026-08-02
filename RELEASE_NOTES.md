@@ -13,6 +13,8 @@ travaille uniquement sur des fichiers hors ligne.
 
 ## Principales évolutions
 
+- notice visuelle française complète de 11 min 12 s, réalisée à partir de
+  captures réelles du logiciel, avec sous-titres intégrés et SRT séparé ;
 - vérification automatique des nouvelles Releases, sans erreur visible lorsque
   l'ordinateur est hors ligne, et contrôle manuel depuis le menu Aide ;
 - téléchargement de l'installateur Windows ou macOS adapté, validation de son

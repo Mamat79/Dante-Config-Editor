@@ -16,6 +16,8 @@ final file remains recommended for each new preset structure before operation.
 
 ## Documentation
 
+- [Complete 2026.1.1 visual guide - French (11 min 12 sec)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/dce-2026-1-guide-visuel-fr.mp4)
+- [Separate subtitles for the French visual guide](docs/media/dce-2026-1-guide-visuel-fr.srt)
 - [2026.1 presentation video - English](docs/media/dce-2026-1-presentation-en.mp4)
 - [Separate English subtitles](docs/media/dce-2026-1-presentation-en.srt)
 - [Vidéo de présentation 2026.1 - français](docs/media/dce-2026-1-presentation-fr.mp4)
