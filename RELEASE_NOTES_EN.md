@@ -19,6 +19,9 @@ Audinate. It only works on offline files.
   and launch only after confirmation;
 - direct GitHub updates for official banks stored in Documents, with a
   transactional backup and no change to the personal bank;
+- batch insertion of 1 to 100 devices from the bank, with a name preview,
+  whole-batch XML validation, one Undo action, and a bank window that stays open
+  for consecutive insertions;
 
 - Domain, DanteXml, Application, and Infrastructure separation;
 - central session, transactional commands, Undo/Redo, and history;

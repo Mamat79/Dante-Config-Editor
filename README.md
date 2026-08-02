@@ -105,6 +105,10 @@ personnelle. Les banques officielles sont gérées dans
 `Documents/Dante Config Editor/Included Machine Banks`. Le bouton
 `Mettre à jour` consulte GitHub, vérifie le SHA-256, sauvegarde l'ancienne copie
 et installe la nouvelle sans jamais remplacer la banque personnelle.
+Lors de l'ajout, la quantité vaut `1` par défaut et peut atteindre `100`. DCE
+affiche les noms qui seront créés (`Nom`, `Nom-2`, `Nom-3`, etc.), valide tout le
+lot avant de modifier le XML, puis laisse la banque ouverte pour poursuivre les
+ajouts.
 
 Au démarrage, DCE vérifie aussi silencieusement si une nouvelle Release existe.
 Si une version plus récente est disponible, il propose de télécharger puis de

@@ -100,6 +100,10 @@ templates remain read-only and may be duplicated into the personal bank.
 Official banks are managed in `Documents/Dante Config Editor/Included Machine Banks`.
 The `Update banks` button checks GitHub, verifies SHA-256, backs up the previous
 copy, and installs the new one without ever replacing the personal bank.
+When adding devices, the quantity defaults to `1` and may be increased up to
+`100`. DCE previews the generated names (`Name`, `Name-2`, `Name-3`, and so on),
+validates the complete batch before changing the XML, and keeps the bank open
+for subsequent additions.
 
 At startup, DCE also checks silently for a newer GitHub Release. When an update
 is available, it offers to download and launch the verified installer. A manual

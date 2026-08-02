@@ -19,6 +19,9 @@ travaille uniquement sur des fichiers hors ligne.
   SHA-256 puis lancement uniquement après confirmation ;
 - mise à jour directe des banques officielles depuis GitHub dans Documents,
   avec sauvegarde transactionnelle et sans toucher à la banque personnelle ;
+- ajout en lot de 1 à 100 machines depuis la banque, avec aperçu des noms,
+  validation XML globale, une seule action Annuler et maintien de la fenêtre
+  Banque ouverte pour enchaîner les insertions ;
 
 - séparation Domain, DanteXml, Application et Infrastructure ;
 - session centrale, commandes transactionnelles, Annuler/Rétablir et historique ;

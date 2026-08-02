@@ -19,6 +19,11 @@ Toutes les dates utilisent le calendrier ISO. Les versions antérieures à
 
 ### Modifié
 
+- la fenêtre Banque reste ouverte après un ajout afin d'enchaîner plusieurs
+  modèles sans la rouvrir ;
+- l'ajout depuis une banque accepte désormais de 1 à 100 instances en une seule
+  opération, avec aperçu des noms, suffixes `-2`, `-3`, etc., validation globale
+  avant mutation et une seule action Annuler ;
 - une banque officielle gérée dans Documents est prioritaire sur la copie de
   secours livrée dans le dossier de l'application ;
 - ajout des modèles assainis Glensound Paradiso 32x32 et Tieline Gateway 16x16,
