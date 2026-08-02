@@ -251,6 +251,23 @@
       "image": {"mode": "preserve", "sourcePage": "https://www.glensound.co.uk/product-details/divine-617"}
     },
     {
+      "key": "glensound-paradiso",
+      "templateName": "Paradiso",
+      "manufacturer": "Glensound",
+      "model": "Paradiso",
+      "category": "Commentary",
+      "tags": ["commentary", "32x32", "Dante", "AES67"],
+      "sourceMatchers": [
+        {"manufacturer": "Glensound Electronics Ltd.", "model": "Paradiso", "txCount": 32, "rxCount": 32}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://www.glensound.co.uk/product-details/paradiso/",
+        "downloadUrl": "https://www.glensound.co.uk/assets/images/library/5a6b3214e499d-Paradiso%20with%20handle%20Angle%20Left%20BAN.jpg",
+        "extension": "jpg"
+      }
+    },
+    {
       "key": "glensound-virgil-1",
       "templateName": "Virgil 1",
       "manufacturer": "Glensound",
@@ -481,6 +498,23 @@
         "sourcePage": "https://tascam.com/us/product/sonicview_xp/",
         "downloadUrl": "https://tascam.com/wp-content/uploads/images/products/thumbnail_img/sonicview_main.jpg",
         "extension": "jpg"
+      }
+    },
+    {
+      "key": "tieline-gateway-16",
+      "templateName": "Gateway 16",
+      "manufacturer": "Tieline",
+      "model": "Gateway",
+      "category": "Codec audio IP",
+      "tags": ["codec", "16x16", "Dante", "AES67"],
+      "sourceMatchers": [
+        {"manufacturer": "Tieline Research Pty Ltd", "model": "Gateway", "txCount": 16, "rxCount": 16}
+      ],
+      "image": {
+        "mode": "url",
+        "sourcePage": "https://tieline.com/gateway/",
+        "downloadUrl": "https://tieline.com/wp-content/uploads/2020/09/Gateway-New-front-and-rear_hero4.png",
+        "extension": "png"
       }
     },
     {

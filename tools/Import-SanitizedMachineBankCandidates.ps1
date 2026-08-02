@@ -805,8 +805,8 @@ try {
 
     if (-not $SkipArchiveBuild) {
         & (Join-Path $PSScriptRoot "Build-BundledMachineBanks.ps1")
-        if ($LASTEXITCODE -ne 0) {
-            throw "La construction des archives de banque a échoué avec le code $LASTEXITCODE."
+        if (-not $?) {
+            throw "La construction des archives de banque a échoué."
         }
     }
 

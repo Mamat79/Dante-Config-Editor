@@ -1,0 +1,36 @@
+{
+  "formatVersion": 2,
+  "templateId": "70dbce74-91a1-5852-aec3-afe98d43f011",
+  "templateName": "Gateway 16",
+  "manufacturer": "Tieline",
+  "model": "Gateway",
+  "description": "Rôle hors ligne assaini pour Gateway 16, 16 TX / 16 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Codec audio IP",
+  "tags": [
+    "codec",
+    "16x16",
+    "Dante",
+    "AES67"
+  ],
+  "txCount": 16,
+  "rxCount": 16,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "33E276C6ACF324C93A8DBA09CE4ADF485F05042F211AD8FFF11AF9938222416C",
+  "imageFileName": "image.png",
+  "imageSha256": "1A423924525C53350F8B8F1812018AD6CAADEB054F29D6B59300E94950BD445B",
+  "catalogKey": "tieline-gateway-16",
+  "descriptionEn": "Sanitized offline role for Gateway 16, 16 Tx / 16 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://tieline.com/gateway/",
+  "imageSourceUrl": "https://tieline.com/wp-content/uploads/2020/09/Gateway-New-front-and-rear_hero4.png",
+  "imageAttribution": "Official product image - Tieline",
+  "sourceSignature": {
+    "manufacturer": "Tieline Research Pty Ltd",
+    "model": "Gateway",
+    "txCount": 16,
+    "rxCount": 16
+  }
+}

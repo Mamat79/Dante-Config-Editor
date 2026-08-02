@@ -17,7 +17,7 @@ public sealed class MachineBankGenerationContractTests
             .ToArray();
 
         Assert.Equal(1, catalog.RootElement.GetProperty("formatVersion").GetInt32());
-        Assert.Equal(41, profiles.Length);
+        Assert.Equal(43, profiles.Length);
         Assert.Equal(
             profiles.Length,
             profiles
@@ -85,6 +85,7 @@ public sealed class MachineBankGenerationContractTests
         Assert.DoesNotContain("Radio France", script, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("Synology", script, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("OneDrive", script, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("$LASTEXITCODE", script, StringComparison.Ordinal);
     }
 
     private static string RepositoryFile(params string[] relativeParts) =>

@@ -1,0 +1,36 @@
+{
+  "formatVersion": 2,
+  "templateId": "a6126746-cd5f-5625-ab17-dbe2874e41ce",
+  "templateName": "Paradiso",
+  "manufacturer": "Glensound",
+  "model": "Paradiso",
+  "description": "Rôle hors ligne assaini pour Paradiso, 32 TX / 32 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Commentary",
+  "tags": [
+    "commentary",
+    "32x32",
+    "Dante",
+    "AES67"
+  ],
+  "txCount": 32,
+  "rxCount": 32,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "6216842F0F13409425BC9FDE691DDA212CDEC2B79466D8CDD90062A394D238DE",
+  "imageFileName": "image.jpg",
+  "imageSha256": "E7BD934F427EA30133B8B8405C36992B7B2EA9B6ACE09A5755BC9FF27DC48849",
+  "catalogKey": "glensound-paradiso",
+  "descriptionEn": "Sanitized offline role for Paradiso, 32 Tx / 32 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://www.glensound.co.uk/product-details/paradiso/",
+  "imageSourceUrl": "https://www.glensound.co.uk/assets/images/library/5a6b3214e499d-Paradiso%20with%20handle%20Angle%20Left%20BAN.jpg",
+  "imageAttribution": "Official product image - Glensound",
+  "sourceSignature": {
+    "manufacturer": "Glensound Electronics Ltd.",
+    "model": "Paradiso",
+    "txCount": 32,
+    "rxCount": 32
+  }
+}

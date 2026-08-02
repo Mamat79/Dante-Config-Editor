@@ -497,8 +497,8 @@ public sealed class MachineBankV36Tests
             .OrderBy(item => item.TemplateName, StringComparer.Ordinal)
             .ToArray();
 
-        Assert.Equal(41, communityTemplates.Length);
-        Assert.Equal(41, installedCommunityTemplates.Length);
+        Assert.Equal(43, communityTemplates.Length);
+        Assert.Equal(43, installedCommunityTemplates.Length);
         Assert.Equal(
             communityTemplates.Length,
             communityTemplates

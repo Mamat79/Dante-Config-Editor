@@ -39,7 +39,19 @@ public sealed class MachineBank2026Tests
 
         MachineBankRepository repository = new(bankPath);
 
-        Assert.Equal(41, repository.List().Count);
+        MachineTemplateMetadata[] templates = repository.List().ToArray();
+
+        Assert.Equal(43, templates.Length);
+        Assert.Contains(templates, item =>
+            item.TemplateName == "Paradiso"
+            && item.Manufacturer == "Glensound"
+            && item.TxCount == 32
+            && item.RxCount == 32);
+        Assert.Contains(templates, item =>
+            item.TemplateName == "Gateway 16"
+            && item.Manufacturer == "Tieline"
+            && item.TxCount == 16
+            && item.RxCount == 16);
     }
 
     [Fact]
@@ -71,8 +83,8 @@ public sealed class MachineBank2026Tests
 
         Assert.Empty(catalog.Issues);
         Assert.Equal(3, catalog.Sources.Count);
-        Assert.Equal(52, catalog.Entries.Count);
-        Assert.Equal(43, catalog.UniqueEntries.Count);
+        Assert.Equal(54, catalog.Entries.Count);
+        Assert.Equal(45, catalog.UniqueEntries.Count);
         Assert.Equal(9, catalog.UniqueEntries.Count(entry => entry.IsActiveBank));
         Assert.All(
             new MachineBankRepository(active).List(),
