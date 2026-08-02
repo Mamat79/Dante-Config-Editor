@@ -1,10 +1,10 @@
-# Dante Config Editor 2026.1
+# Dante Config Editor 2026.1.1
 
 [English release notes](RELEASE_NOTES_EN.md)
 
 ## Statut
 
-`2026.1.0` est la version officielle issue de la refondation progressive de
+`2026.1.1` est la version officielle issue de la refondation progressive de
 DCE à partir de la V3.6 stabilisée. La V3.6.1 reste disponible comme version
 historique ; les identités d’installation et les profils locaux sont distincts.
 
@@ -12,6 +12,13 @@ DCE reste un outil tiers non officiel, sans affiliation avec Audinate. Il
 travaille uniquement sur des fichiers hors ligne.
 
 ## Principales évolutions
+
+- vérification automatique des nouvelles Releases, sans erreur visible lorsque
+  l'ordinateur est hors ligne, et contrôle manuel depuis le menu Aide ;
+- téléchargement de l'installateur Windows ou macOS adapté, validation de son
+  SHA-256 puis lancement uniquement après confirmation ;
+- mise à jour directe des banques officielles depuis GitHub dans Documents,
+  avec sauvegarde transactionnelle et sans toucher à la banque personnelle ;
 
 - séparation Domain, DanteXml, Application et Infrastructure ;
 - session centrale, commandes transactionnelles, Annuler/Rétablir et historique ;
@@ -25,10 +32,10 @@ travaille uniquement sur des fichiers hors ligne.
   lecture seule ;
 - banque format 2 et migration V3.6 par copie vérifiée ;
 - vue globale des banques personnelle et fournies, avec déduplication de
-  `43` modèles uniques et protection en lecture seule des modèles fournis ;
+  `45` modèles uniques et protection en lecture seule des modèles fournis ;
 - sélection de machine partagée entre Machines, Patch, Easy Patch et
   l'inspecteur, conservée lors des changements de vue ;
-- accès direct à la vue globale des 43 modèles depuis Machines, sans sélecteur
+- accès direct à la vue globale des 45 modèles depuis Machines, sans sélecteur
   de banque redondant, avec une liste rapide compacte intégrée sous les actions
   globales ;
 - Actions globales aligné sur la hauteur du groupe Machine/Canaux, sans
@@ -105,7 +112,7 @@ Sur le preset synthétique de 200 machines avec 64 TX et 64 RX chacune :
 
 ## Validation automatisée
 
-- 430 tests Core/Windows réussis ;
+- 435 tests Core/Windows réussis ;
 - 22 tests Avalonia/macOS sans écran réussis ;
 - build Windows Release sans warning ;
 - corpus synthétique sauvegardé et comparé sémantiquement sans perte ;
@@ -119,11 +126,12 @@ les rapports techniques datés du dossier `docs/2026.1`.
 
 ### Windows
 
-`DanteConfigEditor2026_1_Installer.exe` inclut le runtime .NET 8 et les
+`DanteConfigEditor2026_1_1_Installer.exe` inclut le runtime .NET 8 et les
 notices bilingues. Le dossier proposé est
 `C:\Program Files\Dante Config Editor 2026.1\`.
-Les 43 modèles fournis sont intégrés dans le dossier de l'application, sans
-remplacer la banque personnelle.
+Les 45 modèles fournis sont intégrés dans le dossier de l'application. Les
+copies officielles mises à jour sont conservées dans Documents, sans remplacer
+la banque personnelle.
 
 ### macOS
 

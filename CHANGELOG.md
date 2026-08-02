@@ -3,6 +3,27 @@
 Toutes les dates utilisent le calendrier ISO. Les versions antérieures à
 2026.1 sont conservées dans [CHANGELOG_V3.md](CHANGELOG_V3.md).
 
+## [2026.1.1] - 2026-08-02
+
+### Ajouté
+
+- vérification automatique et silencieuse de la dernière Release GitHub au
+  démarrage sur Windows et macOS ;
+- commande `Aide > Rechercher les mises à jour` pour vérifier manuellement,
+  télécharger l'installateur adapté, contrôler son SHA-256 puis le lancer ;
+- mise à jour directe des banques officielles depuis la fenêtre Banque ;
+- installation des banques officielles dans `Documents/Dante Config Editor/Included Machine Banks`,
+  sans modifier la banque personnelle ;
+- remplacement transactionnel d'une banque officielle avec sauvegarde de la
+  copie précédente et rejet de toute archive dont le SHA-256 est incorrect.
+
+### Modifié
+
+- une banque officielle gérée dans Documents est prioritaire sur la copie de
+  secours livrée dans le dossier de l'application ;
+- ajout des modèles assainis Glensound Paradiso 32x32 et Tieline Gateway 16x16,
+  portant la banque communautaire à 43 modèles et l'ensemble fourni à 45.
+
 ## [2026.1.0] - 2026-07-29
 
 ### Banque communautaire - mise à jour du 2026-08-02

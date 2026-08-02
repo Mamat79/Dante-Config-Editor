@@ -1,10 +1,10 @@
-# Dante Config Editor 2026.1
+# Dante Config Editor 2026.1.1
 
 [Notes de version françaises](RELEASE_NOTES.md)
 
 ## Status
 
-`2026.1.0` is the official release produced by the progressive rebuild of DCE
+`2026.1.1` is the official release produced by the progressive rebuild of DCE
 on top of the stabilized V3.6 baseline. V3.6.1 remains available as a
 historical release; installer identities and local profiles are separate.
 
@@ -12,6 +12,13 @@ DCE remains an unofficial third-party tool and is not affiliated with
 Audinate. It only works on offline files.
 
 ## Main changes
+
+- automatic checks for newer Releases, with no visible error while offline,
+  plus a manual check from the Help menu;
+- download of the matching Windows or macOS installer, SHA-256 verification,
+  and launch only after confirmation;
+- direct GitHub updates for official banks stored in Documents, with a
+  transactional backup and no change to the personal bank;
 
 - Domain, DanteXml, Application, and Infrastructure separation;
 - central session, transactional commands, Undo/Redo, and history;
@@ -23,11 +30,11 @@ Audinate. It only works on offline files.
 - searchable and exportable Validation Center;
 - XML profiles that can restrict an unknown structure or open it read-only;
 - format-2 device bank and verified copy-based V3.6 migration;
-- global view of personal and bundled banks, deduplicated to `43` unique
+- global view of personal and bundled banks, deduplicated to `45` unique
   templates, with bundled templates protected as read-only;
 - shared device selection across Machines, Patch, Easy Patch, and the
   inspector, preserved when switching views;
-- direct access to the global 43-template view from Devices, with no redundant
+- direct access to the global 45-template view from Devices, with no redundant
   bank selector and a compact quick-list bar integrated below global actions;
 - Global actions now matches the Device/Channels panel height and no longer
   needs an inner scrollbar in Network/audio on a standard display;
@@ -101,7 +108,7 @@ For the synthetic 200-device preset with 64 TX and 64 RX per device:
 
 ## Automated validation
 
-- 430 Core/Windows tests passed;
+- 435 Core/Windows tests passed;
 - 22 headless Avalonia/macOS tests passed;
 - Windows Release build completed without warnings;
 - synthetic corpus saved and semantically compared without loss;
@@ -115,11 +122,11 @@ under `docs/2026.1`.
 
 ### Windows
 
-`DanteConfigEditor2026_1_Installer.exe` includes the .NET 8 runtime and
+`DanteConfigEditor2026_1_1_Installer.exe` includes the .NET 8 runtime and
 bilingual guides. Its default folder is
 `C:\Program Files\Dante Config Editor 2026.1\`.
-All 43 bundled templates are installed in the application folder without
-replacing the personal bank.
+All 45 bundled templates are installed in the application folder. Updated
+official copies are stored in Documents without replacing the personal bank.
 
 ### macOS
 

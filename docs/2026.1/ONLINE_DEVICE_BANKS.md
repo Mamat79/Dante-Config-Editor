@@ -1,6 +1,6 @@
 # Banques locales et catalogue GitHub
 
-## État livré dans 2026.1
+## État livré dans 2026.1.1
 
 L'installateur Windows permet déjà de choisir séparément :
 
@@ -12,10 +12,11 @@ L'installateur Windows permet déjà de choisir séparément :
 La banque communautaire 2026.1 contient 43 modèles illustrés et assainis. Les
 descriptions françaises et anglaises sont affichées selon la langue active.
 
-Chaque banque fournie est copiée dans un dossier distinct. Un dossier existant
-n'est jamais écrasé : un nouveau nom est choisi. La bibliothèque personnelle
-reste indépendante de l'application et peut être placée dans un dossier local,
-partagé ou synchronisé.
+L'application conserve une copie de secours de chaque banque fournie dans son
+dossier d'installation. Les copies officielles mises à jour sont enregistrées
+dans `Documents/Dante Config Editor/Included Machine Banks` et sont prioritaires
+sur ces copies de secours. La bibliothèque personnelle reste indépendante et
+peut être placée dans un dossier local, partagé ou synchronisé.
 
 Depuis DCE, l'utilisateur peut :
 
@@ -25,6 +26,7 @@ Depuis DCE, l'utilisateur peut :
 - ouvrir son dossier ;
 - exporter une banque en `.dce-bank.zip` ;
 - importer une archive dans un dossier neuf ou vide ;
+- vérifier et installer directement les mises à jour des banques officielles ;
 - ouvrir le catalogue public GitHub.
 
 Dans la vue globale, un modèle présent à la fois dans la banque personnelle et
@@ -32,25 +34,28 @@ dans une banque fournie n'apparaît qu'une fois : la copie personnelle est
 prioritaire. Les modèles fournis sont en lecture seule ; ils peuvent toutefois
 être ajoutés à un projet, exportés ou dupliqués dans la banque personnelle.
 
-## Évolution proposée : catalogue intégré
+## Mise à jour directe depuis GitHub
 
-Le bouton `Banques GitHub` pourra afficher directement le fichier public
-`machine-banks/catalog.json` sans authentification.
+Le bouton `Mettre à jour` ou `Update banks` consulte directement le fichier
+public `machine-banks/catalog.json`, sans authentification. Le bouton
+`Banques GitHub` ouvre séparément la page publique du catalogue.
 
-Le parcours recommandé :
+Le parcours mis en œuvre est le suivant :
 
-1. téléchargement explicite du catalogue par HTTPS ;
-2. affichage du nom, de la description, de la version et de la compatibilité ;
-3. comparaison avec les banques locales ;
-4. téléchargement sur action de l'utilisateur ;
-5. contrôle de la taille et du SHA-256 déclaré ;
-6. validation complète de l'archive dans un dossier temporaire ;
-7. aperçu des modèles et du rapport d'assainissement ;
-8. installation dans un nouveau dossier de bibliothèque ;
-9. activation facultative, jamais automatique.
+1. téléchargement du catalogue par HTTPS après action de l'utilisateur ;
+2. contrôle du format, des doublons et de la version minimale de DCE ;
+3. comparaison du SHA-256 avec le marqueur de la copie installée ;
+4. confirmation du nombre de banques à mettre à jour ;
+5. téléchargement de chaque archive avec limite de taille ;
+6. contrôle du SHA-256 déclaré ;
+7. restauration et validation dans un dossier temporaire ;
+8. sauvegarde horodatée de la copie officielle précédente ;
+9. remplacement de la copie officielle puis rechargement de la liste.
 
-Le cache local doit rester supprimable. L'absence de réseau ne doit jamais
-empêcher d'utiliser les banques déjà installées.
+Une coupure réseau ou une archive incorrecte laisse la copie précédente intacte.
+La banque personnelle n'est jamais une destination de cette opération. Les
+sauvegardes sont conservées dans
+`Documents/Dante Config Editor/Included Machine Banks/Backups`.
 
 ## Évolution proposée : soumettre une banque
 
@@ -86,6 +91,7 @@ facile et la création d'une pull request plutôt qu'une écriture directe dans
 - le SHA-256 du catalogue est vérifié avant installation ;
 - une archive est extraite avec protection contre les chemins sortants et les
   tailles excessives ;
-- une banque téléchargée n'écrase jamais une banque locale ;
+- une banque téléchargée ne remplace qu'une copie officielle gérée par DCE,
+  après sauvegarde ;
 - le dépôt public reste la source de vérité du catalogue ;
 - toute contribution publique passe par une revue humaine.

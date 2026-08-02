@@ -101,7 +101,15 @@ La fenêtre affiche désormais en une seule liste dédupliquée la banque
 personnelle et les banques fournies. Le sélecteur permet aussi d'isoler une
 banque ; la colonne `Banque` indique l'origine de chaque modèle. Les modèles
 fournis restent en lecture seule et peuvent être dupliqués dans la banque
-personnelle. Une mise à jour ne remplace jamais cette dernière.
+personnelle. Les banques officielles sont gérées dans
+`Documents/Dante Config Editor/Included Machine Banks`. Le bouton
+`Mettre à jour` consulte GitHub, vérifie le SHA-256, sauvegarde l'ancienne copie
+et installe la nouvelle sans jamais remplacer la banque personnelle.
+
+Au démarrage, DCE vérifie aussi silencieusement si une nouvelle Release existe.
+Si une version plus récente est disponible, il propose de télécharger puis de
+lancer l'installateur vérifié. La vérification reste accessible manuellement
+depuis `Aide > Rechercher les mises à jour`.
 
 ### Fusion de deux XML et identité des rôles
 
@@ -195,18 +203,18 @@ Les tests automatisés couvrent notamment :
 
 Ces tests ne remplacent pas l’import final dans Dante Controller.
 
-## Installer DCE 2026.1
+## Installer DCE 2026.1.1
 
-La [Release DCE 2026.1](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.1)
+La [Release DCE 2026.1.1](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.1.1)
 regroupe les installateurs Windows et macOS, les notices, les vidéos et les
 banques fournies. Les workflows GitHub Actions conservent également leurs
 artefacts après un run réussi.
 
 ### Windows 11 x64
 
-Artefact : `DCE-2026.1-Windows-Installer`
+Artefact : `DCE-2026.1.1-Windows-Installer`
 
-Fichier : `DanteConfigEditor2026_1_Installer.exe`
+Fichier : `DanteConfigEditor2026_1_1_Installer.exe`
 
 L’installateur autonome inclut .NET 8 et les notices FR/EN. Le dossier proposé
 est `C:\Program Files\Dante Config Editor 2026.1\`. L’AppId, les
@@ -216,8 +224,8 @@ profil V3.6.
 
 ### macOS
 
-- `DanteConfigEditor2026_1_macOS_AppleSilicon.dmg`
-- `DanteConfigEditor2026_1_macOS_Intel.dmg`
+- `DanteConfigEditor2026_1_1_macOS_AppleSilicon.dmg`
+- `DanteConfigEditor2026_1_1_macOS_Intel.dmg`
 
 Le runtime .NET est inclus. Les bundles sont signés ad hoc mais ne sont pas
 notariés par Apple. Au premier lancement, macOS peut donc demander une

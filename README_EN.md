@@ -97,7 +97,13 @@ a template to the project, or manage its contents. The window now combines the
 personal and bundled banks in one deduplicated list. A selector can isolate one
 bank, and the `Bank` column identifies each template's source. Bundled
 templates remain read-only and may be duplicated into the personal bank.
-Updates never replace that personal bank.
+Official banks are managed in `Documents/Dante Config Editor/Included Machine Banks`.
+The `Update banks` button checks GitHub, verifies SHA-256, backs up the previous
+copy, and installs the new one without ever replacing the personal bank.
+
+At startup, DCE also checks silently for a newer GitHub Release. When an update
+is available, it offers to download and launch the verified installer. A manual
+check remains available under `Help > Check for updates`.
 
 ### Merging two XML files and role identity
 
@@ -184,17 +190,17 @@ Automated coverage includes:
 
 These tests do not replace final import in Dante Controller.
 
-## Install DCE 2026.1
+## Install DCE 2026.1.1
 
-The [DCE 2026.1 Release](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.1)
+The [DCE 2026.1.1 Release](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.1.1)
 contains the Windows and macOS installers, guides, videos, and bundled banks.
 GitHub Actions also retains branch artifacts after a successful run.
 
 ### Windows 11 x64
 
-Artifact: `DCE-2026.1-Windows-Installer`
+Artifact: `DCE-2026.1.1-Windows-Installer`
 
-File: `DanteConfigEditor2026_1_Installer.exe`
+File: `DanteConfigEditor2026_1_1_Installer.exe`
 
 The self-contained installer includes .NET 8 and the French/English guides.
 Its default folder is
@@ -205,8 +211,8 @@ profile.
 
 ### macOS
 
-- `DanteConfigEditor2026_1_macOS_AppleSilicon.dmg`
-- `DanteConfigEditor2026_1_macOS_Intel.dmg`
+- `DanteConfigEditor2026_1_1_macOS_AppleSilicon.dmg`
+- `DanteConfigEditor2026_1_1_macOS_Intel.dmg`
 
 The .NET runtime is bundled. Packages are ad hoc signed but not notarized by
 Apple, so the first launch may require an explicit Open action from Finder.

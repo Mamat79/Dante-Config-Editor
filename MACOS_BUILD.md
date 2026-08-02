@@ -1,4 +1,4 @@
-# Version macOS - 2026.1
+# Version macOS - 2026.1.1
 
 La version macOS utilise Avalonia et compile le même moteur XML, les mêmes
 services de projet, la même validation et les mêmes migrations que la version
@@ -9,9 +9,9 @@ par pixel du shell WPF Windows.
 
 Deux DMG autonomes sont produits :
 
-- `DanteConfigEditor2026_1_macOS_AppleSilicon.dmg` pour les Mac Apple
+- `DanteConfigEditor2026_1_1_macOS_AppleSilicon.dmg` pour les Mac Apple
   Silicon ;
-- `DanteConfigEditor2026_1_macOS_Intel.dmg` pour les Mac Intel 64 bits.
+- `DanteConfigEditor2026_1_1_macOS_Intel.dmg` pour les Mac Intel 64 bits.
 
 Le runtime .NET 8, les notices FR/EN et les banques publiques assainies sont
 inclus. L'utilisateur ouvre le DMG puis glisse

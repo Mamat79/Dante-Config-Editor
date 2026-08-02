@@ -28,7 +28,7 @@ ROOT = Path(__file__).resolve().parent
 # Les quatre PDF sont générés depuis une source unique pour garder les versions
 # française et anglaise synchronisées avec l'application et l'installateur.
 PRODUCT = "Dante Config Editor 2026.1"
-VERSION = "2026.1.0"
+VERSION = "2026.1.1"
 GITHUB = "github.com/Mamat79/Dante-Config-Editor"
 
 INK = colors.HexColor("#172033")
@@ -529,6 +529,7 @@ def full_guide(language: str) -> None:
                 "Les 45 modèles de DCE Generic Roles 2026.1 et DCE Community Devices 2026.1 sont intégrés à l'application. L'assistant peut aussi en créer des copies partageables dans un dossier choisi, sans remplacer la banque personnelle.",
                 "Deux DMG 2026.1 autonomes sont construits sur macOS pour Apple Silicon et Intel. Ils contiennent les banques 2026.1 dans le dossier Machine Banks ; leur bundle distinct peut cohabiter avec la V3.6.",
                 "Les quatre notices PDF françaises et anglaises sont installées et restent accessibles depuis l'application.",
+                "Au démarrage, DCE vérifie discrètement les Releases GitHub. Une mise à jour disponible est proposée, puis l'installateur adapté est téléchargé et contrôlé par SHA-256 avant son lancement. La commande reste accessible dans Aide > Rechercher les mises à jour.",
             ]),
             para("Principes de sécurité", "h2"),
             *bullets([
@@ -753,7 +754,7 @@ def full_guide(language: str) -> None:
         ]
         technical_reference_page = [
             para("Tests de non-régression", "h1"),
-            para("La suite 2026.1 exécute 430 tests Core/Windows et 22 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, le refus des balises techniques absentes, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la fusion avec réutilisation d'identité ou rôle générique, la duplication, la banque de machines, la création de projet, le format .dceproj, les profils XML, les commandes, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch, le soutien facultatif et la cohérence des traductions."),
+            para("La suite 2026.1.1 exécute 435 tests Core/Windows et 22 tests Mac sans écran. Ils couvrent notamment les garde-fous XML, le refus des balises techniques absentes, la sauvegarde et la récupération, les interfaces IPv4, les subscriptions, les gros presets, la fusion avec réutilisation d'identité ou rôle générique, la duplication, la banque de machines, la création de projet, le format .dceproj, les profils XML, les commandes, les formats DMT, les rapports d'import, le synoptique, Atomic Bomb, Easy patch, les mises à jour vérifiées, le soutien facultatif et la cohérence des traductions."),
             para("Limites connues", "h1"),
             *bullets([
                 "Aucun pilotage en temps réel et aucune communication avec les appareils.",
@@ -797,9 +798,10 @@ def full_guide(language: str) -> None:
                 "Choisissez Enregistrer dans la banque, renseignez fabricant, modèle, catégorie, description, tags et labels génériques.",
                 "Une image PNG, JPEG ou WebP facultative est copiée dans le dossier du modèle ; aucun chemin externe fragile n'est conservé.",
                 "La banque se trouve par défaut dans Documents/Dante Config Editor/Machine Bank. Son emplacement peut être choisi, ouvert, copié ou placé dans un dossier synchronisé.",
+                "Les banques officielles mises à jour par DCE sont conservées séparément dans Documents/Dante Config Editor/Included Machine Banks. Elles sont prioritaires sur les copies de secours livrées avec l'application.",
                 "La fenêtre affiche toutes les banques installées dans une liste dédupliquée de 45 modèles. Le sélecteur isole une banque et la colonne Banque indique l'origine ; une copie personnelle est prioritaire sur un doublon fourni.",
                 "Exporter la banque crée une archive vérifiée *.dce-bank.zip. Importer une banque exige un dossier neuf ou vide et ne remplace jamais l'existant.",
-                "Banques GitHub ouvre le catalogue public. DCE Generic Roles 2026.1 fournit deux rôles génériques d'essai. DCE Community Devices 2026.1 fournit 43 modèles illustrés et assainis issus de fabricants variés. Les 45 modèles sont intégrés aux installateurs sans modifier la banque personnelle et ne contiennent ni identité matérielle, ni donnée réseau, ni flow, ni subscription.",
+                "Mettre à jour consulte le catalogue GitHub, contrôle le SHA-256, prépare la banque dans un dossier temporaire et sauvegarde la copie officielle précédente avant remplacement. Banques GitHub ouvre la page publique. Les 45 modèles fournis ne contiennent ni identité matérielle, ni donnée réseau, ni flow, ni subscription.",
                 "L'administration permet recherche, filtres, modification, duplication, suppression confirmée et import/export d'un modèle ZIP.",
             ]),
             para("Ajouter un modèle au projet", "h2"),
@@ -1178,6 +1180,7 @@ def full_guide(language: str) -> None:
                 "The 45 templates from DCE Generic Roles 2026.1 and DCE Community Devices 2026.1 are bundled with the application. The wizard may also create shareable copies in a chosen folder without replacing the personal bank.",
                 "Two self-contained 2026.1 DMGs are built on macOS for Apple Silicon and Intel. They include the 2026.1 banks in the Machine Banks folder, and their separate bundle can coexist with V3.6.",
                 "All four French and English PDFs are installed and remain available from the application.",
+                "At startup, DCE quietly checks GitHub Releases. When an update is available, it offers the matching installer, verifies its SHA-256, and launches it only after confirmation. The same check is available under Help > Check for updates.",
             ]),
             para("Safety principles", "h2"),
             *bullets([
@@ -1402,7 +1405,7 @@ def full_guide(language: str) -> None:
         ]
         technical_reference_page = [
             para("Regression tests", "h1"),
-            para("The 2026.1 suite runs 430 Core/Windows tests and 22 headless Mac tests. Coverage includes XML guards, rejection of missing technical elements, save and recovery, IPv4 interfaces, subscriptions, large presets, merge reuse and generic-role handling, duplication, the device bank, project creation, .dceproj packages, XML profiles, commands, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, optional support, and translation consistency."),
+            para("The 2026.1.1 suite runs 435 Core/Windows tests and 22 headless Mac tests. Coverage includes XML guards, rejection of missing technical elements, save and recovery, IPv4 interfaces, subscriptions, large presets, merge reuse and generic-role handling, duplication, the device bank, project creation, .dceproj packages, XML profiles, commands, DMT formats, import reports, synoptic export, Atomic Bomb, Easy patch, verified updates, optional support, and translation consistency."),
             para("Known limitations", "h1"),
             *bullets([
                 "No real-time Dante control and no communication with devices.",
@@ -1446,9 +1449,10 @@ def full_guide(language: str) -> None:
                 "Choose Save to machine bank and enter manufacturer, model, category, description, tags, and generic labels.",
                 "An optional PNG, JPEG, or WebP image is copied into the model folder; no fragile external path is kept.",
                 "The default bank is Documents/Dante Config Editor/Machine Bank. You may choose, open, copy, or place it in a synchronized folder.",
+                "Official banks updated by DCE are stored separately under Documents/Dante Config Editor/Included Machine Banks. They take priority over the fallback copies bundled with the application.",
                 "The window combines all installed banks into one deduplicated list of 45 templates. The selector isolates one bank and the Bank column identifies the source; a personal copy takes priority over a bundled duplicate.",
                 "Export bank creates a verified *.dce-bank.zip archive. Import bank requires a new or empty folder and never replaces existing data.",
-                "GitHub banks opens the public catalog. DCE Generic Roles 2026.1 provides two generic test roles. DCE Community Devices 2026.1 provides 43 sanitized illustrated templates from several manufacturers. These banks contain no hardware identity, network data, flow, or subscription.",
+                "Update banks checks the GitHub catalog, verifies SHA-256, prepares the bank in a temporary folder, and backs up the previous official copy before replacement. GitHub banks opens the public page. The 45 bundled templates contain no hardware identity, network data, flow, or subscription.",
                 "Administration supports search, filters, edit, duplicate, confirmed delete, and model ZIP import/export.",
             ]),
             para("Add a template to the project", "h2"),

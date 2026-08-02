@@ -1,5 +1,32 @@
 # Tests et historique DCE
 
+## Validation 2026.1.1 du 2026-08-02
+
+Périmètre : mise à jour automatique de DCE, mise à jour directe des banques
+officielles et packaging 2026.1.1 à partir du commit `8fedc84`.
+
+Résultats locaux :
+
+- restauration Windows et macOS : `2,944 s` ;
+- 435 tests Core/Windows réussis, 0 échec, 0 ignoré ;
+- 22 tests Avalonia/macOS sans écran réussis, 0 échec, 0 ignoré ;
+- build Windows Release : `4,523 s`, 0 avertissement, 0 erreur ;
+- build macOS Release : `3,083 s`, 0 avertissement, 0 erreur ;
+- aucun package NuGet vulnérable signalé pour Windows ou macOS ;
+- installateur Windows autonome construit en `40,679 s` ;
+- installateur : `DanteConfigEditor2026_1_1_Installer.exe`,
+  `75 404 183` octets ;
+- SHA-256 :
+  `b10da15ff2e6b1c0e4c3ba1ac43b60414523d39bb31568e98ad5431344453ae8` ;
+- tests dédiés : remplacement transactionnel d'une banque officielle,
+  conservation de la sauvegarde, rejet d'une archive corrompue, sélection de
+  l'installateur de plateforme et rejet d'un installateur au SHA-256 incorrect ;
+- quatre PDF régénérés, 78 pages rendues en PNG ; pages modifiées contrôlées
+  visuellement et extraction de texte vérifiée sans caractère de remplacement.
+
+Les DMG ne sont pas construits localement sous Windows. Leur construction et
+leurs tests sont confiés au workflow `macos-latest` avant publication.
+
 ## Validation de sécurité XML et installation du 2026-07-29
 
 Périmètre :
