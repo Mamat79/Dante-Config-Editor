@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Ajouter une machine"
         Width="590"
-        Height="520"
+        Height="585"
         MinWidth="500"
         MinHeight="440"
         WindowStartupLocation="CenterOwner">
@@ -35,12 +35,36 @@
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="0,0,8,0">
                 <Label x:Name="NameLabel" Content="Nom de la nouvelle machine" />
-                <TextBox x:Name="NameTextBox" MaxLength="31" />
+                <TextBox x:Name="NameTextBox"
+                         MaxLength="31"
+                         TextChanged="InstancePreviewChanged" />
                 <TextBlock x:Name="NameHintTextBlock"
                            Margin="0,5,0,14"
                            FontSize="12"
                            Foreground="{DynamicResource DialogMutedBrush}"
                            TextWrapping="Wrap" />
+
+                <Grid x:Name="QuantityPanel" Margin="0,0,0,14">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="90" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Label x:Name="QuantityLabel"
+                           VerticalAlignment="Center"
+                           Content="Nombre de machines" />
+                    <TextBox x:Name="QuantityTextBox"
+                             Grid.Column="1"
+                             Margin="10,0,0,0"
+                             Text="1"
+                             TextChanged="InstancePreviewChanged" />
+                    <TextBlock x:Name="NamesPreviewTextBlock"
+                               Grid.Column="2"
+                               Margin="14,0,0,0"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource DialogMutedBrush}"
+                               TextWrapping="Wrap" />
+                </Grid>
 
                 <GroupBox x:Name="RxGroupBox" Header="Canaux RX">
                     <Grid>

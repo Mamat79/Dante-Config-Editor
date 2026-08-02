@@ -124,6 +124,11 @@
                 <Button x:Name="ExportTemplateButton" Margin="0,0,8,8" Click="ExportTemplateButton_Click" />
                 <Button x:Name="BackupBankButton" Margin="0,0,8,8" Click="BackupBankButton_Click" />
                 <Button x:Name="RestoreBankButton" Margin="0,0,8,8" Click="RestoreBankButton_Click" />
+                <TextBlock x:Name="AdditionStatusText"
+                           Classes="muted"
+                           Margin="8,7,0,8"
+                           VerticalAlignment="Center"
+                           TextWrapping="Wrap" />
             </WrapPanel>
             <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
                 <Button x:Name="EditTemplateButton" Margin="0,0,8,8" Click="EditTemplateButton_Click" />

@@ -2,7 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="DanteConfigEditor.Mac.MachineInstanceDialog"
         Width="620"
-        Height="500"
+        Height="570"
         MinWidth="520"
         MinHeight="430"
         ShowInTaskbar="False"
@@ -16,9 +16,22 @@
         <StackPanel Grid.Row="1" Spacing="12">
             <StackPanel Spacing="4">
                 <TextBlock x:Name="NameLabel" />
-                <TextBox x:Name="NameTextBox" />
+                <TextBox x:Name="NameTextBox" TextChanged="InstancePreviewChanged" />
                 <TextBlock x:Name="NameHintText" Classes="muted" FontSize="12" />
             </StackPanel>
+
+            <Grid x:Name="QuantityPanel" ColumnDefinitions="Auto,90,*" ColumnSpacing="10">
+                <TextBlock x:Name="QuantityLabel" VerticalAlignment="Center" />
+                <TextBox x:Name="QuantityTextBox"
+                         Grid.Column="1"
+                         Text="1"
+                         TextChanged="InstancePreviewChanged" />
+                <TextBlock x:Name="NamesPreviewText"
+                           Grid.Column="2"
+                           Classes="muted"
+                           VerticalAlignment="Center"
+                           TextWrapping="Wrap" />
+            </Grid>
 
             <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
                 <Border Classes="panel">

@@ -948,30 +948,42 @@ public partial class MainWindow : Window
             ThemeToggleButton.IsChecked == true,
             _project?.Devices.Select(device => device.Name) ?? [],
             _project is not null && _editModeEnabled,
-            bankPath)
+            bankPath,
+            AddDevicesFromBank)
         {
             Owner = this
         };
-        bool accepted = window.ShowDialog() == true;
-        if (!accepted
-            || window.SelectedPackageToAdd is null
-            || window.SelectedInstanceOptions is null
-            || _project is null)
+        window.ShowDialog();
+    }
+
+    private IReadOnlyList<string>? AddDevicesFromBank(
+        MachineTemplatePackage package,
+        MachineInstanceBatchRequest request)
+    {
+        if (_project is null)
         {
-            return;
+            return null;
         }
 
-        MachineTemplatePackage package = window.SelectedPackageToAdd;
-        MachineInstanceOptions options = window.SelectedInstanceOptions;
+        IReadOnlyList<MachineCloneResult>? results = null;
+        string actionLabel = request.Quantity == 1
+            ? (_language == UiLanguage.English
+                ? $"Device added from bank: {request.Options.NewName}"
+                : $"Machine ajoutée depuis la banque : {request.Options.NewName}")
+            : (_language == UiLanguage.English
+                ? $"{request.Quantity} devices added from bank"
+                : $"{request.Quantity} machines ajoutées depuis la banque");
         bool completed = RunProjectAction(
-            _language == UiLanguage.English
-                ? $"Device added from bank: {options.NewName}"
-                : $"Machine ajoutée depuis la banque : {options.NewName}",
-            () => _project.AddDeviceFromTemplate(package, options));
-        if (completed)
+            actionLabel,
+            () => results = _project.AddDevicesFromTemplate(package, request));
+        if (!completed || results is null)
         {
-            DeviceComboBox.SelectedItem = options.NewName;
+            return null;
         }
+
+        string[] names = results.Select(result => result.NewName).ToArray();
+        DeviceComboBox.SelectedItem = names[^1];
+        return names;
     }
 
     private void RedoButton_Click(object sender, RoutedEventArgs e)

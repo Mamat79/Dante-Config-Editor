@@ -193,6 +193,37 @@ public sealed class MachineDialogUiContractTests
     }
 
     [Fact]
+    public void MachineBankSupportsRepeatedBatchInsertionOnWindowsAndMac()
+    {
+        string windowsInstanceXaml = File.ReadAllText(RepositoryFile("MachineInstanceWindow.xaml"));
+        string windowsBankCode = File.ReadAllText(RepositoryFile("MachineBankWindow.xaml.cs"));
+        string windowsMainCode = File.ReadAllText(RepositoryFile("MainWindow.xaml.cs"));
+        string macInstanceXaml = File.ReadAllText(RepositoryFile(
+            "src",
+            "DanteConfigEditor.Mac",
+            "MachineInstanceDialog.axaml"));
+        string macBankCode = File.ReadAllText(RepositoryFile(
+            "src",
+            "DanteConfigEditor.Mac",
+            "MachineBankDialog.axaml.cs"));
+        string macMainCode = File.ReadAllText(RepositoryFile(
+            "src",
+            "DanteConfigEditor.Mac",
+            "MainWindow.axaml.cs"));
+
+        Assert.Contains("x:Name=\"QuantityTextBox\"", windowsInstanceXaml, StringComparison.Ordinal);
+        Assert.Contains("MachineInstanceBatchRequest", windowsBankCode, StringComparison.Ordinal);
+        Assert.Contains("AdditionStatusTextBlock.Text", windowsBankCode, StringComparison.Ordinal);
+        Assert.Contains("AddDevicesFromTemplate", windowsMainCode, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"QuantityTextBox\"", macInstanceXaml, StringComparison.Ordinal);
+        Assert.Contains("MachineInstanceBatchRequest", macBankCode, StringComparison.Ordinal);
+        Assert.Contains("AdditionStatusText", macBankCode, StringComparison.Ordinal);
+        Assert.Contains("AddDevicesFromTemplate", macMainCode, StringComparison.Ordinal);
+        Assert.DoesNotContain("DialogResult = true;", ExtractMethod(windowsBankCode, "AddToProjectButton_Click"), StringComparison.Ordinal);
+        Assert.DoesNotContain("Close(new MacMachineBankSelection", ExtractMethod(macBankCode, "AddToProjectButton_Click"), StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void TemplateMetadataUsesExplicitFrenchAndEnglishHelp()
     {
         string code = File.ReadAllText(RepositoryFile("MachineTemplateEditorWindow.xaml.cs"));
@@ -230,6 +261,14 @@ public sealed class MachineDialogUiContractTests
                     (string?)element.Attribute(xamlNamespace + "Name"),
                     name,
                     StringComparison.Ordinal));
+    }
+
+    private static string ExtractMethod(string code, string methodName)
+    {
+        int start = code.IndexOf(methodName, StringComparison.Ordinal);
+        Assert.True(start >= 0, $"Method {methodName} was not found.");
+        int next = code.IndexOf("\n    private ", start + methodName.Length, StringComparison.Ordinal);
+        return next < 0 ? code[start..] : code[start..next];
     }
 
     private static string RepositoryFile(params string[] relativeParts)

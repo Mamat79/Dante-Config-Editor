@@ -9,10 +9,6 @@ using DanteConfigEditor.Services;
 
 namespace DanteConfigEditor.Mac;
 
-internal sealed record MacMachineBankSelection(
-    MachineTemplatePackage Package,
-    MachineInstanceOptions Options);
-
 internal sealed partial class MachineBankDialog : Window
 {
     private static readonly FilePickerFileType TemplateArchiveType = new("DCE machine template")
@@ -30,6 +26,7 @@ internal sealed partial class MachineBankDialog : Window
     private UiLanguage _language;
     private HashSet<string> _usedDeviceNames = new(StringComparer.OrdinalIgnoreCase);
     private bool _canAddToProject;
+    private Func<MachineTemplatePackage, MachineInstanceBatchRequest, Task<IReadOnlyList<string>?>>? _addToProject;
     private bool _updatingBankSources;
     private bool _updatingFilters;
     private string _bankPath = string.Empty;
@@ -51,18 +48,20 @@ internal sealed partial class MachineBankDialog : Window
 
     private string AllFilterLabel => L("Tous", "All");
 
-    public static Task<MacMachineBankSelection?> ShowAsync(
+    public static Task ShowAsync(
         Window owner,
         UiLanguage language,
         IEnumerable<string> usedDeviceNames,
         bool canAddToProject,
-        string? initialBankPath = null)
+        string? initialBankPath = null,
+        Func<MachineTemplatePackage, MachineInstanceBatchRequest, Task<IReadOnlyList<string>?>>? addToProject = null)
     {
         MachineBankDialog dialog = new()
         {
             _language = language,
             _usedDeviceNames = usedDeviceNames.ToHashSet(StringComparer.OrdinalIgnoreCase),
             _canAddToProject = canAddToProject,
+            _addToProject = addToProject,
             Title = language == UiLanguage.English ? "Device bank" : "Banque de machines"
         };
         dialog._bankPath = Path.GetFullPath(dialog._locationService.Load());
@@ -73,7 +72,7 @@ internal sealed partial class MachineBankDialog : Window
         dialog.FindControl<DataGrid>("TemplatesGrid")!.ItemsSource = dialog._visibleRows;
         dialog.ApplyLanguage();
         dialog.RefreshBank();
-        return dialog.ShowDialog<MacMachineBankSelection?>(owner);
+        return dialog.ShowDialog(owner);
     }
 
     private void ApplyLanguage()
@@ -113,6 +112,15 @@ internal sealed partial class MachineBankDialog : Window
         FindControl<Button>("DuplicateTemplateButton")!.Content = L("Dupliquer le modèle", "Duplicate template");
         FindControl<Button>("DeleteTemplateButton")!.Content = L("Supprimer", "Delete");
         FindControl<Button>("AddToProjectButton")!.Content = L("Ajouter au projet", "Add to project");
+        ToolTip.SetTip(
+            FindControl<Button>("AddToProjectButton")!,
+            _canAddToProject
+                ? L(
+                    "Ajoute une ou plusieurs instances indépendantes sans fermer la banque.",
+                    "Adds one or more independent instances without closing the bank.")
+                : L(
+                    "Ouvrez un projet pour ajouter une machine.",
+                    "Open a project before adding a device."));
         FindControl<Button>("CloseButton")!.Content = L("Fermer", "Close");
         ToolTip.SetTip(
             updateBanksButton,
@@ -451,15 +459,38 @@ internal sealed partial class MachineBankDialog : Window
         try
         {
             MachineTemplatePackage package = RepositoryFor(row).Load(row.TemplateId);
-            MachineInstanceOptions? options = await MachineInstanceDialog.ShowAsync(
+            MachineInstanceBatchRequest? request = await MachineInstanceDialog.ShowAsync(
                 this,
                 _language,
                 package.Metadata,
                 BuildSuggestedDeviceName(package.Metadata));
-            if (options is not null)
+            if (request is null)
             {
-                Close(new MacMachineBankSelection(package, options));
+                return;
             }
+
+            if (_addToProject is null)
+            {
+                throw new InvalidOperationException(L(
+                    "Le projet ne peut pas recevoir de machine depuis cette fenêtre.",
+                    "This window cannot add devices to the project."));
+            }
+
+            IReadOnlyList<string>? addedNames = await _addToProject(package, request);
+            if (addedNames is null || addedNames.Count == 0)
+            {
+                return;
+            }
+
+            foreach (string addedName in addedNames)
+            {
+                _usedDeviceNames.Add(addedName);
+            }
+
+            FindControl<TextBlock>("AdditionStatusText")!.Text = addedNames.Count == 1
+                ? L($"Machine ajoutée : {addedNames[0]}", $"Device added: {addedNames[0]}")
+                : L($"{addedNames.Count} machines ajoutées.", $"{addedNames.Count} devices added.");
+            FindControl<Button>("AddToProjectButton")!.Focus();
         }
         catch (Exception exception)
         {

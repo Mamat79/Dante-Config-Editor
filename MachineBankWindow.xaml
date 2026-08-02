@@ -264,8 +264,13 @@
                 <Button x:Name="CloseButton"
                         Content="Fermer"
                         Style="{StaticResource DialogSecondaryButtonStyle}"
-                        IsCancel="True" />
+                         IsCancel="True" />
             </WrapPanel>
+            <TextBlock x:Name="AdditionStatusTextBlock"
+                       Margin="10,8,0,8"
+                       VerticalAlignment="Center"
+                       Foreground="{DynamicResource DialogMutedBrush}"
+                       TextWrapping="Wrap" />
         </WrapPanel>
     </Grid>
 </Window>

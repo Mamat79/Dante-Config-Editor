@@ -17,7 +17,7 @@ internal sealed partial class MachineInstanceDialog : Window
     private T? FindControl<T>(string name) where T : Control =>
         ControlExtensions.FindControl<T>(this, name);
 
-    public static Task<MachineInstanceOptions?> ShowAsync(
+    public static Task<MachineInstanceBatchRequest?> ShowAsync(
         Window owner,
         UiLanguage language,
         MachineTemplateMetadata metadata,
@@ -33,8 +33,10 @@ internal sealed partial class MachineInstanceDialog : Window
         };
         dialog.FindControl<TextBox>("NameTextBox")!.Text = suggestedName;
         dialog.ApplyLanguage(metadata, createProjectMode);
+        dialog.FindControl<Grid>("QuantityPanel")!.IsVisible = !createProjectMode;
         dialog.UpdatePrefixState();
-        return dialog.ShowDialog<MachineInstanceOptions?>(owner);
+        dialog.UpdateNamesPreview();
+        return dialog.ShowDialog<MachineInstanceBatchRequest?>(owner);
     }
 
     private void ApplyLanguage(MachineTemplateMetadata metadata, bool createProjectMode)
@@ -52,6 +54,7 @@ internal sealed partial class MachineInstanceDialog : Window
         FindControl<TextBlock>("NameHintText")!.Text = L(
             "31 caractères maximum : lettres, chiffres et tirets.",
             "Maximum 31 characters: letters, digits and hyphens.");
+        FindControl<TextBlock>("QuantityLabel")!.Text = L("Nombre de machines", "Number of devices");
         FindControl<CheckBox>("UseTxLabelsCheckBox")!.Content = L(
             "Utiliser les labels du modèle",
             "Use template labels");
@@ -70,8 +73,13 @@ internal sealed partial class MachineInstanceDialog : Window
         ToolTip.SetTip(
             FindControl<TextBox>("NameTextBox")!,
             L(
-                "Nom unique de cette nouvelle instance dans le projet.",
-                "Unique name of this new instance in the project."));
+                "Nom de la première machine. Pour un lot, les suivantes utilisent -2, -3, etc.",
+                "Name of the first device. In a batch, subsequent devices use -2, -3, and so on."));
+        ToolTip.SetTip(
+            FindControl<TextBox>("QuantityTextBox")!,
+            L(
+                $"Nombre de machines indépendantes à ajouter, de 1 à {MachineInstanceBatchRequest.MaximumQuantity}.",
+                $"Number of independent devices to add, from 1 to {MachineInstanceBatchRequest.MaximumQuantity}."));
         ToolTip.SetTip(
             FindControl<CheckBox>("UseRxLabelsCheckBox")!,
             L(
@@ -112,6 +120,44 @@ internal sealed partial class MachineInstanceDialog : Window
             FindControl<CheckBox>("UseRxLabelsCheckBox")!.IsChecked != true;
     }
 
+    private void InstancePreviewChanged(object? sender, TextChangedEventArgs e)
+    {
+        UpdateNamesPreview();
+    }
+
+    private void UpdateNamesPreview()
+    {
+        TextBlock? preview = FindControl<TextBlock>("NamesPreviewText");
+        TextBox? quantityBox = FindControl<TextBox>("QuantityTextBox");
+        TextBox? nameBox = FindControl<TextBox>("NameTextBox");
+        if (preview is null || quantityBox is null || nameBox is null)
+        {
+            return;
+        }
+
+        string name = nameBox.Text?.Trim() ?? string.Empty;
+        if (!int.TryParse(quantityBox.Text?.Trim(), out int quantity)
+            || quantity is < 1 or > MachineInstanceBatchRequest.MaximumQuantity
+            || DanteNameRules.ValidateDeviceName(name) is not null)
+        {
+            preview.Text = L("Saisissez un nombre valide.", "Enter a valid number.");
+            return;
+        }
+
+        try
+        {
+            IReadOnlyList<string> names = MachineInstanceNameService.BuildNames(name, quantity, []);
+            preview.Text = quantity == 1
+                ? names[0]
+                : L("Aperçu : ", "Preview: ") + string.Join(", ", names.Take(4))
+                    + (quantity > 4 ? ", …" : string.Empty);
+        }
+        catch
+        {
+            preview.Text = L("Nom de série invalide.", "Invalid series name.");
+        }
+    }
+
     private async void ConfirmButton_Click(object? sender, RoutedEventArgs e)
     {
         string name = FindControl<TextBox>("NameTextBox")!.Text?.Trim() ?? string.Empty;
@@ -121,6 +167,15 @@ internal sealed partial class MachineInstanceDialog : Window
             await ShowValidationAsync(_language == UiLanguage.English
                 ? "Use at most 31 letters, digits or hyphens."
                 : nameError);
+            return;
+        }
+
+        if (!int.TryParse(FindControl<TextBox>("QuantityTextBox")!.Text?.Trim(), out int quantity)
+            || quantity is < 1 or > MachineInstanceBatchRequest.MaximumQuantity)
+        {
+            await ShowValidationAsync(L(
+                $"Le nombre de machines doit être compris entre 1 et {MachineInstanceBatchRequest.MaximumQuantity}.",
+                $"The number of devices must be between 1 and {MachineInstanceBatchRequest.MaximumQuantity}."));
             return;
         }
 
@@ -140,13 +195,17 @@ internal sealed partial class MachineInstanceDialog : Window
             return;
         }
 
-        Close(new MachineInstanceOptions
+        Close(new MachineInstanceBatchRequest
         {
-            NewName = name,
-            UseTemplateTxLabels = useTxLabels,
-            UseTemplateRxLabels = useRxLabels,
-            TxLabelPrefix = useTxLabels ? null : txPrefix,
-            RxLabelPrefix = useRxLabels ? null : rxPrefix
+            Quantity = quantity,
+            Options = new MachineInstanceOptions
+            {
+                NewName = name,
+                UseTemplateTxLabels = useTxLabels,
+                UseTemplateRxLabels = useRxLabels,
+                TxLabelPrefix = useTxLabels ? null : txPrefix,
+                RxLabelPrefix = useRxLabels ? null : rxPrefix
+            }
         });
     }
 

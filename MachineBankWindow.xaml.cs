@@ -19,6 +19,7 @@ public partial class MachineBankWindow : Window
     private readonly bool _useLightTheme;
     private readonly HashSet<string> _usedDeviceNames;
     private readonly bool _canAddToProject;
+    private readonly Func<MachineTemplatePackage, MachineInstanceBatchRequest, IReadOnlyList<string>?>? _addToProject;
     private readonly ObservableCollection<MachineBankRow> _visibleRows = [];
     private readonly MachineBankLocationService _locationService;
     private IReadOnlyList<MachineBankCatalogEntry> _allTemplates = [];
@@ -34,13 +35,15 @@ public partial class MachineBankWindow : Window
         bool useLightTheme,
         IEnumerable<string> usedDeviceNames,
         bool canAddToProject,
-        string? initialBankPath = null)
+        string? initialBankPath = null,
+        Func<MachineTemplatePackage, MachineInstanceBatchRequest, IReadOnlyList<string>?>? addToProject = null)
     {
         InitializeComponent();
         _language = language;
         _useLightTheme = useLightTheme;
         _usedDeviceNames = usedDeviceNames.ToHashSet(StringComparer.OrdinalIgnoreCase);
         _canAddToProject = canAddToProject;
+        _addToProject = addToProject;
         _locationService = MachineBankLocationService.CreateDefault();
         _bankPath = Path.GetFullPath(_locationService.Load());
         _initialBankPath = string.IsNullOrWhiteSpace(initialBankPath)
@@ -52,10 +55,6 @@ public partial class MachineBankWindow : Window
         ApplyLanguage();
         RefreshBank();
     }
-
-    public MachineTemplatePackage? SelectedPackageToAdd { get; private set; }
-
-    public MachineInstanceOptions? SelectedInstanceOptions { get; private set; }
 
     public string CurrentBankPath =>
         (BankSourceComboBox.SelectedItem as MachineBankSourceChoice)?.Path
@@ -106,8 +105,8 @@ public partial class MachineBankWindow : Window
         AddToProjectButton.IsEnabled = _canAddToProject;
         AddToProjectButton.ToolTip = _canAddToProject
             ? L(
-                "Ajoute une nouvelle instance indépendante au projet ouvert.",
-                "Adds a new independent instance to the open project.")
+                "Ajoute une ou plusieurs instances indépendantes sans fermer la banque.",
+                "Adds one or more independent instances without closing the bank.")
             : L(
                 "Ouvrez un projet et activez l'édition pour ajouter une machine.",
                 "Open a project and enable editing to add a device.");
@@ -513,14 +512,33 @@ public partial class MachineBankWindow : Window
             {
                 Owner = this
             };
-            if (window.ShowDialog() != true || window.Options is null)
+            if (window.ShowDialog() != true || window.Request is null)
             {
                 return;
             }
 
-            SelectedPackageToAdd = package;
-            SelectedInstanceOptions = window.Options;
-            DialogResult = true;
+            if (_addToProject is null)
+            {
+                throw new InvalidOperationException(L(
+                    "Le projet ne peut pas recevoir de machine depuis cette fenêtre.",
+                    "This window cannot add devices to the project."));
+            }
+
+            IReadOnlyList<string>? addedNames = _addToProject(package, window.Request);
+            if (addedNames is null || addedNames.Count == 0)
+            {
+                return;
+            }
+
+            foreach (string addedName in addedNames)
+            {
+                _usedDeviceNames.Add(addedName);
+            }
+
+            AdditionStatusTextBlock.Text = addedNames.Count == 1
+                ? L($"Machine ajoutée : {addedNames[0]}", $"Device added: {addedNames[0]}")
+                : L($"{addedNames.Count} machines ajoutées.", $"{addedNames.Count} devices added.");
+            AddToProjectButton.Focus();
         }
         catch (Exception ex)
         {

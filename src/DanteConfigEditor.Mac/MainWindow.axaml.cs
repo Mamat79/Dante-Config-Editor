@@ -257,24 +257,42 @@ public partial class MainWindow : Window
 
     private async Task OpenMachineBankAsync(string? bankPath)
     {
-        MacMachineBankSelection? selection = await MachineBankDialog.ShowAsync(
+        await MachineBankDialog.ShowAsync(
             this,
             _language,
             _project?.Devices.Select(device => device.Name) ?? [],
             _project is not null,
-            bankPath);
-        if (selection is null || _project is null)
+            bankPath,
+            AddDevicesFromBankAsync);
+    }
+
+    private async Task<IReadOnlyList<string>?> AddDevicesFromBankAsync(
+        MachineTemplatePackage package,
+        MachineInstanceBatchRequest request)
+    {
+        if (_project is null)
         {
-            return;
+            return null;
         }
 
+        IReadOnlyList<MachineCloneResult>? results = null;
         await ExecuteMutationAsync(
-            L(
-                $"Machine ajoutée depuis la banque : {selection.Options.NewName}",
-                $"Device added from bank: {selection.Options.NewName}"),
-            L("Machine ajoutée depuis la banque.", "Device added from bank."),
-            project => project.AddDeviceFromTemplate(selection.Package, selection.Options),
-            selection.Options.NewName);
+            request.Quantity == 1
+                ? L(
+                    $"Machine ajoutée depuis la banque : {request.Options.NewName}",
+                    $"Device added from bank: {request.Options.NewName}")
+                : L(
+                    $"{request.Quantity} machines ajoutées depuis la banque",
+                    $"{request.Quantity} devices added from bank"),
+            request.Quantity == 1
+                ? L("Machine ajoutée depuis la banque.", "Device added from bank.")
+                : L(
+                    $"{request.Quantity} machines ajoutées depuis la banque.",
+                    $"{request.Quantity} devices added from bank."),
+            project => results = project.AddDevicesFromTemplate(package, request),
+            request.Options.NewName);
+
+        return results?.Select(result => result.NewName).ToArray();
     }
 
     private async void OpenRecentButton_Click(object? sender, RoutedEventArgs e)

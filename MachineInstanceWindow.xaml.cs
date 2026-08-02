@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Controls;
 using DanteConfigEditor.Models;
 using DanteConfigEditor.Services;
 
@@ -20,12 +21,14 @@ public partial class MachineInstanceWindow : Window
         DialogThemeService.Apply(this, useLightTheme);
         NameTextBox.Text = suggestedName;
         ApplyLanguage(metadata, createProjectMode);
+        QuantityPanel.Visibility = createProjectMode ? Visibility.Collapsed : Visibility.Visible;
         UpdatePrefixState();
+        UpdateNamesPreview();
         NameTextBox.SelectAll();
         NameTextBox.Focus();
     }
 
-    public MachineInstanceOptions? Options { get; private set; }
+    public MachineInstanceBatchRequest? Request { get; private set; }
 
     private void ApplyLanguage(
         MachineTemplateMetadata metadata,
@@ -47,6 +50,7 @@ public partial class MachineInstanceWindow : Window
         NameHintTextBlock.Text = L(
             "31 caractères maximum : lettres, chiffres et tirets.",
             "Maximum 31 characters: letters, digits and hyphens.");
+        QuantityLabel.Content = L("Nombre de machines", "Number of devices");
         TxGroupBox.Header = L("Canaux TX", "Tx channels");
         RxGroupBox.Header = L("Canaux RX", "Rx channels");
         UseTxLabelsCheckBox.Content = L(
@@ -64,8 +68,11 @@ public partial class MachineInstanceWindow : Window
         CancelButton.Content = L("Annuler", "Cancel");
 
         NameTextBox.ToolTip = L(
-            "Nom unique de la machine qui sera créée dans le projet.",
-            "Unique name of the device that will be created in the project.");
+            "Nom de la première machine. Pour un lot, les suivantes utilisent -2, -3, etc.",
+            "Name of the first device. In a batch, subsequent devices use -2, -3, and so on.");
+        QuantityTextBox.ToolTip = L(
+            $"Nombre de machines indépendantes à ajouter, de 1 à {MachineInstanceBatchRequest.MaximumQuantity}.",
+            $"Number of independent devices to add, from 1 to {MachineInstanceBatchRequest.MaximumQuantity}.");
         UseTxLabelsCheckBox.ToolTip = L(
             "Coché : conserve les labels TX du modèle. Décoché : génère des labels numérotés avec le préfixe saisi.",
             "Checked: keeps the template Tx labels. Cleared: generates numbered labels with the entered prefix.");
@@ -100,6 +107,41 @@ public partial class MachineInstanceWindow : Window
         RxPrefixTextBox.IsEnabled = UseRxLabelsCheckBox.IsChecked != true;
     }
 
+    private void InstancePreviewChanged(object sender, TextChangedEventArgs e)
+    {
+        UpdateNamesPreview();
+    }
+
+    private void UpdateNamesPreview()
+    {
+        if (NamesPreviewTextBlock is null || QuantityTextBox is null || NameTextBox is null)
+        {
+            return;
+        }
+
+        string name = NameTextBox.Text.Trim();
+        if (!int.TryParse(QuantityTextBox.Text.Trim(), out int quantity)
+            || quantity is < 1 or > MachineInstanceBatchRequest.MaximumQuantity
+            || DanteNameRules.ValidateDeviceName(name) is not null)
+        {
+            NamesPreviewTextBlock.Text = L("Saisissez un nombre valide.", "Enter a valid number.");
+            return;
+        }
+
+        try
+        {
+            IReadOnlyList<string> names = MachineInstanceNameService.BuildNames(name, quantity, []);
+            NamesPreviewTextBlock.Text = quantity == 1
+                ? names[0]
+                : L("Aperçu : ", "Preview: ") + string.Join(", ", names.Take(4))
+                    + (quantity > 4 ? ", …" : string.Empty);
+        }
+        catch
+        {
+            NamesPreviewTextBlock.Text = L("Nom de série invalide.", "Invalid series name.");
+        }
+    }
+
     private void ConfirmButton_Click(object sender, RoutedEventArgs e)
     {
         string name = NameTextBox.Text.Trim();
@@ -109,6 +151,15 @@ public partial class MachineInstanceWindow : Window
             ShowError(_language == UiLanguage.English
                 ? "The device name is invalid. Use at most 31 letters, digits or hyphens."
                 : nameError);
+            return;
+        }
+
+        if (!int.TryParse(QuantityTextBox.Text.Trim(), out int quantity)
+            || quantity is < 1 or > MachineInstanceBatchRequest.MaximumQuantity)
+        {
+            ShowError(L(
+                $"Le nombre de machines doit être compris entre 1 et {MachineInstanceBatchRequest.MaximumQuantity}.",
+                $"The number of devices must be between 1 and {MachineInstanceBatchRequest.MaximumQuantity}."));
             return;
         }
 
@@ -126,17 +177,21 @@ public partial class MachineInstanceWindow : Window
             return;
         }
 
-        Options = new MachineInstanceOptions
+        Request = new MachineInstanceBatchRequest
         {
-            NewName = name,
-            UseTemplateTxLabels = UseTxLabelsCheckBox.IsChecked == true,
-            UseTemplateRxLabels = UseRxLabelsCheckBox.IsChecked == true,
-            TxLabelPrefix = UseTxLabelsCheckBox.IsChecked == true
-                ? null
-                : TxPrefixTextBox.Text.Trim(),
-            RxLabelPrefix = UseRxLabelsCheckBox.IsChecked == true
-                ? null
-                : RxPrefixTextBox.Text.Trim()
+            Quantity = quantity,
+            Options = new MachineInstanceOptions
+            {
+                NewName = name,
+                UseTemplateTxLabels = UseTxLabelsCheckBox.IsChecked == true,
+                UseTemplateRxLabels = UseRxLabelsCheckBox.IsChecked == true,
+                TxLabelPrefix = UseTxLabelsCheckBox.IsChecked == true
+                    ? null
+                    : TxPrefixTextBox.Text.Trim(),
+                RxLabelPrefix = UseRxLabelsCheckBox.IsChecked == true
+                    ? null
+                    : RxPrefixTextBox.Text.Trim()
+            }
         };
         DialogResult = true;
     }
