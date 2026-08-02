@@ -15,7 +15,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parent
 MEDIA = ROOT / "media"
-SRT = MEDIA / "dce-2026-1-guide-visuel-fr.srt"
+SRT = MEDIA / "dce-2026-1-guide-visuel-fr-subtitles.srt"
 DEFAULT_RAW = ROOT.parent.parent / "Video Drafts" / "2026.1.1" / "raw"
 DEFAULT_OUTPUT = MEDIA / "dce-2026-1-guide-visuel-fr.mp4"
 
@@ -171,9 +171,9 @@ def main() -> None:
 
         subtitle_filter = (
             f"subtitles=filename='{escape_subtitle_path(SRT)}':"
-            "force_style='FontName=Segoe UI,FontSize=26,PrimaryColour=&H00FFFFFF,"
-            "OutlineColour=&H00101828,BackColour=&H900B1220,BorderStyle=3,"
-            "Outline=1,Shadow=0,Alignment=2,MarginL=120,MarginR=120,MarginV=38'"
+            "force_style='FontName=Segoe UI,FontSize=9,PrimaryColour=&H00FFFFFF,"
+            "OutlineColour=&H00101828,BorderStyle=1,Outline=1,Shadow=0,"
+            "Alignment=2,MarginL=24,MarginR=24,MarginV=22'"
         )
         run([
             ffmpeg, "-hide_banner", "-loglevel", "warning", "-y", "-i", str(silent),
