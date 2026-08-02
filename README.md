@@ -17,8 +17,10 @@ nouvelle structure de preset avant exploitation.
 
 ## Documentation
 
-- [Notice visuelle complète 2026.1.1 - français (MKV, 11 min 12 s)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/dce-2026-1-guide-visuel-fr.mkv)
+- [Notice visuelle complète 2026.1.1 - français (MKV, 11 min 22 s)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/dce-2026-1-guide-visuel-fr.mkv)
   La piste française est sélectionnable et peut être désactivée dans le lecteur.
+- [Complete 2026.1.1 visual guide - English (MKV, 11 min 22 sec)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/dce-2026-1-guide-visual-en.mkv)
+  L'interface filmée et la piste de sous-titres sélectionnable sont en anglais.
 - [Vidéo de présentation 2026.1 - français](docs/media/dce-2026-1-presentation-fr.mp4)
 - [2026.1 presentation video - English](docs/media/dce-2026-1-presentation-en.mp4)
 - [Démarrage rapide FR](docs/QuickStart_DanteConfigEditorV3_FR.pdf)

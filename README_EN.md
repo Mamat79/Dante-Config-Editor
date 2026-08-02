@@ -16,7 +16,9 @@ final file remains recommended for each new preset structure before operation.
 
 ## Documentation
 
-- [Complete 2026.1.1 visual guide - French (MKV, 11 min 12 sec)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/dce-2026-1-guide-visuel-fr.mkv)
+- [Complete 2026.1.1 visual guide - English (MKV, 11 min 22 sec)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/dce-2026-1-guide-visual-en.mkv)
+  Both the recorded interface and the selectable subtitle track are in English.
+- [Notice visuelle complète 2026.1.1 - français (MKV, 11 min 22 s)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/dce-2026-1-guide-visuel-fr.mkv)
   The selectable French subtitle track can be disabled in the media player.
 - [2026.1 presentation video - English](docs/media/dce-2026-1-presentation-en.mp4)
 - [Vidéo de présentation 2026.1 - français](docs/media/dce-2026-1-presentation-fr.mp4)

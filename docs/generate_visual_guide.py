@@ -40,7 +40,7 @@ class Segment:
 
 
 SEGMENTS = (
-    Segment("00-intro", None, 0, 0, 8, title="Dante Config Editor 2026.1.1", subtitle="Notice visuelle complète"),
+    Segment("00-intro", None, 0, 0, 18, title="Dante Config Editor 2026.1.1", subtitle="Notice visuelle complète"),
     Segment("01-interface", "10-interface.mp4", 0, 32, 32),
     Segment("02-open-overview", "01-open-project.mp4", 0, 14, 56, hold_last_frame=True),
     Segment("03-machine-settings", "02-machines.mp4", 0, 45, 56),
@@ -63,7 +63,11 @@ SEGMENTS = (
 
 
 def localized_segments(language: str) -> tuple[Segment, ...]:
-    intro = "Notice visuelle complète" if language == "fr" else "Complete visual guide"
+    intro = (
+        "Éditeur hors ligne de presets XML Dante Controller"
+        if language == "fr"
+        else "Offline editor for Dante Controller XML presets"
+    )
     return tuple(
         replace(segment, subtitle=intro) if segment.name == "00-intro" else segment
         for segment in SEGMENTS
@@ -86,14 +90,31 @@ def make_title_card(path: Path, title: str, subtitle: str, language: str) -> Non
     image = Image.new("RGB", (WIDTH, HEIGHT), "#111827")
     draw = ImageDraw.Draw(image)
     draw.rectangle((0, 0, WIDTH, 12), fill="#2F8AF0")
-    draw.text((WIDTH // 2, 425), title, fill="#F8FAFC", font=font(68, True), anchor="mm")
-    draw.text((WIDTH // 2, 520), subtitle, fill="#AFC7E8", font=font(34), anchor="mm")
-    footer = (
-        "DCE travaille hors ligne sur des fichiers XML Dante."
+    logo_path = ROOT.parent / "Resources" / "Branding" / "silemio-logo.png"
+    if logo_path.exists():
+        with Image.open(logo_path) as opened:
+            logo = opened.convert("RGBA")
+            logo.thumbnail((190, 190), Image.Resampling.LANCZOS)
+            image.alpha_composite(logo, ((WIDTH - logo.width) // 2, 135)) if image.mode == "RGBA" else image.paste(
+                logo,
+                ((WIDTH - logo.width) // 2, 135),
+                logo,
+            )
+
+    draw.text((WIDTH // 2, 405), title, fill="#F8FAFC", font=font(64, True), anchor="mm")
+    draw.text((WIDTH // 2, 505), subtitle, fill="#AFC7E8", font=font(32), anchor="mm")
+    features = (
+        "Vue globale  ·  Renommage  ·  Patch  ·  Fusion  ·  Banques  ·  Validation"
         if language == "fr"
-        else "DCE works offline with Dante XML files."
+        else "Overview  ·  Renaming  ·  Patching  ·  Merge  ·  Banks  ·  Validation"
     )
-    draw.text((WIDTH // 2, 915), footer, fill="#7F93B2", font=font(24), anchor="mm")
+    draw.text((WIDTH // 2, 585), features, fill="#D7E4F7", font=font(26), anchor="mm")
+    footer = (
+        "Préparez et contrôlez vos projets sans connexion au réseau Dante."
+        if language == "fr"
+        else "Prepare and review projects without connecting to the Dante network."
+    )
+    draw.text((WIDTH // 2, 905), footer, fill="#7F93B2", font=font(24), anchor="mm")
     image.save(path)
 
 
@@ -199,10 +220,12 @@ def main() -> None:
             run([
                 ffmpeg, "-hide_banner", "-loglevel", "warning", "-y",
                 "-i", str(silent), "-i", str(args.srt),
-                "-map", "0:v:0", "-map", "1:0", "-c:v", "copy", "-c:s", "srt",
+                "-map", "0:v:0", "-map", "1:0",
+                "-c:v", "copy", "-c:s", "copy",
                 "-metadata:s:s:0", f"language={language}",
                 "-metadata:s:s:0", f"title={title}",
-                "-disposition:s:0", "default", "-an", str(args.output),
+                "-disposition:s:0", "default",
+                "-an", str(args.output),
             ])
         else:
             subtitle_filter = (

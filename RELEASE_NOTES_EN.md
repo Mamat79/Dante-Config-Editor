@@ -13,8 +13,9 @@ Audinate. It only works on offline files.
 
 ## Main changes
 
-- complete 11 min 12 sec French visual guide based on real application
-  recordings, with a selectable MKV subtitle track;
+- complete 11 min 22 sec French and English visual guides, each with an
+  introduction explaining DCE, an interface genuinely displayed in the stated
+  language, and a selectable MKV subtitle track;
 - automatic checks for newer Releases, with no visible error while offline,
   plus a manual check from the Help menu;
 - download of the matching Windows or macOS installer, SHA-256 verification,

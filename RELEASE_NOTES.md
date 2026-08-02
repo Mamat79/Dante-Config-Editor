@@ -13,8 +13,9 @@ travaille uniquement sur des fichiers hors ligne.
 
 ## Principales évolutions
 
-- notice visuelle française complète de 11 min 12 s, réalisée à partir de
-  captures réelles du logiciel, avec piste de sous-titres MKV sélectionnable ;
+- notices visuelles française et anglaise complètes de 11 min 22 s, avec une
+  introduction présentant DCE, une interface réellement affichée dans la
+  langue annoncée et une piste de sous-titres MKV sélectionnable ;
 - vérification automatique des nouvelles Releases, sans erreur visible lorsque
   l'ordinateur est hors ligne, et contrôle manuel depuis le menu Aide ;
 - téléchargement de l'installateur Windows ou macOS adapté, validation de son
