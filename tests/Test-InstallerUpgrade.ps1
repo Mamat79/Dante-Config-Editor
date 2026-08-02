@@ -1,6 +1,6 @@
 param(
     [string]$InstallerPath = "",
-    [string]$ExpectedVersion = "2026.1.0",
+    [string]$ExpectedVersion = "2026.1.1",
     [switch]$AllowCustomInstallLocation
 )
 
@@ -8,7 +8,7 @@ $ErrorActionPreference = "Stop"
 
 $root = Split-Path $PSScriptRoot -Parent
 if ([string]::IsNullOrWhiteSpace($InstallerPath)) {
-    $InstallerPath = Join-Path $root "dist\DanteConfigEditor2026_1_Installer.exe"
+    $InstallerPath = Join-Path $root "dist\DanteConfigEditor2026_1_1_Installer.exe"
 }
 
 $installer = (Resolve-Path -LiteralPath $InstallerPath -ErrorAction Stop).Path

@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Net.Http;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
@@ -77,6 +78,7 @@ public partial class MachineBankWindow : Window
         HeadingTextBlock.Text = Title;
         BankSourceLabel.Content = L("Banques affichées", "Displayed banks");
         BankColumn.Header = L("Banque", "Bank");
+        UpdateBanksButton.Content = L("Mettre à jour", "Update banks");
         GithubBanksButton.Content = L("Banques GitHub", "GitHub banks");
         MigrateBankButton.Content = L("Migrer une copie", "Migrate a copy");
         ChangeBankButton.Content = L("Changer de banque", "Change bank");
@@ -112,9 +114,12 @@ public partial class MachineBankWindow : Window
         ChangeBankButton.ToolTip = L(
             "Choisir un autre dossier de banque, local, partagé ou synchronisé.",
             "Choose another local, shared or synchronized bank folder.");
+        UpdateBanksButton.ToolTip = L(
+            "Vérifie le catalogue GitHub puis installe ou actualise les banques officielles dans Documents, avec contrôle SHA-256 et sauvegarde.",
+            "Checks the GitHub catalog, then installs or updates official banks in Documents with SHA-256 verification and a backup.");
         GithubBanksButton.ToolTip = L(
-            "Ouvre le catalogue public de banques DCE sur GitHub pour télécharger ou proposer une banque.",
-            "Opens the public DCE bank catalog on GitHub to download or submit a bank.");
+            "Ouvre la page publique des banques DCE sur GitHub.",
+            "Opens the public DCE bank page on GitHub.");
         MigrateBankButton.ToolTip = L(
             "Crée une banque au format 2026.1 dans un nouveau dossier, avec sauvegarde, sans modifier cette banque V3.6.",
             "Creates a 2026.1-format bank in a new folder with a backup, without modifying this V3.6 bank.");
@@ -772,6 +777,75 @@ public partial class MachineBankWindow : Window
         catch (Exception ex)
         {
             ShowError(L("Ouverture impossible", "Unable to open GitHub"), ex);
+        }
+    }
+
+    private async void UpdateBanksButton_Click(object sender, RoutedEventArgs e)
+    {
+        UpdateBanksButton.IsEnabled = false;
+        string originalContent = UpdateBanksButton.Content?.ToString() ?? string.Empty;
+        try
+        {
+            UpdateBanksButton.Content = L("Vérification…", "Checking…");
+            using HttpClient client = new() { Timeout = TimeSpan.FromMinutes(5) };
+            MachineBankOnlineUpdateService service = new(client);
+            MachineBankOnlineUpdatePlan plan = await service.CheckAsync();
+            if (plan.PendingCount == 0)
+            {
+                bool incompatible = plan.IncompatibleCount > 0;
+                MessageBox.Show(
+                    this,
+                    incompatible
+                        ? L(
+                            "Une banque en ligne exige une version plus récente de DCE. Mettez d'abord l'application à jour depuis le menu Aide.",
+                            "An online bank requires a newer DCE version. Update the application first from the Help menu.")
+                        : L(
+                            "Les banques officielles installées sont déjà à jour.",
+                            "The installed official banks are already up to date."),
+                    incompatible
+                        ? L("DCE doit être mis à jour", "DCE update required")
+                        : L("Banques à jour", "Banks are up to date"),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+                return;
+            }
+
+            string targetRoot = MachineBankDistributionService.IncludedBanksRootPath();
+            MessageBoxResult confirmation = MessageBox.Show(
+                this,
+                L(
+                    $"{plan.PendingCount} banque(s) officielle(s) seront installées ou actualisées dans :{Environment.NewLine}{targetRoot}{Environment.NewLine}{Environment.NewLine}L'ancienne copie sera sauvegardée. La banque personnelle ne sera pas modifiée.",
+                    $"{plan.PendingCount} official bank(s) will be installed or updated in:{Environment.NewLine}{targetRoot}{Environment.NewLine}{Environment.NewLine}The previous copy will be backed up. Your personal bank will not be modified."),
+                L("Mettre à jour les banques", "Update banks"),
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+            if (confirmation != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            Progress<string> progress = new(name =>
+                UpdateBanksButton.Content = L($"Mise à jour : {name}", $"Updating: {name}"));
+            MachineBankOnlineUpdateResult result = await service.ApplyAsync(plan, progress);
+            _initialBankPath = null;
+            RefreshBank();
+            MessageBox.Show(
+                this,
+                L(
+                    $"{result.UpdatedPaths.Count} banque(s) mise(s) à jour.{Environment.NewLine}{result.BackupPaths.Count} sauvegarde(s) conservée(s).",
+                    $"{result.UpdatedPaths.Count} bank(s) updated.{Environment.NewLine}{result.BackupPaths.Count} backup(s) retained."),
+                L("Mise à jour terminée", "Update complete"),
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+        catch (Exception exception)
+        {
+            ShowError(L("Mise à jour impossible", "Unable to update banks"), exception);
+        }
+        finally
+        {
+            UpdateBanksButton.Content = originalContent;
+            UpdateBanksButton.IsEnabled = true;
         }
     }
 

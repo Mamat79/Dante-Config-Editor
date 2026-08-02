@@ -42,6 +42,9 @@
                            ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" />
             </StackPanel>
             <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
+                <Button x:Name="UpdateBanksButton"
+                        Content="Mettre à jour"
+                        Click="UpdateBanksButton_Click" />
                 <Button x:Name="GithubBanksButton"
                         Content="Banques GitHub"
                         Style="{StaticResource DialogSecondaryButtonStyle}"

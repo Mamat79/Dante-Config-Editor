@@ -1459,7 +1459,7 @@ public static class LocalizationService
         Add(map, "Les changements de patch seront appliqués avec les autres réglages de cette fenêtre.", "Patch changes will be applied with the other settings in this window.");
 
         // Shell Windows 2026.1.
-        Add(map, "Dante Config Editor 2026.1", "Dante Config Editor 2026.1");
+        Add(map, "Dante Config Editor 2026.1.1", "Dante Config Editor 2026.1.1");
         Add(map, "Fichier", "File");
         Add(map, "Édition", "Edit");
         Add(map, "Affichage", "View");
@@ -1477,6 +1477,7 @@ public static class LocalizationService
         Add(map, "Thème clair", "Light theme");
         Add(map, "Démarrage rapide", "Quick start");
         Add(map, "Notes de version", "Release notes");
+        Add(map, "Rechercher les mises à jour", "Check for updates");
         Add(map, "Projet GitHub", "GitHub project");
         Add(map, "À propos de DCE", "About DCE");
         Add(map, "XML Dante", "Dante XML");

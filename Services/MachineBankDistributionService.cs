@@ -25,13 +25,15 @@ public static class MachineBankDistributionService
         string[] roots = string.IsNullOrWhiteSpace(rootPath)
             ?
             [
+                // La copie gérée dans Documents est actualisable sans droits
+                // administrateur et prend le pas sur le secours de l'application.
+                IncludedBanksRootPath(),
                 Path.Combine(AppContext.BaseDirectory, "Machine Banks"),
                 Path.GetFullPath(Path.Combine(
                     AppContext.BaseDirectory,
                     "..",
                     "Resources",
-                    "Machine Banks")),
-                IncludedBanksRootPath()
+                    "Machine Banks"))
             ]
             : [Path.GetFullPath(rootPath)];
         List<string> banks = [];

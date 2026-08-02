@@ -122,6 +122,7 @@ public partial class MainWindow : Window
         ApplyLanguageToVisualTree();
         _initializing = false;
         InitializeSupportReminder();
+        _ = CheckForApplicationUpdateAsync(silentWhenCurrent: true);
     }
 
     private void MainWindow_Closing(object? sender, WindowClosingEventArgs e)
@@ -1492,7 +1493,7 @@ public partial class MainWindow : Window
         if (path is null) return;
         try
         {
-            ReportExportService.ExportPdf(path, "Dante Config Editor 2026.1", _project.BuildReportText(_language));
+            ReportExportService.ExportPdf(path, "Dante Config Editor 2026.1.1", _project.BuildReportText(_language));
             SetStatus(LocalizationService.Text(_language, "Status.PdfExported"));
         }
         catch (Exception exception)
@@ -1574,13 +1575,90 @@ public partial class MainWindow : Window
         }
     }
 
+    private async void CheckUpdatesMenuItem_Click(object? sender, RoutedEventArgs e)
+    {
+        await CheckForApplicationUpdateAsync(silentWhenCurrent: false);
+    }
+
+    private async Task CheckForApplicationUpdateAsync(bool silentWhenCurrent)
+    {
+        MenuItem item = FindControl<MenuItem>("CheckUpdatesMenuItem")!;
+        item.IsEnabled = false;
+        try
+        {
+            using HttpClient client = new() { Timeout = TimeSpan.FromMinutes(15) };
+            ApplicationUpdateService service = new(client);
+            ApplicationUpdateRelease release = await service.GetLatestReleaseAsync();
+            Version current = ApplicationUpdateService.CurrentVersion;
+            if (release.Version <= current)
+            {
+                if (silentWhenCurrent)
+                {
+                    return;
+                }
+
+                await ShowInfoAsync(
+                    L("Aucune mise à jour", "No update"),
+                    L(
+                        $"DCE {current.ToString(3)} est à jour.",
+                        $"DCE {current.ToString(3)} is up to date."));
+                return;
+            }
+
+            bool download = await ConfirmAsync(
+                L("Mise à jour de DCE", "DCE update"),
+                L(
+                    $"DCE {release.Version.ToString(3)} est disponible. Télécharger maintenant l'installateur vérifié ?",
+                    $"DCE {release.Version.ToString(3)} is available. Download the verified installer now?"),
+                L("Télécharger", "Download"));
+            if (!download)
+            {
+                return;
+            }
+
+            item.Header = L("Téléchargement de la mise à jour…", "Downloading update…");
+            ApplicationUpdateDownload downloaded = await service.DownloadInstallerAsync(release);
+            bool launch = await ConfirmAsync(
+                L("Mise à jour prête", "Update ready"),
+                L(
+                    $"L'image disque a été téléchargée et son SHA-256 vérifié.{Environment.NewLine}{Environment.NewLine}{downloaded.PackagePath}{Environment.NewLine}{Environment.NewLine}L'ouvrir maintenant ?",
+                    $"The disk image was downloaded and its SHA-256 verified.{Environment.NewLine}{Environment.NewLine}{downloaded.PackagePath}{Environment.NewLine}{Environment.NewLine}Open it now?"),
+                L("Ouvrir", "Open"));
+            if (launch)
+            {
+                ApplicationUpdateService.LaunchInstaller(downloaded.PackagePath);
+            }
+        }
+        catch (Exception exception)
+        {
+            if (silentWhenCurrent)
+            {
+                DiagnosticLogService.Default.Write(
+                    "Update",
+                    "Automatic DCE update check failed.",
+                    exception);
+            }
+            else
+            {
+                await ShowErrorAsync(
+                    L("Mise à jour de DCE impossible", "Unable to update DCE"),
+                    exception);
+            }
+        }
+        finally
+        {
+            item.Header = L("Rechercher les mises à jour", "Check for updates");
+            item.IsEnabled = true;
+        }
+    }
+
     private async void AboutMenuItem_Click(object? sender, RoutedEventArgs e)
     {
         await ShowInfoAsync(
             L("À propos de DCE", "About DCE"),
             L(
                 """
-                Dante Config Editor 2026.1
+                Dante Config Editor 2026.1.1
 
                 Éditeur hors ligne de fichiers XML Dante Controller.
                 Projet tiers non officiel, sans affiliation avec Audinate.
@@ -1590,7 +1668,7 @@ public partial class MainWindow : Window
                 -------[]--
                 """,
                 """
-                Dante Config Editor 2026.1
+                Dante Config Editor 2026.1.1
 
                 Offline Dante Controller XML editor.
                 Unofficial third-party project, not affiliated with Audinate.
@@ -2433,7 +2511,7 @@ public partial class MainWindow : Window
         RefreshLiteralComboSelection("DeviceFilterCombo");
         RefreshLiteralComboSelection("PatchStatusCombo");
 
-        Title = L("Dante Config Editor 2026.1 - macOS", "Dante Config Editor 2026.1 - macOS");
+        Title = L("Dante Config Editor 2026.1.1 - macOS", "Dante Config Editor 2026.1.1 - macOS");
         FindControl<Button>("ThemeButton")!.Content = _darkTheme ? L("Thème clair", "Light theme") : L("Thème sombre", "Dark theme");
         FindControl<MenuItem>("ThemeMenuItem")!.Header =
             _darkTheme ? L("Thème clair", "Light theme") : L("Thème sombre", "Dark theme");

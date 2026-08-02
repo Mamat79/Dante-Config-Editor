@@ -29,7 +29,7 @@ RESOURCES="$CONTENTS/Resources"
 ICONSET="$STAGING/DanteEdit.iconset"
 DMG_STAGE="$STAGING/dmg"
 DIST="$ROOT/dist/macos"
-DMG="$DIST/DanteConfigEditor2026_1_macOS_${ARCH_LABEL}.dmg"
+DMG="$DIST/DanteConfigEditor2026_1_1_macOS_${ARCH_LABEL}.dmg"
 
 rm -rf "$STAGING"
 mkdir -p "$PUBLISH" "$MACOS" "$RESOURCES/Docs" "$ICONSET" "$DMG_STAGE" "$DIST"

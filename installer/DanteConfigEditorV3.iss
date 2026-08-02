@@ -1,5 +1,5 @@
 #define MyAppName "Dante Config Editor 2026.1"
-#define MyAppVersion "2026.1.0"
+#define MyAppVersion "2026.1.1"
 #define MyAppPublisher "Mamat"
 #define MyAppExeName "DanteConfigEditorV3.exe"
 #define MyAppShortcutName "DCE 2026.1"
@@ -15,7 +15,7 @@ DefaultGroupName=Dante Config Editor 2026.1
 DisableProgramGroupPage=no
 AllowNoIcons=yes
 OutputDir={#SourceRoot}\dist
-OutputBaseFilename=DanteConfigEditor2026_1_Installer
+OutputBaseFilename=DanteConfigEditor2026_1_1_Installer
 SetupIconFile={#SourceRoot}\DanteEdit.ico
 Compression=lzma2
 SolidCompression=yes
@@ -26,7 +26,7 @@ PrivilegesRequired=admin
 ; La génération 2026.1 possède une identité distincte et ne modifie aucune installation V3.6.
 UsedUserAreasWarning=no
 UninstallDisplayIcon={app}\{#MyAppExeName}
-VersionInfoVersion=2026.1.0.0
+VersionInfoVersion=2026.1.1.0
 VersionInfoCompany={#MyAppPublisher}
 VersionInfoDescription=Dante Config Editor 2026.1 installer
 VersionInfoProductName={#MyAppName}

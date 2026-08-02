@@ -41,7 +41,7 @@ function Remove-GeneratedPath {
 $project = Join-Path $root "DanteConfigEditorV3.csproj"
 $dist = Join-Path $root "dist"
 $payload = Join-Path $dist "installer_payload"
-$installer = Join-Path $dist "DanteConfigEditor2026_1_Installer.exe"
+$installer = Join-Path $dist "DanteConfigEditor2026_1_1_Installer.exe"
 $installerChecksum = "$installer.sha256"
 $script = Join-Path $PSScriptRoot "DanteConfigEditorV3.iss"
 $bankBuilder = Join-Path $root "tools\Build-BundledMachineBanks.ps1"

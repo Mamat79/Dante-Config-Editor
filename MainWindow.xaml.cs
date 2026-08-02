@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Windows;
 using System.Windows.Automation;
@@ -339,6 +340,7 @@ public partial class MainWindow : Window
         ApplyWorkspaceSection(WorkspaceSection.Home);
         UpdateResponsiveConfigurationLayout(ActualWidth, ActualHeight);
         InitializeSupportReminder();
+        _ = CheckForApplicationUpdateAsync(silentWhenCurrent: true);
     }
 
     private static void MigrateV36Settings()
@@ -1934,11 +1936,98 @@ public partial class MainWindow : Window
         }
     }
 
+    private async void CheckUpdatesMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        await CheckForApplicationUpdateAsync(silentWhenCurrent: false);
+    }
+
+    private async Task CheckForApplicationUpdateAsync(bool silentWhenCurrent)
+    {
+        CheckUpdatesMenuItem.IsEnabled = false;
+        try
+        {
+            using HttpClient client = new() { Timeout = TimeSpan.FromMinutes(15) };
+            ApplicationUpdateService service = new(client);
+            ApplicationUpdateRelease release = await service.GetLatestReleaseAsync();
+            Version current = ApplicationUpdateService.CurrentVersion;
+            if (release.Version <= current)
+            {
+                if (silentWhenCurrent)
+                {
+                    return;
+                }
+
+                MessageBox.Show(
+                    this,
+                    _language == UiLanguage.English
+                        ? $"DCE {current.ToString(3)} is up to date."
+                        : $"DCE {current.ToString(3)} est à jour.",
+                    _language == UiLanguage.English ? "No update" : "Aucune mise à jour",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+                return;
+            }
+
+            MessageBoxResult download = MessageBox.Show(
+                this,
+                _language == UiLanguage.English
+                    ? $"DCE {release.Version.ToString(3)} is available. Download the verified installer now?"
+                    : $"DCE {release.Version.ToString(3)} est disponible. Télécharger maintenant l'installateur vérifié ?",
+                _language == UiLanguage.English ? "DCE update" : "Mise à jour de DCE",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+            if (download != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            CheckUpdatesMenuItem.Header = _language == UiLanguage.English
+                ? "Downloading update…"
+                : "Téléchargement de la mise à jour…";
+            ApplicationUpdateDownload downloaded = await service.DownloadInstallerAsync(release);
+            MessageBoxResult launch = MessageBox.Show(
+                this,
+                _language == UiLanguage.English
+                    ? $"The installer was downloaded and its SHA-256 verified.{Environment.NewLine}{Environment.NewLine}{downloaded.PackagePath}{Environment.NewLine}{Environment.NewLine}Launch it now?"
+                    : $"L'installateur a été téléchargé et son SHA-256 vérifié.{Environment.NewLine}{Environment.NewLine}{downloaded.PackagePath}{Environment.NewLine}{Environment.NewLine}Le lancer maintenant ?",
+                _language == UiLanguage.English ? "Update ready" : "Mise à jour prête",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Information);
+            if (launch == MessageBoxResult.Yes)
+            {
+                ApplicationUpdateService.LaunchInstaller(downloaded.PackagePath);
+            }
+        }
+        catch (Exception exception)
+        {
+            if (silentWhenCurrent)
+            {
+                DiagnosticLogService.Default.Write(
+                    "Update",
+                    "La vérification automatique des mises à jour DCE a échoué.",
+                    exception);
+            }
+            else
+            {
+                ShowError(
+                    _language == UiLanguage.English
+                        ? "Unable to update DCE"
+                        : "Mise à jour de DCE impossible",
+                    exception);
+            }
+        }
+        finally
+        {
+            CheckUpdatesMenuItem.Header = LocalizeLiteral("Rechercher les mises à jour");
+            CheckUpdatesMenuItem.IsEnabled = true;
+        }
+    }
+
     private void AboutMenuItem_Click(object sender, RoutedEventArgs e)
     {
         string message = _language == UiLanguage.English
             ? """
-              Dante Config Editor 2026.1
+              Dante Config Editor 2026.1.1
 
               Offline Dante Controller XML editor.
               Unofficial third-party project, not affiliated with Audinate.
@@ -1948,7 +2037,7 @@ public partial class MainWindow : Window
               -------[]--
               """
             : """
-              Dante Config Editor 2026.1
+              Dante Config Editor 2026.1.1
 
               Éditeur hors ligne de fichiers XML Dante Controller.
               Projet tiers non officiel, sans affiliation avec Audinate.

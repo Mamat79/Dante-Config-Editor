@@ -711,6 +711,28 @@ public sealed class PatchWorkspaceUiContractTests
     }
 
     [Fact]
+    public void WindowsAndMacOfferManualAndAutomaticApplicationUpdates()
+    {
+        string windowsXaml = File.ReadAllText(RepositoryFile("MainWindow.xaml"));
+        string windowsCode = File.ReadAllText(RepositoryFile("MainWindow.xaml.cs"));
+        string macXaml = File.ReadAllText(RepositoryFile(
+            "src",
+            "DanteConfigEditor.Mac",
+            "MainWindow.axaml"));
+        string macCode = File.ReadAllText(RepositoryFile(
+            "src",
+            "DanteConfigEditor.Mac",
+            "MainWindow.axaml.cs"));
+
+        Assert.Contains("x:Name=\"CheckUpdatesMenuItem\"", windowsXaml, StringComparison.Ordinal);
+        Assert.Contains("CheckForApplicationUpdateAsync(silentWhenCurrent: true)", windowsCode, StringComparison.Ordinal);
+        Assert.Contains("ApplicationUpdateService", windowsCode, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"CheckUpdatesMenuItem\"", macXaml, StringComparison.Ordinal);
+        Assert.Contains("CheckForApplicationUpdateAsync(silentWhenCurrent: true)", macCode, StringComparison.Ordinal);
+        Assert.Contains("ApplicationUpdateService", macCode, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void PatchMatrixNavigatesBetweenRxSourcesAndTxDestinations()
     {
         string windowsXaml = File.ReadAllText(RepositoryFile("PatchWorkspaceView.xaml"));

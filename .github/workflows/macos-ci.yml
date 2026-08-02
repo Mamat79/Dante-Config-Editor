@@ -70,19 +70,19 @@ jobs:
       - name: Upload Apple Silicon DMG
         uses: actions/upload-artifact@v7
         with:
-          name: DanteConfigEditor2026-1-macOS-AppleSilicon
+          name: DanteConfigEditor2026-1-1-macOS-AppleSilicon
           path: |
-            ./dist/macos/DanteConfigEditor2026_1_macOS_AppleSilicon.dmg
-            ./dist/macos/DanteConfigEditor2026_1_macOS_AppleSilicon.dmg.sha256
+            ./dist/macos/DanteConfigEditor2026_1_1_macOS_AppleSilicon.dmg
+            ./dist/macos/DanteConfigEditor2026_1_1_macOS_AppleSilicon.dmg.sha256
           if-no-files-found: error
           retention-days: 14
 
       - name: Upload Intel DMG
         uses: actions/upload-artifact@v7
         with:
-          name: DanteConfigEditor2026-1-macOS-Intel
+          name: DanteConfigEditor2026-1-1-macOS-Intel
           path: |
-            ./dist/macos/DanteConfigEditor2026_1_macOS_Intel.dmg
-            ./dist/macos/DanteConfigEditor2026_1_macOS_Intel.dmg.sha256
+            ./dist/macos/DanteConfigEditor2026_1_1_macOS_Intel.dmg
+            ./dist/macos/DanteConfigEditor2026_1_1_macOS_Intel.dmg.sha256
           if-no-files-found: error
           retention-days: 14

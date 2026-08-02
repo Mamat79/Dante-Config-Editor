@@ -157,11 +157,15 @@ public sealed class MachineDialogUiContractTests
             "MachineBankDialog.axaml.cs"));
 
         Assert.Contains("x:Name=\"GithubBanksButton\"", windowsXaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"UpdateBanksButton\"", windowsXaml, StringComparison.Ordinal);
         Assert.Contains("Exporter la banque", windowsCode, StringComparison.Ordinal);
         Assert.Contains("Importer une banque", windowsCode, StringComparison.Ordinal);
         Assert.Contains("MachineBankDistributionService.GitHubBanksUrl", windowsCode, StringComparison.Ordinal);
+        Assert.Contains("MachineBankOnlineUpdateService", windowsCode, StringComparison.Ordinal);
         Assert.Contains("x:Name=\"GithubBanksButton\"", macXaml, StringComparison.Ordinal);
+        Assert.Contains("x:Name=\"UpdateBanksButton\"", macXaml, StringComparison.Ordinal);
         Assert.Contains("MachineBankDistributionService.GitHubBanksUrl", macCode, StringComparison.Ordinal);
+        Assert.Contains("MachineBankOnlineUpdateService", macCode, StringComparison.Ordinal);
     }
 
     [Fact]

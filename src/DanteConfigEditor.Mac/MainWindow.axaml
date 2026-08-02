@@ -6,7 +6,7 @@
         d:DesignWidth="1500"
         d:DesignHeight="930"
         x:Class="DanteConfigEditor.Mac.MainWindow"
-        Title="Dante Config Editor 2026.1 - macOS"
+        Title="Dante Config Editor 2026.1.1 - macOS"
         Width="1500"
         Height="930"
         MinWidth="1120"
@@ -109,6 +109,9 @@
                                   Click="FullGuideButton_Click" />
                         <MenuItem Header="Notes de version"
                                   Click="OpenReleaseNotesMenuItem_Click" />
+                        <MenuItem x:Name="CheckUpdatesMenuItem"
+                                  Header="Rechercher les mises à jour"
+                                  Click="CheckUpdatesMenuItem_Click" />
                         <Separator />
                         <MenuItem Header="Projet GitHub"
                                   Click="OpenGitHubMenuItem_Click" />
@@ -122,7 +125,7 @@
 
                 <Grid Grid.Row="1" ColumnDefinitions="*,Auto,Auto,120,Auto" ColumnSpacing="10">
                     <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="Dante Config Editor 2026.1" FontSize="20" FontWeight="Bold" />
+                    <TextBlock Text="Dante Config Editor 2026.1.1" FontSize="20" FontWeight="Bold" />
                     <TextBlock x:Name="FilePathText" Classes="muted" Text="Aucun fichier ouvert" TextTrimming="CharacterEllipsis" />
                     </StackPanel>
                     <TextBlock x:Name="DirtyStateText" Grid.Column="1" VerticalAlignment="Center" Foreground="{DynamicResource MutedTextBrush}" Text="Non modifié" />
