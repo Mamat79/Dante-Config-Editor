@@ -13,6 +13,11 @@ Audinate. It only works on offline files.
 
 ## Main changes
 
+- clarified visual identity: `Dante Config Editor` remains the primary product
+  name, while `SiLeMI/O`, `By Mamat` and the fader form a compact signature in
+  the footer and About dialog;
+- fixed contrast for menus, submenus and context menus in light and dark themes
+  on Windows and macOS;
 - complete 11 min 22 sec French and English visual guides, each with an
   introduction explaining DCE, an interface genuinely displayed in the stated
   language, and a selectable MKV subtitle track;

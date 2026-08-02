@@ -13,6 +13,11 @@ travaille uniquement sur des fichiers hors ligne.
 
 ## Principales évolutions
 
+- identité visuelle clarifiée : `Dante Config Editor` reste le nom principal,
+  tandis que `SiLeMI/O`, `By Mamat` et le fader forment une signature compacte
+  dans le pied de page et dans À propos ;
+- contraste corrigé pour les menus, sous-menus et menus contextuels dans les
+  thèmes clair et sombre sur Windows et macOS ;
 - notices visuelles française et anglaise complètes de 11 min 22 s, avec une
   introduction présentant DCE, une interface réellement affichée dans la
   langue annoncée et une piste de sous-titres MKV sélectionnable ;

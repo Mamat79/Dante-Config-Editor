@@ -22,6 +22,11 @@ Toutes les dates utilisent le calendrier ISO. Les versions antérieures à
 
 ### Modifié
 
+- le nom `Dante Config Editor` redevient l'identité principale du bandeau et
+  de la fenêtre ; la marque `SiLeMI/O`, la signature et le fader restent
+  visibles de façon compacte dans le pied et dans la fenêtre À propos ;
+- les menus principaux, sous-menus et menus contextuels conservent désormais
+  un contraste lisible dans les thèmes clair et sombre sur Windows et macOS ;
 - la matrice initialise maintenant RX et TX avec deux machines distinctes
   lorsqu'une inversion valide est possible ; `FLIP TX/RX` signale clairement
   une sélection identique au lieu d'annoncer un succès sans effet visible ;
