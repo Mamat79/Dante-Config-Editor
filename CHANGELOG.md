@@ -7,8 +7,8 @@ Toutes les dates utilisent le calendrier ISO. Les versions antérieures à
 
 ### Ajouté
 
-- notices visuelles française et anglaise de 11 min 12 s fondées sur des
-  captures réelles de l'application, avec sous-titres intégrés ;
+- notice visuelle française de 11 min 12 s fondée sur des captures réelles de
+  l'application, avec piste de sous-titres sélectionnable dans un MKV ;
 - vérification automatique et silencieuse de la dernière Release GitHub au
   démarrage sur Windows et macOS ;
 - commande `Aide > Rechercher les mises à jour` pour vérifier manuellement,

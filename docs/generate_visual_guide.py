@@ -36,6 +36,7 @@ class Segment:
     hold_last_frame: bool = False
     title: str | None = None
     subtitle: str | None = None
+    crop: str | None = None
 
 
 SEGMENTS = (
@@ -43,7 +44,10 @@ SEGMENTS = (
     Segment("01-interface", "10-interface.mp4", 0, 32, 32),
     Segment("02-open-overview", "01-open-project.mp4", 0, 14, 56, hold_last_frame=True),
     Segment("03-machine-settings", "02-machines.mp4", 0, 45, 56),
-    Segment("04-machine-list", "11-renaming.mp4", 0, 40, 40),
+    Segment("04-machine-list", "11-renaming.mp4", 0, 24, 24),
+    # DCE est réduit pendant cette partie de la capture. Le recadrage conserve
+    # uniquement ses fenêtres et masque le bureau Codex situé derrière.
+    Segment("04-machine-detail", "11-renaming.mp4", 24, 16, 16, crop="1264:812:140:132"),
     Segment("05-bank", "03-bank.mp4", 0, 45, 56),
     Segment("06-project", "09-project-help.mp4", 0, 40, 40),
     Segment("07-matrix", "04-patch-matrix.mp4", 0, 65, 96),
@@ -94,7 +98,11 @@ def make_title_card(path: Path, title: str, subtitle: str, language: str) -> Non
 
 
 def video_filter(segment: Segment) -> str:
+    # Les captures Windows contiennent une barre des tâches de 48 px. Elle est
+    # retirée avant la mise à l'échelle, sans étirer l'image restante.
+    source_crop = segment.crop or "iw:ih-48:0:0"
     common = (
+        f"crop={source_crop},"
         f"scale={WIDTH}:{HEIGHT}:force_original_aspect_ratio=decrease,"
         f"pad={WIDTH}:{HEIGHT}:(ow-iw)/2:(oh-ih)/2:color=black,"
         f"fps={FPS},format=yuv420p"
@@ -185,17 +193,29 @@ def main() -> None:
             "-c", "copy", str(silent),
         ])
 
-        subtitle_filter = (
-            f"subtitles=filename='{escape_subtitle_path(args.srt)}':"
-            "force_style='FontName=Segoe UI,FontSize=9,PrimaryColour=&H00FFFFFF,"
-            "OutlineColour=&H00101828,BorderStyle=1,Outline=1,Shadow=0,"
-            "Alignment=2,MarginL=24,MarginR=24,MarginV=22'"
-        )
-        run([
-            ffmpeg, "-hide_banner", "-loglevel", "warning", "-y", "-i", str(silent),
-            "-vf", subtitle_filter, "-an", "-c:v", "libx264", "-preset", "veryfast",
-            "-crf", "20", "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(args.output),
-        ])
+        if args.output.suffix.lower() == ".mkv":
+            language = "fra" if args.language == "fr" else "eng"
+            title = "Français" if args.language == "fr" else "English"
+            run([
+                ffmpeg, "-hide_banner", "-loglevel", "warning", "-y",
+                "-i", str(silent), "-i", str(args.srt),
+                "-map", "0:v:0", "-map", "1:0", "-c:v", "copy", "-c:s", "srt",
+                "-metadata:s:s:0", f"language={language}",
+                "-metadata:s:s:0", f"title={title}",
+                "-disposition:s:0", "default", "-an", str(args.output),
+            ])
+        else:
+            subtitle_filter = (
+                f"subtitles=filename='{escape_subtitle_path(args.srt)}':"
+                "force_style='FontName=Segoe UI,FontSize=9,PrimaryColour=&H00FFFFFF,"
+                "OutlineColour=&H00101828,BorderStyle=1,Outline=1,Shadow=0,"
+                "Alignment=2,MarginL=24,MarginR=24,MarginV=22'"
+            )
+            run([
+                ffmpeg, "-hide_banner", "-loglevel", "warning", "-y", "-i", str(silent),
+                "-vf", subtitle_filter, "-an", "-c:v", "libx264", "-preset", "veryfast",
+                "-crf", "20", "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(args.output),
+            ])
 
     verify_duration(args.output, expected_duration)
     digest = hashlib.sha256(args.output.read_bytes()).hexdigest()

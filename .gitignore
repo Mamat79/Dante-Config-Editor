@@ -37,6 +37,7 @@ __pycache__/
 # des chemins de travail. Les videos finales et leurs sommes sont publiees.
 docs/media/v3.3/
 !docs/media/*.mp4.sha256
+!docs/media/*.mkv.sha256
 docs/media/v*/
 docs/media/dce-v*-presentation-*
 
@@ -44,6 +45,7 @@ docs/media/dce-v*-presentation-*
 # restent locaux dans Video Drafts ; seules les empreintes sont versionnees.
 docs/media/dce-2026-1-guide-visuel-*.mp4
 docs/media/dce-2026-1-guide-visual-*.mp4
+docs/media/dce-2026-1-guide-visuel-*.mkv
 docs/media/*.srt
 
 # OS files

@@ -17,8 +17,8 @@ nouvelle structure de preset avant exploitation.
 
 ## Documentation
 
-- [Notice visuelle complète 2026.1.1 - français (11 min 12 s)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/dce-2026-1-guide-visuel-fr.mp4)
-- [Complete 2026.1.1 visual guide - English (11 min 12 sec)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/dce-2026-1-guide-visual-en.mp4)
+- [Notice visuelle complète 2026.1.1 - français (MKV, 11 min 12 s)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/dce-2026-1-guide-visuel-fr.mkv)
+  La piste française est sélectionnable et peut être désactivée dans le lecteur.
 - [Vidéo de présentation 2026.1 - français](docs/media/dce-2026-1-presentation-fr.mp4)
 - [2026.1 presentation video - English](docs/media/dce-2026-1-presentation-en.mp4)
 - [Démarrage rapide FR](docs/QuickStart_DanteConfigEditorV3_FR.pdf)
