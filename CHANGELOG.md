@@ -5,6 +5,13 @@ Toutes les dates utilisent le calendrier ISO. Les versions antérieures à
 
 ## [2026.1.0] - 2026-07-29
 
+### Banque communautaire - mise à jour du 2026-08-02
+
+- ajout des rôles assainis Glensound Paradiso 32x32 et Tieline Gateway 16x16 ;
+- la banque communautaire contient désormais 43 modèles illustrés, soit 45
+  modèles fournis avec les deux rôles génériques ;
+- correction du contrôle de réussite du script de reconstruction des banques.
+
 ### Modifié
 
 - promotion de 2026.1 en version officielle sans changer son périmètre métier ;

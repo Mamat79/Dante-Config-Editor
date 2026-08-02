@@ -18,10 +18,10 @@ ce dépôt ne constitue pas une validation d'import par Dante Controller.
 
 ### Banque communautaire
 
-- **DCE Community Devices 2026.1** : 41 modèles illustrés provenant de
+- **DCE Community Devices 2026.1** : 43 modèles illustrés provenant de
   configurations représentatives. La banque couvre notamment Allen & Heath,
   Audinate, Clear-Com, d&b, Fohhn, Glensound, Lab Gruppen, Lake, Powersoft,
-  RAMI, RDL, RME, Sennheiser, Shure, TASCAM et Yamaha. Les capacités vont de
+  RAMI, RDL, RME, Sennheiser, Shure, TASCAM, Tieline et Yamaha. Les capacités vont de
   0 à 144 canaux TX ou RX et tous les labels sont génériques.
 
 Les identités matérielles, paramètres réseau et abonnements du projet source
@@ -44,7 +44,7 @@ projet réel.
 | Banque | Contenu | Téléchargement | SHA-256 |
 |---|---|---|---|
 | DCE Generic Roles 2026.1 | Rôles génériques 8x8 et 32x32 | [Télécharger](DCE_Generic_Roles_2026_1.dce-bank.zip) | `0b07af7c63276e3648a03626120b0ba9bbc4b469e67484f0fd8b8cb75d3ea27b` |
-| DCE Community Devices 2026.1 | 41 modèles illustrés et assainis | [Télécharger](DCE_Community_Devices_2026_1.dce-bank.zip) | `67fe30378086240b0939ece5d7c7b74e93dfe94d59d53b3561b03e1433a0fb2a` |
+| DCE Community Devices 2026.1 | 43 modèles illustrés et assainis | [Télécharger](DCE_Community_Devices_2026_1.dce-bank.zip) | `77a0007bf123252fdfe82ccaf96261a89b67ca47e0502299f368d877ebf88fe0` |
 
 ### Partager une banque
 
@@ -82,10 +82,10 @@ repository is not proof of a successful Dante Controller import.
 
 ### Community bank
 
-- **DCE Community Devices 2026.1**: 41 illustrated templates identified from
+- **DCE Community Devices 2026.1**: 43 illustrated templates identified from
   representative configurations. The bank covers Allen & Heath, Audinate,
   Clear-Com, d&b, Fohhn, Glensound, Lab Gruppen, Lake, Powersoft, RAMI, RDL,
-  RME, Sennheiser, Shure, TASCAM, and Yamaha, among others. Capacities range
+  RME, Sennheiser, Shure, TASCAM, Tieline, and Yamaha, among others. Capacities range
   from 0 to 144 Tx or Rx channels and all channel labels are generic.
 
 Hardware identities, network settings and source-project subscriptions were
@@ -106,7 +106,7 @@ before using them in a real project.
 | Bank | Contents | Download | SHA-256 |
 |---|---|---|---|
 | DCE Generic Roles 2026.1 | Generic 8x8 and 32x32 roles | [Download](DCE_Generic_Roles_2026_1.dce-bank.zip) | `0b07af7c63276e3648a03626120b0ba9bbc4b469e67484f0fd8b8cb75d3ea27b` |
-| DCE Community Devices 2026.1 | 41 illustrated sanitized templates | [Download](DCE_Community_Devices_2026_1.dce-bank.zip) | `67fe30378086240b0939ece5d7c7b74e93dfe94d59d53b3561b03e1433a0fb2a` |
+| DCE Community Devices 2026.1 | 43 illustrated sanitized templates | [Download](DCE_Community_Devices_2026_1.dce-bank.zip) | `77a0007bf123252fdfe82ccaf96261a89b67ca47e0502299f368d877ebf88fe0` |
 
 ### Share a bank
 

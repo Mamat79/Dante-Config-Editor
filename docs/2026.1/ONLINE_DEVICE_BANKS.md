@@ -9,7 +9,7 @@ L'installateur Windows permet déjà de choisir séparément :
 - l'installation de `DCE Generic Roles 2026.1` ;
 - l'installation de `DCE Community Devices 2026.1`.
 
-La banque communautaire 2026.1 contient 41 modèles illustrés et assainis. Les
+La banque communautaire 2026.1 contient 43 modèles illustrés et assainis. Les
 descriptions françaises et anglaises sont affichées selon la langue active.
 
 Chaque banque fournie est copiée dans un dossier distinct. Un dossier existant

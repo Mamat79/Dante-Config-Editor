@@ -96,7 +96,7 @@ crée une instance indépendante ; elle ne lie pas le projet au modèle source.
 Les identités matérielles, IP, flows et subscriptions ne sont pas recopiés par
 défaut. Les banques `DCE Generic Roles 2026.1` et
 `DCE Community Devices 2026.1` sont intégrées à l'application. Elles
-fournissent 43 modèles, dont 41 modèles communautaires illustrés et assainis.
+fournissent 45 modèles, dont 43 modèles communautaires illustrés et assainis.
 La fenêtre affiche désormais en une seule liste dédupliquée la banque
 personnelle et les banques fournies. Le sélecteur permet aussi d'isoler une
 banque ; la colonne `Banque` indique l'origine de chaque modèle. Les modèles

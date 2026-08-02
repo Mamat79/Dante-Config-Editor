@@ -91,7 +91,7 @@ A bank holds reusable and shareable templates. Insertion creates an independent
 instance and does not bind a project to the source template. Hardware identity,
 IP configuration, flows, and subscriptions are not copied by default.
 `DCE Generic Roles 2026.1` and `DCE Community Devices 2026.1` are bundled with
-the application. Together they provide 43 templates, including 41 illustrated,
+the application. Together they provide 45 templates, including 43 illustrated,
 sanitized community templates. The Devices page lets users select a bank, add
 a template to the project, or manage its contents. The window now combines the
 personal and bundled banks in one deduplicated list. A selector can isolate one
