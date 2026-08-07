@@ -1,6 +1,23 @@
-# Dante Config Editor 2026.1
+# Dante Config Editor
+
+## Dernière version (accès rapide)
+
+**Version stable : [DCE v2026.1.1](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.1.1)**  
+Téléchargement direct :
+
+- [Windows x64 Installer (.exe)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/DanteConfigEditor2026_1_1_Installer.exe)
+- [macOS Apple Silicon (.dmg)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/DanteConfigEditor2026_1_1_macOS_AppleSilicon.dmg)
+- [macOS Intel (.dmg)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/DanteConfigEditor2026_1_1_macOS_Intel.dmg)
+- [Sommes SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/SHA256SUMS.txt)
 
 [English documentation](README_EN.md)
+
+Version 2026.1.1 officielle pour Windows et macOS. Le code publié se trouve dans `main`.
+
+**Version stable : [Release 2026.1.1 Windows et macOS](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.1.1)**
+
+> **Statut : v2026.1.1 officielle. Outil tiers non officiel Audinate.**
+> Cette version peut encore contenir des bugs. La V3.3 reste accessible comme version historique dans les Releases GitHub. Travaillez toujours sur une copie et validez le XML généré dans les outils Dante officiels.
 
 Éditeur local et hors ligne de presets XML pour Dante Controller, développé
 par Mamat avec l’aide d’agents de développement.
@@ -10,7 +27,7 @@ par Mamat avec l’aide d’agents de développement.
 > pilote aucun réseau Dante et n’utilise ni SDK ni API Audinate. Travaillez sur
 > une copie et contrôlez le XML final dans Dante Controller avant exploitation.
 
-La version 2026.1 et ses XML modifiés ont été importés avec succès dans Dante
+La version 2026.1.1 et ses XML modifiés ont été importés avec succès dans Dante
 Controller par le mainteneur. Les tests structurels et sémantiques complètent
 ces essais réels. Un contrôle du fichier final reste recommandé pour chaque
 nouvelle structure de preset avant exploitation.
@@ -223,12 +240,6 @@ Artefact : `DCE-2026.1.1-Windows-Installer`
 
 Fichier : `DanteConfigEditor2026_1_1_Installer.exe`
 
-L’installateur autonome inclut .NET 8 et les notices FR/EN. Le dossier proposé
-est `C:\Program Files\Dante Config Editor 2026.1\`. L’AppId, les
-raccourcis et le profil `%LOCALAPPDATA%\DanteConfigEditor2026.1` sont distincts
-de la V3.6. Désinstaller DCE 2026.1 ne supprime ni XML, ni projet, ni banque, ni
-profil V3.6.
-
 ### macOS
 
 - `DanteConfigEditor2026_1_1_macOS_AppleSilicon.dmg`
@@ -286,3 +297,5 @@ Merci à Charles Bouticourt pour l’idée de la fonction de formation
 **By Mamat**<br>
 *et ses agents*<br>
 `-------[]--`
+
+

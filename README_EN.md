@@ -1,17 +1,34 @@
-# Dante Config Editor 2026.1
+# Dante Config Editor
+
+## Stable release (quick access)
+
+**Stable version: [DCE v2026.1.1](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.1.1)**  
+Direct download:
+
+- [Windows x64 Installer (.exe)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/DanteConfigEditor2026_1_1_Installer.exe)
+- [macOS Apple Silicon (.dmg)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/DanteConfigEditor2026_1_1_macOS_AppleSilicon.dmg)
+- [macOS Intel (.dmg)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/DanteConfigEditor2026_1_1_macOS_Intel.dmg)
+- [SHA-256 checksums](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/SHA256SUMS.txt)
 
 [Documentation française](README.md)
 
-A local, offline Dante Controller preset XML editor developed by Mamat with
-the assistance of development agents.
+Version 2026.1.1 is the official Windows and macOS version. Published source is available on `main`.
+
+**Stable version: [2026.1.1 Release for Windows and macOS](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.1.1)**
+
+> **Status: official v2026.1.1 release. Unofficial third-party tool, not affiliated with Audinate.**
+> This software may still contain bugs. V3.3 remains available as a historical release. Always work on a copy and validate generated XML with official Dante tools.
+
+A local, offline Dante Controller preset XML editor developed by
+Mamat with assistance from development agents.
 
 > **Status: official release published from the `main` branch.**
 > DCE is an unofficial third-party tool and is not affiliated with Audinate.
 > It does not control a live Dante network and uses no Audinate SDK or API.
 > Work on a copy and review the final XML in Dante Controller before operation.
 
-The maintainer successfully imported 2026.1 output into Dante Controller.
-Structural and semantic tests complement those real imports. Reviewing the
+The maintainer successfully imported 2026.1.1 output into Dante Controller.
+Structural and semantic tests complement these real imports. Reviewing the
 final file remains recommended for each new preset structure before operation.
 
 ## Documentation
@@ -209,13 +226,6 @@ Artifact: `DCE-2026.1.1-Windows-Installer`
 
 File: `DanteConfigEditor2026_1_1_Installer.exe`
 
-The self-contained installer includes .NET 8 and the French/English guides.
-Its default folder is
-`C:\Program Files\Dante Config Editor 2026.1\`. Its AppId, shortcuts, and
-`%LOCALAPPDATA%\DanteConfigEditor2026.1` profile are separate from V3.6.
-Uninstalling DCE 2026.1 does not remove XML files, projects, banks, or the V3.6
-profile.
-
 ### macOS
 
 - `DanteConfigEditor2026_1_1_macOS_AppleSilicon.dmg`
@@ -270,3 +280,5 @@ Thanks to Charles Bouticourt for the `Atomic Bomb` training-function idea.
 **By Mamat**<br>
 *et ses agents*<br>
 `-------[]--`
+
+
