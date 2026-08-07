@@ -7,6 +7,10 @@ Toutes les dates utilisent le calendrier ISO. Les versions antérieures à
 
 ### Ajouté
 
+- présentations courtes française et anglaise de 1 min 20 s, destinées à
+  présenter rapidement DCE sur GitHub et les forums spécialisés ;
+- variante assainie `LM 44 - RX only` avec 0 TX et 4 RX, en complément du rôle
+  LM 44 8 TX / 4 RX déjà fourni ;
 - notices visuelles française et anglaise de 11 min 22 s, avec une introduction
   expliquant le rôle de DCE, des interfaces réellement affichées dans chaque
   langue et une piste de sous-titres sélectionnable dans chaque MKV ;
@@ -39,6 +43,8 @@ Toutes les dates utilisent le calendrier ISO. Les versions antérieures à
   secours livrée dans le dossier de l'application ;
 - ajout des modèles assainis Glensound Paradiso 32x32 et Tieline Gateway 16x16,
   portant la banque communautaire à 43 modèles et l'ensemble fourni à 45.
+- la mise à jour de banque du 2026-08-07 porte la banque communautaire à 44
+  modèles et l'ensemble fourni à 46, sans modifier la banque personnelle.
 
 ## [2026.1.0] - 2026-07-29
 

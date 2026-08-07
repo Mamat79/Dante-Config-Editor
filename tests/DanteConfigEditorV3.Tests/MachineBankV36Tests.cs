@@ -587,12 +587,12 @@ public sealed class MachineBankV36Tests
             .OrderBy(item => item.TemplateName, StringComparer.Ordinal)
             .ToArray();
 
-        Assert.Equal(43, communityTemplates.Length);
-        Assert.Equal(43, installedCommunityTemplates.Length);
+        Assert.Equal(44, communityTemplates.Length);
+        Assert.Equal(44, installedCommunityTemplates.Length);
         Assert.Equal(
             communityTemplates.Length,
             communityTemplates
-                .Select(item => $"{item.Manufacturer}\0{item.Model}")
+                .Select(item => $"{item.Manufacturer}\0{item.Model}\0{item.TxCount}\0{item.RxCount}")
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .Count());
         Assert.Contains(communityTemplates, item =>

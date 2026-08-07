@@ -16,12 +16,12 @@ final file remains recommended for each new preset structure before operation.
 
 ## Documentation
 
+- [Short 2026.1.1 presentation - English (MP4, 1 min 20 sec)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/dce-2026-1-presentation-courte-en.mp4)
+- [Présentation rapide 2026.1.1 - français (MP4, 1 min 20 s)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/dce-2026-1-presentation-courte-fr.mp4)
 - [Complete 2026.1.1 visual guide - English (MKV, 10 min 27 sec)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/dce-2026-1-guide-visual-en.mkv)
   Both the recorded interface and the selectable subtitle track are in English.
 - [Notice visuelle complète 2026.1.1 - français (MKV, 11 min 11 s)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/dce-2026-1-guide-visuel-fr.mkv)
   The selectable French subtitle track can be disabled in the media player.
-- [2026.1 presentation video - English](docs/media/dce-2026-1-presentation-en.mp4)
-- [Vidéo de présentation 2026.1 - français](docs/media/dce-2026-1-presentation-fr.mp4)
 - [English quick start](docs/QuickStart_DanteConfigEditorV3_EN.pdf)
 - [Full English guide](docs/Notice_DanteConfigEditorV3_EN.pdf)
 - [Démarrage rapide FR](docs/QuickStart_DanteConfigEditorV3_FR.pdf)
@@ -93,8 +93,9 @@ A bank holds reusable and shareable templates. Insertion creates an independent
 instance and does not bind a project to the source template. Hardware identity,
 IP configuration, flows, and subscriptions are not copied by default.
 `DCE Generic Roles 2026.1` and `DCE Community Devices 2026.1` are bundled with
-the application. Together they provide 45 templates, including 43 illustrated,
-sanitized community templates. The Devices page lets users select a bank, add
+the application. Together they provide 46 templates, including 44 illustrated,
+sanitized community templates. The bank includes two distinct LM44 roles:
+`8 Tx / 4 Rx` and `0 Tx / 4 Rx`. The Devices page lets users select a bank, add
 a template to the project, or manage its contents. The window now combines the
 personal and bundled banks in one deduplicated list. A selector can isolate one
 bank, and the `Bank` column identifies each template's source. Bundled

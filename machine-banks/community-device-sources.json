@@ -335,6 +335,22 @@
       }
     },
     {
+      "key": "lake-lm44-rx-only",
+      "templateName": "LM 44 - RX only",
+      "manufacturer": "Lake",
+      "model": "LM 44",
+      "category": "Processeur",
+      "tags": ["processor", "Lake", "0x4", "RX only"],
+      "sourceMatchers": [
+        {"manufacturer": "Lake", "model": "LM 44", "txCount": 0, "rxCount": 4}
+      ],
+      "image": {
+        "mode": "preserve",
+        "reuseTemplateId": "b5084be2-21aa-4044-b3e1-f91bb83f091e",
+        "sourcePage": "https://mediadl.musictribe.com/download/webservice/labgruppen/LM44_Data_Sheet.pdf"
+      }
+    },
+    {
       "key": "powersoft-t-series",
       "templateName": "T Series",
       "manufacturer": "Powersoft",

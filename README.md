@@ -17,12 +17,12 @@ nouvelle structure de preset avant exploitation.
 
 ## Documentation
 
+- [Présentation rapide 2026.1.1 - français (MP4, 1 min 20 s)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/dce-2026-1-presentation-courte-fr.mp4)
+- [Short 2026.1.1 presentation - English (MP4, 1 min 20 sec)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/dce-2026-1-presentation-courte-en.mp4)
 - [Notice visuelle complète 2026.1.1 - français (MKV, 11 min 11 s)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/dce-2026-1-guide-visuel-fr.mkv)
   La piste française est sélectionnable et peut être désactivée dans le lecteur.
 - [Complete 2026.1.1 visual guide - English (MKV, 10 min 27 sec)](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.1.1/dce-2026-1-guide-visual-en.mkv)
   L'interface filmée et la piste de sous-titres sélectionnable sont en anglais.
-- [Vidéo de présentation 2026.1 - français](docs/media/dce-2026-1-presentation-fr.mp4)
-- [2026.1 presentation video - English](docs/media/dce-2026-1-presentation-en.mp4)
 - [Démarrage rapide FR](docs/QuickStart_DanteConfigEditorV3_FR.pdf)
 - [Notice complète FR](docs/Notice_DanteConfigEditorV3_FR.pdf)
 - [English quick start](docs/QuickStart_DanteConfigEditorV3_EN.pdf)
@@ -98,7 +98,8 @@ crée une instance indépendante ; elle ne lie pas le projet au modèle source.
 Les identités matérielles, IP, flows et subscriptions ne sont pas recopiés par
 défaut. Les banques `DCE Generic Roles 2026.1` et
 `DCE Community Devices 2026.1` sont intégrées à l'application. Elles
-fournissent 45 modèles, dont 43 modèles communautaires illustrés et assainis.
+fournissent 46 modèles, dont 44 modèles communautaires illustrés et assainis.
+La banque contient deux rôles LM44 distincts : `8 TX / 4 RX` et `0 TX / 4 RX`.
 La fenêtre affiche désormais en une seule liste dédupliquée la banque
 personnelle et les banques fournies. Le sélecteur permet aussi d'isoler une
 banque ; la colonne `Banque` indique l'origine de chaque modèle. Les modèles

@@ -422,6 +422,8 @@ Write-JsonFile -Path (Join-Path $genericBankRoot "bank.json") -Value $manifest
 Assert-CommunityBank `
     -BankDirectory $communityBankRoot `
     -SourceCatalogPath $communitySourceCatalogPath
+$communityProfileCount = @((Get-Content -LiteralPath $communitySourceCatalogPath -Raw |
+    ConvertFrom-Json).profiles).Count
 New-DeterministicZip -SourceDirectory $genericBankRoot -DestinationArchive $genericArchivePath
 New-DeterministicZip -SourceDirectory $communityBankRoot -DestinationArchive $communityArchivePath
 $genericArchiveHash = (
@@ -451,8 +453,8 @@ $catalog = [ordered]@{
             sha256 = $communityArchiveHash
             minimumDceVersion = "2026.1"
             language = "fr-en"
-            descriptionFr = "Quarante-trois modèles illustrés et assainis, sans identité matérielle, réseau, flow ni abonnement."
-            descriptionEn = "Forty-three illustrated sanitized templates without hardware identity, network settings, flows, or subscriptions."
+            descriptionFr = "$communityProfileCount modèles illustrés et assainis, sans identité matérielle, réseau, flow ni abonnement."
+            descriptionEn = "$communityProfileCount illustrated sanitized templates without hardware identity, network settings, flows, or subscriptions."
         }
     )
 }

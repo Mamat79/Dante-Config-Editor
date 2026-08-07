@@ -21,6 +21,8 @@ travaille uniquement sur des fichiers hors ligne.
 - notices visuelles française et anglaise complètes de 11 min 22 s, avec une
   introduction présentant DCE, une interface réellement affichée dans la
   langue annoncée et une piste de sous-titres MKV sélectionnable ;
+- présentations courtes française et anglaise de 1 min 20 s pour découvrir les
+  principaux parcours avant de consulter les notices complètes ;
 - vérification automatique des nouvelles Releases, sans erreur visible lorsque
   l'ordinateur est hors ligne, et contrôle manuel depuis le menu Aide ;
 - téléchargement de l'installateur Windows ou macOS adapté, validation de son
@@ -46,10 +48,12 @@ travaille uniquement sur des fichiers hors ligne.
   lecture seule ;
 - banque format 2 et migration V3.6 par copie vérifiée ;
 - vue globale des banques personnelle et fournies, avec déduplication de
-  `45` modèles uniques et protection en lecture seule des modèles fournis ;
+  `46` modèles uniques et protection en lecture seule des modèles fournis ;
+- banque communautaire portée à `44` modèles assainis, avec deux rôles Lake
+  LM44 distincts : `8 TX / 4 RX` et `RX seul (0 TX / 4 RX)` ;
 - sélection de machine partagée entre Machines, Patch, Easy Patch et
   l'inspecteur, conservée lors des changements de vue ;
-- accès direct à la vue globale des 45 modèles depuis Machines, sans sélecteur
+- accès direct à la vue globale des 46 modèles depuis Machines, sans sélecteur
   de banque redondant, avec une liste rapide compacte intégrée sous les actions
   globales ;
 - Actions globales aligné sur la hauteur du groupe Machine/Canaux, sans
@@ -126,7 +130,7 @@ Sur le preset synthétique de 200 machines avec 64 TX et 64 RX chacune :
 
 ## Validation automatisée
 
-- 435 tests Core/Windows réussis ;
+- 445 tests Core/Windows réussis ;
 - 22 tests Avalonia/macOS sans écran réussis ;
 - build Windows Release sans warning ;
 - corpus synthétique sauvegardé et comparé sémantiquement sans perte ;
@@ -143,7 +147,7 @@ les rapports techniques datés du dossier `docs/2026.1`.
 `DanteConfigEditor2026_1_1_Installer.exe` inclut le runtime .NET 8 et les
 notices bilingues. Le dossier proposé est
 `C:\Program Files\Dante Config Editor 2026.1\`.
-Les 45 modèles fournis sont intégrés dans le dossier de l'application. Les
+Les 46 modèles fournis sont intégrés dans le dossier de l'application. Les
 copies officielles mises à jour sont conservées dans Documents, sans remplacer
 la banque personnelle.
 

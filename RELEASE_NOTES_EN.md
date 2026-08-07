@@ -21,6 +21,8 @@ Audinate. It only works on offline files.
 - complete 11 min 22 sec French and English visual guides, each with an
   introduction explaining DCE, an interface genuinely displayed in the stated
   language, and a selectable MKV subtitle track;
+- short 1 min 20 sec French and English presentations for discovering the main
+  workflows before opening the complete guides;
 - automatic checks for newer Releases, with no visible error while offline,
   plus a manual check from the Help menu;
 - download of the matching Windows or macOS installer, SHA-256 verification,
@@ -44,11 +46,13 @@ Audinate. It only works on offline files.
 - searchable and exportable Validation Center;
 - XML profiles that can restrict an unknown structure or open it read-only;
 - format-2 device bank and verified copy-based V3.6 migration;
-- global view of personal and bundled banks, deduplicated to `45` unique
+- global view of personal and bundled banks, deduplicated to `46` unique
   templates, with bundled templates protected as read-only;
+- community bank expanded to `44` sanitized templates, with two separate Lake
+  LM44 roles: `8 TX / 4 RX` and `RX only (0 TX / 4 RX)`;
 - shared device selection across Machines, Patch, Easy Patch, and the
   inspector, preserved when switching views;
-- direct access to the global 45-template view from Devices, with no redundant
+- direct access to the global 46-template view from Devices, with no redundant
   bank selector and a compact quick-list bar integrated below global actions;
 - Global actions now matches the Device/Channels panel height and no longer
   needs an inner scrollbar in Network/audio on a standard display;
@@ -122,7 +126,7 @@ For the synthetic 200-device preset with 64 TX and 64 RX per device:
 
 ## Automated validation
 
-- 435 Core/Windows tests passed;
+- 445 Core/Windows tests passed;
 - 22 headless Avalonia/macOS tests passed;
 - Windows Release build completed without warnings;
 - synthetic corpus saved and semantically compared without loss;
@@ -139,7 +143,7 @@ under `docs/2026.1`.
 `DanteConfigEditor2026_1_1_Installer.exe` includes the .NET 8 runtime and
 bilingual guides. Its default folder is
 `C:\Program Files\Dante Config Editor 2026.1\`.
-All 45 bundled templates are installed in the application folder. Updated
+All 46 bundled templates are installed in the application folder. Updated
 official copies are stored in Documents without replacing the personal bank.
 
 ### macOS

@@ -17,7 +17,7 @@ public sealed class MachineBankGenerationContractTests
             .ToArray();
 
         Assert.Equal(1, catalog.RootElement.GetProperty("formatVersion").GetInt32());
-        Assert.Equal(43, profiles.Length);
+        Assert.Equal(44, profiles.Length);
         Assert.Equal(
             profiles.Length,
             profiles
@@ -29,7 +29,9 @@ public sealed class MachineBankGenerationContractTests
             profiles
                 .Select(profile =>
                     $"{profile.GetProperty("manufacturer").GetString()}\0" +
-                    profile.GetProperty("model").GetString())
+                    $"{profile.GetProperty("model").GetString()}\0" +
+                    $"{profile.GetProperty("sourceMatchers")[0].GetProperty("txCount").GetInt32()}\0" +
+                    profile.GetProperty("sourceMatchers")[0].GetProperty("rxCount").GetInt32())
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .Count());
         Assert.All(profiles, profile =>

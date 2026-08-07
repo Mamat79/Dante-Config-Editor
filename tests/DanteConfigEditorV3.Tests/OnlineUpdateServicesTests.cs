@@ -34,7 +34,7 @@ public sealed class OnlineUpdateServicesTests
         string backup = Assert.Single(result.BackupPaths);
         Assert.True(File.Exists(Path.Combine(backup, "old.txt")));
         Assert.Equal(
-            43,
+            44,
             new MachineBankRepository(existing).List().Count);
         Assert.True(File.Exists(Path.Combine(existing, ".dce-managed-bank.json")));
 

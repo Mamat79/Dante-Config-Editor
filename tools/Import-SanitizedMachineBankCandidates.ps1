@@ -414,7 +414,13 @@ function Get-ProfileImage {
         else {
             $legacyCommunityRoot
         }
-        $oldDirectory = Join-Path $existingBankRoot ("machines\" + $TemplateId)
+        $preservedTemplateId = [string](Get-OptionalPropertyValue `
+            -InputObject $image `
+            -Name "reuseTemplateId")
+        if ([string]::IsNullOrWhiteSpace($preservedTemplateId)) {
+            $preservedTemplateId = $TemplateId
+        }
+        $oldDirectory = Join-Path $existingBankRoot ("machines\" + $preservedTemplateId)
         $metadataPath = Join-Path $oldDirectory "machine.json"
         if (-not (Test-Path -LiteralPath $metadataPath -PathType Leaf)) {
             throw "L'image existante de $($Profile.templateName) est introuvable."
@@ -580,10 +586,12 @@ foreach ($profile in @($catalog.profiles)) {
         throw "Clé de profil absente ou dupliquée : '$key'."
     }
     $profileKeys[$key] = $true
+    $firstMatcher = @($profile.sourceMatchers)[0]
     $modelKey = (Get-NormalizedKey -Value ([string]$profile.manufacturer)) + "|" +
-        (Get-NormalizedKey -Value ([string]$profile.model))
+        (Get-NormalizedKey -Value ([string]$profile.model)) + "|" +
+        [int]$firstMatcher.txCount + "|" + [int]$firstMatcher.rxCount
     if ($modelKeys.ContainsKey($modelKey)) {
-        throw "Doublon fabricant/modèle refusé : $($profile.manufacturer) $($profile.model)."
+        throw "Doublon fabricant/modèle/canaux refusé : $($profile.manufacturer) $($profile.model)."
     }
     $modelKeys[$modelKey] = $true
 }

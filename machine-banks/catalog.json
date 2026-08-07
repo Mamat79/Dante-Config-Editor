@@ -16,11 +16,11 @@
       "id": "dce-community-devices-2026.1",
       "name": "DCE Community Devices 2026.1",
       "file": "DCE_Community_Devices_2026_1.dce-bank.zip",
-      "sha256": "77a0007bf123252fdfe82ccaf96261a89b67ca47e0502299f368d877ebf88fe0",
+      "sha256": "645123c2809a81cfc8898547d7d2e5c068e149acce62d40869a4c103f4be0249",
       "minimumDceVersion": "2026.1",
       "language": "fr-en",
-      "descriptionFr": "Quarante-trois modèles illustrés et assainis, sans identité matérielle, réseau, flow ni abonnement.",
-      "descriptionEn": "Forty-three illustrated sanitized templates without hardware identity, network settings, flows, or subscriptions."
+      "descriptionFr": "44 modèles illustrés et assainis, sans identité matérielle, réseau, flow ni abonnement.",
+      "descriptionEn": "44 illustrated sanitized templates without hardware identity, network settings, flows, or subscriptions."
     }
   ]
 }

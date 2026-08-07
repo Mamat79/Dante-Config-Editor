@@ -1,0 +1,36 @@
+{
+  "formatVersion": 2,
+  "templateId": "1080f68e-fc37-58a3-9815-b1d32d05e45d",
+  "templateName": "LM 44 - RX only",
+  "manufacturer": "Lake",
+  "model": "LM 44",
+  "description": "Rôle hors ligne assaini pour LM 44 - RX only, 0 TX / 4 RX. Les identifiants matériels, le réseau, les flows et les subscriptions ne sont jamais repris.",
+  "category": "Processeur",
+  "tags": [
+    "processor",
+    "Lake",
+    "0x4",
+    "RX only"
+  ],
+  "txCount": 0,
+  "rxCount": 4,
+  "sourcePresetVersion": "3.0.0",
+  "sourceXmlNamespace": "",
+  "createdByDceVersion": "2026.1",
+  "createdUtc": "2026-07-27T00:00:00+00:00",
+  "modifiedUtc": "2026-07-27T00:00:00+00:00",
+  "templateSha256": "A1367F9795D898598E4AE3AE88C8311E4F4E185715ADB9DD0B4D3E028F90D70C",
+  "imageFileName": "image.jpg",
+  "imageSha256": "39564F39CBDC19C6085DABE2D32F6FE701FED4AF645CCCBB545DF11D1289A2E3",
+  "catalogKey": "lake-lm44-rx-only",
+  "descriptionEn": "Sanitized offline role for LM 44 - RX only, 0 Tx / 4 Rx. Hardware identifiers, network settings, flows and subscriptions are never reused.",
+  "imageSourcePage": "https://mediadl.musictribe.com/download/webservice/labgruppen/LM44_Data_Sheet.pdf",
+  "imageSourceUrl": null,
+  "imageAttribution": "Publication approved by contributor - Lake",
+  "sourceSignature": {
+    "manufacturer": "Lake",
+    "model": "LM 44",
+    "txCount": 0,
+    "rxCount": 4
+  }
+}
