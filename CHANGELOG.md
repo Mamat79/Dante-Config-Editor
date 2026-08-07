@@ -45,6 +45,8 @@ Toutes les dates utilisent le calendrier ISO. Les versions antérieures à
   portant la banque communautaire à 43 modèles et l'ensemble fourni à 45.
 - la mise à jour de banque du 2026-08-07 porte la banque communautaire à 44
   modèles et l'ensemble fourni à 46, sans modifier la banque personnelle.
+- les présentations courtes affichent maintenant l'interface complète dans un
+  cadre fixe, sans mouvement des captures, et illustrent le renommage en série.
 
 ## [2026.1.0] - 2026-07-29
 

@@ -21,6 +21,8 @@ WIDTH = 1920
 HEIGHT = 1080
 FPS = 30
 FADE_SECONDS = 0.28
+SCREEN_BOX = (36, 118, 1540, 956)
+COPY_BOX = (1568, 118, 1884, 956)
 
 FONT_REGULAR = Path(r"C:\Windows\Fonts\segoeui.ttf")
 FONT_BOLD = Path(r"C:\Windows\Fonts\segoeuib.ttf")
@@ -41,7 +43,7 @@ class Scene:
 SCENES = (
     Scene(
         "intro",
-        7.0,
+        6.0,
         None,
         None,
         "Dante Config Editor",
@@ -51,7 +53,7 @@ SCENES = (
     ),
     Scene(
         "project",
-        9.0,
+        8.0,
         None,
         None,
         "Composez votre projet",
@@ -61,7 +63,7 @@ SCENES = (
     ),
     Scene(
         "overview",
-        9.0,
+        8.0,
         "overview.png",
         "overview.png",
         "Controle global instantane",
@@ -71,7 +73,7 @@ SCENES = (
     ),
     Scene(
         "devices",
-        10.0,
+        9.0,
         "machines.png",
         "devices.png",
         "Renommez sans perdre le patch",
@@ -80,8 +82,18 @@ SCENES = (
         ("Devices, Rx, and Tx channels are editable.", "Related subscriptions remain consistent."),
     ),
     Scene(
+        "series",
+        8.0,
+        "machines.png",
+        "devices.png",
+        "Renommage en serie",
+        "Series renaming",
+        ("Deux noms termines par un numero suffisent.", "Etirez la serie : les numeros continuent."),
+        ("Two names ending in a number are enough.", "Extend the series to continue numbering."),
+    ),
+    Scene(
         "patch",
-        10.0,
+        9.0,
         "patch-matrix.png",
         "patch.png",
         "Patchez comme vous preferez",
@@ -91,7 +103,7 @@ SCENES = (
     ),
     Scene(
         "bank",
-        9.0,
+        8.0,
         "device-bank.png",
         "device-bank.png",
         "Banques de machines",
@@ -101,7 +113,7 @@ SCENES = (
     ),
     Scene(
         "synoptic",
-        9.0,
+        8.0,
         "synoptic.png",
         "synoptic.png",
         "Documentez votre installation",
@@ -111,7 +123,7 @@ SCENES = (
     ),
     Scene(
         "validation",
-        9.0,
+        8.0,
         "validation.png",
         "validation.png",
         "Validez avant d'enregistrer",
@@ -153,23 +165,54 @@ def draw_brand(canvas: Image.Image) -> None:
     draw.text((166, 90), "By Mamat  -------[]--", fill="#9FB1CA", font=face(18))
 
 
-def cover_capture(path: Path) -> Image.Image:
+def fit_capture(path: Path, language: str) -> Image.Image:
     source = Image.open(path).convert("RGB")
-    # Les captures de documentation contiennent la barre de titre et le chemin
-    # du preset de test. La presentation courte cadre uniquement la zone utile.
-    top_cut = min(175, source.height // 5)
-    source = source.crop((0, top_cut, source.width, source.height))
-    target_ratio = WIDTH / HEIGHT
-    source_ratio = source.width / source.height
-    if source_ratio > target_ratio:
-        crop_width = int(source.height * target_ratio)
-        left = (source.width - crop_width) // 2
-        source = source.crop((left, 0, left + crop_width, source.height))
-    else:
-        crop_height = int(source.width / target_ratio)
-        top = (source.height - crop_height) // 2
-        source = source.crop((0, top, source.width, top + crop_height))
-    return source.resize((WIDTH, HEIGHT), Image.Resampling.LANCZOS)
+
+    # Certaines captures francaises affichent le chemin local du preset de
+    # demonstration. On masque uniquement cette ligne sans recadrer l'interface.
+    if language == "fr" and source.width >= 1800 and source.height >= 900:
+        draw = ImageDraw.Draw(source)
+        draw.rectangle((235, 98, 1525, 122), fill="#FFFFFF")
+        draw.text(
+            (245, 99),
+            "Projet de demonstration",
+            fill="#536273",
+            font=face(15),
+        )
+
+    x1, y1, x2, y2 = SCREEN_BOX
+    max_width = x2 - x1
+    max_height = y2 - y1
+    scale = min(max_width / source.width, max_height / source.height)
+    target = source.resize(
+        (round(source.width * scale), round(source.height * scale)),
+        Image.Resampling.LANCZOS,
+    )
+    frame = Image.new("RGB", (max_width, max_height), "#111B2A")
+    left = (max_width - target.width) // 2
+    top = (max_height - target.height) // 2
+    frame.paste(target, (left, top))
+    return frame
+
+
+def wrapped_lines(
+    draw: ImageDraw.ImageDraw,
+    text: str,
+    font: ImageFont.FreeTypeFont,
+    max_width: int,
+) -> list[str]:
+    lines: list[str] = []
+    current = ""
+    for word in text.split():
+        candidate = f"{current} {word}".strip()
+        if not current or draw.textlength(candidate, font=font) <= max_width:
+            current = candidate
+        else:
+            lines.append(current)
+            current = word
+    if current:
+        lines.append(current)
+    return lines
 
 
 def draw_copy(
@@ -188,14 +231,36 @@ def draw_copy(
             y += 54
         return
 
-    panel = (80, 720, 1840, 1010)
-    draw.rounded_rectangle(panel, radius=12, fill=(10, 17, 29, 232), outline="#506682", width=2)
-    draw.rectangle((80, 720, 92, 1010), fill="#2F8AF0")
-    draw.text((126, 758), title, fill="#FFFFFF", font=face(48, True))
-    y = 838
-    for line in lines:
-        draw.text((128, y), line, fill="#D6E0EF", font=face(31))
-        y += 47
+    x1, y1, x2, y2 = COPY_BOX
+    draw.rounded_rectangle((x1, y1, x2, y2), radius=10, fill="#111B2A", outline="#506682", width=2)
+    draw.rectangle((x1, y1, x1 + 8, y2), fill="#2F8AF0")
+    title_font = face(32, True)
+    body_font = face(23)
+    y = y1 + 42
+    for line in wrapped_lines(draw, title, title_font, x2 - x1 - 54):
+        draw.text((x1 + 28, y), line, fill="#FFFFFF", font=title_font)
+        y += 43
+    y += 26
+    for paragraph in lines:
+        for line in wrapped_lines(draw, paragraph, body_font, x2 - x1 - 54):
+            draw.text((x1 + 28, y), line, fill="#D6E0EF", font=body_font)
+            y += 34
+        y += 16
+
+
+def draw_series_example(canvas: Image.Image, language: str) -> None:
+    draw = ImageDraw.Draw(canvas)
+    x1, _, x2, _ = COPY_BOX
+    labels = ("Mic 01", "Mic 02", "Mic 03", "Mic 04", "Mic 05")
+    start_y = 520
+    for index, label in enumerate(labels):
+        y = start_y + index * 60
+        fill = "#DCE9F7" if index < 2 else "#D8F3E3"
+        outline = "#6B8BAE" if index < 2 else "#4DAA72"
+        draw.rounded_rectangle((x1 + 40, y, x2 - 40, y + 46), radius=6, fill=fill, outline=outline, width=2)
+        draw.text((x1 + 60, y + 9), label, fill="#132033", font=face(22, index >= 2))
+    arrow = "ETIRER" if language == "fr" else "EXTEND"
+    draw.text(((x1 + x2) // 2, 475), f"{arrow}  v", fill="#7EC5FF", font=face(20, True), anchor="ma")
 
 
 def draw_project_choices(canvas: Image.Image, language: str) -> None:
@@ -268,10 +333,16 @@ def make_slide(language: str, scene: Scene) -> Image.Image:
     capture_path = CAPTURES / language / capture_name
     if not capture_path.exists():
         raise FileNotFoundError(capture_path)
-    canvas = cover_capture(capture_path)
-    veil = Image.new("RGBA", canvas.size, (4, 10, 20, 22))
-    canvas = Image.alpha_composite(canvas.convert("RGBA"), veil).convert("RGB")
+    canvas = Image.new("RGB", (WIDTH, HEIGHT), "#0B1422")
+    draw_brand(canvas)
+    frame = fit_capture(capture_path, language)
+    x1, y1, x2, y2 = SCREEN_BOX
+    canvas.paste(frame, (x1, y1))
+    draw = ImageDraw.Draw(canvas)
+    draw.rounded_rectangle((x1 - 2, y1 - 2, x2 + 2, y2 + 2), radius=8, outline="#506682", width=2)
     draw_copy(canvas, title, lines)
+    if scene.key == "series":
+        draw_series_example(canvas, language)
     return canvas
 
 
@@ -292,9 +363,7 @@ def build(language: str) -> Path:
             slide = temp / f"slide-{index:02}.png"
             make_slide(language, scene).save(slide, optimize=True)
             segment = temp / f"segment-{index:02}.mp4"
-            frames = int(scene.duration * FPS)
             fade_out = max(0.0, scene.duration - FADE_SECONDS)
-            zoom_direction = "min(zoom+0.00020,1.025)" if index % 2 else "if(eq(on,1),1.025,max(zoom-0.00020,1.0))"
             command = [
                 ffmpeg,
                 "-y",
@@ -306,8 +375,6 @@ def build(language: str) -> Path:
                 str(slide),
                 "-vf",
                 (
-                    f"zoompan=z='{zoom_direction}':x='iw/2-(iw/zoom/2)':"
-                    f"y='ih/2-(ih/zoom/2)':d={frames}:s={WIDTH}x{HEIGHT}:fps={FPS},"
                     f"fade=t=in:st=0:d={FADE_SECONDS},"
                     f"fade=t=out:st={fade_out:.3f}:d={FADE_SECONDS},format=yuv420p"
                 ),
