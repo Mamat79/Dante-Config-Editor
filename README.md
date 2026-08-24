@@ -164,7 +164,7 @@ non prise en charge est désactivée ou refusée avec une explication.
 - **30 jours sans aucun rappel** au premier démarrage ;
 - après 30 jours, **DCE et toutes ses fonctions restent utilisables** ;
 - un rappel non bloquant apparaît simplement au lancement ;
-- une licence permanente à **29 €** supprime ce rappel ;
+- une licence permanente à **29 € TTC** supprime ce rappel ;
 - le code signé est vérifié localement et reste valable après les mises à jour.
 
 [Acheter une licence permanente avec Stripe](https://dce-license.mamat79-dce.workers.dev/buy)

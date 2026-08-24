@@ -37,7 +37,7 @@ Les vidéos MKV possèdent une piste de sous-titres sélectionnable et modifiabl
 
 - sélecteur de banques simplifié : une banque personnelle, une banque
   communautaire et une banque générique, sans anciennes générations en double ;
-- système de licence permanente signée à **29 €** ;
+- système de licence permanente signée à **29 € TTC** ;
 - 30 jours sans rappel, puis rappel de démarrage non bloquant ;
 - toutes les fonctions restent utilisables après les 30 jours ;
 - livraison automatique du code après un paiement Stripe réussi ;
@@ -88,7 +88,7 @@ Each MKV video contains a selectable and editable subtitle track.
 
 - simplified device-bank selector: one personal bank, one Community bank, and
   one Generic bank, without duplicate older generations;
-- **€29** signed permanent-license system;
+- **€29 including French VAT** signed permanent-license system;
 - 30 reminder-free days followed by a non-blocking startup reminder;
 - every feature remains usable after the 30-day period;
 - automatic code delivery after a successful Stripe payment;
