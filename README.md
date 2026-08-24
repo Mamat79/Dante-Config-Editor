@@ -125,7 +125,11 @@ non prise en charge est désactivée ou refusée avec une explication.
 
 ### Banques de machines
 
-- banques fournies, personnelles ou partagées ;
+- catalogue simplifié en trois sources : `Ma banque`, `DCE Community` et
+  `DCE Generic` ;
+- sélection automatique de la génération officielle la plus récente, sans
+  afficher les anciennes copies ni les doublons ;
+- banques personnelles ou partagées toujours préservées ;
 - recherche par fabricant, catégorie et capacités TX/RX ;
 - ajout de plusieurs rôles en une seule opération ;
 - modèles indépendants du projet après insertion ;

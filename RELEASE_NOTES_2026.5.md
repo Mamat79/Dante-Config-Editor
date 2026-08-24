@@ -35,6 +35,8 @@ Les vidéos MKV possèdent une piste de sous-titres sélectionnable et modifiabl
 
 ### Nouveautés 2026.5
 
+- sélecteur de banques simplifié : une banque personnelle, une banque
+  communautaire et une banque générique, sans anciennes générations en double ;
 - système de licence permanente signée à **29 €** ;
 - 30 jours sans rappel, puis rappel de démarrage non bloquant ;
 - toutes les fonctions restent utilisables après les 30 jours ;
@@ -84,6 +86,8 @@ Each MKV video contains a selectable and editable subtitle track.
 
 ### What is new in 2026.5
 
+- simplified device-bank selector: one personal bank, one Community bank, and
+  one Generic bank, without duplicate older generations;
 - **€29** signed permanent-license system;
 - 30 reminder-free days followed by a non-blocking startup reminder;
 - every feature remains usable after the 30-day period;

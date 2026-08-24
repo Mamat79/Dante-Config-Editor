@@ -122,7 +122,11 @@ is disabled or rejected with an explanation.
 
 ### Device banks
 
-- bundled, personal, or shared banks;
+- simplified catalog with three sources: `My bank`, `DCE Community`, and
+  `DCE Generic`;
+- automatic selection of the newest official generation, without exposing
+  older copies or duplicates;
+- personal and shared banks are always preserved;
 - filters by manufacturer, category, and Tx/Rx capacity;
 - batch insertion of multiple roles;
 - independent project instances after insertion;
