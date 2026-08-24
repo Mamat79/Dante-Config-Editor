@@ -14,7 +14,7 @@
   ·
   <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Quick-Presentation-EN.mkv"><strong>Watch the presentation</strong></a>
   ·
-  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/Notice_DanteConfigEditorV3_EN.pdf"><strong>Read the manual</strong></a>
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/Notice_DanteConfigEditorV3_EN.pdf"><strong>Read the professional manual</strong></a>
 </p>
 
 <p align="center">
@@ -43,13 +43,19 @@ use in Dante Controller.
 | **Windows 11 x64 installer** | [DanteConfigEditor2026_5_Installer.exe](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_Installer.exe) |
 | Quick presentation, 2 min 12 sec | [English MKV video](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Quick-Presentation-EN.mkv) |
 | Complete visual guide, 10 min 38 sec | [English MKV video](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Complete-Visual-Guide-EN.mkv) |
-| Quick start | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/QuickStart_DanteConfigEditorV3_EN.pdf) |
-| Full manual | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/Notice_DanteConfigEditorV3_EN.pdf) |
+| Quick start, 1 page | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/QuickStart_DanteConfigEditorV3_EN.pdf) |
+| **Complete professional manual, 40 pages** | [Download the English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/Notice_DanteConfigEditorV3_EN.pdf) · [View in the repository](manuals/Notice_DanteConfigEditorV3_EN.pdf) |
 | Download verification | [SHA-256 checksums](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/SHA256SUMS.txt) |
 | Every file in this version | [DCE 2026.5 Release](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.5) |
 
 Each MKV video contains a selectable and editable subtitle track. Captions are
 not burned into the picture.
+
+The complete manual includes a SiLeMI/O cover, clickable contents, PDF
+bookmarks, a contents link on every page, and annotated screenshots. It follows
+the workflow in order: startup, project, global settings, devices, renaming,
+patching, merging, banks, import/export, synoptic, validation, recovery,
+licensing, and Atomic Bomb.
 
 DCE has also been tested and validated on real Mac hardware by the maintainer.
 The public Release currently provides the Windows installer; the next macOS

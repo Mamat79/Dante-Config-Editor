@@ -12,11 +12,14 @@
 | Installateur Windows 11 x64 | [Télécharger l’installateur autonome](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_Installer.exe) |
 | Présentation rapide | [Vidéo française, 2 min 12 s](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Presentation-Rapide-FR.mkv) |
 | Guide visuel complet | [Vidéo française, 10 min 38 s](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Guide-Visuel-Complet-FR.mkv) |
-| Démarrage rapide | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/QuickStart_DanteConfigEditorV3_FR.pdf) |
-| Notice complète | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/Notice_DanteConfigEditorV3_FR.pdf) |
+| Démarrage rapide, 1 page | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/QuickStart_DanteConfigEditorV3_FR.pdf) |
+| Notice professionnelle complète, 40 pages | [PDF français avec sommaire cliquable](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/Notice_DanteConfigEditorV3_FR.pdf) |
 | Vérification | [Sommes SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/SHA256SUMS.txt) |
 
 Les vidéos MKV possèdent une piste de sous-titres sélectionnable et modifiable.
+La nouvelle notice complète possède une couverture SiLeMI/O, un sommaire
+cliquable, des signets PDF, des captures annotées et une navigation de retour au
+sommaire sur chaque page.
 
 ### Ce que permet DCE
 
@@ -65,11 +68,13 @@ macOS sera ajouté dès sa compilation de distribution.
 | Windows 11 x64 installer | [Download the self-contained installer](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_Installer.exe) |
 | Quick presentation | [English video, 2 min 12 sec](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Quick-Presentation-EN.mkv) |
 | Complete visual guide | [English video, 10 min 38 sec](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Complete-Visual-Guide-EN.mkv) |
-| Quick start | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/QuickStart_DanteConfigEditorV3_EN.pdf) |
-| Full manual | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/Notice_DanteConfigEditorV3_EN.pdf) |
+| Quick start, 1 page | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/QuickStart_DanteConfigEditorV3_EN.pdf) |
+| Complete professional manual, 40 pages | [English PDF with clickable contents](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/Notice_DanteConfigEditorV3_EN.pdf) |
 | Verification | [SHA-256 checksums](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/SHA256SUMS.txt) |
 
 Each MKV video contains a selectable and editable subtitle track.
+The new complete manual includes a SiLeMI/O cover, clickable contents, PDF
+bookmarks, annotated screenshots, and a contents link on every page.
 
 ### What DCE can do
 

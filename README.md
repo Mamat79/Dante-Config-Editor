@@ -14,7 +14,7 @@
   ·
   <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Presentation-Rapide-FR.mkv"><strong>Voir la présentation</strong></a>
   ·
-  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/Notice_DanteConfigEditorV3_FR.pdf"><strong>Lire la notice</strong></a>
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/Notice_DanteConfigEditorV3_FR.pdf"><strong>Lire la notice professionnelle</strong></a>
 </p>
 
 <p align="center">
@@ -45,13 +45,19 @@ Controller.
 | **Installateur Windows 11 x64** | [DanteConfigEditor2026_5_Installer.exe](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_Installer.exe) |
 | Présentation rapide, 2 min 12 s | [Vidéo MKV en français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Presentation-Rapide-FR.mkv) |
 | Guide visuel complet, 10 min 38 s | [Vidéo MKV en français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Guide-Visuel-Complet-FR.mkv) |
-| Démarrage rapide | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/QuickStart_DanteConfigEditorV3_FR.pdf) |
-| Notice complète | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/Notice_DanteConfigEditorV3_FR.pdf) |
+| Démarrage rapide, 1 page | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/QuickStart_DanteConfigEditorV3_FR.pdf) |
+| **Notice professionnelle complète, 40 pages** | [Télécharger le PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/Notice_DanteConfigEditorV3_FR.pdf) · [Consulter dans le dépôt](manuals/Notice_DanteConfigEditorV3_FR.pdf) |
 | Contrôle des téléchargements | [Sommes SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/SHA256SUMS.txt) |
 | Toutes les pièces de la version | [Release DCE 2026.5](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.5) |
 
 Les vidéos MKV contiennent une piste de sous-titres sélectionnable et
 modifiable. Les sous-titres ne sont pas incrustés dans l’image.
+
+La notice complète possède une page de garde SiLeMI/O, un sommaire cliquable,
+des signets PDF, un retour au sommaire sur chaque page et des captures annotées.
+Elle suit le travail dans l’ordre : démarrage, projet, réglages globaux,
+machines, renommage, patch, fusion, banques, import/export, synoptique,
+validation, récupération, licence et Atomic Bomb.
 
 DCE a également été testé et validé sur un Mac réel par le mainteneur. La
 Release publique fournit actuellement l’installateur Windows ; le prochain
