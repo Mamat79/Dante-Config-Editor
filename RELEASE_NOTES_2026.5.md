@@ -1,25 +1,99 @@
-# Dante Config Editor 2026.5
+# DCE 2026.5
+
+> Préparez, vérifiez, modifiez, fusionnez et patchez des configurations Dante
+> hors ligne, sans connecter les machines.
 
 ## Français
 
-- Nouveau système de licence permanente signée à 29 €.
-- Essai de 30 jours sans rappel ; le logiciel reste utilisable sans limitation après l'essai.
-- Délivrance automatique du code après un paiement Stripe réussi.
-- Conservation de la licence lors des mises à jour futures.
-- Suppression de l'ancien parcours PayPal et de son QR code.
-- Interface Windows et macOS synchronisée pour l'activation hors ligne.
-- Dépôt public désormais réservé aux fichiers d'installation et à la documentation.
+### Télécharger et découvrir
 
-Sous Windows, téléchargez `DanteConfigEditor2026_5_Installer.exe`, vérifiez sa somme SHA-256, puis lancez l'installateur. La mise à jour remplace la version précédente tout en conservant l'état d'essai et la licence.
+| Ressource | Lien direct |
+| --- | --- |
+| Installateur Windows 11 x64 | [Télécharger l’installateur autonome](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_Installer.exe) |
+| Présentation rapide | [Vidéo française, 2 min 12 s](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Presentation-Rapide-FR.mkv) |
+| Guide visuel complet | [Vidéo française, 10 min 38 s](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Guide-Visuel-Complet-FR.mkv) |
+| Démarrage rapide | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/QuickStart_DanteConfigEditorV3_FR.pdf) |
+| Notice complète | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/Notice_DanteConfigEditorV3_FR.pdf) |
+| Vérification | [Sommes SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/SHA256SUMS.txt) |
+
+Les vidéos MKV possèdent une piste de sous-titres sélectionnable et modifiable.
+
+### Ce que permet DCE
+
+- travailler hors ligne depuis un XML Dante existant ou un nouveau projet ;
+- contrôler rapidement machines, patchs, formats audio, réseau, horloge et IP ;
+- renommer machines, TX et RX sans perdre les subscriptions reconnues ;
+- fusionner plusieurs installations en résolvant les conflits de noms et
+  d’identités ;
+- patcher avec la Matrice, Easy Patch, les plages et les séries 1:1 ;
+- retrouver la source d’un RX ou toutes les destinations d’un TX ;
+- appliquer des réglages globaux et utiliser des profils ;
+- ajouter des rôles assainis depuis des banques réutilisables ;
+- importer ou exporter des labels et produire rapports, patchbooks et
+  synoptiques PDF/SVG ;
+- enregistrer avec validation, récupération, sauvegarde et remplacement sûr.
+
+### Nouveautés 2026.5
+
+- système de licence permanente signée à **29 €** ;
+- 30 jours sans rappel, puis rappel de démarrage non bloquant ;
+- toutes les fonctions restent utilisables après les 30 jours ;
+- livraison automatique du code après un paiement Stripe réussi ;
+- vérification hors ligne et conservation de la licence lors des mises à jour ;
+- interface d’activation harmonisée sous Windows et macOS ;
+- dépôt public recentré sur les installateurs, notices, vidéos et sommes
+  SHA-256.
+
+La version publique 2026.5 contient actuellement l’installateur Windows. Les
+paquets macOS seront ajoutés après validation finale sur Mac réel.
+
+> DCE est un outil tiers non officiel, sans affiliation avec Audinate. Il ne
+> contrôle pas le réseau Dante en direct. Travaillez sur une copie et contrôlez
+> le XML final dans Dante Controller avant son utilisation en production.
+
+---
 
 ## English
 
-- New €29 signed permanent-license system.
-- 30-day reminder-free trial; the application remains fully usable after the trial.
-- Automatic code delivery after a successful Stripe payment.
-- Existing licenses remain valid across future updates.
-- Removed the legacy PayPal flow and QR code.
-- Synchronized offline activation on Windows and macOS.
-- The public repository is now reserved for installers and documentation.
+### Download and discover
 
-On Windows, download `DanteConfigEditor2026_5_Installer.exe`, verify its SHA-256 checksum, then run the installer. The update replaces the previous version while preserving trial and license state.
+| Resource | Direct link |
+| --- | --- |
+| Windows 11 x64 installer | [Download the self-contained installer](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_Installer.exe) |
+| Quick presentation | [English video, 2 min 12 sec](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Quick-Presentation-EN.mkv) |
+| Complete visual guide | [English video, 10 min 38 sec](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Complete-Visual-Guide-EN.mkv) |
+| Quick start | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/QuickStart_DanteConfigEditorV3_EN.pdf) |
+| Full manual | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/Notice_DanteConfigEditorV3_EN.pdf) |
+| Verification | [SHA-256 checksums](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/SHA256SUMS.txt) |
+
+Each MKV video contains a selectable and editable subtitle track.
+
+### What DCE can do
+
+- work offline from an existing Dante XML file or a new project;
+- quickly review devices, patches, audio formats, network, clock, and IP data;
+- rename devices, Tx, and Rx channels without losing recognized subscriptions;
+- merge multiple installations and resolve name or identity conflicts;
+- patch through Matrix, Easy Patch, ranges, and 1:1 series;
+- locate the source of an Rx or every destination of a Tx;
+- apply global settings and reusable profiles;
+- add sanitized roles from reusable device banks;
+- exchange labels and produce reports, patchbooks, and PDF/SVG synoptics;
+- save through validation, recovery, backup, and safe replacement.
+
+### What is new in 2026.5
+
+- **€29** signed permanent-license system;
+- 30 reminder-free days followed by a non-blocking startup reminder;
+- every feature remains usable after the 30-day period;
+- automatic code delivery after a successful Stripe payment;
+- offline verification and license preservation across updates;
+- consistent Windows and macOS activation interface;
+- public repository focused on installers, manuals, videos, and SHA-256 files.
+
+The public 2026.5 release currently contains the Windows installer. macOS
+packages will be added after final validation on real Mac hardware.
+
+> DCE is an unofficial third-party tool and is not affiliated with Audinate. It
+> does not control a live Dante network. Work on a copy and review the final XML
+> in Dante Controller before production use.
