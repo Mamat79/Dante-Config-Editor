@@ -44,8 +44,9 @@ Les vidéos MKV possèdent une piste de sous-titres sélectionnable et modifiabl
 - dépôt public recentré sur les installateurs, notices, vidéos et sommes
   SHA-256.
 
-La version publique 2026.5 contient actuellement l’installateur Windows. Les
-paquets macOS seront ajoutés après validation finale sur Mac réel.
+DCE a été testé et validé sur un Mac réel par le mainteneur. La Release
+publique contient actuellement l’installateur Windows ; le prochain paquet
+macOS sera ajouté dès sa compilation de distribution.
 
 > DCE est un outil tiers non officiel, sans affiliation avec Audinate. Il ne
 > contrôle pas le réseau Dante en direct. Travaillez sur une copie et contrôlez
@@ -91,8 +92,9 @@ Each MKV video contains a selectable and editable subtitle track.
 - consistent Windows and macOS activation interface;
 - public repository focused on installers, manuals, videos, and SHA-256 files.
 
-The public 2026.5 release currently contains the Windows installer. macOS
-packages will be added after final validation on real Mac hardware.
+DCE has been tested and validated on real Mac hardware by the maintainer. The
+public Release currently contains the Windows installer; the next macOS
+package will be added once it has been built for distribution.
 
 > DCE is an unofficial third-party tool and is not affiliated with Audinate. It
 > does not control a live Dante network. Work on a copy and review the final XML

@@ -53,9 +53,9 @@ Controller.
 Les vidéos MKV contiennent une piste de sous-titres sélectionnable et
 modifiable. Les sous-titres ne sont pas incrustés dans l’image.
 
-La version publique 2026.5 fournit actuellement l’installateur Windows vérifié.
-Les paquets macOS seront ajoutés après leur validation finale sur Mac réel ;
-aucun lien de téléchargement factice ou ancien n’est présenté ici.
+DCE a également été testé et validé sur un Mac réel par le mainteneur. La
+Release publique fournit actuellement l’installateur Windows ; le prochain
+paquet macOS sera ajouté à cette page dès sa compilation de distribution.
 
 ## Pourquoi utiliser DCE ?
 
@@ -173,7 +173,8 @@ vérification du code de licence fonctionne hors ligne.
 Les XML produits par cette génération ont été importés avec succès dans Dante
 Controller par le mainteneur. Les tests automatisés vérifient également les
 cycles ouverture/enregistrement/réouverture, les références croisées, les
-namespaces, les valeurs inconnues et les opérations transactionnelles.
+namespaces, les valeurs inconnues et les opérations transactionnelles. DCE a
+également été testé et validé sur macOS par le mainteneur.
 
 > DCE est un outil tiers non officiel, sans affiliation avec Audinate. Il ne
 > contrôle pas un réseau Dante en direct et n’utilise ni SDK ni API Audinate.
