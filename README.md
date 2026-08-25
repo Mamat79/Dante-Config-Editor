@@ -12,6 +12,10 @@
 <p align="center">
   <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_Installer.exe"><strong>Télécharger pour Windows</strong></a>
   ·
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_AppleSilicon.dmg"><strong>Mac Apple Silicon</strong></a>
+  ·
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_Intel.dmg"><strong>Mac Intel</strong></a>
+  ·
   <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Presentation-Rapide-FR.mkv"><strong>Voir la présentation</strong></a>
   ·
   <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/Notice_DanteConfigEditorV3_FR.pdf"><strong>Lire la notice professionnelle</strong></a>
@@ -43,6 +47,8 @@ Controller.
 | Ressource | Lien direct |
 | --- | --- |
 | **Installateur Windows 11 x64** | [DanteConfigEditor2026_5_Installer.exe](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_Installer.exe) |
+| **macOS Apple Silicon** | [DanteConfigEditor2026_5_macOS_AppleSilicon.dmg](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_AppleSilicon.dmg) |
+| **macOS Intel** | [DanteConfigEditor2026_5_macOS_Intel.dmg](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_Intel.dmg) |
 | Présentation rapide, 2 min 12 s | [Vidéo MKV en français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Presentation-Rapide-FR.mkv) |
 | Guide visuel complet, 10 min 38 s | [Vidéo MKV en français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Guide-Visuel-Complet-FR.mkv) |
 | Démarrage rapide, 1 page | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/QuickStart_DanteConfigEditorV3_FR.pdf) |
@@ -53,15 +59,17 @@ Controller.
 Les vidéos MKV contiennent une piste de sous-titres sélectionnable et
 modifiable. Les sous-titres ne sont pas incrustés dans l’image.
 
-La notice complète possède une page de garde SiLeMI/O, un sommaire cliquable,
+Les installateurs Windows et macOS embarquent les démarrages rapides et les
+notices complètes en français et en anglais. La notice complète possède une
+page de garde SiLeMI/O, un sommaire cliquable,
 des signets PDF, un retour au sommaire sur chaque page et des captures annotées.
 Elle suit le travail dans l’ordre : démarrage, projet, réglages globaux,
 machines, renommage, patch, fusion, banques, import/export, synoptique,
 validation, récupération, licence et Atomic Bomb.
 
 DCE a également été testé et validé sur un Mac réel par le mainteneur. La
-Release publique fournit actuellement l’installateur Windows ; le prochain
-paquet macOS sera ajouté à cette page dès sa compilation de distribution.
+Release publique fournit les paquets autonomes pour Windows 11 x64, macOS Apple
+Silicon et macOS Intel.
 
 ## Pourquoi utiliser DCE ?
 

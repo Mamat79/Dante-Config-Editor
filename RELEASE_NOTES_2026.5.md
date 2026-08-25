@@ -10,13 +10,16 @@
 | Ressource | Lien direct |
 | --- | --- |
 | Installateur Windows 11 x64 | [Télécharger l’installateur autonome](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_Installer.exe) |
+| macOS Apple Silicon | [Télécharger le DMG Apple Silicon](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_AppleSilicon.dmg) |
+| macOS Intel | [Télécharger le DMG Intel](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_Intel.dmg) |
 | Présentation rapide | [Vidéo française, 2 min 12 s](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Presentation-Rapide-FR.mkv) |
 | Guide visuel complet | [Vidéo française, 10 min 38 s](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Guide-Visuel-Complet-FR.mkv) |
 | Démarrage rapide, 1 page | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/QuickStart_DanteConfigEditorV3_FR.pdf) |
 | Notice professionnelle complète, 40 pages | [PDF français avec sommaire cliquable](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/Notice_DanteConfigEditorV3_FR.pdf) |
 | Vérification | [Sommes SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/SHA256SUMS.txt) |
 
-Les vidéos MKV possèdent une piste de sous-titres sélectionnable et modifiable.
+Les trois installateurs embarquent les démarrages rapides et notices complètes
+en français et en anglais. Les vidéos MKV possèdent une piste de sous-titres sélectionnable et modifiable.
 La nouvelle notice complète possède une couverture SiLeMI/O, un sommaire
 cliquable, des signets PDF, des captures annotées et une navigation de retour au
 sommaire sur chaque page.
@@ -50,8 +53,8 @@ sommaire sur chaque page.
   SHA-256.
 
 DCE a été testé et validé sur un Mac réel par le mainteneur. La Release
-publique contient actuellement l’installateur Windows ; le prochain paquet
-macOS sera ajouté dès sa compilation de distribution.
+publique contient les paquets Windows 11 x64, macOS Apple Silicon et macOS
+Intel.
 
 > DCE est un outil tiers non officiel, sans affiliation avec Audinate. Il ne
 > contrôle pas le réseau Dante en direct. Travaillez sur une copie et contrôlez
@@ -66,13 +69,16 @@ macOS sera ajouté dès sa compilation de distribution.
 | Resource | Direct link |
 | --- | --- |
 | Windows 11 x64 installer | [Download the self-contained installer](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_Installer.exe) |
+| macOS Apple Silicon | [Download the Apple Silicon DMG](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_AppleSilicon.dmg) |
+| macOS Intel | [Download the Intel DMG](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_Intel.dmg) |
 | Quick presentation | [English video, 2 min 12 sec](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Quick-Presentation-EN.mkv) |
 | Complete visual guide | [English video, 10 min 38 sec](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Complete-Visual-Guide-EN.mkv) |
 | Quick start, 1 page | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/QuickStart_DanteConfigEditorV3_EN.pdf) |
 | Complete professional manual, 40 pages | [English PDF with clickable contents](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/Notice_DanteConfigEditorV3_EN.pdf) |
 | Verification | [SHA-256 checksums](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/SHA256SUMS.txt) |
 
-Each MKV video contains a selectable and editable subtitle track.
+All three installers include the French and English quick starts and complete
+manuals. Each MKV video contains a selectable and editable subtitle track.
 The new complete manual includes a SiLeMI/O cover, clickable contents, PDF
 bookmarks, annotated screenshots, and a contents link on every page.
 
@@ -102,8 +108,8 @@ bookmarks, annotated screenshots, and a contents link on every page.
 - public repository focused on installers, manuals, videos, and SHA-256 files.
 
 DCE has been tested and validated on real Mac hardware by the maintainer. The
-public Release currently contains the Windows installer; the next macOS
-package will be added once it has been built for distribution.
+public Release contains packages for Windows 11 x64, macOS Apple Silicon, and
+macOS Intel.
 
 > DCE is an unofficial third-party tool and is not affiliated with Audinate. It
 > does not control a live Dante network. Work on a copy and review the final XML

@@ -12,6 +12,10 @@
 <p align="center">
   <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_Installer.exe"><strong>Download for Windows</strong></a>
   ·
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_AppleSilicon.dmg"><strong>Mac Apple Silicon</strong></a>
+  ·
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_Intel.dmg"><strong>Mac Intel</strong></a>
+  ·
   <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Quick-Presentation-EN.mkv"><strong>Watch the presentation</strong></a>
   ·
   <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/Notice_DanteConfigEditorV3_EN.pdf"><strong>Read the professional manual</strong></a>
@@ -41,6 +45,8 @@ use in Dante Controller.
 | Resource | Direct link |
 | --- | --- |
 | **Windows 11 x64 installer** | [DanteConfigEditor2026_5_Installer.exe](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_Installer.exe) |
+| **macOS Apple Silicon** | [DanteConfigEditor2026_5_macOS_AppleSilicon.dmg](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_AppleSilicon.dmg) |
+| **macOS Intel** | [DanteConfigEditor2026_5_macOS_Intel.dmg](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_Intel.dmg) |
 | Quick presentation, 2 min 12 sec | [English MKV video](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Quick-Presentation-EN.mkv) |
 | Complete visual guide, 10 min 38 sec | [English MKV video](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Complete-Visual-Guide-EN.mkv) |
 | Quick start, 1 page | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/QuickStart_DanteConfigEditorV3_EN.pdf) |
@@ -51,15 +57,16 @@ use in Dante Controller.
 Each MKV video contains a selectable and editable subtitle track. Captions are
 not burned into the picture.
 
-The complete manual includes a SiLeMI/O cover, clickable contents, PDF
+The Windows and macOS installers include both quick starts and both complete
+manuals. The complete manual includes a SiLeMI/O cover, clickable contents, PDF
 bookmarks, a contents link on every page, and annotated screenshots. It follows
 the workflow in order: startup, project, global settings, devices, renaming,
 patching, merging, banks, import/export, synoptic, validation, recovery,
 licensing, and Atomic Bomb.
 
 DCE has also been tested and validated on real Mac hardware by the maintainer.
-The public Release currently provides the Windows installer; the next macOS
-distribution package will be added to this page once it has been built.
+The public Release provides self-contained packages for Windows 11 x64, macOS
+Apple Silicon, and macOS Intel.
 
 ## Why use DCE?
 
