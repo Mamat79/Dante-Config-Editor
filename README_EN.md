@@ -12,9 +12,9 @@
 <p align="center">
   <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_Installer.exe"><strong>Download for Windows</strong></a>
   ·
-  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_AppleSilicon.dmg"><strong>Mac Apple Silicon</strong></a>
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_AppleSilicon_Portable.zip"><strong>Mac Apple Silicon</strong></a>
   ·
-  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_Intel.dmg"><strong>Mac Intel</strong></a>
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_Intel_Portable.zip"><strong>Mac Intel</strong></a>
   ·
   <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Quick-Presentation-EN.mkv"><strong>Watch the presentation</strong></a>
   ·
@@ -45,8 +45,8 @@ use in Dante Controller.
 | Resource | Direct link |
 | --- | --- |
 | **Windows 11 x64 installer** | [DanteConfigEditor2026_5_Installer.exe](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_Installer.exe) |
-| **macOS Apple Silicon** | [DanteConfigEditor2026_5_macOS_AppleSilicon.dmg](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_AppleSilicon.dmg) |
-| **macOS Intel** | [DanteConfigEditor2026_5_macOS_Intel.dmg](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_Intel.dmg) |
+| **macOS Apple Silicon** | [Self-contained `.app` archive](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_AppleSilicon_Portable.zip) |
+| **macOS Intel** | [Self-contained `.app` archive](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_Intel_Portable.zip) |
 | Quick presentation, 2 min 12 sec | [English MKV video](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Quick-Presentation-EN.mkv) |
 | Complete visual guide, 10 min 38 sec | [English MKV video](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Complete-Visual-Guide-EN.mkv) |
 | Quick start, 1 page | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/QuickStart_DanteConfigEditorV3_EN.pdf) |
@@ -57,16 +57,16 @@ use in Dante Controller.
 Each MKV video contains a selectable and editable subtitle track. Captions are
 not burned into the picture.
 
-The Windows and macOS installers include both quick starts and both complete
-manuals. The complete manual includes a SiLeMI/O cover, clickable contents, PDF
+The Windows installer and macOS archives include both quick starts and both
+complete manuals. The complete manual includes a SiLeMI/O cover, clickable contents, PDF
 bookmarks, a contents link on every page, and annotated screenshots. It follows
 the workflow in order: startup, project, global settings, devices, renaming,
 patching, merging, banks, import/export, synoptic, validation, recovery,
 licensing, and Atomic Bomb.
 
 DCE has also been tested and validated on real Mac hardware by the maintainer.
-The public Release provides self-contained packages for Windows 11 x64, macOS
-Apple Silicon, and macOS Intel.
+The public Release provides a self-contained Windows 11 x64 installer and two
+macOS `.app` archives for Apple Silicon and Intel.
 
 ## Why use DCE?
 
@@ -123,6 +123,10 @@ settings, flows, or subscriptions from another production network.
 
 ### Validation and safe saving
 
+- a real pre-export assistant with blocking errors, acknowledged warnings, and
+  information grouped by severity;
+- direct navigation to the Validation Center or the affected item;
+- export of a control report before handing the XML to Dante Controller;
 - safeguards for missing or duplicated identities;
 - detection of inconsistent patch references;
 - preservation of namespaces, attributes, values, and unknown elements;
@@ -144,7 +148,14 @@ is disabled or rejected with an explanation.
 - batch insertion of multiple roles;
 - independent project instances after insertion;
 - public-bank updates with SHA-256 verification;
+- quality, provenance, and compatibility status displayed for every template;
+- **57 physical models validated in DCE and tested on real hardware**, plus two
+  clearly identified generic roles for preparation and training;
+- sanitized contribution archives that exclude identity, IP settings,
+  subscriptions, and source-project data;
 - personal banks are always preserved during updates.
+
+Direct downloads: [DCE Community bank](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE_Community_Devices_2026_3.dce-bank.zip) · [DCE Generic roles](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE_Generic_Roles_2026_3.dce-bank.zip).
 
 [![Device bank](media/en/device-bank.png)](media/en/device-bank.png)
 
@@ -157,6 +168,16 @@ is disabled or rejected with an explanation.
 - PDF or SVG synoptic export for further vector editing.
 
 [![Dante Config Editor synoptic](media/en/synoptic.png)](media/en/synoptic.png)
+
+### First launch and support
+
+- a first-launch discovery screen offering four useful paths: open an XML,
+  create a project, discover the device bank, or read the manual;
+- the same screen remains available from `Help > Discover DCE`;
+- contextual help and tooltips without hiding advanced functions;
+- one-click creation of a privacy-safe support package containing diagnostics,
+  useful logs, validation results, and SHA-256 fingerprints, but **never the
+  project XML or a license code**.
 
 ## Three file types to distinguish
 

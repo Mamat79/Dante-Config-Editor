@@ -10,15 +10,17 @@
 | Ressource | Lien direct |
 | --- | --- |
 | Installateur Windows 11 x64 | [Télécharger l’installateur autonome](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_Installer.exe) |
-| macOS Apple Silicon | [Télécharger le DMG Apple Silicon](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_AppleSilicon.dmg) |
-| macOS Intel | [Télécharger le DMG Intel](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_Intel.dmg) |
+| macOS Apple Silicon | [Télécharger l’archive autonome `.app`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_AppleSilicon_Portable.zip) |
+| macOS Intel | [Télécharger l’archive autonome `.app`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_Intel_Portable.zip) |
+| Banque DCE Community | [57 modèles physiques testés sur matériel](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE_Community_Devices_2026_3.dce-bank.zip) |
+| Rôles DCE Generic | [2 rôles génériques de préparation](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE_Generic_Roles_2026_3.dce-bank.zip) |
 | Présentation rapide | [Vidéo française, 2 min 12 s](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Presentation-Rapide-FR.mkv) |
 | Guide visuel complet | [Vidéo française, 10 min 38 s](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Guide-Visuel-Complet-FR.mkv) |
 | Démarrage rapide, 1 page | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/QuickStart_DanteConfigEditorV3_FR.pdf) |
 | Notice professionnelle complète, 40 pages | [PDF français avec sommaire cliquable](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/Notice_DanteConfigEditorV3_FR.pdf) |
 | Vérification | [Sommes SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/SHA256SUMS.txt) |
 
-Les trois installateurs embarquent les démarrages rapides et notices complètes
+L’installateur Windows et les deux archives macOS embarquent les démarrages rapides et notices complètes
 en français et en anglais. Les vidéos MKV possèdent une piste de sous-titres sélectionnable et modifiable.
 La nouvelle notice complète possède une couverture SiLeMI/O, un sommaire
 cliquable, des signets PDF, des captures annotées et une navigation de retour au
@@ -41,6 +43,15 @@ sommaire sur chaque page.
 
 ### Nouveautés 2026.5
 
+- assistant de validation avant export : erreurs bloquantes, avertissements à
+  confirmer, informations, navigation vers l’élément concerné et rapport ;
+- écran de découverte au premier lancement, accessible ensuite depuis le menu
+  Aide ;
+- banques professionnalisées avec statut, provenance et compatibilité ;
+- 57 modèles physiques testés sur du matériel réel et deux rôles génériques ;
+- archive de contribution assainie, sans identité matérielle ni donnée du
+  projet source ;
+- paquet de support respectueux de la confidentialité, sans XML ni licence ;
 - sélecteur de banques simplifié : une banque personnelle, une banque
   communautaire et une banque générique, sans anciennes générations en double ;
 - système de licence permanente signée à **29 € TTC** ;
@@ -69,15 +80,17 @@ Intel.
 | Resource | Direct link |
 | --- | --- |
 | Windows 11 x64 installer | [Download the self-contained installer](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_Installer.exe) |
-| macOS Apple Silicon | [Download the Apple Silicon DMG](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_AppleSilicon.dmg) |
-| macOS Intel | [Download the Intel DMG](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_Intel.dmg) |
+| macOS Apple Silicon | [Download the self-contained `.app` archive](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_AppleSilicon_Portable.zip) |
+| macOS Intel | [Download the self-contained `.app` archive](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_Intel_Portable.zip) |
+| DCE Community bank | [57 physical models tested on hardware](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE_Community_Devices_2026_3.dce-bank.zip) |
+| DCE Generic roles | [2 generic preparation roles](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE_Generic_Roles_2026_3.dce-bank.zip) |
 | Quick presentation | [English video, 2 min 12 sec](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Quick-Presentation-EN.mkv) |
 | Complete visual guide | [English video, 10 min 38 sec](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Complete-Visual-Guide-EN.mkv) |
 | Quick start, 1 page | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/QuickStart_DanteConfigEditorV3_EN.pdf) |
 | Complete professional manual, 40 pages | [English PDF with clickable contents](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/Notice_DanteConfigEditorV3_EN.pdf) |
 | Verification | [SHA-256 checksums](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/SHA256SUMS.txt) |
 
-All three installers include the French and English quick starts and complete
+The Windows installer and both macOS archives include the French and English quick starts and complete
 manuals. Each MKV video contains a selectable and editable subtitle track.
 The new complete manual includes a SiLeMI/O cover, clickable contents, PDF
 bookmarks, annotated screenshots, and a contents link on every page.
@@ -97,6 +110,14 @@ bookmarks, annotated screenshots, and a contents link on every page.
 
 ### What is new in 2026.5
 
+- pre-export validation assistant with blocking errors, acknowledged warnings,
+  information, direct navigation, and report export;
+- first-launch discovery screen that remains available from the Help menu;
+- professionalized banks with quality, provenance, and compatibility status;
+- 57 physical models tested on real hardware plus two generic roles;
+- sanitized contribution archive without hardware identity or source-project
+  data;
+- privacy-safe support package that excludes XML projects and license codes;
 - simplified device-bank selector: one personal bank, one Community bank, and
   one Generic bank, without duplicate older generations;
 - **€29 including French VAT** signed permanent-license system;

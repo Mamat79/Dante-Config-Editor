@@ -12,9 +12,9 @@
 <p align="center">
   <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_Installer.exe"><strong>Télécharger pour Windows</strong></a>
   ·
-  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_AppleSilicon.dmg"><strong>Mac Apple Silicon</strong></a>
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_AppleSilicon_Portable.zip"><strong>Mac Apple Silicon</strong></a>
   ·
-  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_Intel.dmg"><strong>Mac Intel</strong></a>
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_Intel_Portable.zip"><strong>Mac Intel</strong></a>
   ·
   <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Presentation-Rapide-FR.mkv"><strong>Voir la présentation</strong></a>
   ·
@@ -47,8 +47,8 @@ Controller.
 | Ressource | Lien direct |
 | --- | --- |
 | **Installateur Windows 11 x64** | [DanteConfigEditor2026_5_Installer.exe](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_Installer.exe) |
-| **macOS Apple Silicon** | [DanteConfigEditor2026_5_macOS_AppleSilicon.dmg](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_AppleSilicon.dmg) |
-| **macOS Intel** | [DanteConfigEditor2026_5_macOS_Intel.dmg](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_Intel.dmg) |
+| **macOS Apple Silicon** | [Archive autonome `.app`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_AppleSilicon_Portable.zip) |
+| **macOS Intel** | [Archive autonome `.app`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_Intel_Portable.zip) |
 | Présentation rapide, 2 min 12 s | [Vidéo MKV en français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Presentation-Rapide-FR.mkv) |
 | Guide visuel complet, 10 min 38 s | [Vidéo MKV en français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Guide-Visuel-Complet-FR.mkv) |
 | Démarrage rapide, 1 page | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/QuickStart_DanteConfigEditorV3_FR.pdf) |
@@ -59,8 +59,8 @@ Controller.
 Les vidéos MKV contiennent une piste de sous-titres sélectionnable et
 modifiable. Les sous-titres ne sont pas incrustés dans l’image.
 
-Les installateurs Windows et macOS embarquent les démarrages rapides et les
-notices complètes en français et en anglais. La notice complète possède une
+L’installateur Windows et les archives macOS embarquent les démarrages rapides
+et les notices complètes en français et en anglais. La notice complète possède une
 page de garde SiLeMI/O, un sommaire cliquable,
 des signets PDF, un retour au sommaire sur chaque page et des captures annotées.
 Elle suit le travail dans l’ordre : démarrage, projet, réglages globaux,
@@ -68,8 +68,8 @@ machines, renommage, patch, fusion, banques, import/export, synoptique,
 validation, récupération, licence et Atomic Bomb.
 
 DCE a également été testé et validé sur un Mac réel par le mainteneur. La
-Release publique fournit les paquets autonomes pour Windows 11 x64, macOS Apple
-Silicon et macOS Intel.
+Release publique fournit un installateur autonome Windows 11 x64 et les deux
+archives macOS `.app`, pour Apple Silicon et Intel.
 
 ## Pourquoi utiliser DCE ?
 
@@ -127,6 +127,10 @@ réseau.
 
 ### Validation et sauvegarde sécurisée
 
+- véritable assistant avant export, avec erreurs bloquantes, avertissements à
+  confirmer et informations regroupées par gravité ;
+- accès direct au Centre de validation ou à l’élément concerné ;
+- export d’un rapport de contrôle avant de remettre le XML à Dante Controller ;
 - garde-fous contre les identités manquantes ou dupliquées ;
 - détection des références de patch incohérentes ;
 - conservation des namespaces, attributs, valeurs et balises inconnues ;
@@ -148,7 +152,14 @@ non prise en charge est désactivée ou refusée avec une explication.
 - ajout de plusieurs rôles en une seule opération ;
 - modèles indépendants du projet après insertion ;
 - mise à jour des banques publiques avec contrôle SHA-256 ;
+- statut de qualité, provenance et compatibilité affiché pour chaque modèle ;
+- **57 modèles physiques validés dans DCE et testés sur du matériel réel**, plus
+  2 rôles génériques clairement identifiés pour la préparation et la formation ;
+- création d’une archive de contribution assainie, sans identité, IP,
+  subscription ni donnée du projet source ;
 - conservation systématique de la banque personnelle pendant les mises à jour.
+
+Téléchargements directs : [banque DCE Community](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE_Community_Devices_2026_3.dce-bank.zip) · [rôles DCE Generic](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE_Generic_Roles_2026_3.dce-bank.zip).
 
 [![Banque de machines](media/fr/device-bank.png)](media/fr/device-bank.png)
 
@@ -162,6 +173,16 @@ non prise en charge est désactivée ou refusée avec une explication.
 - export du synoptique en PDF ou SVG pour retouche dans un logiciel vectoriel.
 
 [![Synoptique de Dante Config Editor](media/fr/synoptic.png)](media/fr/synoptic.png)
+
+### Premier lancement et support
+
+- écran de découverte au premier lancement avec quatre parcours utiles :
+  ouvrir un XML, créer un projet, découvrir la banque ou lire la notice ;
+- écran accessible ensuite depuis `Aide > Découvrir DCE` ;
+- infobulles et explications contextuelles sans masquer les fonctions avancées ;
+- création en un clic d’un paquet de support respectueux de la confidentialité,
+  contenant le diagnostic, les journaux utiles, les résultats de validation et
+  les empreintes SHA-256, mais **jamais le XML du projet ni un code de licence**.
 
 ## Trois formats à distinguer
 
