@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_Installer.exe"><strong>Download for Windows</strong></a>
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.6/DanteConfigEditor2026_6_Installer.exe"><strong>Download for Windows</strong></a>
   ·
   <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_AppleSilicon_Portable.zip"><strong>Mac Apple Silicon</strong></a>
   ·
@@ -29,7 +29,7 @@
 
 ## At a glance
 
-**DCE 2026.5** is a Dante Controller XML project editor designed for offline
+**DCE 2026.6** is a Dante Controller XML project editor designed for offline
 preparation, fast reviews, and repetitive changes that would otherwise require
 opening many separate pages in Dante Controller.
 
@@ -44,15 +44,15 @@ use in Dante Controller.
 
 | Resource | Direct link |
 | --- | --- |
-| **Windows 11 x64 installer** | [DanteConfigEditor2026_5_Installer.exe](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_Installer.exe) |
+| **Windows 11 x64 installer** | [DanteConfigEditor2026_6_Installer.exe](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.6/DanteConfigEditor2026_6_Installer.exe) |
 | **macOS Apple Silicon** | [Self-contained `.app` archive](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_AppleSilicon_Portable.zip) |
 | **macOS Intel** | [Self-contained `.app` archive](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DanteConfigEditor2026_5_macOS_Intel_Portable.zip) |
 | Quick presentation, 2 min 12 sec | [English MKV video](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Quick-Presentation-EN.mkv) |
 | Complete visual guide, 10 min 38 sec | [English MKV video](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE-2026.5-Complete-Visual-Guide-EN.mkv) |
-| Quick start, 1 page | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/QuickStart_DanteConfigEditorV3_EN.pdf) |
-| **Complete professional manual, 40 pages** | [Download the English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/Notice_DanteConfigEditorV3_EN.pdf) · [View in the repository](manuals/Notice_DanteConfigEditorV3_EN.pdf) |
-| Download verification | [SHA-256 checksums](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/SHA256SUMS.txt) |
-| Every file in this version | [DCE 2026.5 Release](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.5) |
+| Quick start, 1 page | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.6/QuickStart_DanteConfigEditorV3_EN.pdf) |
+| **Complete professional manual, 40 pages** | [Download the English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.6/Notice_DanteConfigEditorV3_EN.pdf) · [View in the repository](manuals/Notice_DanteConfigEditorV3_EN.pdf) |
+| Download verification | [SHA-256 checksums](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.6/SHA256SUMS.txt) |
+| Every file in this version | [DCE 2026.6 Release](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.6) |
 
 Each MKV video contains a selectable and editable subtitle track. Captions are
 not burned into the picture.
@@ -155,7 +155,7 @@ is disabled or rejected with an explanation.
   subscriptions, and source-project data;
 - personal banks are always preserved during updates.
 
-Direct downloads: [DCE Community bank](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE_Community_Devices_2026_3.dce-bank.zip) · [DCE Generic roles](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.5/DCE_Generic_Roles_2026_3.dce-bank.zip).
+Direct downloads: [DCE Community bank](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.6/DCE_Community_Devices_2026_3.dce-bank.zip) · [DCE Generic roles](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.6/DCE_Generic_Roles_2026_3.dce-bank.zip).
 
 [![Device bank](media/en/device-bank.png)](media/en/device-bank.png)
 
@@ -194,7 +194,12 @@ Direct downloads: [DCE Community bank](https://github.com/Mamat79/Dante-Config-E
 - after 30 days, **DCE and every feature remain usable**;
 - a non-blocking reminder simply appears at startup;
 - a **€29 permanent license** removes that reminder;
-- the signed code is verified locally and remains valid after updates.
+- new licenses allow 3 activations by default; DCE shows the used and allowed
+  counts;
+- **Deactivate this computer** releases a seat for another computer;
+- after initial activation, the signed receipt is checked locally and remains
+  valid offline after updates;
+- every legacy license remains valid without conversion.
 
 [Buy a permanent license with Stripe](https://dce-license.mamat79-dce.workers.dev/buy)
 
