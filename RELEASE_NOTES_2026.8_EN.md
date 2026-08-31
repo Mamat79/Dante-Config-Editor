@@ -1,6 +1,6 @@
 # Dante Config Editor 2026.8
 
-[Notes de version françaises](RELEASE_NOTES.md)
+[Notes de version françaises](RELEASE_NOTES_2026.8.md)
 
 ## Native `.stageflow` project
 
@@ -51,11 +51,13 @@ Audinate, and does not control a live Dante network.
 
 ## Validation
 
-- 491 Core/Windows tests passed;
+- 494 Core/Windows tests passed;
 - 22 headless Avalonia/macOS tests passed;
 - Windows and macOS/Avalonia Release builds completed without errors;
 - dedicated StageFlow round-trip, cross-domain integrity, UUID, and base-hash
   conflict tests;
+- dedicated tests for Windows junctions, links escaping the project, and
+  foreign envelopes with an invalid hash or `projectId`;
 - Windows visual review before publication;
 - four regenerated and reviewed bilingual PDF guides.
 
