@@ -16,6 +16,10 @@ les écrans Projet, Machines, Patch et Atomic Bomb. Cette refonte est strictemen
 visuelle : le moteur XML, les mutations ciblées, les formats de projet, les
 banques et le système de licence restent inchangés.
 
+Le coin supérieur droit présente maintenant, dans un ordre fixe et compact,
+l'icône soleil/lune du thème, le sélecteur FR/EN puis le bouton contour
+`? Aide`. Le menu Aide et le raccourci F1 restent disponibles.
+
 ## Nouveau : suivi StageFlow LIVE V1
 
 Quand un projet `.stageflow` est orchestré par StageFlow Desktop, DCE reconnaît

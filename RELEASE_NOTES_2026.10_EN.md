@@ -16,6 +16,10 @@ Project, Devices, Patch, and Atomic Bomb screens. This is a visual-only change:
 the XML engine, targeted mutations, project formats, device banks, and
 licensing system remain unchanged.
 
+The upper-right corner now uses a fixed compact order: sun/moon theme icon,
+FR/EN selector, then an outlined `? Help` button. The Help menu and F1 shortcut
+remain available.
+
 ## New: StageFlow LIVE V1 following
 
 When a `.stageflow` project is orchestrated by StageFlow Desktop, DCE now
