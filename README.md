@@ -5,248 +5,166 @@
 <h1 align="center">Dante Config Editor</h1>
 
 <p align="center">
-  <strong>Préparer, vérifier, modifier, fusionner et patcher des configurations
-  Dante hors ligne, sans connecter les machines.</strong>
+  <strong>Préparez et modifiez vos configurations Dante hors ligne, dans une vue claire.</strong>
 </p>
 
 <p align="center">
-  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8.1/DanteConfigEditor2026_8_1_Installer.exe"><strong>Télécharger pour Windows</strong></a>
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/latest"><strong>⬇ Télécharger DCE pour Windows</strong></a>
   ·
-  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8.1/Notice_DanteConfigEditorV3_FR.pdf"><strong>Lire la notice professionnelle</strong></a>
+  <a href="manuals/Notice_DanteConfigEditorV3_FR.pdf">Notice complète</a>
   ·
-  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.8.1"><strong>Voir la Release</strong></a>
-</p>
-
-<p align="center">
-  Français · <a href="README_EN.md">English</a>
+  <a href="README_EN.md">English</a>
 </p>
 
 ---
 
-## L’essentiel
+## DCE, à quoi ça sert ?
 
-**DCE 2026.8.1** est un éditeur de projets Dante Controller conçu pour les
-préparations hors ligne, les contrôles rapides et les modifications répétitives
-qui demandent habituellement d’ouvrir de nombreuses pages dans Dante
-Controller. Son projet natif est désormais un dossier `.stageflow`, tout en
-conservant l'ouverture, la fusion et l'export des XML Dante.
+Dante Config Editor, ou **DCE**, est un logiciel de préparation hors ligne pour
+les réseaux audio Dante.
 
-Dans une seule interface, DCE rassemble les machines, canaux TX/RX,
-subscriptions, latences, fréquences d’échantillonnage, formats audio, modes
-réseau, Preferred Masters et adresses IP. Il permet de modifier ce que le XML
-expose réellement, puis d’enregistrer un nouveau fichier destiné à Dante
-Controller.
+Il permet d’ouvrir un XML Dante Controller, de comprendre rapidement le contenu
+d’une installation, de corriger les noms, de préparer le patch et de fusionner
+plusieurs projets sans devoir connecter les machines.
+
+DCE est particulièrement utile pour préparer une installation avant d’arriver
+sur site, documenter un réseau existant, appliquer de nombreux changements
+répétitifs ou vérifier un fichier avant de le remettre à Dante Controller.
 
 [![Vue d’ensemble de Dante Config Editor](media/fr/overview.png)](media/fr/overview.png)
 
-## Télécharger, voir et apprendre
+## Un exemple concret
 
-| Ressource | Lien direct |
-| --- | --- |
-| **Installateur Windows 11 x64** | [DanteConfigEditor2026_8_1_Installer.exe](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8.1/DanteConfigEditor2026_8_1_Installer.exe) |
-| Démarrage rapide, 1 page | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8.1/QuickStart_DanteConfigEditorV3_FR.pdf) |
-| **Notice professionnelle complète, 41 pages** | [Télécharger le PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8.1/Notice_DanteConfigEditorV3_FR.pdf) · [Consulter dans le dépôt](manuals/Notice_DanteConfigEditorV3_FR.pdf) |
-| Contrôle des téléchargements | [Sommes SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8.1/SHA256SUMS.txt) |
-| Banque communautaire | [77 modèles DCE Community](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8.1/DCE_Community_Devices_2026_3.dce-bank.zip) |
-| Toutes les pièces de la version | [Release DCE 2026.8.1](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.8.1) |
+Vous devez préparer un festival avec une console, plusieurs racks de scène, un
+ordinateur d’enregistrement et des amplificateurs réseau :
 
-L’installateur Windows embarque les démarrages rapides et les notices complètes
-en français et en anglais. La notice complète possède une
-page de garde SiLeMI/O, un sommaire cliquable,
-des signets PDF, un retour au sommaire sur chaque page et des captures annotées.
-Elle suit le travail dans l’ordre : démarrage, projet, réglages globaux,
-machines, renommage, patch, fusion, banques, import/export, synoptique,
-validation, récupération, licence et Atomic Bomb.
+1. ouvrez le XML de référence dans DCE ;
+2. visualisez les machines, leurs canaux TX/RX et les subscriptions ;
+3. renommez les rôles et les canaux, à l’unité ou en série ;
+4. préparez le patch dans la matrice ou avec Easy Patch ;
+5. ajoutez les machines manquantes depuis la banque ;
+6. lancez la vérification du projet ;
+7. exportez le XML final et ouvrez-le dans Dante Controller avant exploitation.
 
-DCE a également été testé et validé sur un Mac réel par le mainteneur. Les
-paquets macOS 2026.8.1 sont temporairement indisponibles : leur fabrication doit
-être relancée sur un runner Apple avant publication. Aucun lien macOS non
-vérifié n’est présenté comme un téléchargement fonctionnel.
+Vous pouvez préparer l’essentiel au bureau et réserver le temps sur site aux
+contrôles réels : câblage, horloge, réseau et audio.
 
-## Pourquoi utiliser DCE ?
+## Ce que DCE permet de faire
 
-### Voir rapidement toute une installation
+### Voir toute l’installation
 
-DCE donne une vue synthétique du projet et signale les éléments à contrôler :
-formats audio différents, modes réseau mélangés, Preferred Masters multiples,
-IP fixes, machines sans patch ou références incohérentes.
+DCE rassemble dans une seule interface les machines, canaux TX/RX,
+subscriptions, formats audio, latences, fréquences d’échantillonnage,
+Preferred Masters et informations réseau disponibles dans le fichier.
 
-### Renommer sans refaire tout le patch
+La vue d’ensemble aide à repérer rapidement les machines sans patch, les
+réglages différents ou les références à contrôler.
 
-Les machines, TX et RX peuvent être renommés directement ou en série. Pour les
-références reconnues, DCE met à jour les subscriptions concernées afin de ne pas
-perdre le patch existant. Les séries numériques conservent les zéros et peuvent
-enchaîner des paires stéréo comme `FX-1L`, `FX-1R`, `FX-2L`, `FX-2R`.
+### Renommer rapidement
 
-### Fusionner plusieurs installations
-
-Un second XML peut être ajouté au projet ouvert. DCE détecte les conflits de
-noms et d’identités, permet de réutiliser les rôles déjà présents ou de renommer
-les rôles importés, puis redirige les références de patch reconnues.
-
-### Préparer un projet sans les machines
-
-DCE peut partir d’un XML existant ou créer un projet hors ligne. Des rôles
-assainis peuvent être ajoutés depuis la banque de machines, sans recopier une
-identité matérielle, une IP, des flows ou des subscriptions provenant d’un autre
-réseau.
-
-### Un seul projet, plusieurs outils
-
-DCE sait créer, ouvrir et enregistrer directement un dossier `.stageflow`.
-StageFlow Desktop est [gratuit et facultatif](https://github.com/Mamat79/SiLeMIO-StageFlow-Distribution/releases/latest) : DCE reste totalement autonome.
-Dans le projet commun, DCE ne possède que `dante/dante.json`. Les domaines de
-StageFlow, SMT, StageMark et AutoCAD sont validés puis conservés sans être
-réécrits. Les entrées de patch sont liées par UUID explicites, jamais par simple
-ressemblance de libellé.
-
-Pour ajouter Dante à un projet `.stageflow` existant qui n'en contient pas
-encore, ouvrez d'abord le projet StageFlow, ouvrez ensuite le XML Dante, puis
-cliquez sur **Enregistrer**. **Enregistrer sous** crée un nouveau projet et
-refuse volontairement un dossier `.stageflow` existant.
-
-[![Un seul projet, plusieurs outils](media/stageflow-suite-workflow.svg)](media/stageflow-suite-workflow.svg)
-
-[![Création d'un projet StageFlow dans DCE](media/fr/new-project.png)](media/fr/new-project.png)
-
-## Fonctions principales
-
-### Machines et actions globales
-
-- renommer, dupliquer, supprimer ou réinitialiser prudemment un rôle ;
-- renommer les canaux TX et RX à l’unité ou en série ;
-- modifier les réglages audio, réseau, horloge, latence et Preferred Master
-  réellement présents dans le XML ;
-- appliquer un profil ou une même action à plusieurs machines ;
-- indiquer clairement quand une propriété n’est pas disponible pour un rôle.
+- Renommer les machines et les canaux directement.
+- Appliquer une série numérique à une sélection.
+- Conserver les zéros dans des noms comme <code>Mic 01</code>.
+- Prolonger des paires stéréo comme <code>FX-1L</code>,
+  <code>FX-1R</code>, <code>FX-2L</code>, <code>FX-2R</code>.
+- Dupliquer ou réorganiser un rôle sans recommencer tout le projet.
 
 [![Réglages des machines](media/fr/devices.png)](media/fr/devices.png)
 
-### Patch rapide et lisible
+### Préparer le patch
 
-- Matrice de patch compacte avec zoom et fenêtre détachable ;
-- Easy Patch pour travailler par sélection ou par plage 1:1 ;
-- patch immédiat à l’unité, verticalement ou en diagonale selon le résultat
-  valide attendu ;
-- FLIP RX/TX entre les deux machines affichées ;
-- recherche de la source d’un RX ;
-- affichage de toutes les destinations d’un TX et navigation vers celle choisie ;
-- reset RX, TX ou RX/TX d’une machine.
+- Matrice de patch compacte.
+- Easy Patch par sélection ou plage 1:1.
+- Patch à l’unité, vertical ou diagonal.
+- Recherche de la source d’un RX.
+- Affichage des destinations d’un TX.
+- FLIP RX/TX entre deux machines.
+- Réinitialisation ciblée d’une partie du patch.
 
 [![Matrice de patch](media/fr/patch.png)](media/fr/patch.png)
 
-### Validation et sauvegarde sécurisée
+### Fusionner plusieurs projets
 
-- véritable assistant avant export, avec erreurs bloquantes, avertissements à
-  confirmer et informations regroupées par gravité ;
-- accès direct au Centre de validation ou à l’élément concerné ;
-- export d’un rapport de contrôle avant de remettre le XML à Dante Controller ;
-- garde-fous contre les identités manquantes ou dupliquées ;
-- détection des références de patch incohérentes ;
-- conservation des namespaces, attributs, valeurs et balises inconnues ;
-- annulation, rétablissement et récupération automatique ;
-- écriture temporaire, relecture, validation, sauvegarde de l’ancienne
-  destination puis remplacement sûr.
+DCE peut ajouter le contenu d’un second XML dans le projet ouvert. Il vous aide
+à résoudre les conflits de noms et à réutiliser ou renommer les rôles importés.
 
-DCE ne fabrique pas silencieusement des balises techniques absentes. Une action
-non prise en charge est désactivée ou refusée avec une explication.
+Cette fonction est pratique pour réunir des préparations provenant de plusieurs
+équipes ou plusieurs zones d’une installation.
 
-### Banques de machines
+### Préparer des machines sans les avoir sous la main
 
-- catalogue simplifié en trois sources : `Ma banque`, `DCE Community` et
-  `DCE Generic` ;
-- sélection automatique de la génération officielle la plus récente, sans
-  afficher les anciennes copies ni les doublons ;
-- banques personnelles ou partagées toujours préservées ;
-- recherche par fabricant, catégorie et capacités TX/RX ;
-- ajout de plusieurs rôles en une seule opération ;
-- modèles indépendants du projet après insertion ;
-- mise à jour des banques publiques avec contrôle SHA-256 ;
-- statut de qualité, provenance et compatibilité affiché pour chaque modèle ;
-- **77 modèles physiques** : 57 profils testés sur du matériel réel et 20
-  nouveaux profils validés structurellement à partir des spécifications des
-  fabricants, plus 2 rôles génériques pour la préparation et la formation ;
-- création d’une archive de contribution assainie, sans identité, IP,
-  subscription ni donnée du projet source ;
-- conservation systématique de la banque personnelle pendant les mises à jour.
-
-Téléchargements directs : [banque DCE Community](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8.1/DCE_Community_Devices_2026_3.dce-bank.zip) · [rôles DCE Generic](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8.1/DCE_Generic_Roles_2026_3.dce-bank.zip).
+La banque de machines permet d’ajouter des modèles réutilisables pour préparer
+un projet hors ligne. La banque communautaire comprend des profils de consoles,
+racks, interfaces, amplificateurs et équipements réseau audio.
 
 [![Banque de machines](media/fr/device-bank.png)](media/fr/device-bank.png)
 
-### Rapports, labels et synoptique
+### Vérifier et documenter
 
-- rapports TXT/PDF, patchbooks et comparaisons avant/après ;
-- import/export de labels JSON, CSV, XLSX et ODS ;
-- échanges de labels avec les workflows DMT, Allen & Heath dLive/Avantis et
-  Yamaha CL/QL ;
-- synoptique coloré avec emplacements, machines et liaisons regroupées ;
-- export du synoptique en PDF ou SVG pour retouche dans un logiciel vectoriel.
+- Assistant de contrôle avant export.
+- Erreurs et avertissements regroupés par gravité.
+- Rapports TXT ou PDF.
+- Patchbooks et comparaisons avant/après.
+- Import et export de labels avec Excel, CSV, JSON et ODS.
+- Synoptique exportable en PDF ou SVG.
 
 [![Synoptique de Dante Config Editor](media/fr/synoptic.png)](media/fr/synoptic.png)
 
-### Premier lancement et support
+## Un seul projet avec les autres outils SiLeMI/O
 
-- écran de découverte au premier lancement avec cinq parcours utiles : ouvrir
-  un projet StageFlow, ouvrir un XML, créer un projet, découvrir la banque ou
-  lire la notice ;
-- écran accessible ensuite depuis `Aide > Découvrir DCE` ;
-- infobulles et explications contextuelles sans masquer les fonctions avancées ;
-- création en un clic d’un paquet de support respectueux de la confidentialité,
-  contenant le diagnostic, les journaux utiles, les résultats de validation et
-  les empreintes SHA-256, mais **jamais le XML du projet ni un code de licence**.
+DCE utilise le dossier <code>.stageflow</code> comme projet natif. Il peut créer
+et ouvrir ce projet de manière autonome : StageFlow Desktop n’est pas
+obligatoire.
 
-## Quatre formats à distinguer
+Le même projet peut ensuite être utilisé avec SMT, StageMark, StageFlow et
+AutoCAD sans multiplier les fichiers contradictoires.
 
-- **Projet `.stageflow`** : format natif par défaut, autonome et partagé entre
-  les outils SiLeMI/O. DCE n'écrit que son domaine Dante et préserve les autres.
-- **XML Dante** : fichier destiné à Dante Controller. DCE effectue des
-  modifications ciblées du document chargé.
-- **Projet historique `.dceproj`** : ancien espace de travail DCE toujours
-  lisible pour préserver les projets existants.
-- **Banque de machines** : ensemble de modèles réutilisables et partageables,
-  sans identité matérielle de production.
+[![Un seul projet, plusieurs outils](media/stageflow-suite-workflow.svg)](media/stageflow-suite-workflow.svg)
 
-## Licence permanente
+- [StageFlow — patch, groupes, Excel et plan de scène](https://github.com/Mamat79/SiLeMIO-StageFlow-Distribution/releases/latest)
+- [SMT — transfert entre consoles et logiciels](https://github.com/Mamat79/Save-My-Time-SMT/releases/latest)
+- [StageMark — implantation et projection](https://github.com/Mamat79/StageMark/releases/latest)
 
-- **30 jours sans aucun rappel** au premier démarrage ;
-- après 30 jours, **DCE et toutes ses fonctions restent utilisables** ;
-- un rappel non bloquant apparaît simplement au lancement ;
-- une licence permanente à **29 € TTC** supprime ce rappel ;
-- les nouvelles licences incluent 3 activations par défaut ; DCE affiche le
-  nombre utilisé et le nombre autorisé ;
-- le bouton **Désactiver cet ordinateur** libère une activation pour une autre
-  machine ;
-- après l’activation initiale, le reçu signé est vérifié localement et reste
-  valable hors ligne après les mises à jour ;
-- les anciennes licences restent valables sans conversion.
+## Les formats à connaître
 
-[Acheter une licence permanente avec Stripe](https://dce-license.mamat79-dce.workers.dev/buy)
+- **Projet <code>.stageflow</code>** : projet natif partagé avec la suite
+  SiLeMI/O.
+- **XML Dante** : fichier d’échange destiné à Dante Controller.
+- **Projet historique <code>.dceproj</code>** : ancien format DCE toujours
+  ouvrable.
+- **Banque de machines** : collection de modèles réutilisables pour préparer un
+  projet.
 
-Le paiement est traité par Stripe. DCE ne reçoit aucune donnée bancaire et la
-vérification du code de licence fonctionne hors ligne.
+## Télécharger et démarrer
 
-## Compatibilité et limites
+La version actuelle est proposée pour **Windows 11 x64**.
 
-Les XML produits par cette génération ont été importés avec succès dans Dante
-Controller par le mainteneur. Les tests automatisés vérifient également les
-cycles ouverture/enregistrement/réouverture, les références croisées, les
-namespaces, les valeurs inconnues et les opérations transactionnelles. DCE a
-également été testé et validé sur macOS par le mainteneur.
+| Ressource | Lien |
+|---|---|
+| Installateur Windows | [Télécharger la dernière version](https://github.com/Mamat79/Dante-Config-Editor/releases/latest) |
+| Démarrage rapide | [PDF français](manuals/QuickStart_DanteConfigEditorV3_FR.pdf) |
+| Notice complète | [PDF français](manuals/Notice_DanteConfigEditorV3_FR.pdf) |
+| Banque communautaire | [Téléchargement dans la dernière Release](https://github.com/Mamat79/Dante-Config-Editor/releases/latest) |
 
-> DCE est un outil tiers non officiel, sans affiliation avec Audinate. Il ne
-> contrôle pas un réseau Dante en direct et n’utilise ni SDK ni API Audinate.
-> Travaillez sur une copie et contrôlez le XML final dans Dante Controller avant
-> son utilisation sur une installation importante.
+Au premier lancement, l’écran **Découvrir DCE** permet d’ouvrir un XML, créer un
+projet, découvrir la banque ou accéder à la notice.
 
-## Remerciements
+## Utilisation et licence
 
-Merci à [Tobi / @togrupe](https://github.com/togrupe), auteur de
-[dLive MIDI Tools](https://github.com/togrupe/dlive-midi-tools), pour ses
-retours et ses idées sur les workflows de patch et les échanges de labels.
+DCE offre 30 jours sans rappel au premier lancement. Ensuite, le logiciel et ses
+fonctions restent utilisables ; un rappel apparaît simplement au démarrage.
 
-Merci à Charles Bouticourt pour l’idée de la fonction de formation
-**Atomic Bomb**.
+Une licence permanente à **29 € TTC**, en paiement unique, supprime ce rappel.
+
+**[Acheter une licence permanente DCE](https://dce-license.mamat79-dce.workers.dev/buy)**
+
+## À savoir avant une exploitation
+
+DCE est un outil tiers indépendant, sans affiliation avec Audinate. Il prépare
+des fichiers hors ligne et ne pilote pas directement un réseau Dante.
+
+Travaillez sur une copie, ouvrez le XML obtenu dans Dante Controller et vérifiez
+la configuration sur le matériel réel avant toute exploitation importante.
 
 ---
 
