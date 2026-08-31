@@ -119,6 +119,22 @@ obligatoire.
 Le même projet peut ensuite être utilisé avec SMT, StageMark, StageFlow et
 AutoCAD sans multiplier les fichiers contradictoires.
 
+### Envoyer le patch StageFlow vers les RX Dante
+
+Avec DCE 2026.9, un groupe de patch StageFlow peut servir directement à nommer
+tout ou partie des canaux RX d'une machine Dante :
+
+1. ouvrez le projet `.stageflow` dans DCE ;
+2. choisissez le groupe et le nom à utiliser : source, micro, source + micro ou
+   libellé StageFlow ;
+3. choisissez la machine, le premier RX et le nombre de canaux ;
+4. contrôlez l'aperçu Avant / Après, puis appliquez.
+
+DCE tient compte des paires communes, des surcharges propres au groupe et des
+paires masquées. Les cellules vides sont ignorées et rien n'est modifié avant
+votre validation. Ce parcours fonctionne aussi lorsque DCE est utilisé seul,
+sans StageFlow Desktop.
+
 [![Un seul projet, plusieurs outils](media/stageflow-suite-workflow.svg)](media/stageflow-suite-workflow.svg)
 
 - [StageFlow — patch, groupes, Excel et plan de scène](https://github.com/Mamat79/SiLeMIO-StageFlow-Distribution/releases/latest)
@@ -137,7 +153,7 @@ AutoCAD sans multiplier les fichiers contradictoires.
 
 ## Télécharger et démarrer
 
-La version actuelle est proposée pour **Windows 11 x64**.
+La version actuelle **2026.9** est proposée pour **Windows 11 x64**.
 
 | Ressource | Lien |
 |---|---|

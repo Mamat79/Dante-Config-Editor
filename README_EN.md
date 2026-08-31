@@ -107,6 +107,21 @@ create and open it on its own; StageFlow Desktop is optional.
 
 The same project can later be used with SMT, StageMark, StageFlow and AutoCAD.
 
+### Map a StageFlow patch to Dante RX channels
+
+Starting with DCE 2026.9, a StageFlow patch group can directly name all or part
+of a Dante device's RX channels:
+
+1. open the `.stageflow` project in DCE;
+2. choose the group and naming mode: source, microphone, source + microphone,
+   or StageFlow label;
+3. choose the device, first RX channel, and number of channels;
+4. review the Before / After preview, then apply.
+
+DCE resolves common pairs, group overrides, and hidden pairs. Empty cells are
+ignored, and nothing changes before confirmation. This workflow also works
+when DCE is used on its own, without StageFlow Desktop.
+
 [![One project, several tools](media/stageflow-suite-workflow.svg)](media/stageflow-suite-workflow.svg)
 
 - [StageFlow — patch lists, groups, Excel and stage plan](https://github.com/Mamat79/SiLeMIO-StageFlow-Distribution/releases/latest)
@@ -124,7 +139,7 @@ The same project can later be used with SMT, StageMark, StageFlow and AutoCAD.
 
 ## Download and start
 
-The current release is available for **Windows 11 x64**.
+The current **2026.9** release is available for **Windows 11 x64**.
 
 | Resource | Link |
 |---|---|
