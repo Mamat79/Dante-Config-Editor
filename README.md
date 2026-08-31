@@ -10,11 +10,11 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8/DanteConfigEditor2026_8_Installer.exe"><strong>Télécharger pour Windows</strong></a>
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8.1/DanteConfigEditor2026_8_1_Installer.exe"><strong>Télécharger pour Windows</strong></a>
   ·
-  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8/Notice_DanteConfigEditorV3_FR.pdf"><strong>Lire la notice professionnelle</strong></a>
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8.1/Notice_DanteConfigEditorV3_FR.pdf"><strong>Lire la notice professionnelle</strong></a>
   ·
-  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.8"><strong>Voir la Release</strong></a>
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.8.1"><strong>Voir la Release</strong></a>
 </p>
 
 <p align="center">
@@ -25,7 +25,7 @@
 
 ## L’essentiel
 
-**DCE 2026.8** est un éditeur de projets Dante Controller conçu pour les
+**DCE 2026.8.1** est un éditeur de projets Dante Controller conçu pour les
 préparations hors ligne, les contrôles rapides et les modifications répétitives
 qui demandent habituellement d’ouvrir de nombreuses pages dans Dante
 Controller. Son projet natif est désormais un dossier `.stageflow`, tout en
@@ -43,12 +43,12 @@ Controller.
 
 | Ressource | Lien direct |
 | --- | --- |
-| **Installateur Windows 11 x64** | [DanteConfigEditor2026_8_Installer.exe](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8/DanteConfigEditor2026_8_Installer.exe) |
-| Démarrage rapide, 1 page | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8/QuickStart_DanteConfigEditorV3_FR.pdf) |
-| **Notice professionnelle complète, 41 pages** | [Télécharger le PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8/Notice_DanteConfigEditorV3_FR.pdf) · [Consulter dans le dépôt](manuals/Notice_DanteConfigEditorV3_FR.pdf) |
-| Contrôle des téléchargements | [Sommes SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8/SHA256SUMS.txt) |
-| Banque communautaire | [77 modèles DCE Community](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8/DCE_Community_Devices_2026_3.dce-bank.zip) |
-| Toutes les pièces de la version | [Release DCE 2026.8](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.8) |
+| **Installateur Windows 11 x64** | [DanteConfigEditor2026_8_1_Installer.exe](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8.1/DanteConfigEditor2026_8_1_Installer.exe) |
+| Démarrage rapide, 1 page | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8.1/QuickStart_DanteConfigEditorV3_FR.pdf) |
+| **Notice professionnelle complète, 41 pages** | [Télécharger le PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8.1/Notice_DanteConfigEditorV3_FR.pdf) · [Consulter dans le dépôt](manuals/Notice_DanteConfigEditorV3_FR.pdf) |
+| Contrôle des téléchargements | [Sommes SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8.1/SHA256SUMS.txt) |
+| Banque communautaire | [77 modèles DCE Community](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8.1/DCE_Community_Devices_2026_3.dce-bank.zip) |
+| Toutes les pièces de la version | [Release DCE 2026.8.1](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2026.8.1) |
 
 L’installateur Windows embarque les démarrages rapides et les notices complètes
 en français et en anglais. La notice complète possède une
@@ -59,7 +59,7 @@ machines, renommage, patch, fusion, banques, import/export, synoptique,
 validation, récupération, licence et Atomic Bomb.
 
 DCE a également été testé et validé sur un Mac réel par le mainteneur. Les
-paquets macOS 2026.8 sont temporairement indisponibles : leur fabrication doit
+paquets macOS 2026.8.1 sont temporairement indisponibles : leur fabrication doit
 être relancée sur un runner Apple avant publication. Aucun lien macOS non
 vérifié n’est présenté comme un téléchargement fonctionnel.
 
@@ -99,6 +99,11 @@ Dans le projet commun, DCE ne possède que `dante/dante.json`. Les domaines de
 StageFlow, SMT, StageMark et AutoCAD sont validés puis conservés sans être
 réécrits. Les entrées de patch sont liées par UUID explicites, jamais par simple
 ressemblance de libellé.
+
+Pour ajouter Dante à un projet `.stageflow` existant qui n'en contient pas
+encore, ouvrez d'abord le projet StageFlow, ouvrez ensuite le XML Dante, puis
+cliquez sur **Enregistrer**. **Enregistrer sous** crée un nouveau projet et
+refuse volontairement un dossier `.stageflow` existant.
 
 [![Un seul projet, plusieurs outils](media/stageflow-suite-workflow.svg)](media/stageflow-suite-workflow.svg)
 
@@ -165,7 +170,7 @@ non prise en charge est désactivée ou refusée avec une explication.
   subscription ni donnée du projet source ;
 - conservation systématique de la banque personnelle pendant les mises à jour.
 
-Téléchargements directs : [banque DCE Community](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8/DCE_Community_Devices_2026_3.dce-bank.zip) · [rôles DCE Generic](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8/DCE_Generic_Roles_2026_3.dce-bank.zip).
+Téléchargements directs : [banque DCE Community](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8.1/DCE_Community_Devices_2026_3.dce-bank.zip) · [rôles DCE Generic](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.8.1/DCE_Generic_Roles_2026_3.dce-bank.zip).
 
 [![Banque de machines](media/fr/device-bank.png)](media/fr/device-bank.png)
 
