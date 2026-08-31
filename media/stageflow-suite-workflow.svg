@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
+  <title id="title">Un seul projet, plusieurs outils</title>
+  <desc id="desc">StageFlow, SMT, Dante Config Editor, StageMark et AutoCAD échangent des domaines isolés autour d'un projet stageflow commun.</desc>
+  <rect width="1200" height="520" fill="#07111f"/>
+  <text x="600" y="54" text-anchor="middle" fill="#f4f8fc" font-family="Segoe UI,Arial,sans-serif" font-size="30" font-weight="700">Un seul projet, plusieurs outils</text>
+  <text x="600" y="84" text-anchor="middle" fill="#9fb3c8" font-family="Segoe UI,Arial,sans-serif" font-size="16">Chaque application ne modifie que son propre domaine</text>
+  <g stroke="#63b6e6" stroke-width="3" fill="none" opacity="0.9">
+    <path d="M600 188 L228 155"/><path d="M600 188 L395 385"/><path d="M600 188 L805 385"/><path d="M600 188 L972 155"/>
+  </g>
+  <g font-family="Segoe UI,Arial,sans-serif">
+    <rect x="420" y="120" width="360" height="136" rx="8" fill="#17283d" stroke="#63b6e6" stroke-width="3"/>
+    <text x="600" y="168" text-anchor="middle" fill="#f4f8fc" font-size="27" font-weight="700">Projet .stageflow</text>
+    <text x="600" y="202" text-anchor="middle" fill="#c9d7e6" font-size="17">project.json + domaines indépendants</text>
+    <text x="600" y="231" text-anchor="middle" fill="#63b6e6" font-size="15">écriture atomique · verrous · UUID · hash de base</text>
+    <g fill="#102238" stroke="#526b86" stroke-width="2">
+      <rect x="78" y="110" width="300" height="96" rx="8"/><rect x="822" y="110" width="300" height="96" rx="8"/>
+      <rect x="245" y="340" width="300" height="96" rx="8"/><rect x="655" y="340" width="300" height="96" rx="8"/>
+    </g>
+    <text x="228" y="150" text-anchor="middle" fill="#f4f8fc" font-size="22" font-weight="700">StageFlow</text>
+    <text x="228" y="180" text-anchor="middle" fill="#9fb3c8" font-size="15">coordination du projet</text>
+    <text x="972" y="150" text-anchor="middle" fill="#f4f8fc" font-size="22" font-weight="700">SMT</text>
+    <text x="972" y="180" text-anchor="middle" fill="#9fb3c8" font-size="15">domaine technique</text>
+    <text x="395" y="380" text-anchor="middle" fill="#f4f8fc" font-size="22" font-weight="700">Dante Config Editor</text>
+    <text x="395" y="410" text-anchor="middle" fill="#63b6e6" font-size="15">dante/dante.json</text>
+    <text x="805" y="380" text-anchor="middle" fill="#f4f8fc" font-size="22" font-weight="700">StageMark + AutoCAD</text>
+    <text x="805" y="410" text-anchor="middle" fill="#9fb3c8" font-size="15">plans et repérage</text>
+    <text x="600" y="486" text-anchor="middle" fill="#6f8298" font-size="14">StageFlow Desktop est gratuit et facultatif : chaque outil sait ouvrir le projet commun de façon autonome.</text>
+  </g>
+</svg>
