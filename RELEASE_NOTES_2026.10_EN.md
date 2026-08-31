@@ -2,6 +2,20 @@
 
 [Notes de version françaises](RELEASE_NOTES_2026.10.md)
 
+## Unified SiLeMI/O interface
+
+This 2026.10 refresh applies the shared SiLeMI/O visual system across the
+Windows interface: a compact identity bar, 208 px navigation, a 280 px
+contextual inspector, clearer surface hierarchy, and a persistent status bar.
+Controls now share consistent heights, radii, spacing, and hover states;
+values remain vertically centered and long inspector labels are no longer
+split in the middle of a word.
+
+Light and dark palettes were reviewed in both French and English on the
+Project, Devices, Patch, and Atomic Bomb screens. This is a visual-only change:
+the XML engine, targeted mutations, project formats, device banks, and
+licensing system remain unchanged.
+
 ## New: StageFlow LIVE V1 following
 
 When a `.stageflow` project is orchestrated by StageFlow Desktop, DCE now
@@ -101,7 +115,8 @@ Audinate, and does not control a live Dante network.
 
 ## Validation
 
-- 509 Core/Windows tests passed, including 21 focused StageFlow tests;
+- 512 Core/Windows tests passed, including 21 focused StageFlow tests and 3
+  dedicated SiLeMI/O visual-system contracts;
 - 22 headless Avalonia/macOS tests passed;
 - Windows and macOS/Avalonia Release builds completed without errors;
 - dedicated StageFlow round-trip, cross-domain integrity, UUID, and base-hash

@@ -2,6 +2,20 @@
 
 [English release notes](RELEASE_NOTES_2026.10_EN.md)
 
+## Interface SiLeMI/O harmonisée
+
+Cette actualisation de la 2026.10 applique à toute l'interface Windows le
+système visuel commun SiLeMI/O : barre d'identité compacte, navigation de
+208 px, inspecteur contextuel de 280 px, surfaces mieux hiérarchisées et barre
+d'état permanente. Les contrôles ont des hauteurs, rayons, espacements et
+états de survol cohérents ; les valeurs restent centrées verticalement et les
+libellés longs de l'inspecteur ne sont plus coupés au milieu d'un mot.
+
+Les palettes claire et sombre ont été vérifiées en français et en anglais sur
+les écrans Projet, Machines, Patch et Atomic Bomb. Cette refonte est strictement
+visuelle : le moteur XML, les mutations ciblées, les formats de projet, les
+banques et le système de licence restent inchangés.
+
 ## Nouveau : suivi StageFlow LIVE V1
 
 Quand un projet `.stageflow` est orchestré par StageFlow Desktop, DCE reconnaît
@@ -108,7 +122,8 @@ contrôle en direct du réseau Dante.
 
 ## Validation
 
-- 509 tests Core/Windows réussis, dont 21 tests StageFlow ciblés ;
+- 512 tests Core/Windows réussis, dont 21 tests StageFlow ciblés et 3 contrats
+  dédiés au système visuel SiLeMI/O ;
 - 22 tests Avalonia/macOS sans écran réussis ;
 - build Windows et build macOS/Avalonia Release sans erreur ;
 - tests dédiés au cycle StageFlow, à l'intégrité inter-domaines, aux UUID et aux
