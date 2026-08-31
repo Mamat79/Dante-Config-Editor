@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/latest"><strong>⬇ Télécharger DCE pour Windows</strong></a>
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/latest/download/DanteConfigEditor2026_10_Installer.exe"><strong>⬇ Windows</strong></a>
   ·
   <a href="manuals/Notice_DanteConfigEditorV3_FR.pdf">Notice complète</a>
   ·
@@ -119,9 +119,9 @@ obligatoire.
 Le même projet peut ensuite être utilisé avec SMT, StageMark, StageFlow et
 AutoCAD sans multiplier les fichiers contradictoires.
 
-### Envoyer le patch StageFlow vers les RX Dante
+### Envoyer le patch StageFlow vers les RX Dante et suivre le projet en LIVE
 
-Avec DCE 2026.9, un groupe de patch StageFlow peut servir directement à nommer
+Un groupe de patch StageFlow peut servir directement à nommer
 tout ou partie des canaux RX d'une machine Dante :
 
 1. ouvrez le projet `.stageflow` dans DCE ;
@@ -134,6 +134,13 @@ DCE tient compte des paires communes, des surcharges propres au groupe et des
 paires masquées. Les cellules vides sont ignorées et rien n'est modifié avant
 votre validation. Ce parcours fonctionne aussi lorsque DCE est utilisé seul,
 sans StageFlow Desktop.
+
+Avec StageFlow Desktop ouvert sur le même projet, DCE 2026.10 reconnaît sa
+session LIVE locale et peut suivre les changements liés aux RX par leurs UUID
+explicites. L'état connecté, autonome ou en conflit reste visible. Une règle
+manquante, un travail local non enregistré ou un conflit de hash interrompt la
+transaction entière : le dernier état valide est conservé. DCE ne pilote pas
+le réseau Dante et ne modifie que son propre domaine hors ligne.
 
 [![Un seul projet, plusieurs outils](media/stageflow-suite-workflow.svg)](media/stageflow-suite-workflow.svg)
 
@@ -153,14 +160,17 @@ sans StageFlow Desktop.
 
 ## Télécharger et démarrer
 
-La version actuelle **2026.9** est proposée pour **Windows 11 x64**.
+La version actuelle **2026.10** est proposée pour **Windows 11 x64**.
 
 | Ressource | Lien |
 |---|---|
-| Installateur Windows | [Télécharger la dernière version](https://github.com/Mamat79/Dante-Config-Editor/releases/latest) |
+| Installateur Windows | [Télécharger directement](https://github.com/Mamat79/Dante-Config-Editor/releases/latest/download/DanteConfigEditor2026_10_Installer.exe) |
 | Démarrage rapide | [PDF français](manuals/QuickStart_DanteConfigEditorV3_FR.pdf) |
 | Notice complète | [PDF français](manuals/Notice_DanteConfigEditorV3_FR.pdf) |
 | Banque communautaire | [Téléchargement dans la dernière Release](https://github.com/Mamat79/Dante-Config-Editor/releases/latest) |
+
+L'interface macOS conserve le même parcours et passe les tests automatisés,
+mais les DMG 2026.10 seront ajoutés après rétablissement du runner macOS GitHub.
 
 Au premier lancement, l’écran **Découvrir DCE** permet d’ouvrir un XML, créer un
 projet, découvrir la banque ou accéder à la notice.
