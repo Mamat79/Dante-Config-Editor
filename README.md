@@ -11,6 +11,10 @@
 <p align="center">
   <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/latest/download/DanteConfigEditor2026_10_Installer.exe"><strong>⬇ Windows</strong></a>
   ·
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/latest/download/DanteConfigEditor2026_10_macOS_AppleSilicon.dmg"><strong>macOS Apple Silicon</strong></a>
+  ·
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/latest/download/DanteConfigEditor2026_10_macOS_Intel.dmg"><strong>macOS Intel</strong></a>
+  ·
   <a href="manuals/Notice_DanteConfigEditorV3_FR.pdf">Notice complète</a>
   ·
   <a href="manuals/Guide-Suite-SiLeMIO-FR.pdf">Guide de la suite</a>
@@ -124,6 +128,12 @@ racks, interfaces, amplificateurs et équipements réseau audio.
 DCE utilise le dossier <code>.stageflow</code> comme projet natif. Il peut créer
 et ouvrir ce projet de manière autonome : StageFlow n’est pas obligatoire.
 
+Si le projet StageFlow ne contient pas encore de configuration Dante, DCE
+propose immédiatement de **créer depuis zéro**, d'**ouvrir un XML Dante** ou de
+continuer plus tard. La création depuis zéro démarre avec une première machine
+personnalisée ou issue de la banque. À l'enregistrement, DCE ajoute uniquement
+son domaine Dante et conserve les données des autres logiciels.
+
 Le même projet peut ensuite être utilisé avec StageDesk, sous-titré **Save My Time**, StageMark,
 StageFlow, StageMon et AutoCAD sans multiplier les fichiers contradictoires.
 
@@ -169,18 +179,19 @@ le réseau Dante et ne modifie que son propre domaine hors ligne.
 
 ## Télécharger et démarrer
 
-La version actuelle **2026.10** est proposée pour **Windows 11 x64**.
+La version actuelle **2026.10** est proposée pour **Windows 11 x64** et
+**macOS**. L'application a été testée sur les deux plateformes ; deux DMG sont
+fournis pour les Mac Apple Silicon et Intel.
 
 | Ressource | Lien |
 |---|---|
 | Installateur Windows | [Télécharger directement](https://github.com/Mamat79/Dante-Config-Editor/releases/latest/download/DanteConfigEditor2026_10_Installer.exe) |
+| macOS Apple Silicon | [Télécharger le DMG](https://github.com/Mamat79/Dante-Config-Editor/releases/latest/download/DanteConfigEditor2026_10_macOS_AppleSilicon.dmg) |
+| macOS Intel | [Télécharger le DMG](https://github.com/Mamat79/Dante-Config-Editor/releases/latest/download/DanteConfigEditor2026_10_macOS_Intel.dmg) |
 | Démarrage rapide | [PDF français](manuals/QuickStart_DanteConfigEditorV3_FR.pdf) |
 | Notice complète | [PDF français](manuals/Notice_DanteConfigEditorV3_FR.pdf) |
 | Guide de la suite | [PDF français](manuals/Guide-Suite-SiLeMIO-FR.pdf) · [English PDF](manuals/SiLeMIO-Suite-Guide-EN.pdf) |
 | Banque communautaire | [Téléchargement dans la dernière Release](https://github.com/Mamat79/Dante-Config-Editor/releases/latest) |
-
-L'interface macOS conserve le même parcours et passe les tests automatisés,
-mais les DMG 2026.10 seront ajoutés après rétablissement du runner macOS GitHub.
 
 Au premier lancement, l’écran **Découvrir DCE** permet d’ouvrir un XML, créer un
 projet, découvrir la banque ou accéder à la notice.

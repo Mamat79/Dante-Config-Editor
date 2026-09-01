@@ -1,28 +1,67 @@
-# Dante Config Editor 2026.10
+# Dante Config Editor - version 2026.10
 
 [Notes de version françaises](RELEASE_NOTES_2026.10.md)
 
-## Unified SiLeMI/O interface
+## Unified SiLeMIO interface
 
-This 2026.10 refresh applies the shared SiLeMI/O visual system across the
-Windows interface: a compact identity bar, 208 px navigation, a 280 px
-contextual inspector, clearer surface hierarchy, and a persistent status bar.
-Controls now share consistent heights, radii, spacing, and hover states;
-values remain vertically centered and long inspector labels are no longer
-split in the middle of a word.
+Dante Config Editor now follows the SiLeMIO Visual System v1: a compact
+identity bar, permanently available Undo/Redo commands, language and theme
+controls consistently ordered on the right as a theme icon, compact language
+selector, then an outlined `? Help` button, calmer navigation, and panels
+without unnecessary decorative effects. Light and dark modes now use the
+Atelier Hybrid and Studio Graphite palettes.
 
-Light and dark palettes were reviewed in both French and English on the
-Project, Devices, Patch, and Atomic Bomb screens. This is a visual-only change:
-the XML engine, targeted mutations, project formats, device banks, and
-licensing system remain unchanged.
+Fields, lists, buttons, and dialogs share consistent heights, radii, and
+vertical alignment. This is strictly a visual update: the XML engine, device
+libraries, StageFlow integration, licensing, and project formats are unchanged.
 
-The upper-right corner now uses a fixed compact order: sun/moon theme icon,
-FR/EN selector, then an outlined `? Help` button. The Help menu and F1 shortcut
-remain available.
+## Create Dante from an empty StageFlow project
+
+After opening a `.stageflow` project with no Dante domain, DCE directly offers
+**Start from scratch**, **Open Dante XML**, or **Later**. The first choice opens
+the first-device wizard for a custom device or a device-bank role. DCE adds only
+`dante/dante.json` and its package; Patch, CAD, SMT, and StageMark domains remain
+unchanged.
+
+The previous workflow remains available: open the empty StageFlow project,
+open an existing Dante XML file, then choose **Save**. Once an Rx device is
+available, **Map the StageFlow patch to RX channels** is available from Project
+and from **Import / Export > Labels**. It applies Source, Microphone, Source +
+microphone, or StageFlow label names from the selected group with a Before /
+After preview.
+
+## Local StageFlow console on Windows
+
+StageFlow can discover DCE, open the current project in the existing
+single instance, show Patch / RX or the validation center, and request a save
+of the Dante domain. Presence uses a short lease and atomic writes; the pipe is
+restricted to the current user. DCE verifies the instance nonce plus the LIVE
+project and session UUIDs.
+
+This console advertises no Dante network-control capability. Opening or
+reloading remains an offline project operation and never triggers hardware. If
+the current project has unsaved changes, DCE presents **Save / Discard /
+Cancel** before switching. Interactive opening may wait for up to five minutes;
+quick commands remain limited to two seconds and no duplicate instance is
+created.
+
+For a shared save, DCE acquires `dante.lock` before `project.lock`, rereads both
+documents while locked, and adds its reference to the latest manifest. Concurrent
+additions made by other tools are retained; a collision on the Dante domain is
+explicitly rejected.
+
+The bundled French/English suite guide and its architecture and workflow
+diagrams distinguish standalone work in each application, shared `.stageflow`
+projects that do not require StageFlow, and the optional central
+StageFlow console.
+
+The **Help** menu and validation centre also expose the **SiLeMI/O suite
+guide**. DCE opens the local English or French PDF for the active language
+without replacing DCE's own quick start or full guide.
 
 ## New: StageFlow LIVE V1 following
 
-When a `.stageflow` project is orchestrated by StageFlow, Dante Config Editor now
+When a `.stageflow` project is orchestrated by StageFlow, DCE now
 recognizes its short LIVE lease and displays an explicit state: connected,
 available with following disabled, standalone, or conflict. Following is
 enabled by default, stored locally, and can be disabled from the Labels page.
@@ -60,10 +99,10 @@ Windows and macOS expose the same workflow in French and English.
 
 ## 2026.8.1 corrective release
 
-When a StageFlow project does not contain a Dante domain yet, DCE now states
-the exact workflow: open the StageFlow project, open the Dante XML file, then
-choose **Save**. **Save as** remains dedicated to creating a new project and
-intentionally refuses an existing `.stageflow` directory.
+When a StageFlow project does not contain a Dante domain yet, DCE can either
+create its configuration from scratch with **New project**, or open a Dante XML
+file and then choose **Save**. **Save as** remains dedicated to creating
+another project and intentionally refuses an existing `.stageflow` directory.
 
 A contract test covers the shared Windows/macOS wording and the actual flow.
 It also verifies that adding `dante/dante.json` and the `.dceproj` package
@@ -119,8 +158,7 @@ Audinate, and does not control a live Dante network.
 
 ## Validation
 
-- 512 Core/Windows tests passed, including 21 focused StageFlow tests and 3
-  dedicated SiLeMI/O visual-system contracts;
+- 540 Core/Windows tests passed, including focused StageFlow workflows;
 - 22 headless Avalonia/macOS tests passed;
 - Windows and macOS/Avalonia Release builds completed without errors;
 - dedicated StageFlow round-trip, cross-domain integrity, UUID, and base-hash
@@ -133,6 +171,3 @@ Audinate, and does not control a live Dante network.
 The Windows installer is not Authenticode-signed. macOS packages remain
 unnotarized. The final exported XML must still be reviewed in Dante Controller
 before deployment.
-
-This publication includes the Windows installer. The 2026.10 macOS DMGs will
-be added to the same release after the GitHub runner is restored.

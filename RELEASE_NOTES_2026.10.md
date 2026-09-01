@@ -1,28 +1,67 @@
-# Dante Config Editor 2026.10
+# Dante Config Editor - version 2026.10
 
 [English release notes](RELEASE_NOTES_2026.10_EN.md)
 
-## Interface SiLeMI/O harmonisée
+## Interface SiLeMIO harmonisée
 
-Cette actualisation de la 2026.10 applique à toute l'interface Windows le
-système visuel commun SiLeMI/O : barre d'identité compacte, navigation de
-208 px, inspecteur contextuel de 280 px, surfaces mieux hiérarchisées et barre
-d'état permanente. Les contrôles ont des hauteurs, rayons, espacements et
-états de survol cohérents ; les valeurs restent centrées verticalement et les
-libellés longs de l'inspecteur ne sont plus coupés au milieu d'un mot.
+Dante Config Editor adopte le système visuel commun SiLeMIO v1 : une barre
+d'identité plus compacte, les commandes Annuler/Rétablir toujours visibles,
+le thème sous forme d'icône, la langue compacte puis le bouton contour
+`? Aide` toujours accessibles à droite, une navigation plus calme et des
+panneaux sans effets décoratifs inutiles. Les thèmes clair et sombre utilisent
+désormais les palettes Atelier hybride et Studio Graphite.
 
-Les palettes claire et sombre ont été vérifiées en français et en anglais sur
-les écrans Projet, Machines, Patch et Atomic Bomb. Cette refonte est strictement
-visuelle : le moteur XML, les mutations ciblées, les formats de projet, les
-banques et le système de licence restent inchangés.
+Les champs, listes, boutons et dialogues partagent les mêmes hauteurs, rayons
+et alignements. Cette évolution est strictement visuelle : le moteur XML, les
+banques, StageFlow, les licences et les formats de projet restent inchangés.
 
-Le coin supérieur droit présente maintenant, dans un ordre fixe et compact,
-l'icône soleil/lune du thème, le sélecteur FR/EN puis le bouton contour
-`? Aide`. Le menu Aide et le raccourci F1 restent disponibles.
+## Créer Dante depuis un projet StageFlow vide
+
+Après l'ouverture d'un projet `.stageflow` sans domaine Dante, DCE propose
+directement **Créer depuis zéro**, **Ouvrir un XML Dante** ou **Plus tard**.
+Le premier choix ouvre l'assistant de la première machine, personnalisée ou
+issue de la banque. DCE ajoute uniquement `dante/dante.json` et son paquet ;
+les domaines Patch, CAD, SMT et StageMark restent inchangés.
+
+L'ancien parcours reste disponible : ouvrir le projet StageFlow vide, ouvrir
+un XML Dante existant, puis utiliser **Enregistrer**. Une fois une machine RX
+présente, **Associer le patch StageFlow aux canaux RX** est accessible depuis
+Projet et depuis **Import / Export > Labels**. Cette action reprend les noms
+Source, Micro, Source + micro ou Libellé StageFlow du groupe choisi avec aperçu
+Avant / Après.
+
+## Console locale StageFlow sous Windows
+
+StageFlow peut détecter DCE, ouvrir le projet courant dans l'instance
+unique existante, afficher Patch / RX ou le centre de validation et demander
+l'enregistrement du domaine Dante. La présence utilise un bail court et une
+écriture atomique ; le pipe est limité à l'utilisateur courant. DCE vérifie le
+nonce d'instance ainsi que les UUID du projet et de la session LIVE.
+
+Cette console ne publie aucune capacité de commande du réseau Dante. Une
+ouverture ou un rechargement reste une opération de projet hors ligne et ne
+déclenche jamais d'action matérielle. Si le projet courant contient des
+modifications, DCE présente **Enregistrer / Abandonner / Annuler** avant toute
+bascule. L'ouverture interactive accepte jusqu'à cinq minutes ; les commandes
+rapides restent limitées à deux secondes et aucune seconde instance n'est créée.
+
+Lors d'un enregistrement partagé, DCE prend `dante.lock` puis `project.lock`,
+relit les deux documents sous verrou et ajoute sa référence au dernier manifeste
+disponible. Les ajouts concurrents des autres outils sont ainsi conservés ; une
+collision sur le domaine Dante est refusée explicitement.
+
+Le guide commun FR/EN et ses schémas d'architecture et de parcours sont fournis
+avec la documentation. Ils distinguent le travail autonome dans chaque outil,
+le projet commun `.stageflow` utilisable sans StageFlow et la console
+centrale facultative de StageFlow.
+
+Le menu **Aide** et le centre de validation proposent aussi **Guide de la suite
+SiLeMI/O**. DCE ouvre alors le PDF local français ou anglais selon la langue
+active, sans remplacer le démarrage rapide ni la notice complète propres à DCE.
 
 ## Nouveau : suivi StageFlow LIVE V1
 
-Quand un projet `.stageflow` est orchestré par StageFlow, Dante Config Editor reconnaît
+Quand un projet `.stageflow` est orchestré par StageFlow, DCE reconnaît
 désormais son bail LIVE court et affiche un état explicite : connecté,
 disponible avec suivi désactivé, autonome ou conflit. Le suivi est activé par
 défaut, mémorisé localement et peut être désactivé depuis la page Labels.
@@ -62,11 +101,11 @@ Les interfaces Windows et macOS exposent le même flux en français et en anglai
 
 ## Correctif 2026.8.1
 
-Lorsqu'un projet StageFlow ne contient pas encore de domaine Dante, DCE indique
-maintenant le parcours exact : ouvrir le projet StageFlow, ouvrir le XML Dante,
-puis utiliser **Enregistrer**. La commande **Enregistrer sous** reste réservée
-à la création d'un nouveau projet et refuse volontairement un dossier
-`.stageflow` existant.
+Lorsqu'un projet StageFlow ne contient pas encore de domaine Dante, DCE permet
+soit de créer sa configuration de zéro avec **Nouveau projet**, soit d'ouvrir
+un XML Dante puis d'utiliser **Enregistrer**. La commande **Enregistrer sous**
+reste réservée à la création d'un autre projet et refuse volontairement un
+dossier `.stageflow` existant.
 
 Le libellé commun Windows/macOS et le flux réel sont couverts par un test de
 contrat. Celui-ci vérifie aussi que l'ajout de `dante/dante.json` et du paquet
@@ -126,8 +165,7 @@ contrôle en direct du réseau Dante.
 
 ## Validation
 
-- 512 tests Core/Windows réussis, dont 21 tests StageFlow ciblés et 3 contrats
-  dédiés au système visuel SiLeMI/O ;
+- 540 tests Core/Windows réussis, avec les parcours StageFlow ciblés ;
 - 22 tests Avalonia/macOS sans écran réussis ;
 - build Windows et build macOS/Avalonia Release sans erreur ;
 - tests dédiés au cycle StageFlow, à l'intégrité inter-domaines, aux UUID et aux
@@ -140,6 +178,3 @@ contrôle en direct du réseau Dante.
 L'installateur Windows n'est pas signé Authenticode. Les paquets macOS restent
 non notariés. L'export XML final doit toujours être contrôlé dans Dante
 Controller avant exploitation.
-
-Cette publication contient l'installateur Windows. Les DMG macOS 2026.10
-seront ajoutés à cette même release après rétablissement du runner GitHub.
