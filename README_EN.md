@@ -18,6 +18,13 @@
   <a href="README.md">Français</a>
 </p>
 
+<p align="center">
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.10/dante-config-editor-presentation-en.mp4"><img src="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.10/dante-config-editor-presentation-en-poster.png" width="820" alt="Dante Config Editor presentation video"></a><br>
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.10/dante-config-editor-presentation-en.mp4">Presentation · EN</a>
+  · <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.10/dante-config-editor-presentation-en.vtt">EN captions</a>
+  · <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.10/dante-config-editor-presentation-fr.mp4">Présentation · FR</a>
+</p>
+
 ---
 
 ## What is Dante Config Editor for?
