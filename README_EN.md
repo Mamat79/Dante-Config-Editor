@@ -134,7 +134,7 @@ updates its own offline domain.
 
 [![One project, several tools](media/stageflow-suite-workflow.svg)](media/stageflow-suite-workflow.svg)
 
-- [StageFlow — patch lists, groups, Excel and stage plan](https://github.com/Mamat79/SiLeMIO-StageFlow-Distribution/releases/latest)
+- [StageFlow — patch lists, groups, Excel and stage plan](https://github.com/Mamat79/StageFlow)
 - [Save My Time — transfer between consoles and software](https://github.com/Mamat79/Save-My-Time-SMT/releases/latest)
 - [StageMark — placement and projection](https://github.com/Mamat79/StageMark/releases/latest)
 - [StageMon — live monitoring matrix](https://github.com/Mamat79/StageMon/releases/latest)

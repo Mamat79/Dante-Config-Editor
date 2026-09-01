@@ -145,7 +145,7 @@ le réseau Dante et ne modifie que son propre domaine hors ligne.
 
 [![Un seul projet, plusieurs outils](media/stageflow-suite-workflow.svg)](media/stageflow-suite-workflow.svg)
 
-- [StageFlow — patch, groupes, Excel et plan de scène](https://github.com/Mamat79/SiLeMIO-StageFlow-Distribution/releases/latest)
+- [StageFlow — patch, groupes, Excel et plan de scène](https://github.com/Mamat79/StageFlow)
 - [Save My Time — transfert entre consoles et logiciels](https://github.com/Mamat79/Save-My-Time-SMT/releases/latest)
 - [StageMark — implantation et projection](https://github.com/Mamat79/StageMark/releases/latest)
 - [StageMon — matrice d’écoute live](https://github.com/Mamat79/StageMon/releases/latest)
