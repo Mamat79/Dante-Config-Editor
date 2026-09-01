@@ -27,7 +27,7 @@ applications.
 
 ## DCE remains standalone
 
-StageFlow Desktop remains free and optional. DCE can create, open, and save a
+StageFlow remains free and optional. Dante Config Editor can create, open, and save a
 `.stageflow` project by itself while continuing to support Dante XML and legacy
 DCE projects.
 

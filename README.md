@@ -13,12 +13,14 @@
   ·
   <a href="manuals/Notice_DanteConfigEditorV3_FR.pdf">Notice complète</a>
   ·
+  <a href="manuals/Guide-Suite-SiLeMIO-FR.pdf">Guide de la suite</a>
+  ·
   <a href="README_EN.md">English</a>
 </p>
 
 ---
 
-## DCE, à quoi ça sert ?
+## Dante Config Editor, à quoi ça sert ?
 
 Dante Config Editor, ou **DCE**, est un logiciel de préparation hors ligne pour
 les réseaux audio Dante.
@@ -113,11 +115,10 @@ racks, interfaces, amplificateurs et équipements réseau audio.
 ## Un seul projet avec les autres outils SiLeMI/O
 
 DCE utilise le dossier <code>.stageflow</code> comme projet natif. Il peut créer
-et ouvrir ce projet de manière autonome : StageFlow Desktop n’est pas
-obligatoire.
+et ouvrir ce projet de manière autonome : StageFlow n’est pas obligatoire.
 
-Le même projet peut ensuite être utilisé avec SMT, StageMark, StageFlow et
-AutoCAD sans multiplier les fichiers contradictoires.
+Le même projet peut ensuite être utilisé avec Save My Time, StageMark,
+StageFlow, StageMon et AutoCAD sans multiplier les fichiers contradictoires.
 
 ### Envoyer le patch StageFlow vers les RX Dante et suivre le projet en LIVE
 
@@ -133,9 +134,9 @@ tout ou partie des canaux RX d'une machine Dante :
 DCE tient compte des paires communes, des surcharges propres au groupe et des
 paires masquées. Les cellules vides sont ignorées et rien n'est modifié avant
 votre validation. Ce parcours fonctionne aussi lorsque DCE est utilisé seul,
-sans StageFlow Desktop.
+sans StageFlow.
 
-Avec StageFlow Desktop ouvert sur le même projet, DCE 2026.10 reconnaît sa
+Avec StageFlow ouvert sur le même projet, DCE 2026.10 reconnaît sa
 session LIVE locale et peut suivre les changements liés aux RX par leurs UUID
 explicites. L'état connecté, autonome ou en conflit reste visible. Une règle
 manquante, un travail local non enregistré ou un conflit de hash interrompt la
@@ -145,8 +146,9 @@ le réseau Dante et ne modifie que son propre domaine hors ligne.
 [![Un seul projet, plusieurs outils](media/stageflow-suite-workflow.svg)](media/stageflow-suite-workflow.svg)
 
 - [StageFlow — patch, groupes, Excel et plan de scène](https://github.com/Mamat79/SiLeMIO-StageFlow-Distribution/releases/latest)
-- [SMT — transfert entre consoles et logiciels](https://github.com/Mamat79/Save-My-Time-SMT/releases/latest)
+- [Save My Time — transfert entre consoles et logiciels](https://github.com/Mamat79/Save-My-Time-SMT/releases/latest)
 - [StageMark — implantation et projection](https://github.com/Mamat79/StageMark/releases/latest)
+- [StageMon — matrice d’écoute live](https://github.com/Mamat79/StageMon/releases/latest)
 
 ## Les formats à connaître
 
@@ -167,6 +169,7 @@ La version actuelle **2026.10** est proposée pour **Windows 11 x64**.
 | Installateur Windows | [Télécharger directement](https://github.com/Mamat79/Dante-Config-Editor/releases/latest/download/DanteConfigEditor2026_10_Installer.exe) |
 | Démarrage rapide | [PDF français](manuals/QuickStart_DanteConfigEditorV3_FR.pdf) |
 | Notice complète | [PDF français](manuals/Notice_DanteConfigEditorV3_FR.pdf) |
+| Guide de la suite | [PDF français](manuals/Guide-Suite-SiLeMIO-FR.pdf) · [English PDF](manuals/SiLeMIO-Suite-Guide-EN.pdf) |
 | Banque communautaire | [Téléchargement dans la dernière Release](https://github.com/Mamat79/Dante-Config-Editor/releases/latest) |
 
 L'interface macOS conserve le même parcours et passe les tests automatisés,

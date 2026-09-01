@@ -22,7 +22,7 @@ l'icône soleil/lune du thème, le sélecteur FR/EN puis le bouton contour
 
 ## Nouveau : suivi StageFlow LIVE V1
 
-Quand un projet `.stageflow` est orchestré par StageFlow Desktop, DCE reconnaît
+Quand un projet `.stageflow` est orchestré par StageFlow, Dante Config Editor reconnaît
 désormais son bail LIVE court et affiche un état explicite : connecté,
 disponible avec suivi désactivé, autonome ou conflit. Le suivi est activé par
 défaut, mémorisé localement et peut être désactivé depuis la page Labels.
@@ -77,7 +77,7 @@ licences et le format StageFlow restent inchangés.
 
 DCE utilise désormais le dossier `.stageflow` comme format de projet par
 défaut. L'application sait le créer, l'ouvrir et l'enregistrer de façon
-autonome. StageFlow Desktop reste gratuit et facultatif ; il n'est pas requis
+autonome. StageFlow reste gratuit et facultatif ; il n'est pas requis
 pour utiliser DCE.
 
 L'import et l'export XML Dante restent disponibles. Les anciens fichiers XML

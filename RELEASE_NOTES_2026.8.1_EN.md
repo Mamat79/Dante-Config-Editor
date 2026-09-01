@@ -17,7 +17,7 @@ and StageFlow format are unchanged.
 ## Native `.stageflow` project
 
 DCE now defaults to a `.stageflow` project directory. The application can
-create, open, and save it independently. StageFlow Desktop remains free and
+create, open, and save it independently. StageFlow remains free and
 optional; it is not required to use DCE.
 
 Dante XML import and export remain available. Previous XML files and `.dceproj`

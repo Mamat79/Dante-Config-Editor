@@ -13,9 +13,7 @@
   la fenêtre de rappel est supprimée par la licence.
 
 Le paiement unique de **29 € TTC** est traité par Stripe. Le code est envoyé
-automatiquement après confirmation du paiement. L’auteur peut également offrir
-des licences depuis son panneau privé Cloudflare, avec une limite d’activation
-configurable et un historique.
+automatiquement après confirmation du paiement.
 
 ## Compatibilité
 

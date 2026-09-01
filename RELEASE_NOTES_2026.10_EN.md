@@ -22,7 +22,7 @@ remain available.
 
 ## New: StageFlow LIVE V1 following
 
-When a `.stageflow` project is orchestrated by StageFlow Desktop, DCE now
+When a `.stageflow` project is orchestrated by StageFlow, Dante Config Editor now
 recognizes its short LIVE lease and displays an explicit state: connected,
 available with following disabled, standalone, or conflict. Following is
 enabled by default, stored locally, and can be disabled from the Labels page.
@@ -73,7 +73,7 @@ and StageFlow format are unchanged.
 ## Native `.stageflow` project
 
 DCE now defaults to a `.stageflow` project directory. The application can
-create, open, and save it independently. StageFlow Desktop remains free and
+create, open, and save it independently. StageFlow remains free and
 optional; it is not required to use DCE.
 
 Dante XML import and export remain available. Previous XML files and `.dceproj`

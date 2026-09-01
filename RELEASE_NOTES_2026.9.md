@@ -28,7 +28,7 @@ sans modifier le patch des autres applications.
 
 ## DCE reste autonome
 
-StageFlow Desktop reste gratuit et facultatif. DCE sait créer, ouvrir et
+StageFlow reste gratuit et facultatif. Dante Config Editor sait créer, ouvrir et
 enregistrer un projet `.stageflow` tout seul, tout en continuant à ouvrir les
 XML Dante et les anciens projets DCE.
 

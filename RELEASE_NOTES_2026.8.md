@@ -6,7 +6,7 @@
 
 DCE utilise désormais le dossier `.stageflow` comme format de projet par
 défaut. L'application sait le créer, l'ouvrir et l'enregistrer de façon
-autonome. StageFlow Desktop reste gratuit et facultatif ; il n'est pas requis
+autonome. StageFlow reste gratuit et facultatif ; il n'est pas requis
 pour utiliser DCE.
 
 L'import et l'export XML Dante restent disponibles. Les anciens fichiers XML
