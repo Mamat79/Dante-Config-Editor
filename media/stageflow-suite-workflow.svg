@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
   <title id="title">Un seul projet, plusieurs outils</title>
-  <desc id="desc">StageFlow, SMT, Dante Config Editor, StageMark et AutoCAD échangent des domaines isolés autour d'un projet stageflow commun.</desc>
+  <desc id="desc">StageFlow, StageDesk — Save My Time, Dante Config Editor, StageMark et AutoCAD échangent des domaines isolés autour d'un projet stageflow commun.</desc>
   <rect width="1200" height="520" fill="#07111f"/>
   <text x="600" y="54" text-anchor="middle" fill="#f4f8fc" font-family="Segoe UI,Arial,sans-serif" font-size="30" font-weight="700">Un seul projet, plusieurs outils</text>
   <text x="600" y="84" text-anchor="middle" fill="#9fb3c8" font-family="Segoe UI,Arial,sans-serif" font-size="16">Chaque application ne modifie que son propre domaine</text>
@@ -18,8 +18,8 @@
     </g>
     <text x="228" y="150" text-anchor="middle" fill="#f4f8fc" font-size="22" font-weight="700">StageFlow</text>
     <text x="228" y="180" text-anchor="middle" fill="#9fb3c8" font-size="15">coordination du projet</text>
-    <text x="972" y="150" text-anchor="middle" fill="#f4f8fc" font-size="22" font-weight="700">SMT</text>
-    <text x="972" y="180" text-anchor="middle" fill="#9fb3c8" font-size="15">domaine technique</text>
+    <text x="972" y="150" text-anchor="middle" fill="#f4f8fc" font-size="22" font-weight="700">StageDesk</text>
+    <text x="972" y="180" text-anchor="middle" fill="#9fb3c8" font-size="15">Save My Time · domaine smt</text>
     <text x="395" y="380" text-anchor="middle" fill="#f4f8fc" font-size="22" font-weight="700">Dante Config Editor</text>
     <text x="395" y="410" text-anchor="middle" fill="#63b6e6" font-size="15">dante/dante.json</text>
     <text x="805" y="380" text-anchor="middle" fill="#f4f8fc" font-size="22" font-weight="700">StageMark + AutoCAD</text>

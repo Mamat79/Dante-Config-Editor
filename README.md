@@ -117,7 +117,7 @@ racks, interfaces, amplificateurs et équipements réseau audio.
 DCE utilise le dossier <code>.stageflow</code> comme projet natif. Il peut créer
 et ouvrir ce projet de manière autonome : StageFlow n’est pas obligatoire.
 
-Le même projet peut ensuite être utilisé avec Save My Time, StageMark,
+Le même projet peut ensuite être utilisé avec StageDesk — Save My Time, StageMark,
 StageFlow, StageMon et AutoCAD sans multiplier les fichiers contradictoires.
 
 ### Envoyer le patch StageFlow vers les RX Dante et suivre le projet en LIVE
@@ -146,7 +146,7 @@ le réseau Dante et ne modifie que son propre domaine hors ligne.
 [![Un seul projet, plusieurs outils](media/stageflow-suite-workflow.svg)](media/stageflow-suite-workflow.svg)
 
 - [StageFlow — patch, groupes, Excel et plan de scène](https://github.com/Mamat79/StageFlow)
-- [Save My Time — transfert entre consoles et logiciels](https://github.com/Mamat79/Save-My-Time-SMT/releases/latest)
+- [StageDesk — Save My Time — transfert entre consoles et logiciels](https://github.com/Mamat79/StageDesk/releases/latest)
 - [StageMark — implantation et projection](https://github.com/Mamat79/StageMark/releases/latest)
 - [StageMon — matrice d’écoute live](https://github.com/Mamat79/StageMon/releases/latest)
 

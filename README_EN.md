@@ -107,7 +107,7 @@ and network-audio profiles for offline preparation.
 DCE uses the <code>.stageflow</code> folder as its native project. DCE can
 create and open it on its own; StageFlow is optional.
 
-The same project can later be used with Save My Time, StageMark, StageFlow,
+The same project can later be used with StageDesk — Save My Time, StageMark, StageFlow,
 StageMon and AutoCAD.
 
 ### Map a StageFlow patch to Dante RX channels and follow it LIVE
@@ -135,7 +135,7 @@ updates its own offline domain.
 [![One project, several tools](media/stageflow-suite-workflow.svg)](media/stageflow-suite-workflow.svg)
 
 - [StageFlow — patch lists, groups, Excel and stage plan](https://github.com/Mamat79/StageFlow)
-- [Save My Time — transfer between consoles and software](https://github.com/Mamat79/Save-My-Time-SMT/releases/latest)
+- [StageDesk — Save My Time — transfer between consoles and software](https://github.com/Mamat79/StageDesk/releases/latest)
 - [StageMark — placement and projection](https://github.com/Mamat79/StageMark/releases/latest)
 - [StageMon — live monitoring matrix](https://github.com/Mamat79/StageMon/releases/latest)
 
