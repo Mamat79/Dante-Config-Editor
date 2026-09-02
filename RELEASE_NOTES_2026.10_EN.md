@@ -78,6 +78,11 @@ maximum duration, event capability, size, and absence of symbolic links on
 DCE does not create sessions and never controls the real Dante network: it
 updates only its offline project and its own domain.
 
+Label alerts are enabled by default as soon as LIVE connects. Each computer
+acknowledges its own alerts; reception can be disabled per computer without
+building a backlog or showing old alerts when it is enabled again. The StageFlow
+host's global acknowledgement remains separate.
+
 ## New: StageFlow patch to RX channels
 
 From an open `.stageflow` project, DCE can now use a patch group directly to

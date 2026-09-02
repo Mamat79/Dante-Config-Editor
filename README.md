@@ -160,6 +160,11 @@ manquante, un travail local non enregistré ou un conflit de hash interrompt la
 transaction entière : le dernier état valide est conservé. DCE ne pilote pas
 le réseau Dante et ne modifie que son propre domaine hors ligne.
 
+Les alertes de labels LIVE sont reçues par défaut dès la connexion. Chaque
+ordinateur acquitte ses propres alertes ; un poste peut désactiver sa réception
+sans créer de retard ni faire réapparaître d'anciennes alertes lors de la
+réactivation. L'hôte StageFlow conserve son acquittement global séparément.
+
 [![Un seul projet, plusieurs outils](media/stageflow-suite-workflow.svg)](media/stageflow-suite-workflow.svg)
 
 - [StageFlow — patch, groupes, Excel et plan de scène](https://github.com/Mamat79/StageFlow)

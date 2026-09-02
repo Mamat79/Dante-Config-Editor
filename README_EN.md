@@ -148,6 +148,11 @@ unsaved local work, or hash conflict rejects the complete transaction and
 retains the last valid state. DCE does not control the Dante network and only
 updates its own offline domain.
 
+LIVE label alerts are received by default as soon as the session connects. Each
+computer acknowledges its own alerts; a computer can disable reception without
+building a backlog or showing old alerts when reception is enabled again. The
+StageFlow host keeps its global acknowledgement state separate.
+
 [![One project, several tools](media/stageflow-suite-workflow.svg)](media/stageflow-suite-workflow.svg)
 
 - [StageFlow — patch lists, groups, Excel and stage plan](https://github.com/Mamat79/StageFlow)

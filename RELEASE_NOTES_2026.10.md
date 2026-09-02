@@ -78,6 +78,11 @@ symbolique sur `.live`. À son expiration, DCE revient automatiquement en mode
 autonome. DCE ne crée pas de session et ne commande jamais le réseau Dante
 réel : il modifie uniquement son projet hors ligne et son propre domaine.
 
+Les alertes de labels sont activées par défaut dès la connexion LIVE. Chaque
+poste acquitte ses propres alertes ; la réception peut être désactivée poste par
+poste sans accumuler de retard ni faire réapparaître d'anciennes alertes lors de
+la réactivation. L'acquittement global de l'hôte StageFlow reste indépendant.
+
 ## Nouveau : patch StageFlow vers canaux RX
 
 Depuis un projet `.stageflow` ouvert, DCE peut maintenant utiliser directement
