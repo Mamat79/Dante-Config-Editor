@@ -9,13 +9,13 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/latest/download/DanteConfigEditor2026_10_Installer.exe"><strong>⬇ Windows</strong></a>
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.10/DanteConfigEditor2026_10_Installer.exe"><strong>⬇ Windows 2026.10</strong></a>
   ·
-  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/latest/download/DanteConfigEditor2026_10_macOS_AppleSilicon.dmg"><strong>macOS Apple Silicon</strong></a>
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0/DanteConfigEditor2027_macOS_AppleSilicon.dmg"><strong>macOS Apple Silicon v2027</strong></a>
   ·
-  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/latest/download/DanteConfigEditor2026_10_macOS_Intel.dmg"><strong>macOS Intel</strong></a>
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0/DanteConfigEditor2027_macOS_Intel.dmg"><strong>macOS Intel v2027</strong></a>
   ·
-  <a href="manuals/Notice_DanteConfigEditorV3_FR.pdf">Notice complète</a>
+  <a href="manuals/Notice_DanteConfigEditorV3_FR.pdf">Notice Mac v2027</a>
   ·
   <a href="manuals/Guide-Suite-SiLeMIO-FR.pdf">Guide de la suite</a>
   ·
@@ -40,11 +40,19 @@ Il permet d’ouvrir un XML Dante Controller, de comprendre rapidement le conten
 d’une installation, de corriger les noms, de préparer le patch et de fusionner
 plusieurs projets sans devoir connecter les machines.
 
+**Renommez sans perdre le patch.** Quand vous renommez une machine ou un canal,
+DCE met à jour les références de subscriptions concernées. Vous pouvez aussi
+partir de zéro avec la banque de machines, puis exporter votre configuration
+vers Dante Controller.
+
 DCE est particulièrement utile pour préparer une installation avant d’arriver
 sur site, documenter un réseau existant, appliquer de nombreux changements
 répétitifs ou vérifier un fichier avant de le remettre à Dante Controller.
 
 [![Vue d’ensemble de Dante Config Editor](media/fr/overview.png)](media/fr/overview.png)
+
+Les captures de présentation illustrent l'interface Windows. Les fonctions
+métier existent aussi sur Mac, avec une disposition propre à macOS.
 
 ## Un exemple concret
 
@@ -69,6 +77,12 @@ contrôles réels : câblage, horloge, réseau et audio.
 DCE rassemble dans une seule interface les machines, canaux TX/RX,
 subscriptions, formats audio, latences, fréquences d’échantillonnage,
 Preferred Masters et informations réseau disponibles dans le fichier.
+
+Les propriétés reconnues peuvent être modifiées pour une machine ou par des
+actions globales : fréquence, latence, format audio, mode redondant/daisychain,
+horloge et adressage IP. Un réglage que le profil ne permet pas de modifier
+reste indisponible avec une explication ; DCE n'invente pas les capacités du
+matériel.
 
 La vue d’ensemble aide à repérer rapidement les machines sans patch, les
 réglages différents ou les références à contrôler.
@@ -153,17 +167,39 @@ paires masquées. Les cellules vides sont ignorées et rien n'est modifié avant
 votre validation. Ce parcours fonctionne aussi lorsque DCE est utilisé seul,
 sans StageFlow.
 
-Avec StageFlow ouvert sur le même projet, DCE 2026.10 reconnaît sa
-session LIVE locale et peut suivre les changements liés aux RX par leurs UUID
-explicites. L'état connecté, autonome ou en conflit reste visible. Une règle
-manquante, un travail local non enregistré ou un conflit de hash interrompt la
-transaction entière : le dernier état valide est conservé. DCE ne pilote pas
-le réseau Dante et ne modifie que son propre domaine hors ligne.
+### Nouveau sur Mac dans v2027 : un centre de connexion clair
 
-Les alertes de labels LIVE sont reçues par défaut dès la connexion. Chaque
-ordinateur acquitte ses propres alertes ; un poste peut désactiver sa réception
-sans créer de retard ni faire réapparaître d'anciennes alertes lors de la
-réactivation. L'hôte StageFlow conserve son acquittement global séparément.
+Le bouton **StageFlow LIVE**, toujours accessible en haut de la fenêtre Mac,
+ouvre le centre de connexion. Trois usages restent
+distincts :
+
+- **DCE autonome** : préparez votre configuration sans StageFlow.
+- **Projet local `.stageflow`** : partagez un dossier de projet en conservant
+  les données propres à chaque logiciel.
+- **Session LIVE temporaire** : choisissez l'hôte StageFlow sur votre réseau
+  local, vérifiez le nom du projet, puis saisissez son code à six chiffres.
+
+Si la découverte ne fonctionne pas, vous pouvez renseigner l'adresse IPv4
+privée et le port de l'hôte. Une erreur de code reste affichée dans la fenêtre
+pour permettre un nouvel essai. Quitter une session est explicite ; DCE ne
+rejoint pas automatiquement une session après une coupure.
+
+Les changements liés aux RX sont suivis par leurs **UUID explicites**, jamais
+par un simple rapprochement de noms. Une règle manquante, des modifications
+locales non enregistrées ou un conflit refusent la transaction entière et
+conservent le dernier état valide.
+
+Un **bandeau orange, visible sur toutes les pages**, présente les changements
+reçus avec l'ancien et le nouveau label, leur origine et leur heure. Acquitter
+une alerte ou toutes les alertes visibles ne concerne que votre poste ; une
+nouvelle alerte arrivée ensuite reste à traiter. Vous pouvez couper la
+réception des notifications sans quitter LIVE. Une pause décidée par l'hôte
+est indiquée séparément et n'interrompt pas la connexion.
+
+**LIVE synchronise le projet, pas le matériel Dante.** Utilisez cette liaison
+sur un réseau local de confiance. La console locale StageFlow, qui commande
+les logiciels du même poste, reste propre à Windows ; les projets locaux et
+le centre de connexion LAN DCE existent également sur Mac.
 
 [![Un seul projet, plusieurs outils](media/stageflow-suite-workflow.svg)](media/stageflow-suite-workflow.svg)
 
@@ -184,22 +220,41 @@ réactivation. L'hôte StageFlow conserve son acquittement global séparément.
 
 ## Télécharger et démarrer
 
-La version actuelle **2026.10** est proposée pour **Windows 11 x64** et
-**macOS**. L'application a été testée sur les deux plateformes ; deux DMG sont
-fournis pour les Mac Apple Silicon et Intel.
+**macOS : v2027**, avec deux DMG distincts pour Apple Silicon et Intel.
+**Windows 11 x64 : 2026.10**, version stable conservée. Les nouveautés v2027
+décrites ci-dessus concernent la publication Mac ; aucun installateur Windows
+v2027 n'est distribué dans cette Release.
 
 | Ressource | Lien |
 |---|---|
-| Installateur Windows | [Télécharger directement](https://github.com/Mamat79/Dante-Config-Editor/releases/latest/download/DanteConfigEditor2026_10_Installer.exe) |
-| macOS Apple Silicon | [Télécharger le DMG](https://github.com/Mamat79/Dante-Config-Editor/releases/latest/download/DanteConfigEditor2026_10_macOS_AppleSilicon.dmg) |
-| macOS Intel | [Télécharger le DMG](https://github.com/Mamat79/Dante-Config-Editor/releases/latest/download/DanteConfigEditor2026_10_macOS_Intel.dmg) |
-| Démarrage rapide | [PDF français](manuals/QuickStart_DanteConfigEditorV3_FR.pdf) |
-| Notice complète | [PDF français](manuals/Notice_DanteConfigEditorV3_FR.pdf) |
+| Installateur Windows 2026.10 | [Télécharger directement](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.10/DanteConfigEditor2026_10_Installer.exe) |
+| macOS Apple Silicon | [Télécharger le DMG](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0/DanteConfigEditor2027_macOS_AppleSilicon.dmg) |
+| macOS Intel | [Télécharger le DMG](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0/DanteConfigEditor2027_macOS_Intel.dmg) |
+| Démarrage rapide v2027 | [PDF français](manuals/QuickStart_DanteConfigEditorV3_FR.pdf) |
+| Notice complète v2027 | [PDF français](manuals/Notice_DanteConfigEditorV3_FR.pdf) |
+| Notice Windows 2026.10 | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2026.10/Notice_DanteConfigEditorV3_FR.pdf) |
 | Guide de la suite | [PDF français](manuals/Guide-Suite-SiLeMIO-FR.pdf) · [English PDF](manuals/SiLeMIO-Suite-Guide-EN.pdf) |
-| Banque communautaire | [Téléchargement dans la dernière Release](https://github.com/Mamat79/Dante-Config-Editor/releases/latest) |
+| Banque communautaire | [Télécharger la banque](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0/DCE_Community_Devices_2026_3.dce-bank.zip) |
+| Nouveautés et limites | [Notes de version v2027](RELEASE_NOTES_2027.md) |
+| Vérification des paquets Mac | [Tests, provenance et SHA-256](MACOS_VALIDATION_2027.json) |
 
 Au premier lancement, l’écran **Découvrir DCE** permet d’ouvrir un XML, créer un
 projet, découvrir la banque ou accéder à la notice.
+
+Les six PDF sont également inclus dans les applications Mac v2027. Les vidéos présentent
+les fonctions métier ; la notice actualisée détaille aussi le centre de
+connexion LIVE et les notifications. Les versions précédentes restent
+accessibles dans [les Releases](https://github.com/Mamat79/Dante-Config-Editor/releases).
+
+Le nom public Mac est **v2027** et son tag technique est **v2027.0**. Les liens
+Mac de cette page donnent directement cette version. La Release GitHub marquée
+**Latest** reste **v2026.10** pour préserver les mises à jour Windows : les
+utilisateurs Mac peuvent télécharger v2027 avec les liens ci-dessus même si
+l'ancien gestionnaire de mises à jour ne la propose pas encore.
+
+Les applications Mac ne sont pas encore notariées par Apple. Les notices
+v2027 couvrent aussi l'interface Windows en préparation ; utilisez la notice
+2026.10 pour les commandes de la version Windows actuellement disponible.
 
 ## Utilisation et licence
 

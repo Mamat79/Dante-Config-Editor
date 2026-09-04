@@ -1,0 +1,63 @@
+{
+  "edition": "v2027",
+  "tag": "v2027.0",
+  "platforms": [
+    "macOS Apple Silicon",
+    "macOS Intel"
+  ],
+  "publicationAllowed": true,
+  "windowsV2027PublicationAllowed": false,
+  "preserveLatest": "v2026.10",
+  "packages": [
+    {
+      "architecture": "AppleSilicon",
+      "sourceRevision": "3c689fb32cd3c8d8b1a515bd178e48b29004cc89",
+      "runId": "33872289751",
+      "attempt": 4,
+      "jobId": "101076717506",
+      "sharedEngineTestsPassed": 579,
+      "macUiTestsPassed": 29,
+      "failures": 0,
+      "skippedTests": 0,
+      "nativeDmgLaunches": [
+        "first launch",
+        "XML",
+        "StageFlow"
+      ],
+      "unchangedInputFiles": 5,
+      "canonicalSuiteGuidesVerifiedInMountedDmg": 2,
+      "screenshotsReviewed": true,
+      "asset": "DanteConfigEditor2027_macOS_AppleSilicon.dmg",
+      "bytes": 79084447,
+      "sha256": "566efe3e5471f8a55228dfbecad205e98ec180e8acf5ac280c21142b73118aba"
+    },
+    {
+      "architecture": "Intel",
+      "sourceRevision": "3c689fb32cd3c8d8b1a515bd178e48b29004cc89",
+      "runId": "33872289751",
+      "attempt": 4,
+      "jobId": "101076717781",
+      "sharedEngineTestsPassed": 579,
+      "macUiTestsPassed": 29,
+      "failures": 0,
+      "skippedTests": 0,
+      "nativeDmgLaunches": [
+        "first launch",
+        "XML",
+        "StageFlow"
+      ],
+      "unchangedInputFiles": 5,
+      "canonicalSuiteGuidesVerifiedInMountedDmg": 2,
+      "screenshotsReviewed": true,
+      "asset": "DanteConfigEditor2027_macOS_Intel.dmg",
+      "bytes": 80767474,
+      "sha256": "885f72cbda35f3cd541ad21f3ff467b8640ff7fd6a99739204607521570eaa97"
+    }
+  ],
+  "limits": [
+    "No Apple Developer ID signature or Apple notarization; packages use ad-hoc signing.",
+    "1024x768 displays require fallback scrolling; macOS layout is not identical to Windows.",
+    "Intel first-launch log contains non-fatal Skia/Metal shader compilation timeout warnings. Native screenshots are complete; later XML and StageFlow logs contain no errors.",
+    "No exhaustive test on every Mac model, no two-physical-computer LAN test and no new physical Dante hardware validation."
+  ]
+}

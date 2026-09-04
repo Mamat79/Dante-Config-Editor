@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="464.88188976377955" height="229.60629921259846" preserveAspectRatio="xMinYMin meet" viewBox="0 0 464 229" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>Connexions de la suite SiLeMIO</title>
+	<desc>StageFlow héberge le projet. Les logiciels rejoignent avec un code à six chiffres ; les mobiles utilisent un QR. Les compteurs restent distincts.</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="464.88188976377955" height="229.60629921259846"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-229)" style="clip-path: url(#clip)">
+		<g transform="">
+			<rect x="0" y="0" width="464.88188976377955" height="229.60629921259846" rx="8.503937007874017" ry="8.503937007874017" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,9%,14%); fill-rule: evenodd;"/>
+			<text x="14.173228346456694" y="209.76377952755908" style="font-family: 'Segoe UI', Arial, sans-serif; font-weight: 600; font-size: 13px;fill: rgb(40%,87%,82%); stroke:none;" transform="translate(0,419) scale(1,-1)">Session StageFlow LIVE</text>
+			<text x="14.173228346456694" y="189.9212598425197" style="font-family: 'Segoe UI', Arial, sans-serif; font-weight: 400; font-size: 8px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,379) scale(1,-1)">Un réseau local de confiance</text>
+			<rect x="14.173228346456694" y="53.85826771653544" width="138.8976377952756" height="116.22047244094489" rx="8.503937007874017" ry="8.503937007874017" style="stroke: rgb(13%,72%,66%); stroke-linecap: butt; stroke-width: 1; fill: rgb(10%,20%,27%); fill-rule: evenodd;"/>
+			<text x="25.51181102362205" y="144.56692913385828" style="font-family: 'Segoe UI', Arial, sans-serif; font-weight: 600; font-size: 12px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,289) scale(1,-1)">StageFlow</text>
+			<text x="25.51181102362205" y="124.7244094488189" style="font-family: 'Segoe UI', Arial, sans-serif; font-weight: 600; font-size: 8px;fill: rgb(40%,87%,82%); stroke:none;" transform="translate(0,249) scale(1,-1)">HÔTE + PROJET</text>
+			<text x="25.51181102362205" y="99.21259842519686" style="font-family: 'Segoe UI', Arial, sans-serif; font-weight: 400; font-size: 8px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,198) scale(1,-1)">Code à six chiffres</text>
+			<text x="25.51181102362205" y="79.37007874015748" style="font-family: 'Segoe UI', Arial, sans-serif; font-weight: 400; font-size: 8px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,158) scale(1,-1)">Liste des connexions</text>
+			<path d="M 155.905512,130.393701 L 198.425197,130.393701 Z" style="stroke: rgb(36%,62%,78%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<polygon points="198.4252 130.3937, 189.9213 135.4961, 189.9213 125.2913" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(36%,62%,78%); fill-rule: evenodd;"/>
+			<path d="M 155.905512,70.866142 L 198.425197,70.866142 Z" style="stroke: rgb(13%,72%,66%); stroke-linecap: butt; stroke-width: 1.2;"/>
+			<polygon points="198.4252 70.86614, 189.9213 75.9685, 189.9213 65.76378" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(13%,72%,66%); fill-rule: evenodd;"/>
+			<rect x="206.92913385826773" y="104.88188976377954" width="243.77952755905517" height="65.19685039370081" rx="5.669291338582678" ry="5.669291338582678" style="stroke: rgb(36%,62%,78%); stroke-linecap: butt; stroke-width: 1; fill: rgb(10%,20%,27%); fill-rule: evenodd;"/>
+			<text x="218.2677165354331" y="150.23622047244095" style="font-family: 'Segoe UI', Arial, sans-serif; font-weight: 600; font-size: 8px;fill: rgb(40%,87%,82%); stroke:none;" transform="translate(0,300) scale(1,-1)">LOGICIELS · CODE</text>
+			<text x="218.2677165354331" y="130.3937007874016" style="font-family: 'Segoe UI', Arial, sans-serif; font-weight: 400; font-size: 8px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,260) scale(1,-1)">StageDesk · StageMark · StageMon</text>
+			<text x="218.2677165354331" y="113.38582677165356" style="font-family: 'Segoe UI', Arial, sans-serif; font-weight: 400; font-size: 8px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,226) scale(1,-1)">Dante Config Editor · AutoCAD</text>
+			<rect x="206.92913385826773" y="42.51968503937008" width="243.77952755905517" height="51.02362204724411" rx="5.669291338582678" ry="5.669291338582678" style="stroke: rgb(13%,72%,66%); stroke-linecap: butt; stroke-width: 1; fill: rgb(10%,20%,27%); fill-rule: evenodd;"/>
+			<text x="218.2677165354331" y="73.70078740157481" style="font-family: 'Segoe UI', Arial, sans-serif; font-weight: 600; font-size: 8px;fill: rgb(40%,87%,82%); stroke:none;" transform="translate(0,147) scale(1,-1)">TÉLÉPHONES / TABLETTES · QR</text>
+			<text x="218.2677165354331" y="53.85826771653544" style="font-family: 'Segoe UI', Arial, sans-serif; font-weight: 400; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,107) scale(1,-1)">StageFlow + Remotes StageMark / StageMon</text>
+			<text x="14.173228346456694" y="17.007874015748033" style="font-family: 'Segoe UI', Arial, sans-serif; font-weight: 400; font-size: 8px;fill: rgb(40%,87%,82%); stroke:none;" transform="translate(0,34) scale(1,-1)">Postes / logiciels / mobiles comptés séparément</text>
+		</g>
+	</g>
+</svg>

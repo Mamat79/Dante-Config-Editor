@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="800" viewBox="0 0 1600 800" role="img" aria-labelledby="title desc">
+  <title id="title">Parcours conseillé de la suite SiLeMIO</title>
+  <desc id="desc">Le patch peut commencer dans StageFlow, Excel ou un autre logiciel. Il devient un projet StageFlow, peut passer par StageDesk, Dante Config Editor et AutoCAD, puis être exploité dans StageMark et StageMon. Toutes les étapes sont facultatives.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#101923"/><stop offset="1" stop-color="#14212d"/></linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#58a8d3"/></marker>
+    <style>
+      text{font-family:'Segoe UI',Arial,sans-serif;fill:#f4f8fa}.muted{fill:#a9bac6}.teal{fill:#62d4c9}.blue{fill:#79c3ea}
+      .small{font-size:19px}.tiny{font-size:16px}.card{fill:#1b2a38;stroke:#354b60;stroke-width:2}.inner{fill:#14212d;stroke:#354b60;stroke-width:1}
+      .flow{fill:none;stroke:#58a8d3;stroke-width:4;marker-end:url(#arrow)}.optional{fill:none;stroke:#21b6a8;stroke-width:2;stroke-dasharray:9 8}
+    </style>
+  </defs>
+  <rect width="1600" height="800" fill="url(#bg)"/>
+  <text x="70" y="65" font-size="38" font-weight="600">Du premier patch au plateau</text>
+  <text x="70" y="100" class="muted small">Un parcours conseillé, jamais imposé : chaque bloc peut être utilisé seul ou ignoré.</text>
+
+  <g>
+    <rect x="185" y="135" width="1230" height="92" rx="18" fill="#172532" stroke="#21b6a8" stroke-width="2"/>
+    <circle cx="235" cy="181" r="22" fill="#173934" stroke="#21b6a8" stroke-width="2"/>
+    <path d="M224 181h22M235 170v22" stroke="#62d4c9" stroke-width="3" stroke-linecap="round"/>
+    <text x="276" y="174" class="teal tiny" font-weight="600">StageFlow · CONSOLE CENTRALE FACULTATIVE</text>
+    <text x="276" y="205" class="small">Ouvre les logiciels sur le même projet, affiche leur état et peut coordonner une session LIVE.</text>
+  </g>
+  <path d="M800 227V271" class="optional"/>
+
+  <path d="M387 435H432" class="flow"/>
+  <path d="M742 435H782" class="flow"/>
+  <path d="M1162 435H1192" class="flow"/>
+
+  <g transform="translate(55 285)">
+    <rect width="330" height="300" rx="20" class="card"/>
+    <circle cx="45" cy="47" r="26" fill="#4b96bd"/><text x="45" y="56" text-anchor="middle" font-size="26" font-weight="600">1</text>
+    <text x="85" y="55" font-size="28" font-weight="600">Créer le patch</text>
+    <text x="28" y="91" class="muted tiny">Choisissez votre porte d’entrée.</text>
+    <rect x="28" y="118" width="274" height="43" rx="9" class="inner"/><text x="45" y="146" class="small">StageFlow</text>
+    <rect x="28" y="174" width="274" height="43" rx="9" class="inner"/><text x="45" y="202" class="small">Excel · modèle multi-groupes</text>
+    <rect x="28" y="230" width="274" height="43" rx="9" class="inner"/><text x="45" y="258" class="small">Un autre logiciel SiLeMIO</text>
+  </g>
+
+  <g transform="translate(435 285)">
+    <rect width="305" height="300" rx="20" fill="#1b2a38" stroke="#58a8d3" stroke-width="3"/>
+    <circle cx="45" cy="47" r="26" fill="#4b96bd"/><text x="45" y="56" text-anchor="middle" font-size="26" font-weight="600">2</text>
+    <text x="85" y="55" font-size="28" font-weight="600">Enregistrer</text>
+    <rect x="32" y="116" width="241" height="96" rx="13" fill="#223445" stroke="#58a8d3" stroke-width="2"/>
+    <text x="152" y="154" text-anchor="middle" class="blue tiny" font-weight="600">PROJET STAGEFLOW</text>
+    <text x="152" y="188" text-anchor="middle" font-size="23" font-weight="600">Show.stageflow</text>
+    <text x="152" y="242" text-anchor="middle" class="muted tiny">Patch · plans · métiers</text>
+    <text x="152" y="270" text-anchor="middle" class="teal tiny">Toujours utilisable hors ligne</text>
+  </g>
+
+  <g transform="translate(785 285)">
+    <rect width="375" height="300" rx="20" class="card"/>
+    <circle cx="45" cy="47" r="26" fill="#159f98"/><text x="45" y="56" text-anchor="middle" font-size="26" font-weight="600">3</text>
+    <text x="85" y="55" font-size="28" font-weight="600">Préparer</text>
+    <text x="28" y="91" class="teal tiny">Étapes facultatives, dans l’ordre utile.</text>
+    <rect x="28" y="118" width="319" height="43" rx="9" class="inner"/><text x="45" y="146" class="small">StageDesk</text>
+    <rect x="28" y="174" width="319" height="43" rx="9" class="inner"/><text x="45" y="202" class="small">Dante Config Editor · TX / RX</text>
+    <rect x="28" y="230" width="319" height="43" rx="9" class="inner"/><text x="45" y="258" class="small">StageFlow / AutoCAD · plan</text>
+  </g>
+
+  <g transform="translate(1195 285)">
+    <rect width="350" height="300" rx="20" class="card"/>
+    <circle cx="45" cy="47" r="26" fill="#159f98"/><text x="45" y="56" text-anchor="middle" font-size="26" font-weight="600">4</text>
+    <text x="85" y="55" font-size="28" font-weight="600">Exploiter</text>
+    <text x="28" y="91" class="muted tiny">Au plateau ou en régie.</text>
+    <rect x="28" y="124" width="294" height="61" rx="10" class="inner"/>
+    <text x="48" y="151" class="small" font-weight="600">StageMark</text><text x="48" y="174" class="muted tiny">Implantation · cues · projection</text>
+    <rect x="28" y="202" width="294" height="61" rx="10" class="inner"/>
+    <text x="48" y="229" class="small" font-weight="600">StageMon</text><text x="48" y="252" class="muted tiny">Écoutes A/B · sélection live</text>
+  </g>
+
+  <g transform="translate(185 630)">
+    <rect width="570" height="104" rx="16" class="card"/>
+    <circle cx="42" cy="39" r="9" fill="#58a8d3"/><text x="66" y="46" font-size="24" font-weight="600">Mode manuel</text>
+    <text x="32" y="79" class="muted small">Chaque logiciel enregistre et recharge quand vous le décidez.</text>
+  </g>
+  <g transform="translate(845 630)">
+    <rect width="570" height="104" rx="16" class="card"/>
+    <circle cx="42" cy="39" r="9" fill="#21b6a8"/><text x="66" y="46" font-size="24" font-weight="600">Mode LIVE</text>
+    <text x="32" y="79" class="muted small">Synchronisation automatique, conflits protégés.</text>
+  </g>
+  <text x="1530" y="773" text-anchor="end" class="muted tiny">SiLeMIO / By Mamat----[]---</text>
+</svg>

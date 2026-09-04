@@ -8,3 +8,8 @@
 *.exe binary
 *.dmg binary
 *.sha256 text eol=lf
+manuals/suite-guides-manifest.json -text
+manuals/GUIDE-SUITE-FR.md -text
+manuals/SUITE-GUIDE-EN.md -text
+MACOS_VALIDATION_2027.json -text
+media/ecosystem/*.svg -text

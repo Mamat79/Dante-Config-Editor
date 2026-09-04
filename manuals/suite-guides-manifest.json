@@ -1,0 +1,67 @@
+{
+  "edition": "v2027",
+  "status": "publication-approved",
+  "publicationAllowed": true,
+  "files": [
+    {
+      "path": "scripts/generate-suite-guides.py",
+      "bytes": 74141,
+      "sha256": "91d6a90ffb59599e8ad09851048204180163bdaa068126acbdf7e52f0462fce6"
+    },
+    {
+      "path": "docs/guides/GUIDE-SUITE-FR.md",
+      "bytes": 17978,
+      "sha256": "fa4c304b2abc9616cba2a6554a4f42eb1a9ee380fe081704d7ecc5f01bf72e20"
+    },
+    {
+      "path": "docs/guides/SUITE-GUIDE-EN.md",
+      "bytes": 15901,
+      "sha256": "cfacdb8f411d59a64ed67b13fc1f0022345b9bae4c26afd413275cceb73d807a"
+    },
+    {
+      "path": "integrations/streamdeck/com.silemio.stageflow.sdPlugin/commands.json",
+      "bytes": 4788,
+      "sha256": "8cba0b00a3771d4bcd9c8aae558fe2b39e5a4bd024a9147eb867eb40b544d5c6"
+    },
+    {
+      "path": "docs/media/ecosystem/suite-architecture-fr.svg",
+      "bytes": 7553,
+      "sha256": "2ffdf203e9054358cc837963171ce1e9463c6955ded5c90c8702d838dd330b2a"
+    },
+    {
+      "path": "docs/media/ecosystem/suite-architecture-en.svg",
+      "bytes": 7462,
+      "sha256": "3e94ed8818de005bb1af78da8007a92811ce40cba159fb734533afdc452782c6"
+    },
+    {
+      "path": "docs/media/ecosystem/suite-workflow-fr.svg",
+      "bytes": 6339,
+      "sha256": "bbeb222c76c51bcfe93dd3f743bf614eadc655cbb9731ec119dd2b338e74e2fd"
+    },
+    {
+      "path": "docs/media/ecosystem/suite-workflow-en.svg",
+      "bytes": 6271,
+      "sha256": "8db5aaaaee81ff4c4f5d392878bf59832579a43e1f88b889c9b13d1fc2c42e7b"
+    },
+    {
+      "path": "docs/media/ecosystem/suite-connections-fr.svg",
+      "bytes": 5556,
+      "sha256": "9d392eadcb2e75d0049dfb497202d41a8b205ad82e7950cafa0ada2025bded0d"
+    },
+    {
+      "path": "docs/media/ecosystem/suite-connections-en.svg",
+      "bytes": 5500,
+      "sha256": "8c591c6f30ba6d026d14441b5cf07fb4a9ed35e926fcfd2e1554d346307426b9"
+    },
+    {
+      "path": "distribution/guides/Guide-Suite-SiLeMIO-FR.pdf",
+      "bytes": 131153,
+      "sha256": "b25f32c9ad06735ac21727508a1d222fbb0deee2b487ba60bc88b16be0907d71"
+    },
+    {
+      "path": "distribution/guides/SiLeMIO-Suite-Guide-EN.pdf",
+      "bytes": 127610,
+      "sha256": "cfa7d7e888e91aede41954ab1417b1cb71dee1f857ac3aee218d89560d73a656"
+    }
+  ]
+}
