@@ -15,32 +15,51 @@ Découvrir StageFlow et ses versions publiées : [page officielle StageFlow](htt
 
 ## Disponibilité Windows et macOS
 
-| Logiciel | Windows | macOS |
+| Logiciel | Windows public | macOS public |
 |---|---|---|
-| StageFlow | Application native* | Portage en cours - non disponible |
-| StageDesk | Application native* | Native Intel / Apple Silicon* |
-| StageMark | Application native* | Native Intel / Apple Silicon* |
-| StageMon | Application native* | Portage en cours - non disponible |
-| Dante Config Editor | Application native* | Native Intel / Apple Silicon* |
-| AutoCAD | Connecteur StageFlow 2026 pour Windows* | Connecteur StageFlow non disponible |
+| StageFlow | v2027.0 · Windows 11 x64 | v2027.0 · macOS 14+ · Intel / Apple Silicon* |
+| StageDesk | v2027.0.1 · Windows 10+ x64 | v2027.0.0 · macOS 12+ · Intel / Apple Silicon* |
+| StageMark | v2027.0.0 · Windows 11 x64 | v2027.0.0 · macOS 12+ · Intel / Apple Silicon* |
+| StageMon | v2027 · Windows 10/11 x64 | v2027 · macOS 12+ · Intel / Apple Silicon* |
+| Dante Config Editor | v2026.10 · Windows 11 x64 | v2027.0 · macOS 11+ · Intel / Apple Silicon* |
+| AutoCAD | StageFlow v2027 · AutoCAD 2026 Windows | Connecteur non disponible |
 
-*La présence d'un installateur v2027 sur la page Releases du logiciel confirme
-sa disponibilité pour la plateforme. Une application native construite ou une
-édition Windows ne garantit pas une version Mac publiée. Ce guide ne remplace
-ni les notes de version ni la recette de votre matériel.*
+*Le minimum macOS est celui déclaré par le paquet ; la recette native peut
+avoir été réalisée sur une version plus récente. Ces paquets ne portent pas de
+signature Developer ID et ne sont pas notarisés par Apple. Certains produits
+utilisent une signature d'intégrité ad hoc lorsque leur release l'indique ; ne
+l'étendez pas aux autres. Vérifiez la source officielle et ne désactivez jamais
+les protections globales de macOS.*
 
-Le maître StageFlow fonctionne actuellement sous **Windows**. Les éditions Mac
-compatibles de StageDesk, StageMark et Dante Config Editor peuvent le rejoindre
-sur le réseau local avec son code à six chiffres, sans installer StageFlow.
+L'édition 2027 de ce guide n'impose ni le même numéro de build, ni le même statut
+Latest sur tous les systèmes. Dante Config Editor Windows reste publiquement en
+2026.10 tant que sa corrective v2027 n'est pas livrée. Les pages du site et les
+notes de chaque release font foi pour le numéro réellement disponible.
 
-Les cartes de lancement et raccourcis de la console décrits ici concernent le
-poste Windows. Un canal de commande **sur le même Mac** est implémenté dans
-StageDesk, mais pas dans StageMark ni Dante Config Editor. Ces deux logiciels
-peuvent néanmoins rejoindre une **Session StageFlow LIVE** par le réseau.
-Seules les commandes réellement proposées par le logiciel connecté sont actives.
-StageFlow et StageMon pour Mac restent en portage, **non disponibles**.
+StageFlow peut héberger le show sous **Windows ou macOS**. Les logiciels
+compatibles rejoignent volontairement cette Session StageFlow LIVE sur le réseau
+local de confiance avec son code à six chiffres. Un Projet StageFlow local reste
+un dossier sur le poste et ne crée aucune connexion réseau.
+
+Sous Windows et macOS, StageFlow affiche les cartes des logiciels et peut ouvrir
+une application installée. Sur le même Mac, le passage direct du projet est
+confirmé pour StageDesk ; StageMark et Dante Config Editor peuvent être ouverts
+sur le projet, mais la jonction LIVE reste explicite ; StageMon rejoint la session
+depuis son propre centre. Seules les commandes annoncées et activées par le
+logiciel synchronisé sont proposées. Le démarrage audio StageMon reste local sur
+Mac. Le connecteur AutoCAD reste réservé à Windows.
 
 ![Architecture de la suite SiLeMIO](../media/ecosystem/suite-architecture-fr.svg)
+
+## Deux interfaces 2027 réelles
+
+Ces captures proviennent de profils de recette isolés. Elles montrent les vraies
+interfaces sans prétendre prouver un réseau, une console, un projecteur ou une
+interface audio physique.
+
+![Interface native multiplateforme StageFlow v2027](../media/ecosystem/captures/stageflow-2027-fr.png)
+
+![StageDesk v2027](../media/ecosystem/captures/stagedesk-2027-fr.png)
 
 ## Choisir son parcours
 
@@ -172,10 +191,12 @@ prioritaire, même lorsque le logiciel est ouvert depuis StageFlow.
 ### StageMon
 
 Préparez les affectations et les entrées, puis exploitez les écoutes A/B,
-présentes par défaut. StageMon peut proposer de deux à six circuits : C à F
-n'apparaissent qu'après leur configuration. Les commandes rapides de la console StageFlow peuvent notamment
-effacer un cue. Un mute appliqué localement dans StageMon ne peut jamais
-être retiré à distance par StageFlow.
+présentes par défaut. Un projet peut contenir de deux à six circuits ; seuls les
+circuits réellement configurés apparaissent. Sur Mac, choisissez un périphérique
+CoreAudio duplex ou agrégé puis démarrez l'audio localement : aucun bridge ASIO
+n'est fourni. Les commandes rapides de la console StageFlow peuvent notamment
+effacer un cue. Les niveaux bornés, mutes et protections audio locales gardent
+toujours la priorité ; un mute local ne peut jamais être retiré par StageFlow.
 
 ## 5. Utiliser la console StageFlow
 
@@ -190,13 +211,13 @@ La zone inférieure de StageFlow présente une carte par logiciel :
 - **conflit** ou **connexion perdue** (rouge) : action nécessaire avant de
   poursuivre.
 
-Sous Windows, sélectionnez plusieurs cartes puis **Ouvrir la sélection** pour
-lancer les outils utiles. Avec un connecteur local compatible, une application
-déjà ouverte reçoit le projet dans sa fenêtre existante. Les limites Mac
-figurent dans la matrice de disponibilité. Le bouton **Réglages**
-permet de masquer les cartes dont vous ne vous servez pas. **Console compacte**
-réduit StageFlow aux commandes de la suite ; revenez à la fenêtre complète
-pour travailler sur le patch.
+Sous Windows et macOS, sélectionnez plusieurs cartes puis **Ouvrir la sélection**
+pour lancer les outils utiles. Le projet est transmis seulement lorsque ce
+passage local est pris en charge ; sinon, rejoignez explicitement la Session
+StageFlow LIVE dans l'application avec le code à six chiffres. Le bouton
+**Réglages** permet de masquer les cartes dont vous ne vous servez pas.
+**Console compacte** réduit StageFlow aux commandes de la suite ; revenez à la
+fenêtre complète pour travailler sur le patch.
 
 ## 6. Piloter le poste avec un seul QR code
 
@@ -246,10 +267,14 @@ synchronisation automatique.
 ### Mode LIVE
 
 Ouvrez la **Session StageFlow LIVE** lorsque plusieurs logiciels doivent suivre le même
-show pendant la préparation ou l’exploitation. Les changements valides
-sont publiés et rechargés rapidement. Une application qui contient des
-modifications locales non enregistrées ne les écrase pas : elle signale un
-conflit et demande un choix.
+show pendant la préparation ou l’exploitation. Les changements valides sont
+publiés rapidement ; chaque application les recharge ou demande une validation
+selon sa politique locale. **StageMark ne met jamais silencieusement à jour une
+projection ouverte : chaque nouvelle révision LIVE détectée après l’ouverture
+initiale attend l’adoption explicite de l’opérateur, même lorsque l’éditeur
+StageMark n’a aucune modification locale non enregistrée.**
+Une application qui contient des modifications locales non enregistrées ne les
+écrase pas : elle signale un conflit et demande un choix.
 
 Le grand bouton reste toujours visible. Le centre **Session StageFlow LIVE**
 réunit l'activation générale, les autres postes et le QR code. Il distingue les
@@ -306,7 +331,7 @@ commentaires, groupes, balances ou autres réglages.
 
 ## 8. Piloter avec OSC, MIDI ou Stream Deck
 
-Dans **StageFlow sous Windows**, ouvrez **Outils > OSC · MIDI · Stream Deck**.
+Dans **StageFlow sous Windows ou macOS**, ouvrez **Outils > OSC · MIDI · Stream Deck**.
 Pour les contrôles autonomes, vérifiez les fonctions de votre plateforme dans
 la notice du logiciel. StageFlow écoute OSC localement
 sur `127.0.0.1:18040` par défaut. Choisissez explicitement une interface réseau
@@ -316,11 +341,16 @@ peuvent être activés commande par commande.
 
 Pour le MIDI, choisissez l’entrée, cliquez sur **Apprendre le prochain
 message**, puis actionnez le bouton à associer. Une sortie MIDI facultative peut
-renvoyer l’état. Le plugin Stream Deck fourni s’installe depuis le même écran :
-placez l’action SiLeMIO sur une touche, puis choisissez la commande.
+renvoyer l’état ; StageFlow utilise CoreMIDI sur Mac. Le plugin Stream Deck est
+fourni pour Windows et Mac : installez le paquet de votre plateforme, placez
+l’action SiLeMIO sur une touche, puis choisissez la commande.
 
-Le catalogue commun pilote StageFlow, StageMark et StageMon uniquement lorsque
-l’application propriétaire a rejoint le projet LIVE. Ces contrôles restent
+Le catalogue commun contient 24 commandes : 10 pour StageFlow, 5 pour StageMark
+et 9 identifiants StageMon. Il pilote les logiciels propriétaires uniquement
+lorsqu'ils ont rejoint le projet LIVE et exposent réellement la capacité. Sur
+Mac, **Démarrer l'audio** StageMon reste local et n'est pas annoncé à StageFlow.
+Les autres commandes peuvent être désactivées selon l'état, notamment pour
+empêcher qu'un mute local soit retiré à distance. Ces contrôles restent
 facultatifs et chaque logiciel conserve ses commandes locales.
 
 ## 9. Sauvegarde et conflits
@@ -332,8 +362,13 @@ paquet `.stageflowpack`, puis importez-le pour reconstruire le dossier complet.
 
 Chaque logiciel enregistre atomiquement sa partie et vérifie qu’elle n’a pas été
 modifiée entre-temps. Des changements indépendants, par exemple deux paires ou
-deux champs différents, sont fusionnés automatiquement puis affichés dans
-l’éditeur. En cas de modification différente de la même valeur :
+deux champs différents, sont fusionnés dans le projet commun. Cette fusion ne
+force pas leur adoption dans toutes les interfaces : dans StageMark, chaque
+nouvelle révision LIVE détectée après l’ouverture initiale reste en attente de
+l’adoption explicite de l’opérateur, même lorsque l’éditeur ne contient aucune
+modification locale non enregistrée ; une base devenue périmée ne peut pas
+écraser ses modifications locales. En cas de
+modification différente de la même valeur :
 
 1. ne forcez pas l’écrasement ;
 2. lisez le nom du domaine et du logiciel signalés ;

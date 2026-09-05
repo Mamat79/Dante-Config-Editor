@@ -15,32 +15,49 @@ Discover StageFlow and its published versions: [official StageFlow page](https:/
 
 ## Windows and macOS availability
 
-| Application | Windows | macOS |
+| Application | Public Windows | Public macOS |
 |---|---|---|
-| StageFlow | Native application* | Port in progress - not available |
-| StageDesk | Native application* | Native Intel / Apple Silicon* |
-| StageMark | Native application* | Native Intel / Apple Silicon* |
-| StageMon | Native application* | Port in progress - not available |
-| Dante Config Editor | Native application* | Native Intel / Apple Silicon* |
-| AutoCAD | StageFlow 2026 connector for Windows* | StageFlow connector not available |
+| StageFlow | v2027.0 · Windows 11 x64 | v2027.0 · macOS 14+ · Intel / Apple Silicon* |
+| StageDesk | v2027.0.1 · Windows 10+ x64 | v2027.0.0 · macOS 12+ · Intel / Apple Silicon* |
+| StageMark | v2027.0.0 · Windows 11 x64 | v2027.0.0 · macOS 12+ · Intel / Apple Silicon* |
+| StageMon | v2027 · Windows 10/11 x64 | v2027 · macOS 12+ · Intel / Apple Silicon* |
+| Dante Config Editor | v2026.10 · Windows 11 x64 | v2027.0 · macOS 11+ · Intel / Apple Silicon* |
+| AutoCAD | StageFlow v2027 · AutoCAD 2026 Windows | Connector not available |
 
-*A v2027 installer on the application's Releases page confirms availability
-for that platform. A built native application or a Windows edition does not
-guarantee a published Mac release. This guide does not replace release notes
-or acceptance tests on your hardware.*
+*The stated macOS minimum comes from the package; native acceptance may have
+used a newer system. These packages do not carry a Developer ID signature and
+are not notarized by Apple. Some products use an ad-hoc integrity signature
+when their release says so; do not extend that claim to the others. Verify the
+official source and never disable macOS protections globally.*
 
-The StageFlow host currently runs on **Windows**. Compatible Mac editions of
-StageDesk, StageMark and Dante Config Editor can join it over the local network
-with its six-digit code, without installing StageFlow.
+The 2027 edition of this guide does not force the same build number or Latest
+status on every system. Dante Config Editor for Windows remains publicly at
+2026.10 until its v2027 corrective is delivered. Site pages and each release's
+notes are authoritative for the version actually available.
 
-The launch cards and console shortcuts described here apply to the Windows
-workstation. A control channel **on the same Mac** is implemented in StageDesk,
-but not in StageMark or Dante Config Editor. Both can still join a
-**StageFlow LIVE session** over the network. Only commands actually offered by
-the connected application are enabled. StageFlow and StageMon for Mac remain
-work in progress and are **not available**.
+StageFlow can host the show on **Windows or macOS**. Compatible applications
+voluntarily join that StageFlow LIVE session over a trusted local network with
+its six-digit code. A Local StageFlow project remains a folder on the workstation
+and creates no network connection.
+
+On Windows and macOS, StageFlow shows application cards and can open an installed
+tool. On the same Mac, direct project handoff is confirmed for StageDesk;
+StageMark and Dante Config Editor can be opened on the project but join LIVE
+explicitly; StageMon joins from its own centre. Only commands advertised and
+enabled by the synchronized application are offered. StageMon audio start stays
+local on Mac. The AutoCAD connector remains Windows-only.
 
 ![SiLeMIO suite architecture](../media/ecosystem/suite-architecture-en.svg)
+
+## Two real 2027 interfaces
+
+These captures come from isolated acceptance profiles. They show the real
+interfaces without claiming proof of a physical network, console, projector or
+audio device.
+
+![StageFlow v2027 cross-platform native interface](../media/ecosystem/captures/stageflow-2027-en.png)
+
+![StageDesk v2027](../media/ecosystem/captures/stagedesk-2027-en.png)
 
 ## Choose your workflow
 
@@ -165,10 +182,12 @@ opened from StageFlow.
 
 ### StageMon
 
-Prepare assignments and inputs, then operate the default A/B monitor mixes.
-StageMon may offer two to six circuits: C to F only appear after configuration.
-StageFlow console shortcuts may clear a cue. A monitor muted locally
-inside StageMon can never be remotely unmuted by StageFlow.
+Prepare assignments and inputs, then operate the default A/B monitor mixes. A
+project may contain two to six circuits; only configured circuits appear. On
+Mac, choose a duplex or aggregate CoreAudio device and start audio locally: no
+ASIO bridge is supplied. StageFlow console shortcuts may clear a cue. Bounded
+levels, mutes and local audio safeguards keep priority; a local mute can never
+be cleared remotely by StageFlow.
 
 ## 5. Use the StageFlow console
 
@@ -183,12 +202,12 @@ The lower section of StageFlow displays one card per application:
 - **conflict** or **connection lost** (red): action is required before
   continuing.
 
-On Windows, select several cards and click **Open selection** to launch the
-tools you need. With a compatible local connector, an application that is
-already open receives the project in its existing window. Mac limits are in
-the availability matrix. Use **Settings** to hide cards
-you do not use. **Compact console** reduces StageFlow to the suite controls;
-return to the full window when you need to edit the patch.
+On Windows and macOS, select several cards and click **Open selection** to launch
+the tools you need. The project is passed only when that local handoff is
+supported; otherwise explicitly join the StageFlow LIVE session inside the
+application with its six-digit code. Use **Settings** to hide cards you do not
+use. **Compact console** reduces StageFlow to the suite controls; return to the
+full window when you need to edit the patch.
 
 ## 6. Control the workstation with one QR code
 
@@ -235,9 +254,13 @@ for preparing a project alone or working without automatic synchronization.
 ### LIVE mode
 
 Open the **StageFlow LIVE session** when several applications must follow the same show
-during preparation or operation. Valid changes are published and reloaded
-quickly. An application with unsaved local changes does not overwrite them: it
-reports a conflict and asks for a choice.
+during preparation or operation. Valid changes are published quickly; each
+application reloads them or requests approval according to its local policy.
+**StageMark never silently updates an open projection: every later LIVE
+revision detected after the initial open waits for explicit operator adoption,
+even when the StageMark editor has no unsaved local changes.** An application
+with unsaved local changes does not overwrite
+them: it reports a conflict and asks for a choice.
 
 The large status button remains visible. The **StageFlow LIVE session** centre
 combines general activation, other workstations and the QR code. It separates
@@ -293,7 +316,7 @@ never microphones, comments, groups, sound-check notes or other settings.
 
 ## 8. Control with OSC, MIDI or Stream Deck
 
-In **StageFlow on Windows**, open **Tools > OSC · MIDI · Stream Deck**.
+In **StageFlow on Windows or macOS**, open **Tools > OSC · MIDI · Stream Deck**.
 For standalone controls, check the application's manual for features supported
 on your platform. By default StageFlow listens locally
 on `127.0.0.1:18040`. Explicitly choose a network interface only when another
@@ -301,13 +324,17 @@ trusted workstation must send commands. The traffic log shows received,
 accepted and refused messages, and state feedback can be selected per command.
 
 For MIDI, choose an input, click **Learn next message**, then press the control
-to map. An optional MIDI output can return state. The included Stream Deck
-plugin installs from the same screen: place the SiLeMIO action on a key, then
-choose the command.
+to map. An optional MIDI output can return state; StageFlow uses CoreMIDI on Mac.
+The Stream Deck plugin is supplied for Windows and Mac: install the package for
+your platform, place the SiLeMIO action on a key, then choose the command.
 
-The shared command catalogue controls StageFlow, StageMark and StageMon only
-while the owning application has joined the LIVE project. These controls remain
-optional and every application keeps its local controls.
+The shared catalogue contains 24 commands: 10 for StageFlow, 5 for StageMark and
+9 StageMon identifiers. It controls owning applications only while they have
+joined the LIVE project and actually advertise the capability. On Mac, StageMon
+**Start audio** stays local and is not advertised to StageFlow. Other commands
+may be disabled by state, notably to prevent a local mute from being cleared
+remotely. These controls remain optional and every application keeps its local
+controls.
 
 ## 9. Backups and conflicts
 
@@ -318,8 +345,11 @@ to reconstruct the complete folder.
 
 Every application saves its own part atomically and checks that it has not
 changed in the meantime. Independent changes, such as two different pairs or
-fields, are merged automatically and then shown in the editor. If both sides
-changed the same value differently:
+fields, are merged in the shared project. That merge does not force every user
+interface to adopt the revision: in StageMark, every later LIVE revision
+detected after the initial open waits for explicit operator adoption, even when
+the editor has no unsaved local changes; a stale base cannot overwrite its
+local edits. If both sides changed the same value differently:
 
 1. do not force an overwrite;
 2. read the reported domain and application name;
