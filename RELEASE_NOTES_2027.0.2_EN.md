@@ -4,6 +4,10 @@
 
 ## Windows 2027.0.2
 
+Windows package replacement of September 6, 2026, built from private revision
+`96f169f3531e1625166f12dea070ba899024a927`. The public version is unchanged;
+the new package hashes are listed in [SHA256SUMS.txt](SHA256SUMS.txt).
+
 This update clarifies project preparation, suite connection, and export commands.
 DCE remains a standalone application for preparing Dante configurations offline.
 
@@ -21,6 +25,15 @@ DCE remains a standalone application for preparing Dante configurations offline.
 
 ### StageFlow connection and alerts
 
+- The **StageFlow connection** button keeps its name; a separate line shows
+  its state and the joined session when connected.
+- The center uses the common **StageFlow LIVE / Dante Config Editor remote**
+  side rail, current project, and **Back to project**. It remains non-modal;
+  local editing is temporarily protected during connection transitions.
+- The mobile section identifies the **StageFlow suite** as its target. Manage
+  the QR, its state and permissions in StageFlow on the host: DCE does not invent
+  a standalone mobile server, link, or activation button. If no session is found,
+  open StageFlow and share the project on this PC or the local network.
 - **StageFlow connection** distinguishes local projects from LIVE sessions.
   Standalone mode, connection progress, connection loss, and errors are explicit.
   The full project name remains available.
@@ -63,6 +76,10 @@ the exact shared SiLeMI/O 2027.2 guide pair approved by its owner.
 From a 2026.10 installation that does not offer v2027, download the Windows
 installer manually from the public repository. Recent versions select updates
 for their platform and check the download size and SHA-256.
+
+This replacement retains version 2027.0.2. If it is already installed,
+download the installer again to receive the updated connection center:
+a version-number check does not detect a replacement with the same number.
 
 Upgrading preserves profiles, personal banks, projects, and licenses. One desktop
 shortcut is used: **Dante Config Editor v2027**. A historical installation folder

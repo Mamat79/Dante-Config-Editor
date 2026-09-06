@@ -4,6 +4,10 @@
 
 ## Windows 2027.0.2
 
+Remplacement du paquet Windows du 6 septembre 2026, issu de la révision privée
+`96f169f3531e1625166f12dea070ba899024a927`. Le numéro public reste identique ;
+les empreintes du nouveau paquet figurent dans [SHA256SUMS.txt](SHA256SUMS.txt).
+
 Cette mise à jour clarifie les commandes de préparation, de connexion à la suite
 et d'export. DCE reste autonome et prépare les configurations Dante hors ligne.
 
@@ -22,6 +26,15 @@ et d'export. DCE reste autonome et prépare les configurations Dante hors ligne.
 
 ### Connexion StageFlow et alertes
 
+- Le bouton **Connexion StageFlow** conserve son nom ; son état s'affiche sur
+  une seconde ligne, avec la session rejointe lorsqu'elle est connectée.
+- Le centre reprend le menu latéral commun **StageFlow LIVE / Télécommande
+  Dante Config Editor**, le projet courant et **Retour au projet**. Il reste
+  non modal ; l'édition locale est temporairement protégée pendant la connexion.
+- La rubrique mobile identifie la cible **suite StageFlow**. Le QR, son état et
+  ses droits se gèrent dans StageFlow sur l'hôte : DCE n'invente ni serveur mobile
+  autonome, ni lien, ni bouton d'activation. Sans session détectée, le centre
+  invite à ouvrir StageFlow et à diffuser le projet sur ce PC ou le réseau local.
 - **Connexion StageFlow** distingue le projet local de la session LIVE. L'état
   autonome, la connexion en cours, la perte de connexion et les erreurs sont
   indiqués explicitement. Le nom complet du projet reste consultable.
@@ -64,6 +77,10 @@ la paire exacte des guides communs SiLeMI/O 2027.2 validés par leur propriétai
 Depuis une version 2026.10 qui ne propose pas v2027, téléchargez manuellement
 l'installateur Windows depuis le dépôt public. Les versions récentes choisissent
 la mise à jour correspondant à leur plateforme et vérifient taille et SHA-256.
+
+Le numéro 2027.0.2 est conservé pour ce remplacement. Si cette version est
+déjà installée, téléchargez à nouveau l'installateur pour recevoir le centre
+de connexion actualisé : une vérification par numéro ne détecte pas ce remplacement.
 
 La mise à niveau conserve les profils, banques personnelles, projets et licences.
 Un seul raccourci Bureau est utilisé : **Dante Config Editor v2027**. Un ancien

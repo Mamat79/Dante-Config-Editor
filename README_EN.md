@@ -158,21 +158,39 @@ DCE resolves common pairs, group overrides, and hidden pairs. Empty cells are
 ignored, and nothing changes before confirmation. This workflow also works
 when DCE is used on its own, without StageFlow.
 
-### One clear connection center on Windows and Mac
+### An explicit StageFlow connection
 
-The **StageFlow LIVE** button is accessible at the top of the window and
-opens the connection center. Three workflows remain
-distinct:
+On Windows, the permanent **StageFlow connection** button at the top of the
+window opens the connection center. Its state is shown separately:
+**Standalone**, **Session available**, **Connected to…** or **Disconnected**.
+The center displays the current project and a **Back to project** button.
+It can remain open while you view your configuration. Three workflows
+remain distinct:
 
 - **Standalone DCE**: prepare your configuration without StageFlow.
 - **Local `.stageflow` project**: share a project folder while preserving each
   application's own data.
-- **Temporary LIVE session**: select a StageFlow host on your local network,
-  check the project name, then enter its six-digit code.
+- **Temporary LIVE session**: select a StageFlow host on this PC or the local
+  network, check the project name, then enter its six-digit code.
 
-If discovery is unavailable, enter the host's private IPv4 address and port.
-A code error stays in the window so you can try again. Leaving a session is
-explicit; DCE does not automatically rejoin after a connection loss.
+If no session appears, check that StageFlow is open and sharing its project,
+then refresh. The host's private IPv4 address and port can still be entered
+in the technical details. A code error stays in the window so you can try
+again. Leaving a session is explicit; DCE does not automatically rejoin
+after a connection loss.
+
+The **StageFlow LIVE / Dante Config Editor remote** rail separates joining
+the project from mobile access. DCE has no standalone mobile remote server:
+the QR code, its activation and permissions are managed in **StageFlow on
+the session host**. DCE's received protocol contains neither a mobile link
+nor an active/stopped state; no QR code is invented from an IP address.
+With access granted and a project loaded, the suite remote can open DCE's
+Patch / RX workspace or validation center. It does not edit Dante routing
+or control the hardware.
+
+The available Mac packages remain **2027.0**, with their existing
+**StageFlow LIVE** center. This Windows center update does not claim that
+those packages were rebuilt.
 
 Linked RX changes use **explicit UUIDs**, never name matching. A missing rule,
 unsaved local changes or a conflict rejects the complete transaction and

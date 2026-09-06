@@ -1,99 +1,70 @@
-# DCE Windows 2027.0.2 - release verification
+# DCE Windows 2027.0.2 - connection center qualification
 
-Updated: 2026-09-06. This report replaces earlier candidate notes that
-contained obsolete packaging hashes and contradictory delivery statements.
+Updated 2026-09-06. The Windows 2027.0.2 replacement was approved on the
+combined automated, package, document and bounded native evidence below.
+The uncompleted native center checks remain explicit limitations, not passes.
 
-## Published Windows package
+## Windows Package
 
-- Stable release: [v2027.0.2](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.0.2).
 - Installer: `DanteConfigEditor2027_Installer.exe`.
-- File version: `2027.0.2.0`.
-- Size: 85,710,301 bytes.
-- SHA-256: `65d692ba2f41057e13eafff589a820fab70485883c408561a3ac2d41a032dd20`.
-- The local installer, public repository copy and GitHub release asset match.
-- The executable asset is unchanged during this documentation correction.
+- Version: `2027.0.2`, executable file version `2027.0.2.0`.
+- Size: 85,621,243 bytes.
+- SHA-256: `987a9d80dc37741263d465d4958d4eb7bb25cb24b0f4e4c3a091c22f5b39aae6`.
+- Extracted application SHA-256:
+  `87c3d080ef331ab70d3490ee3452ba6e1d5d6d560f01f6b9fb2c3d8d27d48e6b`.
+- Private source revision: `96f169f3531e1625166f12dea070ba899024a927`.
 
-## Checks
+The previous package and all release assets were backed up and checked
+before preparation. No previously released Mac package was rebuilt or renamed.
 
-| Check | Evidence |
+## Checks Performed
+
+| Check | Result |
 | --- | --- |
-| Release WPF build | Passed, 0 warnings, 0 errors |
-| Core / Windows tests | 638 passed, 0 failed, 0 skipped in the final delivery run |
-| Avalonia tests | 33 headless tests passed in the final delivery run; this is not native Mac QA |
-| Licence Worker tests | 5 passed; no Worker deployment or licensing change |
-| Layout component probe | 80 cases, FR/EN and light/dark, including resize back to a large viewport |
-| Large Home viewports | No outer scrolling at tested central viewports 1280x838 and 1120x740 logical units |
-| Small Home viewports | Scrolling fallback keeps commands reachable at 900x630, 640x430 and 440x340 |
-| Header alignment | Theme and Language control/chrome heights match at 36 logical units; no inherited internal margin |
-| Windows manuals | 48 pages, 49 bookmarks and 149 link annotations in each language; no text outside page bounds |
-| Quick starts | One page each, FR/EN |
-| Shared guides | Exact approved suite bundle 2027.2, with matching manifest hashes |
-| Installation on the author's PC | Completed, installer exit code 0; registry and executable report 2027.0.2 |
+| Core / Windows automated tests | 643 passed |
+| Avalonia headless tests | 34 passed on Windows; not native Mac acceptance |
+| Licence Worker tests | 5 passed; no deployment or licensing change |
+| Windows Release build | 0 warnings, 0 errors |
+| WPF connection layout | 12 off-screen cases, FR/EN, light/dark, three sizes |
+| WPF modeless lifecycle | 12 additional cases, synthetic callbacks only |
+| Installer contents | Extracted without installing; all 266 adjacent files match the candidate |
+| Single-file application | 453 embedded entries inspected, including .NET/WPF and application assemblies |
+| Windows manuals | 48 pages, 49 bookmarks and 149 annotations in each language |
+| Quick starts | One page per language |
+| Supplied banks | ZIP files identical to the previous public hashes |
 
-The XML export tests exercise preservation of project history and unsaved state,
-invalid extensions, source protection, foreign StageFlow domains and Windows
-junctions. XML is exported through the existing writer. The layout correction
-does not change the XML mutation engine, personal banks or licence formats.
+The lifecycle checks exercise the actual connection window handlers for success,
+refusal, code error and closing during a pending operation. Separate checks call
+the real MainWindow connection wrapper with a synthetic HTTP handler and verify
+that editing returns to its original enabled or disabled state after failure
+and cancellation. They do not show the application or contact a network host.
 
-## Installation and binary provenance
+The XML editor, transport protocol, personal banks and licence formats are
+unchanged by this lot. Licences are not reset and no payment service is deployed.
+The four Windows PDFs were regenerated and rendered for review. Only the
+connection page changed in the complete guides; all other text and embedded
+images match the previous documents. No native application screenshot was fabricated.
 
-The installer upgraded the existing application in its historical folder,
-`C:\Program Files\Dante Config Editor 2026.3`. That folder name does not reflect
-the binary version: the executable reports **2027.0.2.0**. One desktop shortcut,
-**Dante Config Editor v2027**, points to it.
+## Remaining Acceptance
 
-The installed executable is 73,441,932 bytes, SHA-256
-`e02d59fe90ec8c7727780618019ca0444681498e951fd9aa4e32eec5cde93798`.
-It was launched by that exact path and closed normally. The accessibility tree
-exposed the updated Project page, header, theme/language selectors and recent-file
-command. No real project was opened or saved during this final check.
+This exact candidate was launched without a project. One native main-window
+capture is complete and nonblank in French/dark mode at 1920x1032 logical pixels.
+The header is readable and the empty Project page has no central scrollbar.
+The connection center was also observed in the accessibility tree. However,
+input-geometry and overlapping-window errors prevented completion of its
+native mobile/Return checks. The center itself was not captured. Full native
+focus, light-theme, English and DPI acceptance is not claimed by these checks.
 
-All 142 pre-existing profile/personal-bank files were byte-identical immediately
-after installation. After launch, only the licence state's normal `LastSeenAtUtc`
-timestamp changed; the licence, activation data and all other fields remained
-unchanged. The installed manuals and shared guides match the public assets.
+The owned candidate was closed normally. All 56 pre-existing profile files
+remain; only the licence state's normal LastSeenAtUtc timestamp changed. No
+project, personal bank, licence contents or user preferences were modified.
+Installation on the author's PC is checked separately after publication. The
+previous installation's results must not be presented as installation acceptance
+of this new binary hash.
 
-The older standalone layout candidate (`d11a5245...`) used .NET SDK 8.0.424,
-whereas the installer used the packaging script's SDK 8.0.422. They are not
-byte-identical. A separate verification build from final source commit
-`7b4f121` with the original packaging SDK/options was compared with the installed
-bundle: 447 of 453 embedded files match exactly. The six DCE assemblies match
-after excluding only generated PE/debug timestamps, PE checksum, module MVID,
-and PDB GUID/checksum. No IL, application metadata, text or embedded resource was
-excluded. The comparison covers 9,884 methods and all UI/business resources.
-The strict comparison against the older standalone retained only two
-generator-version attribute differences: WPF build tasks and regex generator.
-This proves the final code/resources are present without claiming raw EXE
-equality or replacing the already published installer.
+The accepted Mac Apple Silicon and Intel packages remain **2027.0**. This
+Windows replacement claims no new native Mac build, Dante Controller trial,
+physical-network test, signing certificate or Apple notarization.
 
-## Documentation provenance
-
-The four downloadable Windows PDFs correspond to the final 2027.0.2 documents.
-Earlier copies attached to the release were outdated and have been replaced.
-Their hashes are listed in `SHA256SUMS.txt`.
-
-The shared French guide is 405,754 bytes with SHA-256
-`e438d52a1012e2c91f9aaf935dc9db16ee77e9989eda692a26a27ac9bf75fc49`.
-The English guide is 363,318 bytes with SHA-256
-`104d554c08f886032345eef7ec98cfbf2dddb283d6edee55e044cb3206953dbc`.
-The approved suite manifest SHA-256 is
-`40ae77c353922cb3bb2faf5be0f2aff86a0bb6c72e22cb41a6fc8c345e0f6bf9`.
-
-## Boundaries
-
-Earlier native checks opened the candidate, imported a synthetic XML fixture,
-cancelled the export preflight and opened the StageFlow connection dialogue.
-Automated captures of the main WPF client and preflight were white, while
-the connection dialogue and the suite PDF rendered. Their cause was not
-determined. The same main-client capture limitation occurred during the final
-installed launch. Component renders in the manuals are explicitly labelled and
-must not be mistaken for native installed-application screenshots. Full native
-DPI and focus acceptance at every scale is not claimed by component tests.
-
-The accepted macOS Apple Silicon and Intel packages remain **2027.0**, with
-their existing platform-specific downloads. This Windows correction does not
-relabel or rebuild those packages. No new physical Dante network or Dante
-Controller trial, code-signing certificate or Apple notarization is claimed.
-
-Private source code and development history remain in the private repository.
-The public repository contains distribution files and public documentation.
+Source code and development history remain private. Public delivery is limited
+to installers, documentation, media and verified checksums.

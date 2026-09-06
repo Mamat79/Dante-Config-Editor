@@ -171,22 +171,39 @@ paires masquées. Les cellules vides sont ignorées et rien n'est modifié avant
 votre validation. Ce parcours fonctionne aussi lorsque DCE est utilisé seul,
 sans StageFlow.
 
-### Un centre de connexion clair sous Windows et Mac
+### Une connexion StageFlow explicite
 
-Le bouton **StageFlow LIVE**, accessible en haut de la fenêtre,
-ouvre le centre de connexion. Trois usages restent
-distincts :
+Sous Windows, le bouton permanent **Connexion StageFlow**, en haut de la
+fenêtre, ouvre le centre de connexion. L'état est affiché séparément :
+**Autonome**, **Session disponible**, **Connecté à…** ou **Déconnecté**.
+Le centre garde le projet courant visible et propose **Retour au projet**.
+Il peut rester ouvert pendant que vous consultez votre configuration.
+Trois usages restent distincts :
 
 - **DCE autonome** : préparez votre configuration sans StageFlow.
 - **Projet local `.stageflow`** : partagez un dossier de projet en conservant
   les données propres à chaque logiciel.
-- **Session LIVE temporaire** : choisissez l'hôte StageFlow sur votre réseau
-  local, vérifiez le nom du projet, puis saisissez son code à six chiffres.
+- **Session LIVE temporaire** : choisissez l'hôte StageFlow sur ce PC ou sur
+  le réseau local, vérifiez le nom du projet, puis saisissez son code à six chiffres.
 
-Si la découverte ne fonctionne pas, vous pouvez renseigner l'adresse IPv4
-privée et le port de l'hôte. Une erreur de code reste affichée dans la fenêtre
-pour permettre un nouvel essai. Quitter une session est explicite ; DCE ne
-rejoint pas automatiquement une session après une coupure.
+Si aucune session n'apparaît, vérifiez que StageFlow est ouvert et diffuse
+son projet, puis actualisez. La saisie de l'adresse IPv4 privée et du port
+reste disponible dans les détails techniques. Une erreur de code reste
+affichée pour permettre un nouvel essai. Quitter une session est explicite ;
+DCE ne rejoint pas automatiquement une session après une coupure.
+
+Le rail **StageFlow LIVE / Télécommande Dante Config Editor** distingue
+l'association au projet de l'accès mobile. DCE n'héberge pas de télécommande
+mobile autonome : le QR, son activation et ses droits se gèrent dans
+**StageFlow, sur l'ordinateur hôte**. Le protocole reçu par DCE ne fournit
+ni lien mobile ni état actif/arrêté ; aucun QR n'est inventé à partir d'une IP.
+Avec les droits nécessaires et un projet chargé, la télécommande de la suite
+peut ouvrir l'espace Patch / RX ou le centre de validation de DCE. Elle ne
+modifie pas le patch Dante et ne commande pas le matériel.
+
+Les paquets Mac disponibles restent en **2027.0**, avec leur centre
+**StageFlow LIVE** existant. Cette mise à jour du centre Windows ne les
+présente pas comme reconstruits.
 
 Les changements liés aux RX sont suivis par leurs **UUID explicites**, jamais
 par un simple rapprochement de noms. Une règle manquante, des modifications
