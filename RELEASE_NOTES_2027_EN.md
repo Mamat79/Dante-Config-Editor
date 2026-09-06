@@ -1,85 +1,82 @@
-# Dante Config Editor v2027 for macOS
+# Dante Config Editor v2027
 
-[Notes de version en français](RELEASE_NOTES_2027.md)
+[Notes de version en français](RELEASE_NOTES.md)
 
-This stable release provides **macOS Apple Silicon and Intel** applications
-only. Windows remains on **2026.10**; its Release keeps the GitHub Latest
-designation and none of its files are replaced.
+## Windows 2027.0.2
 
-## One StageFlow LIVE connection center
+This update clarifies project preparation, suite connection, and export commands.
+DCE remains a standalone application for preparing Dante configurations offline.
 
-- Always accessible from the top bar, regardless of the current page.
-- A full-window connection center on macOS, in English and French.
-- Available sessions with project, host computer, IPv4 address, and shared functions.
-- Manual private IPv4 address and port when local discovery is unavailable.
-- Six-digit codes preserve leading zeros and support pasting spaces or a hyphen.
-- Errors keep the window open so the code can be corrected and retried.
-- Explicit disconnect; no automatic rejoin after a connection loss.
-- The last local working state remains available if the host disappears.
+### A consistent, accessible header
 
-The selected session is rechecked immediately before sending the code.
-Compatible hosts also receive the expected project and session identifiers.
-A late heartbeat response from an old connection cannot revive it or replace a new one.
+- The DCE icon and product name remain visible alongside the application menus.
+- Commands follow this order: StageFlow connection, Alerts, Theme, Language,
+  Suite guide, and DCE help. They move onto a second row when space is limited.
+- Theme shows the current Light or Dark choice. Theme and language preferences
+  are saved. Commands have accessible names and tooltips.
+- Theme and language fields align vertically with the adjacent buttons, without
+  inherited inner margins shifting their backgrounds.
+- Undo and Redo remain in the header. Atomic Bomb is under **Tools > Training**,
+  with its safety sequence unchanged.
 
-## Three distinct workflows
+### StageFlow connection and alerts
 
-Change notifications use an orange banner on every screen: affected item,
-previous/current label, origin, and time. Acknowledge and Acknowledge all are
-local to this computer and leave later arrivals pending. A pause requested
-by StageFlow is shown without interrupting LIVE or asking the user to rejoin.
+- **StageFlow connection** distinguishes local projects from LIVE sessions.
+  Standalone mode, connection progress, connection loss, and errors are explicit.
+  The full project name remains available.
+- The center can open a local `.stageflow` folder without running StageFlow.
+  Disconnect an active LIVE session first; opening another project warns about
+  unsaved changes.
+- Discovery, six-digit pairing codes, and explicit disconnect are retained.
+  The IPv4 address and technical details are in an expandable section.
+- **Alerts** separates XML validation from unacknowledged StageFlow changes.
+  Opening the list neither acknowledges changes nor disables future reception.
+- **Guide** opens the shared SiLeMI/O suite guide; **Help** opens the DCE manual,
+  in the selected language.
 
-Standalone DCE projects, local StageFlow folders, and temporary LIVE sessions
-remain separate. StageFlow is free and optional. DCE remains an offline Dante
-configuration editor, not a live Dante hardware controller. Use this LAN
-connection only on a trusted local network.
+### Prepare, validate, export
 
-On Mac, the initial window respects the available work area and display scale.
-Small displays have fallback scrolling; valid window dimensions and positions
-on a larger screen remain unchanged.
+- The Project page gives direct access to devices, patching, validation, and export.
+- Counters share a single row on wider windows. Recent files use the remaining
+  height and scroll within their own list; smaller windows retain a page-level
+  scrolling fallback so commands are never cut off.
+- **File > Export Dante XML** and **Import / Export > Export Dante XML** open
+  the pre-export checks, then save a separate XML copy.
+- The copy preserves the open project, pending edits, and undo history. It does
+  not overwrite the source. Existing destinations retain the confirmation and
+  backup protections of the existing writer.
+- Export refuses extensions other than `.xml` and destinations inside the current
+  StageFlow folder, including directory junctions and symbolic links.
+- **Save** still saves the StageFlow project. Exporting an XML copy does not
+  replace saving that project.
 
-Starting from scratch, device banks, XML merging, series renaming, patching,
-synoptic views, and StageFlow-patch-to-RX mapping are retained. This update
-does not change the XML model, other applications' domains, personal banks,
-or existing licenses.
+The XML mutation engine is not rewritten. Banks, patching, series renaming, XML
+merging, synoptic views, and existing licenses are preserved. StageFlow is free
+and optional. A LIVE suite connection does not control Dante hardware or the
+physical Dante network.
 
-## Guides and installation
+## Documentation and upgrading
 
-All four French/English guides and quick starts are updated. The complete guide
-includes screenshots of the new center, the connection steps, and troubleshooting.
+The Windows installer includes French/English manuals and quick starts, plus
+the exact shared SiLeMI/O 2027.2 guide pair approved by its owner.
 
-The shared SiLeMI/O suite guides, in English and French, are also included in
-the Mac applications.
+From a 2026.10 installation that does not offer v2027, download the Windows
+installer manually from the public repository. Recent versions select updates
+for their platform and check the download size and SHA-256.
 
-Separate macOS packages are provided for Apple Silicon and Intel. No Windows
-v2027 installer is included here. The v2027 guides also cover the Windows
-interface in preparation; the Windows 2026.10 guide remains in its Release.
+Upgrading preserves profiles, personal banks, projects, and licenses. One desktop
+shortcut is used: **Dante Config Editor v2027**. A historical installation folder
+name such as `Dante Config Editor 2026.3` may remain; About and the executable
+report the effective version.
 
-**v2027** is the public Mac name, **v2027.0** the technical tag, and
-**2027.0.0.0** the binary version. Use the README's direct DMG links: while
-Latest remains v2026.10 for Windows, an older updater may not offer this
-Mac release.
+## Windows and Mac
 
-## Verification limits
+This correction targets **Windows 2027.0.2**, binary version **2027.0.2.0**.
+The latest accepted Mac packages remain **2027.0**, with separate Apple Silicon
+and Intel downloads. They are not renamed or presented as this correction.
+Public download links and version numbers remain platform-specific.
 
-Both packages were built and launched on separate native macOS environments,
-Apple Silicon and Intel. Each architecture passed **579 shared-engine tests
-and 29 Mac UI tests**, with no failures. The packaged application was launched
-from the mounted DMG with no file, an XML file, and a StageFlow folder. All
-five test input files remained byte-identical. Both embedded shared guides
-were checked against their approved hashes.
-
-Native screenshots and the French/English light/dark alert banner were
-reviewed. At 1024 × 768, some controls require fallback scrolling; the Mac
-layout is not identical to Windows. Intel startup emitted Skia/Metal shader
-compilation warnings without terminating the application; the final captures
-were complete and subsequent XML/StageFlow launches emitted no errors.
-This is not exhaustive testing on every Mac model.
-
-The DCE client was tested against a real StageFlow host on the same PC. This
-does not replace a two-computer test or physical Dante hardware validation.
-Build/test evidence and platform-specific limits are listed in the publication
-report. The Mac packages are not yet notarized by Apple.
-
-The local StageFlow console that controls applications on the same computer
-remains Windows-only. On Mac, DCE opens local projects and joins LAN sessions
-through its connection center.
+Avalonia headless tests run on Windows are not native Mac acceptance tests.
+Installation checks and visual verification are reported separately from
+automated tests. This update claims no new Dante Controller or physical hardware
+trial. Commercial Windows signing and Apple notarization are outside this update.

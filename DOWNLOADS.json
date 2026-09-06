@@ -4,11 +4,11 @@
   "globalLatestRetainedForLegacyUpdaters": "v2026.10",
   "platforms": {
     "windowsX64": {
-      "version": "2027.0.1",
-      "releaseUrl": "https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.0.1",
-      "downloadUrl": "https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.1/DanteConfigEditor2027_Installer.exe",
-      "bytes": 85507311,
-      "sha256": "6489c73d2ba2cb73f844a74d98556e853acdb05dbc5aa9a06dd177242330c3d4"
+      "version": "2027.0.2",
+      "releaseUrl": "https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.0.2",
+      "downloadUrl": "https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.2/DanteConfigEditor2027_Installer.exe",
+      "bytes": 85710301,
+      "sha256": "65d692ba2f41057e13eafff589a820fab70485883c408561a3ac2d41a032dd20"
     },
     "macOSAppleSilicon": {
       "version": "2027.0",
