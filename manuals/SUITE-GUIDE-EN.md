@@ -2,7 +2,7 @@
 
 **From the first patch list to live operation, with one application or the whole suite.**
 
-v2027 edition - user guide. Each application is delivered separately: install
+2027.2 edition - user guide. Each application is delivered separately: install
 only a release published for your platform and check its release notes.
 Windows and macOS limitations are explained below.
 
@@ -17,11 +17,11 @@ Discover StageFlow and its published versions: [official StageFlow page](https:/
 
 | Application | Public Windows | Public macOS |
 |---|---|---|
-| StageFlow | v2027.0 · Windows 11 x64 | v2027.0 · macOS 14+ · Intel / Apple Silicon* |
-| StageDesk | v2027.0.1 · Windows 10+ x64 | v2027.0.0 · macOS 12+ · Intel / Apple Silicon* |
-| StageMark | v2027.0.0 · Windows 11 x64 | v2027.0.0 · macOS 12+ · Intel / Apple Silicon* |
-| StageMon | v2027 · Windows 10/11 x64 | v2027 · macOS 12+ · Intel / Apple Silicon* |
-| Dante Config Editor | v2026.10 · Windows 11 x64 | v2027.0 · macOS 11+ · Intel / Apple Silicon* |
+| StageFlow | v2027.0.1 · Windows 11 x64 | v2027.0.1 · macOS 14+ · Intel / Apple Silicon* |
+| StageDesk | v2027.0.2 · Windows 10+ x64 | v2027.0.2 · macOS 12+ · Intel / Apple Silicon* |
+| StageMark | v2027.0.1 · Windows 11 x64 | v2027.0.0 · macOS 12+ · Intel / Apple Silicon* |
+| StageMon | v2027.0.1 · Windows 10/11 x64 | v2027.0.1 · macOS 12+ · Intel / Apple Silicon* |
+| Dante Config Editor | v2027.0.1 · Windows 11 x64 | v2027.0.0 · macOS 11+ · Intel / Apple Silicon* |
 | AutoCAD | StageFlow v2027 · AutoCAD 2026 Windows | Connector not available |
 
 *The stated macOS minimum comes from the package; native acceptance may have
@@ -31,9 +31,9 @@ when their release says so; do not extend that claim to the others. Verify the
 official source and never disable macOS protections globally.*
 
 The 2027 edition of this guide does not force the same build number or Latest
-status on every system. Dante Config Editor for Windows remains publicly at
-2026.10 until its v2027 corrective is delivered. Site pages and each release's
-notes are authoritative for the version actually available.
+status on every system. Reference snapshot: deliveries verified on 5 September
+2026. Later fixes may ship on Windows before Mac, without renaming existing Mac
+packages. Site pages and release notes provide the most recent available versions.
 
 StageFlow can host the show on **Windows or macOS**. Compatible applications
 voluntarily join that StageFlow LIVE session over a trusted local network with

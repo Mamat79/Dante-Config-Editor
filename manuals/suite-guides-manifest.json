@@ -1,23 +1,23 @@
 {
   "edition": "v2027",
-  "bundleVersion": "2027.1",
+  "bundleVersion": "2027.2",
   "status": "publication-approved",
   "publicationAllowed": true,
   "files": [
     {
       "path": "scripts/generate-suite-guides.py",
-      "bytes": 80682,
-      "sha256": "e843d084d574998dad68fd0f4685b1d8cb6c63ee6b4a8e1b6af2e5dd5430b118"
+      "bytes": 80889,
+      "sha256": "bd1fc9333cabdceb74051f10a4ede43d2ef20aab9abde87ad068e1ef8a4e535c"
     },
     {
       "path": "docs/guides/GUIDE-SUITE-FR.md",
-      "bytes": 20406,
-      "sha256": "1a4db7ccf257849bb16c6166c0cd83081e61488f06a286a3ab2696d8b930afeb"
+      "bytes": 20497,
+      "sha256": "b479c867ef73e478277f9f75468f3903cae0fb665c738fd897d1425c260046a1"
     },
     {
       "path": "docs/guides/SUITE-GUIDE-EN.md",
-      "bytes": 17921,
-      "sha256": "a13b1ff3a5f1abd99b7483d54c7ad8cea4ae0055e89dafb63916ba51eb0f8f10"
+      "bytes": 17964,
+      "sha256": "049185929489fcde2e8f2890e7b6655e7e241bd1c11251e8ca215971e754478a"
     },
     {
       "path": "integrations/streamdeck/com.silemio.stageflow.sdPlugin/commands.json",
@@ -76,13 +76,13 @@
     },
     {
       "path": "distribution/guides/Guide-Suite-SiLeMIO-FR.pdf",
-      "bytes": 405675,
-      "sha256": "d9745a119a6112d6e13ad0783f4aed928819ed49c101846c09de391da2e0b110"
+      "bytes": 405754,
+      "sha256": "e438d52a1012e2c91f9aaf935dc9db16ee77e9989eda692a26a27ac9bf75fc49"
     },
     {
       "path": "distribution/guides/SiLeMIO-Suite-Guide-EN.pdf",
-      "bytes": 363267,
-      "sha256": "adab35a01bb06bcf4e715b6efaa9701c9bd73f753c53806ad6afeb985b670b71"
+      "bytes": 363318,
+      "sha256": "104d554c08f886032345eef7ec98cfbf2dddb283d6edee55e044cb3206953dbc"
     }
   ]
 }

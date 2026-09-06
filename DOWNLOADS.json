@@ -1,7 +1,7 @@
 {
   "product": "Dante Config Editor",
   "edition": "v2027",
-  "globalLatestRetainedForLegacyUpdaters": "v2026.10",
+  "latestRelease": "v2027.0.2",
   "platforms": {
     "windowsX64": {
       "version": "2027.0.2",
