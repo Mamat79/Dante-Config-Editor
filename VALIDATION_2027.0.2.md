@@ -58,9 +58,32 @@ focus, light-theme, English and DPI acceptance is not claimed by these checks.
 The owned candidate was closed normally. All 56 pre-existing profile files
 remain; only the licence state's normal LastSeenAtUtc timestamp changed. No
 project, personal bank, licence contents or user preferences were modified.
-Installation on the author's PC is checked separately after publication. The
-previous installation's results must not be presented as installation acceptance
-of this new binary hash.
+
+## Public Downloads and Local Installation
+
+All 11 replaced release assets were downloaded through their public URLs and
+matched the approved sizes and SHA-256 values. The other 18 current-release
+assets and all 14 assets on the existing Mac release were unchanged. The
+public repository README files, download manifest and checksums were also
+downloaded and compared with their committed files.
+
+The public Windows installer completed its silent upgrade on the author's PC
+on 2026-09-06 at 20:02 UTC, exit code 0, with no restart required. Its installed
+application is 73,446,277 bytes and matches the extracted application hash above.
+All 266 adjacent payload files match the approved package, including the four
+Windows PDFs and both supplied banks (232 community files and 5 generic files).
+
+The existing folder remains `C:\Program Files\Dante Config Editor 2026.3`;
+the historical folder name does not indicate the executable version. Registry
+and executable report 2027.0.2 / 2027.0.2.0. The unique desktop shortcut
+**Dante Config Editor v2027** targets the new executable and its installed icon.
+
+Before installation, all 1,173 installed/profile/Documents files were backed
+up and checked. After installation, all 56 profile files and 846 Documents
+files were byte-identical, including the licence state and personal banks.
+No user file was added. The application was not launched after installation;
+no DCE or installer process remained. Native acceptance is limited to the
+exact candidate checks described above, not a new post-install visual test.
 
 The accepted Mac Apple Silicon and Intel packages remain **2027.0**. This
 Windows replacement claims no new native Mac build, Dante Controller trial,
