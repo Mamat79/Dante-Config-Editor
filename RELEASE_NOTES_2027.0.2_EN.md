@@ -4,10 +4,6 @@
 
 ## Windows 2027.0.2
 
-Windows package replacement of September 6, 2026, built from private revision
-`96f169f3531e1625166f12dea070ba899024a927`. The public version is unchanged;
-the new package hashes are listed in [SHA256SUMS.txt](SHA256SUMS.txt).
-
 This update clarifies project preparation, suite connection, and export commands.
 DCE remains a standalone application for preparing Dante configurations offline.
 
@@ -15,13 +11,24 @@ DCE remains a standalone application for preparing Dante configurations offline.
 
 - The DCE icon and product name remain visible alongside the application menus.
 - Commands follow this order: StageFlow connection, Alerts, Theme, Language,
-  Suite guide, and DCE help. They move onto a second row when space is limited.
+  DCE guide, and DCE help. They move onto a second row when space is limited.
 - Theme shows the current Light or Dark choice. Theme and language preferences
   are saved. Commands have accessible names and tooltips.
 - Theme and language fields align vertically with the adjacent buttons, without
   inherited inner margins shifting their backgrounds.
 - Undo and Redo remain in the header. Atomic Bomb is under **Tools > Training**,
   with its safety sequence unchanged.
+
+### Help and manuals
+
+- **Guide** now opens DCE's full manual in the selected language. **Help**
+  opens **Discover DCE**; the shared guide is available only through
+  **Help > SiLeMI/O suite guide**, without an additional dedicated button.
+- Product manuals in both languages have a compact, single-page contents
+  section, preserving links and bookmarks. Captions explain the screens,
+  user links lead to the SiLeMI/O website, and group-specific values are explained.
+- Procedures distinguish Save, Save as, and Export Dante XML, preserving the
+  working project while producing the preset intended for the installation.
 
 ### StageFlow connection and alerts
 
@@ -44,8 +51,6 @@ DCE remains a standalone application for preparing Dante configurations offline.
   The IPv4 address and technical details are in an expandable section.
 - **Alerts** separates XML validation from unacknowledged StageFlow changes.
   Opening the list neither acknowledges changes nor disables future reception.
-- **Guide** opens the shared SiLeMI/O suite guide; **Help** opens the DCE manual,
-  in the selected language.
 
 ### Prepare, validate, export
 
@@ -71,15 +76,11 @@ physical Dante network.
 ## Documentation and upgrading
 
 The Windows installer includes French/English manuals and quick starts, plus
-the exact shared SiLeMI/O 2027.2 guide pair approved by its owner.
+the exact shared SiLeMI/O 2027.3 guide pair approved by its owner.
 
 From a 2026.10 installation that does not offer v2027, download the Windows
 installer manually from the public repository. Recent versions select updates
 for their platform and check the download size and SHA-256.
-
-This replacement retains version 2027.0.2. If it is already installed,
-download the installer again to receive the updated connection center:
-a version-number check does not detect a replacement with the same number.
 
 Upgrading preserves profiles, personal banks, projects, and licenses. One desktop
 shortcut is used: **Dante Config Editor v2027**. A historical installation folder

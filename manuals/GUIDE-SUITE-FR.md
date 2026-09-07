@@ -2,7 +2,7 @@
 
 **Du premier patch à l’exploitation, avec un seul logiciel ou toute la suite.**
 
-Édition 2027.2 - guide utilisateur. Chaque logiciel est livré séparément :
+Édition 2027.3 - guide utilisateur. Chaque logiciel est livré séparément :
 installez uniquement une version publiée pour votre plateforme et consultez
 ses notes de version. Les limites Windows et macOS sont précisées ci-dessous.
 
@@ -11,17 +11,22 @@ seul, avec son projet natif. Lorsqu’on veut faire circuler le même show
 entre plusieurs outils, chaque logiciel peut aussi créer, ouvrir et enregistrer
 un projet StageFlow `.stageflow`, même si StageFlow n’est pas installé.
 
-Découvrir StageFlow et ses versions publiées : [page officielle StageFlow](https://github.com/Mamat79/StageFlow).
+Découvrir StageFlow et ses versions publiées : [page officielle StageFlow](https://www.silemio.com/logiciels/stageflow).
+
+Le bouton **Guide** ouvre la notice du logiciel utilisé, dans sa langue.
+Le présent **Guide de la suite** est accessible depuis le menu **Aide**.
+Les nouveaux parcours décrits dans cette édition concernent Windows ; les
+paquets macOS existants et leurs notices restent distincts.
 
 ## Disponibilité Windows et macOS
 
 | Logiciel | Windows public | macOS public |
 |---|---|---|
-| StageFlow | v2027.0.1 · Windows 11 x64 | v2027.0.1 · macOS 14+ · Intel / Apple Silicon* |
-| StageDesk | v2027.0.2 · Windows 10+ x64 | v2027.0.2 · macOS 12+ · Intel / Apple Silicon* |
-| StageMark | v2027.0.1 · Windows 11 x64 | v2027.0.0 · macOS 12+ · Intel / Apple Silicon* |
-| StageMon | v2027.0.1 · Windows 10/11 x64 | v2027.0.1 · macOS 12+ · Intel / Apple Silicon* |
-| Dante Config Editor | v2027.0.1 · Windows 11 x64 | v2027.0.0 · macOS 11+ · Intel / Apple Silicon* |
+| StageFlow | v2027.0.2 · Windows 11 x64 | v2027.0.1 · macOS 14+ · Intel / Apple Silicon* |
+| StageDesk | v2027.0.4 · Windows 10+ x64 | v2027.0.2 · macOS 12+ · Intel / Apple Silicon* |
+| StageMark | v2027.0.2 · Windows 11 x64 | v2027.0.0 · macOS 12+ · Intel / Apple Silicon* |
+| StageMon | v2027.0.2 · Windows 10/11 x64 | v2027.0.1 · macOS 12+ · Intel / Apple Silicon* |
+| Dante Config Editor | v2027.0.2 · Windows 11 x64 | v2027.0.0 · macOS 11+ · Intel / Apple Silicon* |
 | AutoCAD | StageFlow v2027 · AutoCAD 2026 Windows | Connecteur non disponible |
 
 *Le minimum macOS est celui déclaré par le paquet ; la recette native peut
@@ -33,7 +38,7 @@ les protections globales de macOS.*
 
 L'édition 2027 de ce guide n'impose ni le même numéro de build, ni le même statut
 Latest sur tous les systèmes. État de référence : livraisons vérifiées le
-5 septembre 2026. Les correctifs suivants peuvent être livrés sur Windows avant
+6 septembre 2026. Les correctifs suivants peuvent être livrés sur Windows avant
 Mac, sans renommer les paquets Mac existants. Les pages du site et les notes de
 chaque release donnent les versions disponibles les plus récentes.
 
@@ -54,9 +59,9 @@ Mac. Le connecteur AutoCAD reste réservé à Windows.
 
 ## Deux interfaces 2027 réelles
 
-Ces captures proviennent de profils de recette isolés. Elles montrent les vraies
-interfaces sans prétendre prouver un réseau, une console, un projecteur ou une
-interface audio physique.
+Repérez le patch au centre, les groupes à gauche et la console de la suite en bas.
+Ces vues de référence 2027 sont antérieures à la nouvelle organisation des
+boutons Guide et Connexion.
 
 ![Interface native multiplateforme StageFlow v2027](../media/ecosystem/captures/stageflow-2027-fr.png)
 
@@ -129,7 +134,8 @@ recopie prolonge une liste vers le bas.
 4. Ouvrez ou importez ce classeur dans StageFlow, StageDesk ou StageMon.
 5. Enregistrez ensuite le nouveau projet `.stageflow` si vous voulez le partager.
 
-Chaque feuille de groupe est réglée pour tenir sur une page A4 paysage. Le
+Dans StageFlow Windows, choisissez A4, A3 ou un autre format, puis une ou
+plusieurs pages par groupe. Les titres se répètent sur chaque page. Le
 classeur conserve des identifiants invisibles et stables afin que les logiciels
 reconnaissent les groupes et les paires après une modification.
 
@@ -148,8 +154,10 @@ par paire, si cette valeur doit apparaître.
 - **Tout afficher** active les paires communes pour le groupe courant.
 - **Tout masquer** les retire de ce groupe sans effacer le patch commun.
 - Une valeur locale remplace la valeur commune uniquement dans ce groupe.
+- Une valeur propre au groupe n'est pas une balance : **Balances** contient les
+  informations de soundcheck, indépendamment des valeurs de patch.
 - Une paire commune masquée et sans valeur locale reste vide sur la page du
-  groupe et dans son export Excel/A4.
+  groupe et dans son impression Excel.
 
 ## 3. Préparer les autres métiers
 
@@ -222,9 +230,12 @@ fenêtre complète pour travailler sur le patch.
 
 ## 6. Piloter le poste avec un seul QR code
 
-1. Enregistrez le projet StageFlow puis ouvrez le centre **Session StageFlow
-   LIVE** avec le grand bouton d'état en haut.
-2. Dans **Téléphones et tablettes**, choisissez l’interface Wi-Fi ou Ethernet
+Le parcours ci-dessous décrit le centre Windows actuel. Les paquets macOS
+conservés peuvent présenter le QR sous l’ancien intitulé « Téléphones et tablettes ».
+
+1. Enregistrez le projet StageFlow puis cliquez sur **Connexion StageFlow**
+   dans le bandeau. Ce nom reste visible à côté de l’état et des compteurs.
+2. Choisissez **Télécommande StageFlow**, puis l’interface Wi-Fi ou Ethernet
    du même réseau que le téléphone.
 3. Cliquez sur **Créer le QR** : StageFlow active LIVE et affiche le QR code.
 4. Scannez-le avec le téléphone ou la tablette.
@@ -242,6 +253,22 @@ le logiciel propriétaire. Cliquez sur **Arrêter** dans StageFlow pour révoque
 immédiatement le portail. Sur téléphone ou tablette, et lorsque le logiciel
 cible est sur une autre adresse réseau, sa télécommande s'ouvre en page entière.
 Le bouton **Retour** du navigateur permet de retrouver StageFlow.
+
+Dans la nouvelle édition Windows de StageMark, sa télécommande permet aussi
+de choisir le plan, créer et nommer les objets pris en charge, les sélectionner
+et les déplacer au doigt, lorsque les droits d’édition l’autorisent. Les refus
+de lecture seule et les conflits restent visibles ; cette édition ne lance pas
+la projection.
+
+Une carte indisponible reste consultable : elle explique sa situation et
+l’action à faire dans le logiciel concerné, sans demander d’accès ni prendre
+le contrôle. **Télécommande arrêtée** n’est indiqué que si le logiciel le
+confirme ; sinon, l’état reste explicitement inconnu. Une télécommande active
+ne donne pas à elle seule le droit de modifier : les droits et verrous du
+logiciel restent applicables. Un changement de logiciel cible ou de session
+retire l’ancien contrôleur ; ouvrez de nouveau la carte pour demander un accès.
+Une perte de connexion à StageFlow retire également le contrôleur intégré et
+affiche la situation. Elle ne prétend pas arrêter les télécommandes autonomes.
 
 StageDesk et Dante Config Editor n'ont pas de télécommande QR propre : ils
 rejoignent la session pour travailler sur le projet. StageMark et StageMon
@@ -270,15 +297,19 @@ synchronisation automatique.
 Ouvrez la **Session StageFlow LIVE** lorsque plusieurs logiciels doivent suivre le même
 show pendant la préparation ou l’exploitation. Les changements valides sont
 publiés rapidement ; chaque application les recharge ou demande une validation
-selon sa politique locale. **StageMark ne met jamais silencieusement à jour une
-projection ouverte : chaque nouvelle révision LIVE détectée après l’ouverture
-initiale attend l’adoption explicite de l’opérateur, même lorsque l’éditeur
-StageMark n’a aucune modification locale non enregistrée.**
+selon sa politique locale. Les labels liés au patch dans StageMark suivent les
+données validées, indépendamment des alertes. Les textes personnalisés restent
+protégés. Une notification ne déplace aucun objet et ne lance pas la projection ;
+les changements de plan restent soumis aux décisions locales de StageMark.
 Une application qui contient des modifications locales non enregistrées ne les
 écrase pas : elle signale un conflit et demande un choix.
 
-Le grand bouton reste toujours visible. Le centre **Session StageFlow LIVE**
-réunit l'activation générale, les autres postes et le QR code. Il distingue les
+Le bouton **Connexion StageFlow** reste toujours visible. Le centre possède
+deux rubriques : **StageFlow LIVE** pour le projet et les autres postes, puis
+**Télécommande StageFlow** pour le QR et les mobiles. **Retour au projet**
+ferme le centre sans arrêter une connexion. Sur une petite fenêtre, la
+navigation passe en haut ; les mêmes fonctions restent accessibles.
+Il distingue les
 compteurs **postes / logiciels / mobiles** : plusieurs applications d'un même
 ordinateur ne deviennent pas plusieurs ordinateurs. Le texte de l'état reste
 lisible sans devoir interpréter une couleur.
@@ -286,7 +317,7 @@ lisible sans devoir interpréter une couleur.
 ### Héberger ou rejoindre
 
 1. Sur le poste principal, ouvrez le projet dans StageFlow puis le centre
-   **Session StageFlow LIVE**. Choisissez le réseau et **Autoriser et diffuser**.
+   **Connexion StageFlow → StageFlow LIVE**. Choisissez le réseau et **Autoriser et diffuser**.
 2. Sur un autre logiciel, choisissez **Session StageFlow LIVE**. Sélectionnez
    le show et l'ordinateur hôte découverts, ou utilisez l'adresse indiquée par
    l'hôte si la découverte réseau est indisponible.
@@ -315,8 +346,9 @@ autonome et ne déclenche aucune reconnexion automatique.
 ### Alertes de labels
 
 Le bouton **Alertes labels** reste directement accessible sur la page principale.
-Le maître choisit quand émettre les notifications ; chaque logiciel qui rejoint
-la session les reçoit **par défaut**. Le bandeau persistant affiche
+Chaque nouvelle session LIVE active l'émission ; chaque logiciel qui rejoint
+la session reçoit les alertes **par défaut**. Une suspension volontaire reste
+respectée pendant cette même session. Le bandeau persistant affiche
 **ancien → nouveau**, l'origine, l'heure, un compteur et la liste des changements.
 
 L'**acquittement local**, unitaire ou groupé, ne concerne que les alertes
@@ -326,7 +358,8 @@ sans affecter les autres ; les alertes ignorées ne sont pas rejouées à la rep
 
 Le maître peut **Suspendre les notifications de modifications**, puis les
 réactiver **sans arrêter LIVE**. Les changements réalisés pendant cette pause
-ne sont pas rappelés. Ce n'est pas un acquittement pour toute l'équipe.
+ne sont pas rappelés. La synchronisation des labels continue, même sans
+notification ou après acquittement. Ce n'est pas un acquittement pour toute l'équipe.
 Seuls les labels de sources déclenchent les alertes : jamais les micros,
 commentaires, groupes, balances ou autres réglages.
 
@@ -364,11 +397,9 @@ paquet `.stageflowpack`, puis importez-le pour reconstruire le dossier complet.
 Chaque logiciel enregistre atomiquement sa partie et vérifie qu’elle n’a pas été
 modifiée entre-temps. Des changements indépendants, par exemple deux paires ou
 deux champs différents, sont fusionnés dans le projet commun. Cette fusion ne
-force pas leur adoption dans toutes les interfaces : dans StageMark, chaque
-nouvelle révision LIVE détectée après l’ouverture initiale reste en attente de
-l’adoption explicite de l’opérateur, même lorsque l’éditeur ne contient aucune
-modification locale non enregistrée ; une base devenue périmée ne peut pas
-écraser ses modifications locales. En cas de
+force pas tous les changements de plan dans les interfaces. Les labels liés au
+patch suivent les données validées ; une base devenue périmée ne peut pas
+écraser les modifications locales. En cas de
 modification différente de la même valeur :
 
 1. ne forcez pas l’écrasement ;
@@ -381,7 +412,7 @@ modification différente de la même valeur :
 
 | Besoin | Outil conseillé |
 |---|---|
-| Patch, groupes, Excel A4, plan simple | StageFlow |
+| Patch, groupes, Excel et impression, plan simple | StageFlow |
 | Conversion entre consoles et logiciels audio | StageDesk |
 | Implantation, cues et projection | StageMark |
 | Écoutes A/B, jusqu'à six circuits configurés | StageMon |

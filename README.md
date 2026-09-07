@@ -166,7 +166,7 @@ tout ou partie des canaux RX d'une machine Dante :
 3. choisissez la machine, le premier RX et le nombre de canaux ;
 4. contrôlez l'aperçu Avant / Après, puis appliquez.
 
-DCE tient compte des paires communes, des surcharges propres au groupe et des
+DCE tient compte des paires communes, des valeurs spécifiques au groupe et des
 paires masquées. Les cellules vides sont ignorées et rien n'est modifié avant
 votre validation. Ce parcours fonctionne aussi lorsque DCE est utilisé seul,
 sans StageFlow.
@@ -264,8 +264,13 @@ correspondant à votre ordinateur.
 Au premier lancement, l’écran **Découvrir DCE** permet d’ouvrir un XML, créer un
 projet, découvrir la banque ou accéder à la notice.
 
-L'installateur Windows 2027.0.2 inclut la notice et le démarrage rapide FR/EN,
-ainsi que les deux guides communs de la suite. Les liens Mac conservent la
+Le bouton **Guide** ouvre la notice complète de DCE dans la langue choisie.
+**Aide** ouvre **Découvrir DCE**. Le guide commun est accessible dans
+**Aide > Guide de la suite SiLeMI/O**.
+
+L'installateur Windows 2027.0.2 inclut les notices FR/EN de **46 pages**, avec
+sommaire cliquable, les démarrages rapides et les guides communs **2027.3**.
+Les liens Mac conservent la
 documentation livrée avec Mac 2027.0. Les vidéos présentent les principes
 généraux ; consultez la notice correspondant à votre version pour les commandes.
 
@@ -274,8 +279,9 @@ recopie de la matrice. Sur Mac, le panneau de renommage en série propose les
 suites numériques et stéréo. Les fonctions métier communes ne supposent pas
 une interface identique.
 
-Sur Windows 2027.0.2, l'export XML d'**Enregistrer sous** produit un fichier
-Dante séparé. **Enregistrer** met à jour le domaine Dante du projet StageFlow.
+Sur Windows 2027.0.2, **Fichier > Exporter le XML Dante** produit une copie
+XML séparée, sans remplacer le projet ouvert. **Enregistrer** met à jour le
+projet courant ; **Enregistrer sous** permet de créer une autre copie de projet.
 Le correctif Mac reste aligné sur **v2027.0** pour l'instant.
 
 Le nom public commun est **v2027**. Le tag technique est **v2027.0.2** pour
@@ -308,4 +314,3 @@ la configuration sur le matériel réel avant toute exploitation importante.
   By Mamat<br>
   <code>-------[]--</code>
 </p>
-

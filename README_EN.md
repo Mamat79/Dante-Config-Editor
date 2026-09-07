@@ -154,7 +154,7 @@ of a Dante device's RX channels:
 3. choose the device, first RX channel, and number of channels;
 4. review the Before / After preview, then apply.
 
-DCE resolves common pairs, group overrides, and hidden pairs. Empty cells are
+DCE resolves common pairs, group-specific values, and hidden pairs. Empty cells are
 ignored, and nothing changes before confirmation. This workflow also works
 when DCE is used on its own, without StageFlow.
 
@@ -248,8 +248,13 @@ computer.
 The **Discover DCE** screen provides direct access to opening an XML file,
 creating a project, browsing the catalogue and reading the guide.
 
-The Windows 2027.0.2 installer includes the FR/EN full guides and quick starts,
-plus both shared suite guides. The Mac links retain the documentation shipped
+**Guide** opens DCE's full manual in the selected language. **Help** opens
+**Discover DCE**. The shared guide is available through
+**Help > SiLeMI/O suite guide**.
+
+The Windows 2027.0.2 installer includes the **46-page** FR/EN product manuals,
+with clickable contents, quick starts, and the shared **2027.3** suite guides.
+The Mac links retain the documentation shipped
 with Mac 2027.0. Videos introduce the general workflows; use the manual matching
 your installed version for its commands.
 
@@ -257,8 +262,9 @@ Windows offers matrix fill handles for series renaming. Mac uses a series
 renaming panel with numbered and stereo sequences. Shared editing functions
 do not imply an identical interface.
 
-On Windows 2027.0.2, XML export in **Save as** produces a separate Dante file.
-**Save** updates the StageFlow project's Dante domain. The Mac flow remains on **v2027.0**.
+On Windows 2027.0.2, **File > Export Dante XML** produces a separate XML copy
+without replacing the open project. **Save** updates the current project;
+**Save as** creates another project copy. The Mac flow remains on **v2027.0**.
 
 The shared public name is **v2027**. The technical tags are **v2027.0.2** for
 Windows and **v2027.0** for Mac. Use this page's direct links: GitHub's global
@@ -290,4 +296,3 @@ configuration on the real hardware before an important production.
   By Mamat<br>
   <code>-------[]--</code>
 </p>
-

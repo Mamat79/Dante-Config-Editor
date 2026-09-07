@@ -2,7 +2,7 @@
 
 **From the first patch list to live operation, with one application or the whole suite.**
 
-2027.2 edition - user guide. Each application is delivered separately: install
+2027.3 edition - user guide. Each application is delivered separately: install
 only a release published for your platform and check its release notes.
 Windows and macOS limitations are explained below.
 
@@ -11,17 +11,22 @@ own with its native project. When the same show must move between several
 tools, every application can also create, open and save a StageFlow
 `.stageflow` project, even when StageFlow is not installed.
 
-Discover StageFlow and its published versions: [official StageFlow page](https://github.com/Mamat79/StageFlow).
+Discover StageFlow and its published versions: [official StageFlow page](https://www.silemio.com/en/software/stageflow).
+
+The **Guide** button opens the current application's manual in its selected
+language. This **Suite guide** is available through the **Help** menu.
+The new workflows in this edition concern Windows; existing macOS packages and
+their manuals remain separate.
 
 ## Windows and macOS availability
 
 | Application | Public Windows | Public macOS |
 |---|---|---|
-| StageFlow | v2027.0.1 · Windows 11 x64 | v2027.0.1 · macOS 14+ · Intel / Apple Silicon* |
-| StageDesk | v2027.0.2 · Windows 10+ x64 | v2027.0.2 · macOS 12+ · Intel / Apple Silicon* |
-| StageMark | v2027.0.1 · Windows 11 x64 | v2027.0.0 · macOS 12+ · Intel / Apple Silicon* |
-| StageMon | v2027.0.1 · Windows 10/11 x64 | v2027.0.1 · macOS 12+ · Intel / Apple Silicon* |
-| Dante Config Editor | v2027.0.1 · Windows 11 x64 | v2027.0.0 · macOS 11+ · Intel / Apple Silicon* |
+| StageFlow | v2027.0.2 · Windows 11 x64 | v2027.0.1 · macOS 14+ · Intel / Apple Silicon* |
+| StageDesk | v2027.0.4 · Windows 10+ x64 | v2027.0.2 · macOS 12+ · Intel / Apple Silicon* |
+| StageMark | v2027.0.2 · Windows 11 x64 | v2027.0.0 · macOS 12+ · Intel / Apple Silicon* |
+| StageMon | v2027.0.2 · Windows 10/11 x64 | v2027.0.1 · macOS 12+ · Intel / Apple Silicon* |
+| Dante Config Editor | v2027.0.2 · Windows 11 x64 | v2027.0.0 · macOS 11+ · Intel / Apple Silicon* |
 | AutoCAD | StageFlow v2027 · AutoCAD 2026 Windows | Connector not available |
 
 *The stated macOS minimum comes from the package; native acceptance may have
@@ -51,9 +56,8 @@ local on Mac. The AutoCAD connector remains Windows-only.
 
 ## Two real 2027 interfaces
 
-These captures come from isolated acceptance profiles. They show the real
-interfaces without claiming proof of a physical network, console, projector or
-audio device.
+Locate the patch in the centre, groups on the left and the suite console at the
+bottom. These 2027 reference views predate the new Guide and Connection layout.
 
 ![StageFlow v2027 cross-platform native interface](../media/ecosystem/captures/stageflow-2027-en.png)
 
@@ -122,7 +126,8 @@ downwards.
 4. Open or import it in StageFlow, StageDesk or StageMon.
 5. Save a new `.stageflow` project if you want to share it.
 
-Every group sheet is configured to fit one landscape A4 page. The workbook
+In StageFlow Windows, choose A4, A3 or another format, then one or multiple pages
+per group. Headers repeat on every page. The workbook
 keeps invisible, stable identifiers so applications can recognize groups and
 pairs after an edit.
 
@@ -141,8 +146,10 @@ common value appears.
 - **Show all** enables every common pair in the current group.
 - **Hide all** removes them from this group without deleting the common patch.
 - A local value replaces the common value only in that group.
+- A group-specific value is separate from **Soundcheck**, which holds soundcheck
+  information rather than patch overrides.
 - A hidden common pair with no local value remains blank on the group page and
-  in its Excel/A4 output.
+  in its Excel printout.
 
 ## 3. Prepare the other disciplines
 
@@ -211,9 +218,12 @@ full window when you need to edit the patch.
 
 ## 6. Control the workstation with one QR code
 
-1. Save the StageFlow project, then open the **StageFlow LIVE session** centre with
-   the large status button at the top.
-2. Under **Phones and tablets**, select the Wi-Fi or Ethernet interface on
+The following steps describe the current Windows centre. Retained macOS
+packages may show the QR under the previous "Phones and tablets" heading.
+
+1. Save the StageFlow project, then select **StageFlow connection** in the
+   header. This name stays visible beside the status and counters.
+2. Select **StageFlow remote control**, then the Wi-Fi or Ethernet interface on
    the same network as the phone.
 3. Click **Create QR code**: StageFlow enables LIVE and displays the QR code.
 4. Scan it with the phone or tablet.
@@ -229,6 +239,21 @@ projection, mute and level rules remain enforced by the owning application.
 Click **Stop** in StageFlow to revoke the portal immediately. On a phone or
 tablet, or when the target application has a different network address, its
 remote opens as a full page. Use the browser **Back** button to return to StageFlow.
+
+In the new Windows build of StageMark, its remote also lets you choose the plan,
+create and name supported objects, select them and move them by touch when
+editing permission allows it. Read-only refusals and conflicts remain visible;
+editing does not start projection.
+
+An unavailable card can still be opened to read its status and the action to
+take in the target application, without requesting access or taking control.
+**Remote control stopped** is shown only when confirmed by the application;
+otherwise the service state is explicitly unknown. A running remote does not
+itself grant editing rights: the application's permissions and locks still
+apply. When the target instance or session changes, the old controller is
+removed; open the card again to request access.
+Losing the StageFlow connection also removes the embedded controller and shows
+the situation. This does not claim to stop standalone remote controls.
 
 StageDesk and Dante Config Editor do not have their own QR remote: they join
 the session to work on the project. StageMark and StageMon also keep their own
@@ -256,22 +281,25 @@ for preparing a project alone or working without automatic synchronization.
 Open the **StageFlow LIVE session** when several applications must follow the same show
 during preparation or operation. Valid changes are published quickly; each
 application reloads them or requests approval according to its local policy.
-**StageMark never silently updates an open projection: every later LIVE
-revision detected after the initial open waits for explicit operator adoption,
-even when the StageMark editor has no unsaved local changes.** An application
+Patch-linked labels in StageMark follow validated data independently of alerts.
+Custom text stays protected. A notification never moves an object or starts
+projection; plan changes follow StageMark's local decisions. An application
 with unsaved local changes does not overwrite
 them: it reports a conflict and asks for a choice.
 
-The large status button remains visible. The **StageFlow LIVE session** centre
-combines general activation, other workstations and the QR code. It separates
+The **StageFlow connection** button remains visible. The centre has two
+sections: **StageFlow LIVE** for the project and workstations, then **StageFlow
+remote control** for the QR code and mobiles. **Back to project** closes the
+centre without stopping a connection. In a narrow window, navigation moves
+to the top and the same functions remain accessible. It separates
 **computers / applications / mobiles**: several applications on one computer
 do not count as several computers. Status text remains understandable without
 relying on colour.
 
 ### Host or join
 
-1. On the main computer, open the project in StageFlow and its **StageFlow LIVE
-   session** centre. Select the network, then **Allow and broadcast**.
+1. On the main computer, open the project in StageFlow and **StageFlow
+   connection → StageFlow LIVE**. Select the network, then **Allow and broadcast**.
 2. In another application, choose **StageFlow LIVE session**. Select the
    discovered show and host computer, or enter the host's displayed address
    when network discovery is unavailable.
@@ -300,8 +328,9 @@ to standalone mode and never triggers automatic reconnection.
 ### Label alerts
 
 The **Label alerts** button remains directly accessible on the main page.
-The host chooses when to emit notifications; each application receives them
-**by default** when it joins. The persistent banner shows **old → new**, origin,
+Every new LIVE session enables emission; applications receive alerts
+**by default** when joining. An intentional pause is preserved within the same
+session. The persistent banner shows **old → new**, origin,
 time, a counter and the list of changes.
 
 **Local acknowledgement**, individual or bulk, affects only alerts present at
@@ -310,7 +339,8 @@ afterwards. Each recipient can turn reception off locally without affecting
 others; ignored alerts are not replayed when reception is enabled again.
 
 The host can **Pause change notifications**, then enable them again **without
-stopping LIVE**. Changes made during this pause are not replayed. This is not
+stopping LIVE**. Changes made during this pause are not replayed. Labels still
+synchronize without notifications or after acknowledgement. This is not
 an acknowledgement for the whole team. Only source labels trigger alerts:
 never microphones, comments, groups, sound-check notes or other settings.
 
@@ -346,10 +376,9 @@ to reconstruct the complete folder.
 Every application saves its own part atomically and checks that it has not
 changed in the meantime. Independent changes, such as two different pairs or
 fields, are merged in the shared project. That merge does not force every user
-interface to adopt the revision: in StageMark, every later LIVE revision
-detected after the initial open waits for explicit operator adoption, even when
-the editor has no unsaved local changes; a stale base cannot overwrite its
-local edits. If both sides changed the same value differently:
+interface to adopt every plan change. Patch-linked labels follow validated
+data; a stale base cannot overwrite local edits. If both sides changed the same
+value differently:
 
 1. do not force an overwrite;
 2. read the reported domain and application name;
@@ -361,7 +390,7 @@ local edits. If both sides changed the same value differently:
 
 | Need | Recommended application |
 |---|---|
-| Patch, groups, A4 Excel workbook, simple plan | StageFlow |
+| Patch, groups, Excel and printing, simple plan | StageFlow |
 | Conversion between consoles and audio applications | StageDesk |
 | Layout, cues and projection | StageMark |
 | A/B monitoring, up to six configured circuits | StageMon |
