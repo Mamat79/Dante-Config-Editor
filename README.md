@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.2/DanteConfigEditor2027_Installer.exe"><strong>Windows 2027.0.2</strong></a>
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.4/DanteConfigEditor2027_Installer.exe"><strong>Windows 2027.0.4</strong></a>
   ·
   <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0/DanteConfigEditor2027_macOS_AppleSilicon.dmg"><strong>macOS Apple Silicon 2027.0</strong></a>
   ·
@@ -25,10 +25,10 @@
 </p>
 
 <p align="center">
-<a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.2/dante-config-editor-presentation-fr.mp4"><img src="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.2/dante-config-editor-presentation-fr-poster.png" width="820" alt="Présentation vidéo Dante Config Editor"></a><br>
-  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.2/dante-config-editor-presentation-fr.mp4">Présentation · FR</a>
-  · <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.2/dante-config-editor-presentation-fr.vtt">Sous-titres FR</a>
-  · <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.2/dante-config-editor-presentation-en.mp4">Presentation · EN</a>
+<a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.4/dante-config-editor-presentation-fr.mp4"><img src="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.4/dante-config-editor-presentation-fr-poster.png" width="820" alt="Présentation vidéo Dante Config Editor"></a><br>
+  <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.4/dante-config-editor-presentation-fr.mp4">Présentation · FR</a>
+  · <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.4/dante-config-editor-presentation-fr.vtt">Sous-titres FR</a>
+  · <a href="https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.4/dante-config-editor-presentation-en.mp4">Presentation · EN</a>
 </p>
 
 ---
@@ -242,13 +242,13 @@ le centre de connexion LAN DCE existent également sur Mac.
 ## Télécharger et démarrer
 
 **Dante Config Editor v2027 est disponible sur Windows et Mac.**
-La dernière version publiée est **2027.0.2 sur Windows** et **2027.0 sur Mac**
+La dernière version publiée est **2027.0.4 sur Windows** et **2027.0 sur Mac**
 (Apple Silicon et Intel). Les liens ci-dessous donnent les fichiers publics
 correspondant à votre ordinateur.
 
 | Ressource | Lien |
 |---|---|
-| Installateur Windows x64 | [Télécharger directement](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.2/DanteConfigEditor2027_Installer.exe) |
+| Installateur Windows x64 | [Télécharger directement](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.4/DanteConfigEditor2027_Installer.exe) |
 | macOS Apple Silicon | [Télécharger le DMG](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0/DanteConfigEditor2027_macOS_AppleSilicon.dmg) |
 | macOS Intel | [Télécharger le DMG](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0/DanteConfigEditor2027_macOS_Intel.dmg) |
 | Démarrage rapide Windows | [PDF français](manuals/QuickStart_DanteConfigEditorV3_FR.pdf) |
@@ -257,9 +257,9 @@ correspondant à votre ordinateur.
 | Notice complète Mac | [PDF français](manuals/Notice_DanteConfigEditor_macOS_FR.pdf) |
 | Guide de la suite | [PDF français](manuals/Guide-Suite-SiLeMIO-FR.pdf) · [English PDF](manuals/SiLeMIO-Suite-Guide-EN.pdf) |
 | Banque communautaire | [Télécharger la banque](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.1/DCE_Community_Devices_2026_3.dce-bank.zip) |
-| Nouveautés et limites | [Windows 2027.0.2 et versions Mac publiques](RELEASE_NOTES_2027.0.2.md) |
-| Vérification des fichiers | [SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.2/SHA256SUMS.txt) |
-| Contrôles de publication | [Tests et limites](VALIDATION_2027.0.2.md) |
+| Nouveautés et limites | [Windows 2027.0.4 et versions Mac publiques](RELEASE_NOTES_2027.0.4.md) |
+| Vérification des fichiers | [SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.4/SHA256SUMS.txt) |
+| Contrôles de publication | [Tests et limites](VALIDATION_2027.0.4.md) |
 
 Au premier lancement, l’écran **Découvrir DCE** permet d’ouvrir un XML, créer un
 projet, découvrir la banque ou accéder à la notice.
@@ -268,7 +268,7 @@ Le bouton **Guide** ouvre la notice complète de DCE dans la langue choisie.
 **Aide** ouvre **Découvrir DCE**. Le guide commun est accessible dans
 **Aide > Guide de la suite SiLeMI/O**.
 
-L'installateur Windows 2027.0.2 inclut les notices FR/EN de **46 pages**, avec
+L'installateur Windows 2027.0.4 inclut les notices FR/EN de **46 pages**, avec
 sommaire cliquable, les démarrages rapides et les guides communs **2027.3**.
 Les liens Mac conservent la
 documentation livrée avec Mac 2027.0. Les vidéos présentent les principes
@@ -279,12 +279,12 @@ recopie de la matrice. Sur Mac, le panneau de renommage en série propose les
 suites numériques et stéréo. Les fonctions métier communes ne supposent pas
 une interface identique.
 
-Sur Windows 2027.0.2, **Fichier > Exporter le XML Dante** produit une copie
+Sur Windows 2027.0.4, **Fichier > Exporter le XML Dante** produit une copie
 XML séparée, sans remplacer le projet ouvert. **Enregistrer** met à jour le
 projet courant ; **Enregistrer sous** permet de créer une autre copie de projet.
 Le correctif Mac reste aligné sur **v2027.0** pour l'instant.
 
-Le nom public commun est **v2027**. Le tag technique est **v2027.0.2** pour
+Le nom public commun est **v2027**. Le tag technique est **v2027.0.4** pour
 Windows et **v2027.0** pour Mac. Utilisez les liens directs de cette page ;
 GitHub `Latest` suit désormais la publication en cours.
 Les paquets Windows ne sont pas encore signés commercialement et les
