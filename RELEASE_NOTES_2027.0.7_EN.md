@@ -32,7 +32,7 @@ banks and Dante XML fidelity.
 
 ## Verification
 
-- 657 Windows and XML-engine tests passed.
+- 660 Windows and XML-engine tests passed, including 3 new portable Windows/macOS filename cases.
 - 34 macOS/Avalonia tests passed.
 - 13 macOS version and packaging tests passed.
 - 5 licence Worker tests passed.

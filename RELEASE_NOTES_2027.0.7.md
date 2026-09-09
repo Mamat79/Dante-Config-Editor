@@ -32,7 +32,7 @@ les projets, les banques personnelles et la fidélité du XML Dante.
 
 ## Vérifications
 
-- 657 tests Windows et moteur XML réussis.
+- 660 tests Windows et moteur XML réussis, dont 3 nouveaux cas de noms de fichiers portables Windows/macOS.
 - 34 tests macOS/Avalonia réussis.
 - 13 tests de version et de packaging macOS réussis.
 - 5 tests du Worker de licence réussis.
