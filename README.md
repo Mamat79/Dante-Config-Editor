@@ -8,32 +8,33 @@ Editor** autonome en XML, ouvrir un **projet StageFlow local** accessible sur
 l'ordinateur, ou rejoindre volontairement une **session StageFlow LIVE** sur le
 réseau local avec son code à six chiffres. StageFlow est gratuit et facultatif.
 Un projet StageFlow sans configuration Dante peut être initialisé directement
-depuis zéro avec une première machine personnalisée ou issue de la banque.
+depuis zéro dans une configuration vide, puis recevoir les machines voulues
+depuis la banque.
 
 [English version](README_EN.md)
 
 ## Télécharger, voir, apprendre
 
-**Version stable commune : 2027.0.7 pour Windows, macOS Apple Silicon et macOS Intel.**
+**Version stable commune : 2027.1.0 pour Windows, macOS Apple Silicon et macOS Intel.**
 
 | Plateforme | Téléchargement direct |
 | --- | --- |
-| Windows 11 x64 | [Installateur autonome 2027.0.7 `.exe`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.7/DanteConfigEditor2027_Installer.exe) |
-| macOS Apple Silicon | [Image disque `.dmg`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.7/DanteConfigEditor2027_macOS_AppleSilicon.dmg) |
-| macOS Intel | [Image disque `.dmg`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.7/DanteConfigEditor2027_macOS_Intel.dmg) |
-| Contrôle des téléchargements | [Sommes SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.7/SHA256SUMS.txt) |
+| Windows 11 x64 | [Installateur autonome 2027.1.0 `.exe`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/DanteConfigEditor2027_Installer.exe) |
+| macOS Apple Silicon | [Image disque `.dmg`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/DanteConfigEditor2027_macOS_AppleSilicon.dmg) |
+| macOS Intel | [Image disque `.dmg`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/DanteConfigEditor2027_macOS_Intel.dmg) |
+| Contrôle des téléchargements | [Sommes SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/SHA256SUMS.txt) |
 | Projet StageFlow facultatif | [StageFlow, gratuit](https://github.com/Mamat79/StageFlow) |
 
 | Découvrir Dante Config Editor | Français | English |
 | --- | --- | --- |
-| Présentation rapide | [Vidéo MP4](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.7/dante-config-editor-presentation-fr.mp4) | [MP4 video](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.7/dante-config-editor-presentation-en.mp4) |
-| Démarrage rapide Windows | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.7/QuickStart_DanteConfigEditorV3_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.7/QuickStart_DanteConfigEditorV3_EN.pdf) |
-| Notice complète Windows | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.7/Notice_DanteConfigEditorV3_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.7/Notice_DanteConfigEditorV3_EN.pdf) |
-| Démarrage rapide macOS | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.7/QuickStart_DanteConfigEditor_macOS_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.7/QuickStart_DanteConfigEditor_macOS_EN.pdf) |
-| Notice complète macOS | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.7/Notice_DanteConfigEditor_macOS_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.0.7/Notice_DanteConfigEditor_macOS_EN.pdf) |
-| Guide commun de la suite SiLeMI/O | [PDF français](manuals/Guide-Suite-SiLeMIO-FR.pdf) | [English PDF](manuals/SiLeMIO-Suite-Guide-EN.pdf) |
+| Présentation rapide | [Vidéo MP4](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/dante-config-editor-presentation-fr.mp4) | [MP4 video](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/dante-config-editor-presentation-en.mp4) |
+| Démarrage rapide Windows | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/QuickStart_DanteConfigEditorV3_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/QuickStart_DanteConfigEditorV3_EN.pdf) |
+| Notice complète Windows | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/Notice_DanteConfigEditorV3_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/Notice_DanteConfigEditorV3_EN.pdf) |
+| Démarrage rapide macOS | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/QuickStart_DanteConfigEditor_macOS_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/QuickStart_DanteConfigEditor_macOS_EN.pdf) |
+| Notice complète macOS | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/Notice_DanteConfigEditor_macOS_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/Notice_DanteConfigEditor_macOS_EN.pdf) |
+| Guide commun de la suite SiLeMI/O | [PDF français](docs/guides/Guide-Suite-SiLeMIO-FR.pdf) | [English PDF](docs/guides/SiLeMIO-Suite-Guide-EN.pdf) |
 
-Les vidéos présentent les principes du logiciel. Les notices 2027.0.7 décrivent
+Les vidéos présentent les principes du logiciel. Les notices 2027.1.0 décrivent
 les parcours autonomes et StageFlow, le synoptique persistant et l'export vers Dante Controller.
 Sur Mac, le renommage en série se fait depuis Machines ; les poignées de
 recopie de la matrice sont propres à Windows.
@@ -190,13 +191,17 @@ permet de fabriquer un projet de dépannage chaotique pour la formation.
 Sur Mac, la fenêtre s'adapte au démarrage à la zone disponible et à l'échelle
 de l'écran. Le défilement garde les commandes accessibles sur un petit écran.
 
-## Documentation publique
+## Documentation technique
 
-- [Notice complète Windows en français](manuals/Notice_DanteConfigEditorV3_FR.pdf)
-- [Notice complète macOS en français](manuals/Notice_DanteConfigEditor_macOS_FR.pdf)
-- [Guide de démarrage de la suite SiLeMI/O](manuals/GUIDE-SUITE-FR.md)
-- [Notes de version 2027.0.7](RELEASE_NOTES_2027.0.7.md)
-- [Page officielle et support](https://www.silemio.com/logiciels/dante-config-editor)
+- [Architecture 2026.1](docs/2026.1/ARCHITECTURE_2026_1.md)
+- [Intégration StageFlow et domaine Dante](docs/STAGEFLOW_INTEGRATION.md)
+- [Guide de démarrage de la suite SiLeMIO](docs/guides/GUIDE-SUITE-FR.md)
+- [Format de projet `.dceproj`](docs/2026.1/DCEPROJECT_FORMAT.md)
+- [Format des banques](docs/2026.1/DEVICE_LIBRARY_FORMAT.md)
+- [Migration depuis la V3.6](docs/2026.1/MIGRATION_V3_6_TO_2026_1.md)
+- [Performance](docs/2026.1/PERFORMANCE_REPORT.md)
+- [Checklist Dante Controller](docs/2026.1/DANTE_CONTROLLER_MANUAL_VALIDATION.md)
+- [Limites connues](KNOWN_LIMITATIONS.md)
 
 ## Quatre formats à ne pas confondre
 
@@ -218,9 +223,9 @@ Pour ajouter Dante à un projet `.stageflow` qui n'en contient pas encore,
 ouvrez-le dans DCE. Un choix immédiat propose **Créer depuis zéro**, **Ouvrir un
 XML Dante** ou **Plus tard** :
 
-- cliquez sur **Créer la configuration Dante**, choisissez une première machine
-  personnalisée ou issue de la banque, puis validez pour partir de zéro dans le
-  projet déjà ouvert ;
+- cliquez sur **Créer la configuration Dante** pour ouvrir immédiatement une
+  configuration vide en mémoire, puis ajoutez les machines voulues depuis la
+  banque ; aucun nom, chemin, XML ou première machine n'est imposé ;
 - ou ouvrez un XML Dante existant, puis cliquez sur **Enregistrer** pour
   l'ajouter au projet.
 
@@ -311,9 +316,9 @@ directe d'un `.stageflow`. Si un autre projet contient des modifications, le
 choix **Enregistrer / Abandonner / Annuler** reste entièrement dans Dante Config
 Editor avant toute bascule.
 
-![Architecture de la suite SiLeMIO](media/ecosystem/suite-architecture-fr.svg)
+![Architecture de la suite SiLeMIO](docs/media/ecosystem/suite-architecture-fr.svg)
 
-![Parcours conseillé de la suite SiLeMIO](media/ecosystem/suite-workflow-fr.svg)
+![Parcours conseillé de la suite SiLeMIO](docs/media/ecosystem/suite-workflow-fr.svg)
 
 ### XML Dante
 
@@ -360,6 +365,14 @@ Lors de l'ajout, la quantité vaut `1` par défaut et peut atteindre `100`. DCE
 affiche les noms qui seront créés (`Nom`, `Nom-2`, `Nom-3`, etc.), valide tout le
 lot avant de modifier le XML, puis laisse la banque ouverte pour poursuivre les
 ajouts.
+Pour les modèles Yamaha classés comme console ou boîtier d'entrées/sorties,
+DCE propose le préfixe de nom machine `Y001-`, puis le prochain identifiant
+libre. Cette aide suit la convention décrite par Yamaha pour certaines fonctions
+d'identification et de contrôle entre équipements compatibles ; ce n'est pas
+une règle universelle Dante. Le nom reste modifiable, la séquence évite les
+collisions et aucun appareil existant ou importé n'est renommé.
+Références constructeur : [guide système Yamaha CL/QL](https://download.yamaha.com/files/tcm%3A39-1251310)
+et [manuel Yamaha Rio-D3](https://usa.yamaha.com/files/download/other_assets/7/2345707/Rio3224-D3_reference_manual_En_A0.pdf).
 
 Au démarrage, DCE vérifie aussi silencieusement si une nouvelle Release existe.
 Si une version plus récente est disponible, il propose de télécharger puis de
@@ -463,7 +476,7 @@ Ces tests ne remplacent pas l’import final dans Dante Controller.
 
 ## Installer Dante Config Editor sous Windows
 
-La [Release 2027.0.7](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.0.7)
+La [Release 2027.1.0](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.1.0)
 regroupe l'installateur Windows, les deux paquets Mac, les notices et les banques
 fournies. Les artefacts intermédiaires de construction ne constituent pas une distribution.
 
@@ -511,12 +524,14 @@ dotnet publish .\DanteConfigEditorV3.csproj -c Release -r win-x64 --self-contain
 
 ## Licence et essai
 
-Dante Config Editor propose un essai de 30 jours. Après cette période,
-l'application et toutes ses fonctions restent accessibles : seul un rappel au
-démarrage invite à acheter ou activer une licence. Une licence commerciale ou
-offerte, vérifiée localement par signature cryptographique, supprime ce rappel.
+Dante Config Editor propose un essai de 30 jours. Son rappel au démarrage est
+immédiatement refermable pendant l'essai. Après cette période, un décompte de
+60 secondes apparaît une fois par lancement, puis toutes les fonctions restent
+accessibles. Une activation valide libère immédiatement l'interface. Une licence
+commerciale ou offerte, vérifiée localement par signature cryptographique,
+supprime le rappel et l'attente.
 Le fonctionnement complet et les limites de confidentialité sont décrits dans
-la [notice française](manuals/Notice_DanteConfigEditorV3_FR.pdf).
+[docs/LICENSING_DCE.md](docs/LICENSING_DCE.md).
 
 ## Remerciements
 
