@@ -4,11 +4,13 @@ Qualification réalisée le 19 septembre 2026. Cette version commune Windows et
 macOS adapte automatiquement l'interface aux écrans compacts et clarifie les
 parcours Projet, Patch et Outils sans modifier les formats ni les licences.
 
-## Artefact Windows vérifié
+## Artefacts vérifiés
 
 | Plateforme | Fichier | Taille | SHA-256 |
 | --- | --- | ---: | --- |
 | Windows x64 | `DanteConfigEditor2027_Installer.exe` | 85 551 996 | `c9ab0c793dc5514510fbc9cab7928097d911764dfd99af2a6222045fef749bd0` |
+| macOS Apple Silicon | `DanteConfigEditor2027_macOS_AppleSilicon.dmg` | 79 103 253 | `418904fff1f5074d739c5b9de7d9e82d61848b9091509e2faa5ead05617a2d54` |
+| macOS Intel | `DanteConfigEditor2027_macOS_Intel.dmg` | 80 407 200 | `96d123e73830711e102249746e08ae443bd948ffe780595fcae74fc79649060e` |
 
 - Source privée : commit `cd914a30818deecb6dde5defce4fb93b7c7c4bf6`.
 - Le dépôt public contient uniquement les artefacts compilés, notices, médias,
@@ -26,13 +28,12 @@ parcours Projet, Patch et Outils sans modifier les formats ni les licences.
 | Notices | 46 pages Windows et 23 pages macOS par langue, rendues et contrôlées ; démarrages rapides sur une page |
 | Installation locale Windows | version 2027.1.1 enregistrée, exécutable 2027.1.1.0 lancé, un seul raccourci Bureau |
 | Compatibilité | DCEP1, DCEF1, licences V2, clés publiques et stockage stable préservés |
+| macOS Apple Silicon | Codemagic : tests, compilation arm64, smoke test et DMG terminés avant publication de l'asset |
+| macOS Intel | Codemagic : compilation x64 et architecture vérifiée ; DMG et SHA-256 publiés |
 
-## Fabrication macOS
-
-Les deux DMG sont fabriqués par Codemagic à partir du tag source `v2027.1.1`.
-Cette section et le manifeste de téléchargement seront finalisés seulement après
-présence des DMG Apple Silicon et Intel et vérification de leurs SHA-256. La
-release reste en brouillon jusque-là.
+Les deux DMG ont été fabriqués par Codemagic à partir du tag source
+`v2027.1.1`, puis retéléchargés depuis la release. Chaque fichier correspond à
+son fichier SHA-256 publié.
 
 ## Limites honnêtes
 
