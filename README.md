@@ -15,29 +15,35 @@ depuis la banque.
 
 ## Télécharger, voir, apprendre
 
-**Version stable commune : 2027.1.0 pour Windows, macOS Apple Silicon et macOS Intel.**
+**Version stable commune : 2027.1.1 pour Windows, macOS Apple Silicon et macOS Intel.**
 
 | Plateforme | Téléchargement direct |
 | --- | --- |
-| Windows 11 x64 | [Installateur autonome 2027.1.0 `.exe`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/DanteConfigEditor2027_Installer.exe) |
-| macOS Apple Silicon | [Image disque `.dmg`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/DanteConfigEditor2027_macOS_AppleSilicon.dmg) |
-| macOS Intel | [Image disque `.dmg`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/DanteConfigEditor2027_macOS_Intel.dmg) |
-| Contrôle des téléchargements | [Sommes SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/SHA256SUMS.txt) |
+| Windows 11 x64 | [Installateur autonome 2027.1.1 `.exe`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.1/DanteConfigEditor2027_Installer.exe) |
+| macOS Apple Silicon | [Image disque `.dmg`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.1/DanteConfigEditor2027_macOS_AppleSilicon.dmg) |
+| macOS Intel | [Image disque `.dmg`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.1/DanteConfigEditor2027_macOS_Intel.dmg) |
+| Contrôle des téléchargements | [Sommes SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.1/SHA256SUMS.txt) |
 | Projet StageFlow facultatif | [StageFlow, gratuit](https://github.com/Mamat79/StageFlow) |
 
 | Découvrir Dante Config Editor | Français | English |
 | --- | --- | --- |
-| Présentation rapide | [Vidéo MP4](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/dante-config-editor-presentation-fr.mp4) | [MP4 video](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/dante-config-editor-presentation-en.mp4) |
-| Démarrage rapide Windows | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/QuickStart_DanteConfigEditorV3_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/QuickStart_DanteConfigEditorV3_EN.pdf) |
-| Notice complète Windows | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/Notice_DanteConfigEditorV3_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/Notice_DanteConfigEditorV3_EN.pdf) |
-| Démarrage rapide macOS | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/QuickStart_DanteConfigEditor_macOS_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/QuickStart_DanteConfigEditor_macOS_EN.pdf) |
-| Notice complète macOS | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/Notice_DanteConfigEditor_macOS_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.0/Notice_DanteConfigEditor_macOS_EN.pdf) |
+| Présentation rapide | [Vidéo MP4](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.1/dante-config-editor-presentation-fr.mp4) | [MP4 video](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.1/dante-config-editor-presentation-en.mp4) |
+| Démarrage rapide Windows | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.1/QuickStart_DanteConfigEditorV3_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.1/QuickStart_DanteConfigEditorV3_EN.pdf) |
+| Notice complète Windows | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.1/Notice_DanteConfigEditorV3_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.1/Notice_DanteConfigEditorV3_EN.pdf) |
+| Démarrage rapide macOS | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.1/QuickStart_DanteConfigEditor_macOS_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.1/QuickStart_DanteConfigEditor_macOS_EN.pdf) |
+| Notice complète macOS | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.1/Notice_DanteConfigEditor_macOS_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.1.1/Notice_DanteConfigEditor_macOS_EN.pdf) |
 | Guide commun de la suite SiLeMI/O | [PDF français](docs/guides/Guide-Suite-SiLeMIO-FR.pdf) | [English PDF](docs/guides/SiLeMIO-Suite-Guide-EN.pdf) |
 
-Les vidéos présentent les principes du logiciel. Les notices 2027.1.0 décrivent
+Les vidéos présentent les principes du logiciel. Les notices 2027.1.1 décrivent
 les parcours autonomes et StageFlow, le synoptique persistant et l'export vers Dante Controller.
 Sur Mac, le renommage en série se fait depuis Machines ; les poignées de
 recopie de la matrice sont propres à Windows.
+
+La 2027.1.1 adapte automatiquement l'interface aux fenêtres larges, compactes
+ou étroites, sans réduire le texte. La navigation principale est recentrée sur
+Projet, Vue d'ensemble, Machines, Patch DCE, Synoptique et Outils. Le nouveau
+projet suit un assistant en deux étapes et Easy Patch distingue clairement le
+parcours Source / destination du mode Hybride recommandé.
 
 > DCE est un outil tiers non officiel, sans affiliation avec Audinate. Il ne
 > pilote pas le réseau Dante en direct et n’utilise ni SDK ni API Audinate.
@@ -476,7 +482,7 @@ Ces tests ne remplacent pas l’import final dans Dante Controller.
 
 ## Installer Dante Config Editor sous Windows
 
-La [Release 2027.1.0](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.1.0)
+La [Release 2027.1.1](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.1.1)
 regroupe l'installateur Windows, les deux paquets Mac, les notices et les banques
 fournies. Les artefacts intermédiaires de construction ne constituent pas une distribution.
 
