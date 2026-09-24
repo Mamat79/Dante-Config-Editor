@@ -1,28 +1,28 @@
 {
   "product": "Dante Config Editor",
   "edition": "v2027",
-  "latestRelease": "v2027.2.2",
+  "latestRelease": "v2027.2.3",
   "platforms": {
     "windowsX64": {
-      "version": "2027.2.2",
-      "releaseUrl": "https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.2.2",
-      "downloadUrl": "https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.2/DanteConfigEditor2027_Installer.exe",
-      "bytes": 85444113,
-      "sha256": "a1b5ad1a738056750905846655e52c944dffff9089d46895c3a7d66af798b3a8"
+      "version": "2027.2.3",
+      "releaseUrl": "https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.2.3",
+      "downloadUrl": "https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.3/DanteConfigEditor2027_Installer.exe",
+      "bytes": 85446685,
+      "sha256": "8018244557134a10a14881120031019f3bb3e54443d2d200e3ae5a6faa2bf6de"
     },
     "macOSAppleSilicon": {
-      "version": "2027.2.2",
-      "releaseUrl": "https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.2.2",
-      "downloadUrl": "https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.2/DanteConfigEditor2027_macOS_AppleSilicon.dmg",
-      "bytes": 79070543,
-      "sha256": "3ce7a10fc167f347bb90b3458470af7acedbd3ae4c264f4fe47e5c2b050ee0fe"
+      "version": "2027.2.3",
+      "releaseUrl": "https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.2.3",
+      "downloadUrl": "https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.3/DanteConfigEditor2027_macOS_AppleSilicon.dmg",
+      "bytes": 79076572,
+      "sha256": "a6617d76255a9d7595cdbf1d7c51fe7bcf6152ffdd2b385f81ffe118d349832d"
     },
     "macOSIntel": {
-      "version": "2027.2.2",
-      "releaseUrl": "https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.2.2",
-      "downloadUrl": "https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.2/DanteConfigEditor2027_macOS_Intel.dmg",
-      "bytes": 80386062,
-      "sha256": "2ff039a3b2fb5e08893335e3be87d4ecce41f061817a6a67ddfad06821bed685"
+      "version": "2027.2.3",
+      "releaseUrl": "https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.2.3",
+      "downloadUrl": "https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.3/DanteConfigEditor2027_macOS_Intel.dmg",
+      "bytes": 80373165,
+      "sha256": "b1af07816c543e5b167b34e32c8906fa574baf53915d8201ef3b834bee98ad04"
     }
   }
 }
