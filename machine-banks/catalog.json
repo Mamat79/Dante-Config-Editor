@@ -1,0 +1,36 @@
+{
+  "formatVersion": 1,
+  "updatedUtc": "2026-09-29T00:00:00+00:00",
+  "banks": [
+    {
+      "id": "dce-generic-roles-2026.3",
+      "name": "DCE Generic Roles 2026.3",
+      "file": "DCE_Generic_Roles_2026_3.dce-bank.zip",
+      "sha256": "1f0afe83224499e2ebd8813cc0e91007083900f124f1789a7684951c5234b74b",
+      "minimumDceVersion": "2026.3",
+      "language": "fr-en",
+      "descriptionFr": "Deux rôles génériques 8x8 et 32x32 sans identité matérielle, réseau ni abonnement.",
+      "descriptionEn": "Two generic 8x8 and 32x32 roles without hardware identity, network settings or subscriptions."
+    },
+    {
+      "id": "dce-community-devices-2026.3",
+      "name": "DCE Community Devices 2026.3",
+      "file": "DCE_Community_Devices_2026_3.dce-bank.zip",
+      "sha256": "219cbd128c33ff334972c870c2f4735199fcd507935c56be65ec7943a2c5d50f",
+      "minimumDceVersion": "2026.3",
+      "language": "fr-en",
+      "descriptionFr": "77 modèles assainis : 57 testés sur matériel et 20 validés structurellement, sans identité, réseau, flow ni abonnement.",
+      "descriptionEn": "77 sanitized templates: 57 hardware-tested and 20 structurally validated, without identity, network settings, flows, or subscriptions."
+    },
+    {
+      "id": "dce-legacy-xml-2.1-models",
+      "name": "DCE Legacy XML 2.1 Models",
+      "file": "DCE_Legacy_XML_2_1_Models.dce-bank.zip",
+      "sha256": "0c0437ab55a776678cac14fcb9f9d0a0fdb5450bf3f796a626cdcb6917d29a2e",
+      "minimumDceVersion": "2027.2.3",
+      "language": "fr-en",
+      "descriptionFr": "Six rôles génériques issus des modèles et nombres de canaux d'un XML 2.1.0, sans données de production ; réservés aux projets XML 2.1.0.",
+      "descriptionEn": "Six generic roles based on model names and channel counts from an XML 2.1.0 file, without production data; for XML 2.1.0 projects only."
+    }
+  ]
+}

@@ -332,6 +332,11 @@ Never import it directly into Dante Controller: export its Dante XML first.
 
 ### Device bank
 
+The [public bank catalog](machine-banks/README.md) also offers six generic
+roles for XML 2.1.0 projects. They are a separate download from the 2027.2.3
+installer and contain no source-project data. Merging XML 2.1.0 with 3.0.0
+remains unsupported.
+
 A bank holds reusable and shareable templates. Insertion creates an independent
 instance and does not bind a project to the source template. Hardware identity,
 IP configuration, flows, and subscriptions are not copied by default.

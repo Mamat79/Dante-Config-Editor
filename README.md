@@ -357,6 +357,11 @@ directement dans Dante Controller : exportez d’abord son XML Dante.
 
 ### Banque de machines
 
+Le [catalogue des banques publiques](machine-banks/README.md) propose aussi
+six rôles génériques pour les projets XML 2.1.0. Ils sont téléchargeables
+séparément de l'installateur 2027.2.3 et ne contiennent aucune donnée du
+projet source. Une fusion XML 2.1.0 / 3.0.0 reste interdite.
+
 Une banque contient des modèles réutilisables et partageables. Une insertion
 crée une instance indépendante ; elle ne lie pas le projet au modèle source.
 Les identités matérielles, IP, flows et subscriptions ne sont pas recopiés par
