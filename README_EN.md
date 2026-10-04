@@ -14,30 +14,36 @@ then populated with the required device-bank templates.
 
 ## Download, watch, learn
 
-2027.2.4 opens Dante XML files directly and accepts dropped XML files or
+2027.2.6 reduces the reminder after the full 30-day trial: a 5-second wait
+at startup, once per session. All features remain available afterwards.
+A valid license removes all waiting. Existing activations and user data
+are preserved. See [release notes](RELEASE_NOTES_2027.2.6_EN.md) and
+[qualification limits](VALIDATION_2027.2.6.md).
+
+2027.2.6 opens Dante XML files directly and accepts dropped XML files or
 StageFlow projects. It adds six generic XML 2.1.0 device models. Flip,
 trackpad navigation, and earlier update-check fixes remain included.
 
-**Shared stable version: 2027.2.4 for Windows, macOS Apple Silicon, and macOS Intel.**
+**Shared stable version: 2027.2.6 for Windows, macOS Apple Silicon, and macOS Intel.**
 
 | Platform | Direct download |
 | --- | --- |
-| Windows 11 x64 | [Self-contained 2027.2.4 `.exe` installer](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/DanteConfigEditor2027_Installer.exe) |
-| macOS Apple Silicon | [`.dmg` disk image](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/DanteConfigEditor2027_macOS_AppleSilicon.dmg) |
-| macOS Intel | [`.dmg` disk image](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/DanteConfigEditor2027_macOS_Intel.dmg) |
-| Download verification | [SHA-256 checksums](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/SHA256SUMS.txt) |
+| Windows 11 x64 | [Self-contained 2027.2.6 `.exe` installer](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.6/DanteConfigEditor2027_Installer.exe) |
+| macOS Apple Silicon | [`.dmg` disk image](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.6/DanteConfigEditor2027_macOS_AppleSilicon.dmg) |
+| macOS Intel | [`.dmg` disk image](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.6/DanteConfigEditor2027_macOS_Intel.dmg) |
+| Download verification | [SHA-256 checksums](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.6/SHA256SUMS-2027.2.6-all-platforms.txt) |
 | Optional StageFlow project tool | [StageFlow, free](https://github.com/Mamat79/StageFlow) |
 
 | Discover Dante Config Editor | English | Français |
 | --- | --- | --- |
 | Short presentation | [MP4 video](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/dante-config-editor-presentation-en.mp4) | [Vidéo MP4](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/dante-config-editor-presentation-fr.mp4) |
-| Windows quick start | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/QuickStart_DanteConfigEditorV3_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/QuickStart_DanteConfigEditorV3_FR.pdf) |
-| Windows full manual | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/Notice_DanteConfigEditorV3_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/Notice_DanteConfigEditorV3_FR.pdf) |
-| macOS quick start | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/QuickStart_DanteConfigEditor_macOS_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/QuickStart_DanteConfigEditor_macOS_FR.pdf) |
-| macOS full manual | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/Notice_DanteConfigEditor_macOS_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/Notice_DanteConfigEditor_macOS_FR.pdf) |
-| Shared SiLeMI/O suite guide | [English PDF](docs/guides/SiLeMIO-Suite-Guide-EN.pdf) | [PDF français](docs/guides/Guide-Suite-SiLeMIO-FR.pdf) |
+| Windows quick start | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.6/QuickStart_DanteConfigEditorV3_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.6/QuickStart_DanteConfigEditorV3_FR.pdf) |
+| Windows full manual | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.6/Notice_DanteConfigEditorV3_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.6/Notice_DanteConfigEditorV3_FR.pdf) |
+| macOS quick start | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.6/QuickStart_DanteConfigEditor_macOS_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.6/QuickStart_DanteConfigEditor_macOS_FR.pdf) |
+| macOS full manual | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.6/Notice_DanteConfigEditor_macOS_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.6/Notice_DanteConfigEditor_macOS_FR.pdf) |
+| Shared SiLeMI/O suite guide | [English PDF](manuals/SiLeMIO-Suite-Guide-EN.pdf) | [PDF français](manuals/Guide-Suite-SiLeMIO-FR.pdf) |
 
-The videos introduce the software's principles. The 2027.2.4 manuals cover
+The videos introduce the software's principles. The 2027.2.6 manuals cover
 standalone and StageFlow workflows, persistent synoptic layout, and Dante Controller export.
 Windows and Mac offer the project-wide matrix: collapsed devices, automatic
 diagonal and column previews, Flip, inline renaming and series fill handles,
@@ -46,7 +52,7 @@ selected pair, not the axes; two fingers scroll and pinch zooms around the point
 project flows and creates, updates, or removes simple audio flows in 3.0.0
 presets. Unknown formats remain intact; verify network flow removal in Dante Controller.
 
-Version 2027.2.4 automatically adapts the interface to wide, compact, or narrow
+Version 2027.2.6 automatically adapts the interface to wide, compact, or narrow
 windows without shrinking text. Primary navigation is focused on Project,
 Overview, Devices, DCE Patch, and Tools. On Windows a gear customizes shortcuts
 and Synoptic stays under Tools. New projects use a two-step
@@ -200,7 +206,7 @@ Scrolling keeps controls reachable on small displays.
 
 - [2026.1 architecture](docs/2026.1/ARCHITECTURE_2026_1.md)
 - [StageFlow integration and Dante domain](docs/STAGEFLOW_INTEGRATION.md)
-- [SiLeMIO suite getting-started guide](docs/guides/SUITE-GUIDE-EN.md)
+- [SiLeMIO suite getting-started guide](manuals/SUITE-GUIDE-EN.md)
 - [`.dceproj` format](docs/2026.1/DCEPROJECT_FORMAT.md)
 - [Device-bank format](docs/2026.1/DEVICE_LIBRARY_FORMAT.md)
 - [Migration from V3.6](docs/2026.1/MIGRATION_V3_6_TO_2026_1.md)
@@ -466,7 +472,7 @@ These tests do not replace final import in Dante Controller.
 
 ## Install Dante Config Editor on Windows
 
-The [2027.2.4 Release](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.2.4)
+The [2027.2.6 Release](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.2.6)
 contains the Windows installer, both Mac packages, guides, and bundled banks.
 Intermediate build artifacts are not a distribution channel.
 
