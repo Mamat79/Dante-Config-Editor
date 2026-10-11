@@ -1,0 +1,140 @@
+{
+  "product": "Dante Config Editor",
+  "version": "2027.2.7",
+  "sourceSHA": "257fd4594b149be4b25307d74e9539e8d0becc3a",
+  "platforms": [
+    "windows-x64",
+    "macos-arm64",
+    "macos-x64"
+  ],
+  "minimumMacOS": "15.0",
+  "macOSTechnicalQualification": "TECHNICAL_CHECKS_PASS_WITH_ACCEPTANCE_LIMITS",
+  "nativeAcceptanceLimitationsPreserved": true,
+  "assets": [
+    {
+      "path": "DanteConfigEditor-2027.2.7-win-x64-candidate.zip",
+      "bytes": 79022165,
+      "sha256": "544c60550e06daa315c637841e4ae3aae2212bde1ec3bfa90804c7f9b253617d"
+    },
+    {
+      "path": "DanteConfigEditor-2027.2.7-win-x64-candidate.zip.sha256",
+      "bytes": 116,
+      "sha256": "66421979855f0b8aaf169c31d56eba8f4884e69e342b8c9ba388ea2ae06800fd"
+    },
+    {
+      "path": "DanteConfigEditor2027_Installer.exe",
+      "bytes": 78662443,
+      "sha256": "0587a53dbe655f77f4b4ac95a91f87f07338c5f80f1f78d27ea1c4a8ce20db86"
+    },
+    {
+      "path": "DanteConfigEditor2027_Installer.exe.sha256",
+      "bytes": 102,
+      "sha256": "91e0dd0831ae2c604933d923e8182279486a13379b15500cf054a69bc4aef91b"
+    },
+    {
+      "path": "DanteConfigEditor2027_macOS_AppleSilicon.dmg",
+      "bytes": 82095075,
+      "sha256": "626b9ad8d4a058b40e5da81e43ec2d9e09cf3fa2fd45e1a70fa068a7bbe5e4c9"
+    },
+    {
+      "path": "DanteConfigEditor2027_macOS_AppleSilicon.dmg.sha256",
+      "bytes": 111,
+      "sha256": "6ff1b17ffa75a514566d3e22774d04ecc3b4c548359ff4d062c3ed9ab1dbb1c9"
+    },
+    {
+      "path": "DanteConfigEditor2027_macOS_Intel.dmg",
+      "bytes": 83637302,
+      "sha256": "d21790a4aa7668dd6d8cdf2a0e56f34512d3c42db2bc91439c18076f8787f325"
+    },
+    {
+      "path": "DanteConfigEditor2027_macOS_Intel.dmg.sha256",
+      "bytes": 104,
+      "sha256": "d8c3ed1c29194d287510687e30f2d3951ebdc7b68d4ce8936c71b60780a8f843"
+    },
+    {
+      "path": "Guide-Suite-SiLeMIO-FR.pdf",
+      "bytes": 406116,
+      "sha256": "236a751649392d2bcbfbb10b753015ea0aa4aa92a0d86f3e7fb8d8f75639d968"
+    },
+    {
+      "path": "Notice_DanteConfigEditor_macOS_EN.pdf",
+      "bytes": 995770,
+      "sha256": "e1e57281509f60973512f6795a19646bdca68a41a203f8d1926de745182d11d5"
+    },
+    {
+      "path": "Notice_DanteConfigEditor_macOS_FR.pdf",
+      "bytes": 1041039,
+      "sha256": "259cb171deaa256023212b80905e8807b16d4eb608991ff5d5d3eed75ab709a3"
+    },
+    {
+      "path": "Notice_DanteConfigEditorV3_EN.pdf",
+      "bytes": 2874221,
+      "sha256": "ae0657d1b7916f15cbeda8a92bd8e98bc2b8e38c2cf4377312534e53f8edab45"
+    },
+    {
+      "path": "Notice_DanteConfigEditorV3_FR.pdf",
+      "bytes": 2992489,
+      "sha256": "db11de76c72248852597c50f5b0b2e1bd04ae45367f42cb2d43520664835718d"
+    },
+    {
+      "path": "QUALIFICATION-2027.2.7.md",
+      "bytes": 4279,
+      "sha256": "1e0f87de8f1decf9797313490735fdc997dc5f8f430af1afb1fdbbca38dfcccc"
+    },
+    {
+      "path": "QUALIFICATION-MACOS-2027.2.7.md",
+      "bytes": 1861,
+      "sha256": "d5c343848edd4fe7854b6f669f165995e9ad606254420852f3ff260b14b508ee"
+    },
+    {
+      "path": "QuickStart_DanteConfigEditor_macOS_EN.pdf",
+      "bytes": 131953,
+      "sha256": "59ad08e2545c7fd31869e391a67f33f71b644d95ba405887223d539c5aa5c470"
+    },
+    {
+      "path": "QuickStart_DanteConfigEditor_macOS_FR.pdf",
+      "bytes": 132821,
+      "sha256": "4e21d6e741cc3d8877e801892c9e5d8041a3c1835bf21e46546917378ad56a3d"
+    },
+    {
+      "path": "QuickStart_DanteConfigEditorV3_EN.pdf",
+      "bytes": 133349,
+      "sha256": "b6edafd62df31ae5abf2821514f6ec33c36706fd0e386ce3e5c608a666dc0b17"
+    },
+    {
+      "path": "QuickStart_DanteConfigEditorV3_FR.pdf",
+      "bytes": 134026,
+      "sha256": "29da6cc2530683f8060b7c2dc4bc2f0039dcf0942eb7550788be05fa0c5587e2"
+    },
+    {
+      "path": "README.md",
+      "bytes": 35477,
+      "sha256": "2b66635356f4bf876418000878ed983619b55e85b61b0f149cc3b423e5631d34"
+    },
+    {
+      "path": "README_EN.md",
+      "bytes": 31532,
+      "sha256": "49a6757456f6eb178a42e27001e5953b6786bef037653898fd498fa83bed8614"
+    },
+    {
+      "path": "release-manifest-macos-v2027.2.7.json",
+      "bytes": 1445,
+      "sha256": "89e79642c58b6f46f74135b4095323dbe15531ff6fdc1b44853de5fdd091196a"
+    },
+    {
+      "path": "RELEASE_NOTES_2027.2.7.md",
+      "bytes": 2488,
+      "sha256": "e44f65c07d2bf4f451daedc73255cb8eb2109978d7c81c0498316620a0a85d1f"
+    },
+    {
+      "path": "SiLeMIO-Suite-Guide-EN.pdf",
+      "bytes": 363744,
+      "sha256": "63b52a0ce2c8d03dc6e8a0333d06a5a91eee534a4feb0dba6e8ead1f19724b93"
+    },
+    {
+      "path": "suite-guides-manifest.json",
+      "bytes": 3567,
+      "sha256": "941d7e0511a3afa0caa97168bd8f9d63d57a67600407f88b9a2c7adc89c2dd60"
+    }
+  ]
+}

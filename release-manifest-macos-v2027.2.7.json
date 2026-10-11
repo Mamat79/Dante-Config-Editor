@@ -1,0 +1,36 @@
+{
+  "product": "Dante Config Editor",
+  "version": "2027.2.7",
+  "sourceSHA": "257fd4594b149be4b25307d74e9539e8d0becc3a",
+  "codemagicJobId": "6aca3a8715254bd723b27d52",
+  "minimumMacOS": "15.0",
+  "testCounts": {
+    "passed": 821,
+    "failed": 0,
+    "skipped": 0
+  },
+  "qualification": "TECHNICAL_CHECKS_PASS_WITH_ACCEPTANCE_LIMITS",
+  "nativeARM64": "nonvisual native launch from mounted DMG",
+  "intel": "cross-compiled and structurally checked; not executed",
+  "signature": "ad-hoc only; no Apple Developer ID or notarization",
+  "assets": [
+    {
+      "name": "DanteConfigEditor2027_macOS_AppleSilicon.dmg",
+      "bytes": 82095075,
+      "sha256": "626b9ad8d4a058b40e5da81e43ec2d9e09cf3fa2fd45e1a70fa068a7bbe5e4c9",
+      "checksumSHA256": "6ff1b17ffa75a514566d3e22774d04ecc3b4c548359ff4d062c3ed9ab1dbb1c9"
+    },
+    {
+      "name": "DanteConfigEditor2027_macOS_Intel.dmg",
+      "bytes": 83637302,
+      "sha256": "d21790a4aa7668dd6d8cdf2a0e56f34512d3c42db2bc91439c18076f8787f325",
+      "checksumSHA256": "d8c3ed1c29194d287510687e30f2d3951ebdc7b68d4ce8936c71b60780a8f843"
+    }
+  ],
+  "limits": [
+    "No interactive macOS desktop/keyboard acceptance",
+    "ARM64 nonvisual native launch only; Intel cross-built and structurally inspected, not executed",
+    "Ad-hoc signature only; no Apple Developer ID or notarization",
+    "No GitHub upload or site update performed by this workshop"
+  ]
+}
