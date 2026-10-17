@@ -1,6 +1,6 @@
 # Dante Config Editor
 
-**Windows 2027.2.7** est disponible avec le runtime .NET 10 fourni. Les paquets Mac2027.2.7 Apple Silicon et Intel sont disponibles pour macOS 15 ou ultérieur ; voir [leurs contrôles et limites](QUALIFICATION-MACOS-2027.2.7.md). [Notes2027.2.7](RELEASE_NOTES_2027.2.7.md) · [Contrôles et limites](QUALIFICATION-2027.2.7.md).
+**Windows 2027.2.8** est disponible avec le runtime .NET 10 fourni. Les paquets macOS 2027.2.8 Apple Silicon et Intel restent disponibles pour macOS 15 ou ultérieur. [Téléchargements et notes de version](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.2.8) · [Contrôles et limites par plateforme](QUALIFICATION-2027.2.8.md).
 
 Windows : dans une fenêtre compacte, le libellé « Sombre » peut être tronqué. Avec navigation et inspecteur ouverts, certaines commandes de Patch/Easy Patch peuvent dépasser la zone visible. Repliez un panneau latéral ou agrandissez la fenêtre ; la matrice peut aussi être ouverte dans sa fenêtre détachée.
 
@@ -32,21 +32,23 @@ de fichiers XML ou de projets StageFlow. Elle ajoute six modèles génériques
 pour les XML 2.1.0. Flip, la navigation au pavé tactile et les corrections
 de mise à jour précédentes restent inclus.
 
-**Version 2027.2.7 pour Windows, macOS Apple Silicon et macOS Intel ; qualification propre à chaque plateforme.**
+**Version 2027.2.8 pour Windows, macOS Apple Silicon et macOS Intel ; qualification propre à chaque plateforme.**
 
 | Plateforme | Téléchargement direct |
 | --- | --- |
-| Windows 11 x64 | [Installateur autonome 2027.2.7 `.exe`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.7/DanteConfigEditor2027_Installer.exe) |
-| macOS Apple Silicon | [Image disque `.dmg`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.7/DanteConfigEditor2027_macOS_AppleSilicon.dmg) |
-| macOS Intel | [Image disque `.dmg`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.7/DanteConfigEditor2027_macOS_Intel.dmg) |
-| Contrôle des téléchargements | [Sommes SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.7/SHA256SUMS-2027.2.7-all-platforms.txt) |
+| Windows 11 x64 | [Installateur autonome 2027.2.8 `.exe`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.8/DanteConfigEditor2027_Installer.exe) |
+| macOS Apple Silicon | [Image disque `.dmg`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.8/DanteConfigEditor2027_macOS_AppleSilicon.dmg) |
+| macOS Intel | [Image disque `.dmg`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.8/DanteConfigEditor2027_macOS_Intel.dmg) |
+| Contrôle des téléchargements | [Windows SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.8/SHA256SUMS-2027.2.8-Windows.txt) · [Mac ARM SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.8/DanteConfigEditor2027_macOS_AppleSilicon.dmg.sha256) · [Mac Intel SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.8/DanteConfigEditor2027_macOS_Intel.dmg.sha256) |
 | Projet StageFlow facultatif | [StageFlow, gratuit](https://github.com/Mamat79/StageFlow) |
+
+Les PDF Windows ci-dessous correspondent à 2027.2.8. Les liens PDF macOS historiques 2027.2.7 sont conservés ; les guides Mac courants sont inclus dans les DMG 2027.2.8.
 
 | Découvrir Dante Config Editor | Français | English |
 | --- | --- | --- |
 | Présentation rapide | [Vidéo MP4](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/dante-config-editor-presentation-fr.mp4) | [MP4 video](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/dante-config-editor-presentation-en.mp4) |
-| Démarrage rapide Windows | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.7/QuickStart_DanteConfigEditorV3_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.7/QuickStart_DanteConfigEditorV3_EN.pdf) |
-| Notice complète Windows | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.7/Notice_DanteConfigEditorV3_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.7/Notice_DanteConfigEditorV3_EN.pdf) |
+| Démarrage rapide Windows | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.8/QuickStart_DanteConfigEditorV3_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.8/QuickStart_DanteConfigEditorV3_EN.pdf) |
+| Notice complète Windows | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.8/Notice_DanteConfigEditorV3_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.8/Notice_DanteConfigEditorV3_EN.pdf) |
 | Démarrage rapide macOS | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.7/QuickStart_DanteConfigEditor_macOS_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.7/QuickStart_DanteConfigEditor_macOS_EN.pdf) |
 | Notice complète macOS | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.7/Notice_DanteConfigEditor_macOS_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.7/Notice_DanteConfigEditor_macOS_EN.pdf) |
 | Guide commun de la suite SiLeMI/O | [PDF français](manuals/Guide-Suite-SiLeMIO-FR.pdf) | [English PDF](manuals/SiLeMIO-Suite-Guide-EN.pdf) |
@@ -514,7 +516,7 @@ Ces tests ne remplacent pas l’import final dans Dante Controller.
 
 ## Installer Dante Config Editor sous Windows
 
-La [Release 2027.2.6](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.2.6)
+La [Release 2027.2.8](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.2.8)
 regroupe l'installateur Windows, les deux paquets Mac, les notices et les banques
 fournies. Les artefacts intermédiaires de construction ne constituent pas une distribution.
 
