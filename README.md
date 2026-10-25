@@ -1,6 +1,6 @@
 # Dante Config Editor
 
-**Windows 2027.2.9** est disponible avec le runtime .NET 10 fourni. Les paquets macOS 2027.2.9 Apple Silicon et Intel restent disponibles pour macOS 15 ou ultérieur. [Téléchargements et notes de version](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.2.9) · [Contrôles et limites par plateforme](QUALIFICATION-2027.2.9.md).
+**Windows 2027.2.9** reste disponible avec le runtime .NET 10 fourni. **macOS 2027.2.10**, Apple Silicon et Intel, ajoute l’activation des codes V2 avec le Trousseau macOS. [Windows 2027.2.9](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.2.9) · [Mac 2027.2.10](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.2.10). macOS 15 ou ultérieur.
 
 Windows : dans une fenêtre compacte, le libellé « Sombre » peut être tronqué. Avec navigation et inspecteur ouverts, certaines commandes de Patch/Easy Patch peuvent dépasser la zone visible. Repliez un panneau latéral ou agrandissez la fenêtre ; la matrice peut aussi être ouverte dans sa fenêtre détachée.
 
@@ -22,9 +22,9 @@ depuis la banque.
 
 La version Windows 2027.2.9 distingue clairement l’utilisation gratuite sans code de la licence permanente facultative, achetée ou offerte. La commande Continuer reste accessible dans la fenêtre de licence. Les 30 jours sans rappel, puis le rappel avec attente de 5 secondes, restent inchangés. Internet concerne l’activation d’un code V2 ; l’utilisation gratuite ne demande pas d’activation en ligne. [Notes Windows 2027.2.9](RELEASE_NOTES_2027.2.9.md).
 
-macOS 2027.2.9 clarifie le choix **Continuer gratuitement**, sans code ni activation en ligne. L'activation permanente V2 liée à Windows DPAPI n'est pas prise en charge sur Mac ; la compatibilité locale V1 existante reste préservée. Le prix, les droits et le rappel de cinq secondes après 30 jours ne changent pas. macOS 15 ou ultérieur et le runtime .NET 10.0.12 inclus sont requis.
+macOS 2027.2.10 prend en charge les codes permanents V2 achetés ou offerts : la clé propre à cette installation est protégée dans le Trousseau macOS. Internet est nécessaire pour activer ou désactiver ce Mac ; après activation, la vérification reste locale et hors ligne, y compris après redémarrage. Déverrouillez le Trousseau et autorisez DCE si macOS le demande. Si une réponse est perdue, réessayez avec le même code ; un remplacement échoué conserve la licence active. Ne copiez pas de clé Windows ni de fichiers de licence. Les codes V1 compatibles restent acceptés. **Continuer gratuitement** reste accessible sans code ni activation en ligne : 30 jours sans rappel, puis une attente de cinq secondes au démarrage. Licence facultative, paiement unique de 29 € TTC en France ; prix et droits inchangés.
 
-La qualification Mac distincte comprend 950 tests (882 Core, 55 Mac headless et 13 contrôles de version) et trois scènes de démarrage/XML/StageFlow sur Apple Silicon, avec fermeture normale, en mode **non visuel**. Intel reste une compilation croisée contrôlée structurellement. Signature ad hoc, sans Developer ID ni notarisation ; aucune recette visuelle complète, installation personnelle, activation commerciale ou validation Dante/audio/réseau réels n'est revendiquée.
+La qualification Mac réutilise 953 tests produit réussis (896 Core et 57 interface Mac, code produit inchangé) et ajoute 25 contrôles Python réussis. Sur Apple Silicon, le moteur réellement livré a passé l’écriture et la relecture du Trousseau dans des processus distincts, la reconnaissance de la licence après redémarrage hors connexion, la preuve de désactivation et le nettoyage des clés QA. Les échanges HTTP d’activation, refus et échecs de sauvegarde sont **simulés**, sans activation commerciale réelle. Trois scènes de démarrage/XML/StageFlow avec fermeture normale sont **non visuelles**. Intel est compilé et contrôlé structurellement ; le Trousseau Intel et un Mac Intel physique n’ont pas été testés. Signature ad hoc vérifiée sur le runner, sans Developer ID ni notarisation ; aucune recette visuelle complète, installation personnelle ou validation Dante/audio/réseau réels. macOS 15 minimum déclaré, sans matrice d’exécution des anciens systèmes. Le premier run arrêté par le vérificateur QA reste enregistré en échec ; le DMG Apple Silicon a été réemployé octet pour octet et qualifié dans la reprise.
 
 La 2027.2.6 réduit le rappel après les 30 jours d'essai complet : attente de
 5 secondes au démarrage, une seule fois par session. Toutes les fonctions
@@ -38,25 +38,25 @@ de fichiers XML ou de projets StageFlow. Elle ajoute six modèles génériques
 pour les XML 2.1.0. Flip, la navigation au pavé tactile et les corrections
 de mise à jour précédentes restent inclus.
 
-**Windows 2027.2.9 · macOS Apple Silicon et Intel 2027.2.9 ; qualification propre à chaque plateforme.**
+**Windows 2027.2.9 · macOS Apple Silicon et Intel 2027.2.10 ; qualification propre à chaque plateforme.**
 
 | Plateforme | Téléchargement direct |
 | --- | --- |
 | Windows 11 x64 | [Installateur autonome 2027.2.9 `.exe`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.9/DanteConfigEditor2027_Installer.exe) |
-| macOS Apple Silicon | [Image disque `.dmg`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.9/DanteConfigEditor2027_macOS_AppleSilicon.dmg) |
-| macOS Intel | [Image disque `.dmg`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.9/DanteConfigEditor2027_macOS_Intel.dmg) |
-| Contrôle des téléchargements | [Windows SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.9/SHA256SUMS-2027.2.9-Windows.txt) · [Mac ARM SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.9/DanteConfigEditor2027_macOS_AppleSilicon.dmg.sha256) · [Mac Intel SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.9/DanteConfigEditor2027_macOS_Intel.dmg.sha256) |
+| macOS Apple Silicon | [Image disque `.dmg`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.10/DanteConfigEditor2027_macOS_AppleSilicon.dmg) |
+| macOS Intel | [Image disque `.dmg`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.10/DanteConfigEditor2027_macOS_Intel.dmg) |
+| Contrôle des téléchargements | [Windows SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.9/SHA256SUMS-2027.2.9-Windows.txt) · [Mac ARM SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.10/DanteConfigEditor2027_macOS_AppleSilicon.dmg.sha256) · [Mac Intel SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.10/DanteConfigEditor2027_macOS_Intel.dmg.sha256) |
 | Projet StageFlow facultatif | [StageFlow, gratuit](https://github.com/Mamat79/StageFlow) |
 
-Les PDF Windows et les quatre PDF macOS ci-dessous correspondent à 2027.2.9. Les guides Mac publiés sous des noms distincts sont identiques à ceux embarqués dans les deux DMG ; les PDF Windows sont préservés.
+Les PDF Windows restent en 2027.2.9 ; les quatre PDF macOS ci-dessous correspondent à 2027.2.10. Ils sont identiques aux guides embarqués dans les deux DMG qualifiés.
 
 | Découvrir Dante Config Editor | Français | English |
 | --- | --- | --- |
 | Présentation rapide | [Vidéo MP4](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/dante-config-editor-presentation-fr.mp4) | [MP4 video](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/dante-config-editor-presentation-en.mp4) |
 | Démarrage rapide Windows | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.9/QuickStart_DanteConfigEditorV3_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.9/QuickStart_DanteConfigEditorV3_EN.pdf) |
 | Notice complète Windows | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.9/Notice_DanteConfigEditorV3_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.9/Notice_DanteConfigEditorV3_EN.pdf) |
-| Démarrage rapide macOS | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.9/QuickStart_DanteConfigEditor_macOS_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.9/QuickStart_DanteConfigEditor_macOS_EN.pdf) |
-| Notice complète macOS | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.9/Notice_DanteConfigEditor_macOS_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.9/Notice_DanteConfigEditor_macOS_EN.pdf) |
+| Démarrage rapide macOS | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.10/QuickStart_DanteConfigEditor_macOS_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.10/QuickStart_DanteConfigEditor_macOS_EN.pdf) |
+| Notice complète macOS | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.10/Notice_DanteConfigEditor_macOS_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.10/Notice_DanteConfigEditor_macOS_EN.pdf) |
 | Guide commun de la suite SiLeMI/O | [PDF français](manuals/Guide-Suite-SiLeMIO-FR.pdf) | [English PDF](manuals/SiLeMIO-Suite-Guide-EN.pdf) |
 
 Les vidéos présentent les principes du logiciel. Les notices 2027.2.6 décrivent
