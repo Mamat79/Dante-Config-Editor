@@ -1,8 +1,8 @@
 # Dante Config Editor
 
-**Windows 2027.2.9** remains available with the included .NET 10 runtime. **macOS 2027.2.10**, for Apple Silicon and Intel, adds V2 code activation using macOS Keychain. [Windows 2027.2.9](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.2.9) · [Mac 2027.2.10](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.2.10). Requires macOS 15 or later.
+**Windows and macOS2027.2.12 — refined dense matrix.** [Packages/checksums](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.2.12) · [Release notes](RELEASE_NOTES_2027.2.12_EN.md) · [Windows qualification/native limitation](QUALIFICATION-WINDOWS-2027.2.12.md) · [Mac qualification](QUALIFICATION-MACOS-2027.2.12.md). Requires macOS15+.
 
-Windows: in a compact window, the selected Dark theme label may be clipped in French. With navigation and inspector panels open, some Patch/Easy Patch controls can extend beyond the visible area. Collapse a side panel or enlarge the window; the matrix can also be opened in its detached window.
+Square matrix, vertical TX labels,14/18/24 densities and framed group controls, with advanced functions retained. Windows installed with compared personal files preserved; actual exit0, but UI close action/final memory unobserved after interruption. ARM Mac acceptance is nonvisual; Intel is structurally inspected. See explicit limits above.
 
 
 **DCE lets you prepare, review, edit, merge, patch, and document Dante
@@ -19,11 +19,11 @@ then populated with the required device-bank templates.
 
 ## Download, watch, learn
 
-Windows 2027.2.9 clearly separates free use without a code from an optional purchased or gifted permanent license. Continue remains accessible in the license window. The 30 days without a reminder, followed by a reminder with a 5-second wait, are unchanged. Internet access applies to V2 code activation; free use needs no online activation. [Windows 2027.2.9 notes](RELEASE_NOTES_2027.2.9_EN.md).
+Since Windows2027.2.9, the workflow separates free use without a code from an optional purchased or gifted permanent license. Continue remains accessible in the license window. The 30 days without a reminder, followed by a reminder with a 5-second wait, are unchanged. Internet access applies to V2 code activation; free use needs no online activation. [Windows 2027.2.9 notes](RELEASE_NOTES_2027.2.9_EN.md).
 
 macOS 2027.2.10 supports purchased or gifted V2 permanent codes: the key for this installation is protected in macOS Keychain. Internet access is required to activate or deactivate this Mac; after activation, verification remains local and offline, including after restart. Unlock Keychain and allow DCE if macOS prompts you. If a response is lost, retry with the same code; a failed replacement keeps the active license. Do not copy Windows keys or license files. Compatible V1 codes remain accepted. **Continue for free** remains available without a code or online activation: 30 days without a reminder, then a five-second wait at startup. The license is optional, with a one-time price of EUR 29 including French VAT; price and rights are unchanged.
 
-Mac qualification reuses 953 passing product tests (896 Core and 57 Mac interface tests, unchanged product code), with 25 additional passing Python checks. On Apple Silicon, the actually shipped Core passed Keychain write/read across separate processes, offline license recognition after restart, deactivation proof and scoped QA key cleanup. Activation HTTP, refusals and save failures are **synthetic**, without a real commercial activation. Three startup/XML/StageFlow scenes with graceful exit are **nonvisual**. Intel is cross-built and structurally inspected; Intel Keychain and physical Intel hardware were not tested. Ad-hoc signing was verified on the runner, without Developer ID or notarization; no full visual acceptance, personal installation or real Dante/audio/network validation. macOS 15 is the declared minimum, without an oldest-OS execution matrix. The first run stopped by the QA verifier remains failed; its Apple Silicon DMG was reused byte for byte and qualified during recovery.
+Historical Mac2027.2.10 qualification reuses 953 passing product tests (896 Core and 57 Mac interface tests, unchanged product code), with 25 additional passing Python checks. On Apple Silicon, the actually shipped Core passed Keychain write/read across separate processes, offline license recognition after restart, deactivation proof and scoped QA key cleanup. Activation HTTP, refusals and save failures are **synthetic**, without a real commercial activation. Three startup/XML/StageFlow scenes with graceful exit are **nonvisual**. Intel is cross-built and structurally inspected; Intel Keychain and physical Intel hardware were not tested. Ad-hoc signing was verified on the runner, without Developer ID or notarization; no full visual acceptance, personal installation or real Dante/audio/network validation. macOS 15 is the declared minimum, without an oldest-OS execution matrix. The first run stopped by the QA verifier remains failed; its Apple Silicon DMG was reused byte for byte and qualified during recovery.
 
 2027.2.6 reduces the reminder after the full 30-day trial: a 5-second wait
 at startup, once per session. All features remain available afterwards.
@@ -35,25 +35,25 @@ are preserved. See [release notes](RELEASE_NOTES_2027.2.6_EN.md) and
 StageFlow projects. It adds six generic XML 2.1.0 device models. Flip,
 trackpad navigation, and earlier update-check fixes remain included.
 
-**Windows 2027.2.9 · macOS Apple Silicon and Intel 2027.2.10; qualification is platform-specific.**
+**Windows and macOS Apple Silicon/Intel2027.2.12; qualification is platform-specific.**
 
 | Platform | Direct download |
 | --- | --- |
-| Windows 11 x64 | [Self-contained 2027.2.9 `.exe` installer](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.9/DanteConfigEditor2027_Installer.exe) |
-| macOS Apple Silicon | [`.dmg` disk image](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.10/DanteConfigEditor2027_macOS_AppleSilicon.dmg) |
-| macOS Intel | [`.dmg` disk image](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.10/DanteConfigEditor2027_macOS_Intel.dmg) |
-| Download verification | [Windows SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.9/SHA256SUMS-2027.2.9-Windows.txt) · [Mac ARM SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.10/DanteConfigEditor2027_macOS_AppleSilicon.dmg.sha256) · [Mac Intel SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.10/DanteConfigEditor2027_macOS_Intel.dmg.sha256) |
+| Windows 11 x64 | [Self-contained 2027.2.12 `.exe` installer](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.12/DanteConfigEditor2027_Installer.exe) |
+| macOS Apple Silicon | [`.dmg` disk image](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.12/DanteConfigEditor2027_macOS_AppleSilicon.dmg) |
+| macOS Intel | [`.dmg` disk image](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.12/DanteConfigEditor2027_macOS_Intel.dmg) |
+| Download verification | [Windows SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.12/SHA256SUMS-2027.2.12-Windows.txt) · [Mac ARM SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.12/DanteConfigEditor2027_macOS_AppleSilicon.dmg.sha256) · [Mac Intel SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.12/DanteConfigEditor2027_macOS_Intel.dmg.sha256) |
 | Optional StageFlow project tool | [StageFlow, free](https://github.com/Mamat79/StageFlow) |
 
-Windows PDFs remain at 2027.2.9; the four macOS PDFs below correspond to 2027.2.10. They match the guides embedded in both qualified DMGs.
+The eight Windows/macOS product PDFs below correspond to2027.2.12. They match the guides embedded in both qualified DMGs.
 
 | Discover Dante Config Editor | English | Français |
 | --- | --- | --- |
 | Short presentation | [MP4 video](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/dante-config-editor-presentation-en.mp4) | [Vidéo MP4](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/dante-config-editor-presentation-fr.mp4) |
-| Windows quick start | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.9/QuickStart_DanteConfigEditorV3_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.9/QuickStart_DanteConfigEditorV3_FR.pdf) |
-| Windows full manual | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.9/Notice_DanteConfigEditorV3_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.9/Notice_DanteConfigEditorV3_FR.pdf) |
-| macOS quick start | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.10/QuickStart_DanteConfigEditor_macOS_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.10/QuickStart_DanteConfigEditor_macOS_FR.pdf) |
-| macOS full manual | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.10/Notice_DanteConfigEditor_macOS_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.10/Notice_DanteConfigEditor_macOS_FR.pdf) |
+| Windows quick start | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.12/QuickStart_DanteConfigEditorV3_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.12/QuickStart_DanteConfigEditorV3_FR.pdf) |
+| Windows full manual | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.12/Notice_DanteConfigEditorV3_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.12/Notice_DanteConfigEditorV3_FR.pdf) |
+| macOS quick start | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.12/QuickStart_DanteConfigEditor_macOS_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.12/QuickStart_DanteConfigEditor_macOS_FR.pdf) |
+| macOS full manual | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.12/Notice_DanteConfigEditor_macOS_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.12/Notice_DanteConfigEditor_macOS_FR.pdf) |
 | Shared SiLeMI/O suite guide | [English PDF](manuals/SiLeMIO-Suite-Guide-EN.pdf) | [PDF français](manuals/Guide-Suite-SiLeMIO-FR.pdf) |
 
 The videos introduce the software's principles. The 2027.2.6 manuals cover
@@ -485,7 +485,7 @@ These tests do not replace final import in Dante Controller.
 
 ## Install Dante Config Editor on Windows
 
-The [2027.2.9 Release](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.2.9)
+The [2027.2.12 Release](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.2.12)
 contains the Windows installer, both Mac packages, guides, and bundled banks.
 Intermediate build artifacts are not a distribution channel.
 

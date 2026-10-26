@@ -1,0 +1,9 @@
+# Dante Config Editor 2027.2.12 — Windows and macOS
+
+The main matrix uses square18px cells and vertical TX labels, with separate Dante numbers. Fine14 shows more channels, Airy24 enlarges targets and Comfort retains horizontal labels. Zoom, scrolling, row/column highlighting and full-name detail follow this geometry. Framed +/− group controls support keyboard navigation.
+
+TX/RX filters, Flip, Find, direct/bulk rename, Multicast, Easy Patch and RX→TX List remain available. Patch gestures retain preview, Escape, RX-replacement confirmation and undo. OFFLINE describes the preset, without measuring a live Dante network. Light/dark themes and XML/StageFlow workflows are retained. V1 remains default; V2 is an explicit local copy, without qualified network/LIVE/AutoCAD exchange.
+
+Windows was locally built, installed and checked after verified private backups, preserving compared personal files. The actual matrix was observed using a private copy. The first bounded observation timed out and remains ATTENTION. After interruption, actual exit code zero was measured against the exact process, but its UI close action and final in-memory state were not observed. A recorded recovery snapshot with two changed assignments and the intact original copy are separately preserved. This is not full UI-close acceptance or attribution of the gestures. See Windows qualification.
+
+Mac:1000 fresh passing tests on this product. Nonvisual Apple Silicon startup/XML/StageFlow scenes and shipped-Core Keychain checks passed. Intel was cross-built and structurally inspected, not run natively on Intel hardware. Declared minimum macOS15; ad-hoc signing without Developer ID/notarization. No real commercial activation or physical Dante/audio/network acceptance. Previous releases, tags and assets are preserved; eight product PDFs match their respective packages. Licensing, free use, trial and existing rights remain unchanged.
