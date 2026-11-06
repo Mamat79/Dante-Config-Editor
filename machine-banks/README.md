@@ -28,9 +28,12 @@ ce dépôt ne constitue pas une validation d'import par Dante Controller.
   Les familles Yamaha CL/QL/DM/TF/RIVAGE, Allen & Heath dLive/Avantis/SQ et
   DiGiCo sont représentées par leur appareil, carte ou interface Dante. Les
   capacités vont de 0 à 256 canaux TX ou RX et tous les labels sont génériques.
-  Les 57 modèles historiques ont été testés sur matériel réel par le
-  mainteneur. Les 20 nouveaux profils reposent sur des caractéristiques
-  constructeur officielles et sont marqués `StructurallyValidated`.
+  53 modèles conservent leur validation matérielle historique. Les 24 rôles
+  marqués `StructurallyValidated` comprennent les 20 profils de spécifications
+  constructeur et quatre rôles audio génériques reconstruits explicitement :
+  CL3, QL5, HY144-D et RU-LB4. Leurs anciens XML étaient incomplets ; aucune
+  valeur technique manquante n’a été devinée et leur ancienne validation
+  matérielle n’est pas attribuée aux nouveaux rôles.
 
 Les identités matérielles, paramètres réseau et abonnements du projet source
 ont été retirés, de même que les flows et références de patch. Les images
@@ -62,7 +65,7 @@ projet réel.
 | Banque | Contenu | Téléchargement | SHA-256 |
 |---|---|---|---|
 | DCE Generic Roles 2026.3 | Rôles génériques 8x8 et 32x32 | [Télécharger](DCE_Generic_Roles_2026_3.dce-bank.zip) | `1f0afe83224499e2ebd8813cc0e91007083900f124f1789a7684951c5234b74b` |
-| DCE Community Devices 2026.3 | 77 modèles assainis : 57 testés sur matériel, 20 validés structurellement | [Télécharger](DCE_Community_Devices_2026_3.dce-bank.zip) | `219cbd128c33ff334972c870c2f4735199fcd507935c56be65ec7943a2c5d50f` |
+| DCE Community Devices 2026.3 | 77 modèles assainis : 53 testés sur matériel, 24 validés structurellement | [Télécharger](DCE_Community_Devices_2026_3.dce-bank.zip) | `fe9ff72e4ae5580ffb63507037c90df014b9802c746adc5a118b63b6efd2fad9` |
 | DCE Legacy XML 2.1 Models | 6 rôles génériques pour projets XML 2.1.0 | [Télécharger](DCE_Legacy_XML_2_1_Models.dce-bank.zip) | `0c0437ab55a776678cac14fcb9f9d0a0fdb5450bf3f796a626cdcb6917d29a2e` |
 
 ### Partager une banque
@@ -78,8 +81,10 @@ Les modèles de matériels réels doivent provenir d'un XML que leur auteur est
 autorisé à partager. DCE assainit les identités, le réseau et les abonnements,
 mais l'auteur reste responsable du contenu publié.
 
-Les archives publiées ici sont accompagnées de leur empreinte SHA-256 dans
-`catalog.json`. La banque personnelle ne fait pas partie de ce dépôt.
+Le workflow GitHub `Machine-bank audit` reconstruit et vérifie chaque semaine
+les archives publiques, leurs empreintes, leurs manifestes et l'absence de
+données de projet interdites. Il fonctionne en lecture seule et ne publie
+jamais automatiquement une banque personnelle.
 
 ## English
 
@@ -108,9 +113,11 @@ repository is not proof of a successful Dante Controller import.
   Yamaha CL/QL/DM/TF/RIVAGE, Allen & Heath dLive/Avantis/SQ, and DiGiCo are
   represented through the relevant Dante device, card, or interface.
   Capacities range from 0 to 256 Tx or Rx channels and all labels are generic.
-  The 57 historical templates were tested on real hardware by the maintainer.
-  The 20 new profiles are based on official manufacturer specifications and
-  are marked `StructurallyValidated`.
+  53 templates retain their historical hardware qualification. The 24
+  `StructurallyValidated` roles include 20 official-specification profiles and
+  four explicitly rebuilt generic audio roles: CL3, QL5, HY144-D and RU-LB4.
+  Their previous XML was incomplete; no missing technical value was inferred,
+  and the old hardware qualification is not attributed to these new roles.
 
 Hardware identities, network settings and source-project subscriptions were
 removed, together with flows and patch references. Images come from official
@@ -140,7 +147,7 @@ before using them in a real project.
 | Bank | Contents | Download | SHA-256 |
 |---|---|---|---|
 | DCE Generic Roles 2026.3 | Generic 8x8 and 32x32 roles | [Download](DCE_Generic_Roles_2026_3.dce-bank.zip) | `1f0afe83224499e2ebd8813cc0e91007083900f124f1789a7684951c5234b74b` |
-| DCE Community Devices 2026.3 | 77 sanitized templates: 57 hardware-tested, 20 structurally validated | [Download](DCE_Community_Devices_2026_3.dce-bank.zip) | `219cbd128c33ff334972c870c2f4735199fcd507935c56be65ec7943a2c5d50f` |
+| DCE Community Devices 2026.3 | 77 sanitized templates: 53 hardware-tested, 24 structurally validated | [Download](DCE_Community_Devices_2026_3.dce-bank.zip) | `fe9ff72e4ae5580ffb63507037c90df014b9802c746adc5a118b63b6efd2fad9` |
 | DCE Legacy XML 2.1 Models | 6 generic roles for XML 2.1.0 projects | [Download](DCE_Legacy_XML_2_1_Models.dce-bank.zip) | `0c0437ab55a776678cac14fcb9f9d0a0fdb5450bf3f796a626cdcb6917d29a2e` |
 
 ### Share a bank
@@ -156,5 +163,6 @@ Real-hardware templates must come from XML that the author is allowed to
 share. DCE removes identities, network settings and subscriptions, but the
 publisher remains responsible for the shared content.
 
-The published archives have SHA-256 hashes in `catalog.json`. The personal
-bank is not part of this repository.
+The `Machine-bank audit` GitHub workflow rebuilds and validates the public
+archives, hashes, manifests, and forbidden project-data checks every week. It
+runs read-only and never publishes a personal bank automatically.

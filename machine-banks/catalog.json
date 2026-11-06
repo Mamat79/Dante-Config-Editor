@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "updatedUtc": "2026-09-29T00:00:00+00:00",
+  "updatedUtc": "2026-11-02T00:00:00+00:00",
   "banks": [
     {
       "id": "dce-generic-roles-2026.3",
@@ -16,11 +16,11 @@
       "id": "dce-community-devices-2026.3",
       "name": "DCE Community Devices 2026.3",
       "file": "DCE_Community_Devices_2026_3.dce-bank.zip",
-      "sha256": "219cbd128c33ff334972c870c2f4735199fcd507935c56be65ec7943a2c5d50f",
+      "sha256": "fe9ff72e4ae5580ffb63507037c90df014b9802c746adc5a118b63b6efd2fad9",
       "minimumDceVersion": "2026.3",
       "language": "fr-en",
-      "descriptionFr": "77 modèles assainis : 57 testés sur matériel et 20 validés structurellement, sans identité, réseau, flow ni abonnement.",
-      "descriptionEn": "77 sanitized templates: 57 hardware-tested and 20 structurally validated, without identity, network settings, flows, or subscriptions."
+      "descriptionFr": "77 modèles assainis : 53 testés sur matériel et 24 validés structurellement, sans identité, réseau, flow ni abonnement.",
+      "descriptionEn": "77 sanitized templates: 53 hardware-tested and 24 structurally validated, without identity, network settings, flows, or subscriptions."
     },
     {
       "id": "dce-legacy-xml-2.1-models",
