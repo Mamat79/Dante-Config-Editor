@@ -1,9 +1,9 @@
 {
   "formatVersion": 1,
   "bankId": "d63623f3-3727-435c-923f-458e3b2b9d9c",
-  "bankName": "DCE Community Devices 2026.3",
+  "bankName": "DCE Community Devices 2026.3.1",
   "generatedByDceVersion": "2026.3",
-  "updatedUtc": "2026-08-29T00:00:00Z",
+  "updatedUtc": "2026-11-11T00:00:00Z",
   "profiles": [
     {
       "key": "allen-heath-dante-64x64",
@@ -1259,6 +1259,87 @@
         {"manufacturer": "Neutrik", "model": "NA-2I2O-DLINE", "txCount": 2, "rxCount": 2}
       ],
       "image": {"mode": "url", "sourcePage": "https://www.neutrik.com/en/product/na-2i2o-dline", "downloadUrl": "https://www.neutrik.com/uploads/media/400x/04/18374-neutrik_NA-2I2O-DLINE_persp%20front_RGB_WEB.png?v=1-0", "extension": "png"}
+    },
+    {
+      "key": "auvitran-axc-dante",
+      "templateName": "AxC-DANTE",
+      "manufacturer": "AuviTran",
+      "model": "AxC-DANTE",
+      "category": "Carte réseau audio",
+      "tags": [
+        "Dante",
+        "64x64",
+        "generic"
+      ],
+      "templateMode": "generic",
+      "specificationSourceUrl": "https://www.auvitran.com/fr/productrange/axc-cards-2/",
+      "compatibilityNotes": "Profil 64 x 64 à 48 kHz. Rôle générique validé structurellement, sans essai sur le matériel.",
+      "compatibilityNotesEn": "64 x 64 profile at 48 kHz. Structurally validated generic role without hardware testing.",
+      "sourceMatchers": [
+        {
+          "manufacturer": "AuviTran",
+          "model": "AxC-DANTE",
+          "txCount": 64,
+          "rxCount": 64
+        }
+      ],
+      "image": {
+        "mode": "none"
+      }
+    },
+    {
+      "key": "tascam-if-da64",
+      "templateName": "TASCAM IF-DA64",
+      "manufacturer": "TEAC Corporation",
+      "model": "IF-DA64",
+      "category": "Carte réseau audio",
+      "tags": [
+        "Dante",
+        "64x64",
+        "generic"
+      ],
+      "templateMode": "generic",
+      "specificationSourceUrl": "https://www.tascam.eu/en/docs/IF-DA64_multi_vB.pdf",
+      "compatibilityNotes": "Profil 64 x 64 à 48 kHz. La carte est limitée à 32 x 32 à 88,2 ou 96 kHz. Rôle générique validé structurellement, sans essai sur le matériel.",
+      "compatibilityNotesEn": "64 x 64 profile at 48 kHz. The card is limited to 32 x 32 at 88.2 or 96 kHz. Structurally validated generic role without hardware testing.",
+      "sourceMatchers": [
+        {
+          "manufacturer": "TEAC Corporation",
+          "model": "IF-DA64",
+          "txCount": 64,
+          "rxCount": 64
+        }
+      ],
+      "image": {
+        "mode": "none"
+      }
+    },
+    {
+      "key": "yamaha-rio3224-d2",
+      "templateName": "Rio3224-D2",
+      "manufacturer": "Yamaha Corporation",
+      "model": "Rio3224-D2",
+      "category": "Stagebox",
+      "tags": [
+        "Dante",
+        "32x24",
+        "generic"
+      ],
+      "templateMode": "generic",
+      "specificationSourceUrl": "https://www.getdante.com/product/yamaha-rio3224-d2/",
+      "compatibilityNotes": "Profil 32 TX / 24 RX pour les projets XML 3.0.0. Rôle générique validé structurellement, sans essai sur le matériel.",
+      "compatibilityNotesEn": "32 Tx / 24 Rx profile for XML 3.0.0 projects. Structurally validated generic role without hardware testing.",
+      "sourceMatchers": [
+        {
+          "manufacturer": "Yamaha Corporation",
+          "model": "Rio3224-D2",
+          "txCount": 32,
+          "rxCount": 24
+        }
+      ],
+      "image": {
+        "mode": "none"
+      }
     }
   ]
 }
