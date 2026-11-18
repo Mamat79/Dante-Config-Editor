@@ -1,13 +1,13 @@
 # Dante Config Editor
 
-**Windows et macOS 2027.3 — modes hors ligne, en ligne et mixte sur Windows.** [Installateurs et SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.3) · [Notes](RELEASE_NOTES_2027.3.md) · [Qualification Windows](QUALIFICATION-WINDOWS-2027.3.md) · [Qualification Mac](QUALIFICATION-MACOS-2027.3.md).
+**Windows et macOS 2027.3.1 — préparation hors ligne, patch Dante en ligne et mode mixte.** [Installateurs et SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.3.1) · [Notes](RELEASE_NOTES_2027.3.1.md)
 
-Sur Windows, la grille unique de DCE sert à préparer un projet XML hors ligne, à patcher le réseau Dante local et à travailler avec des appareils présents et absents dans la même session. Sur macOS Apple Silicon et Intel, DCE propose l’atelier XML hors ligne.
+La grille réunit le projet XML et les appareils détectés. Le patch direct et la synchronisation sur demande sont disponibles sur Windows et macOS 15 ou ultérieur. La qualification du réseau Mac a été réalisée en simulation sur Apple Silicon. L’exécution native Intel et les appareils Dante physiques restent à vérifier.
 
 DCE propose trois parcours explicites : créer ou ouvrir un **projet Dante Config
 Editor** autonome en XML, ouvrir un **projet StageFlow local** accessible sur
 l'ordinateur, ou rejoindre volontairement une **session StageFlow LIVE** sur le
-réseau local avec son code à six chiffres. StageFlow est gratuit et facultatif.
+réseau local avec son code à six chiffres. StageFlow est facultatif.
 Un projet StageFlow sans configuration Dante peut être initialisé directement
 depuis zéro dans une configuration vide, puis recevoir les machines voulues
 depuis la banque.
@@ -16,30 +16,30 @@ depuis la banque.
 
 ## Télécharger, voir, apprendre
 
-**Essai gratuit de 30 jours** à partir du premier lancement de 2027.3. Activez ensuite une licence permanente à **49 € TTC**, en paiement unique. Une licence DCE valide déjà activée reste utilisable. L’activation initiale d’un code V2 nécessite Internet. Après activation, vous pouvez travailler hors ligne.
+**Essai gratuit de 30 jours** à partir du premier lancement de 2027.3. Activez ensuite une licence permanente à **79 € TTC**, en paiement unique. Une licence DCE valide déjà activée reste utilisable. L’activation initiale d’un code V2 nécessite Internet. Après activation, vous pouvez travailler hors ligne.
 
-**Windows 2027.3 ; macOS Apple Silicon/Intel 2027.3 ; qualification propre à chaque plateforme.**
+**Windows 2027.3.1 ; macOS Apple Silicon/Intel 2027.3.1 ; qualification propre à chaque plateforme.**
 
 | Plateforme | Téléchargement direct |
 | --- | --- |
-| Windows 11 x64 | [Installateur autonome 2027.3 `.exe`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3/DanteConfigEditor2027_Installer.exe) |
-| macOS Apple Silicon | [Image disque `.dmg`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3/DanteConfigEditor2027_macOS_AppleSilicon.dmg) |
-| macOS Intel | [Image disque `.dmg`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3/DanteConfigEditor2027_macOS_Intel.dmg) |
-| Contrôle des téléchargements | [Windows SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3/SHA256SUMS-2027.3-Windows.txt) · [Mac ARM SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3/DanteConfigEditor2027_macOS_AppleSilicon.dmg.sha256) · [Mac Intel SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3/DanteConfigEditor2027_macOS_Intel.dmg.sha256) |
-| Projet StageFlow facultatif | [StageFlow, gratuit](https://github.com/Mamat79/StageFlow) |
+| Windows 11 x64 | [Installateur autonome 2027.3.1 `.exe`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/DanteConfigEditor2027_Installer.exe) |
+| macOS Apple Silicon | [Image disque `.dmg`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/DanteConfigEditor2027_macOS_AppleSilicon.dmg) |
+| macOS Intel | [Image disque `.dmg`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/DanteConfigEditor2027_macOS_Intel.dmg) |
+| Contrôle des téléchargements | [Windows SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/SHA256SUMS-2027.3.1-Windows.txt) · [Mac ARM SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/DanteConfigEditor2027_macOS_AppleSilicon.dmg.sha256) · [Mac Intel SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/DanteConfigEditor2027_macOS_Intel.dmg.sha256) |
+| Projet StageFlow facultatif | [StageFlow](https://github.com/Mamat79/StageFlow) |
 
-Les quatre PDF Windows et les quatre PDF macOS ci-dessous correspondent à 2027.3 ; les PDF macOS sont identiques aux guides des deux DMG qualifiés.
+Les quatre PDF Windows et les quatre PDF macOS ci-dessous correspondent à 2027.3.1 ; les PDF macOS sont identiques aux guides des deux DMG qualifiés.
 
 | Découvrir Dante Config Editor | Français | English |
 | --- | --- | --- |
 | Présentation rapide | [Vidéo MP4](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/dante-config-editor-presentation-fr.mp4) | [MP4 video](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/dante-config-editor-presentation-en.mp4) |
-| Démarrage rapide Windows | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3/QuickStart_DanteConfigEditorV3_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3/QuickStart_DanteConfigEditorV3_EN.pdf) |
-| Notice complète Windows | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3/Notice_DanteConfigEditorV3_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3/Notice_DanteConfigEditorV3_EN.pdf) |
-| Démarrage rapide macOS | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3/QuickStart_DanteConfigEditor_macOS_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3/QuickStart_DanteConfigEditor_macOS_EN.pdf) |
-| Notice complète macOS | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3/Notice_DanteConfigEditor_macOS_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3/Notice_DanteConfigEditor_macOS_EN.pdf) |
+| Démarrage rapide Windows | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/QuickStart_DanteConfigEditorV3_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/QuickStart_DanteConfigEditorV3_EN.pdf) |
+| Notice complète Windows | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/Notice_DanteConfigEditorV3_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/Notice_DanteConfigEditorV3_EN.pdf) |
+| Démarrage rapide macOS | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/QuickStart_DanteConfigEditor_macOS_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/QuickStart_DanteConfigEditor_macOS_EN.pdf) |
+| Notice complète macOS | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/Notice_DanteConfigEditor_macOS_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/Notice_DanteConfigEditor_macOS_EN.pdf) |
 | Guide commun de la suite SiLeMI/O | [PDF français](manuals/Guide-Suite-SiLeMIO-FR.pdf) | [English PDF](manuals/SiLeMIO-Suite-Guide-EN.pdf) |
 
-Les vidéos présentent les principes du logiciel. Les notices 2027.3 décrivent
+Les vidéos présentent les principes du logiciel. Les notices 2027.3.1 décrivent
 les parcours autonomes et StageFlow, le synoptique persistant et l'export vers Dante Controller.
 Windows et Mac proposent la matrice de tout le projet : machines repliées,
 diagonales et colonnes automatiques avec aperçu, Flip, renommage direct et
@@ -67,9 +67,9 @@ Les XML générés par cette génération ont été importés avec succès dans 
 Controller par le mainteneur. Des tests structurels, sémantiques et de
 non-régression complètent ces essais réels.
 
-## Qualification macOS 2027.3
+## Qualification macOS 2027.3.1
 
-[Contrôles Mac et limites](QUALIFICATION-MACOS-2027.3.md).
+[Contrôles Mac et limites](QUALIFICATION-MACOS-2027.3.1.md).
 
 ## Bien démarrer
 
@@ -242,7 +242,7 @@ DCE n'y modifie que `dante/dante.json` et les paquets placés sous `dante/`.
 Les domaines de StageFlow, StageDesk, StageMark, AutoCAD ou d'autres outils sont
 préservés. L'écriture prend d'abord le verrou Dante puis le verrou du manifeste,
 relit les deux documents, conserve les ajouts concurrents des autres outils et
-remplace atomiquement le seul domaine Dante. StageFlow est gratuit et
+remplace atomiquement le seul domaine Dante. StageFlow est
 facultatif.
 
 Le même projet peut aussi être ouvert par
@@ -506,9 +506,9 @@ Ces tests ne remplacent pas l’import final dans Dante Controller.
 
 ## Installer Dante Config Editor sous Windows
 
-La [Release Windows 2027.3](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.3)
+La [Release Windows 2027.3.1](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.3.1)
 regroupe l’installateur Windows, les notices Windows et les banques fournies.
-Les [paquets et notices Mac 2027.3](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.3) sont disponibles dans la même release ; les anciens paquets 2027.2.12 sont conservés. Les artefacts intermédiaires de construction ne constituent pas une distribution.
+Les [paquets et notices Mac 2027.3.1](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.3.1) sont disponibles dans la même release ; les anciens paquets 2027.2.12 sont conservés. Les artefacts intermédiaires de construction ne constituent pas une distribution.
 
 ### Windows 11 x64
 

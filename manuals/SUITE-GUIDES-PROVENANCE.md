@@ -1,30 +1,24 @@
-# Shared suite guide bundle 2027.3
+# Shared suite guide bundle 2027.7
 
-Canonical owner: private SiLeMIO StageFlow source, approved on 2026-09-07.
-This directory receives byte-identical copies, not DCE-specific adaptations.
-The two StageFlow PRODUCT manuals are deliberately not included: DCE keeps its
-own four product documents in docs/.
+Canonical owner: private SiLeMI/O StageFlow source.
+Source commit: f786356c82d25cd181416e9d9d273048bc12f816.
+Canonical delivery was approved and qualified for StageFlow 2027.1.18.
 
-Upstream manifest: suite-guides-manifest.json, supplied by the suite guide owner.
-Manifest SHA-256:
-941d7e0511a3afa0caa97168bd8f9d63d57a67600407f88b9a2c7adc89c2dd60
+Upstream manifest: distribution/guides/suite-guides-manifest.json.
+Manifest SHA-256: 8d903a38d3121430bc536d273e14cffee1e47e415f7eaa61b32934a8ab49271e.
 
-All 19 entries in the canonical manifest were checked before copying. Paths
-inside that manifest refer to the StageFlow tree, not to this DCE directory.
-Only the two shared PDFs, their two Markdown sources, and the unchanged
-manifest are mirrored here. Existing suite diagrams/captures remain unchanged.
+All manifest entries were checked against that source before copying.
+The two shared PDF guides, their Markdown sources and the manifest are copied byte for byte.
+DCE keeps its own product notices and quick starts separately.
 
 | File | SHA-256 |
 | --- | --- |
-| Guide-Suite-SiLeMIO-FR.pdf | 236a751649392d2bcbfbb10b753015ea0aa4aa92a0d86f3e7fb8d8f75639d968 |
-| SiLeMIO-Suite-Guide-EN.pdf | 63b52a0ce2c8d03dc6e8a0333d06a5a91eee534a4feb0dba6e8ead1f19724b93 |
-| GUIDE-SUITE-FR.md | 5e4e467fb85006e4192862f7def3a9562c6d73b870990d4b5f164249c47d5fb9 |
-| SUITE-GUIDE-EN.md | 4055570078608cd7939096bd09c982e40d6d2093d79d20a870a308e4add8d6ca |
+| Guide-Suite-SiLeMIO-FR.pdf | b40fa68868e1ab36360a6c3aa5549e9b20d98035d283292940881b2c679b58ad |
+| SiLeMIO-Suite-Guide-EN.pdf | bd42bf41e6071a0e6f713e73dd043a469bce762f21da94f7f24a1b564461446a |
+| GUIDE-SUITE-FR.md | 7dd71a7f47ff969cbc02fa70270d57664ae52731b18fd5aabcc3cdb8fbd16943 |
+| SUITE-GUIDE-EN.md | 881f6f60076d51b25639197271fb50ec7abc12785a2ecb727a9ab045ad0fa8a7 |
 
-Both shared PDFs have 14 pages. The owner reports page-by-page visual review.
-Reference screenshots are pre-existing 2027 captures, not a new native capture
-of every app's latest Guide/Connection UI. DCE's checks are summarized in
-VALIDATION_2027.0.2.md in the public distribution repository.
-
-Bundle approval permits documentation packaging; it does not independently
-authorize application publication or installation. Mac assets are unchanged.
+The shared guides now describe the trial and licence model.
+Reference captures retain their original qualification limits.
+Bundle approval authorizes documentation packaging. Application qualification
+and publication are handled independently by the DCE delivery.

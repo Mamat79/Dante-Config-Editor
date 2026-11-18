@@ -2,27 +2,32 @@
 
 **Du premier patch à l’exploitation, avec un seul logiciel ou toute la suite.**
 
-Édition 2027.3 - guide utilisateur. Chaque logiciel est livré séparément :
+Édition 2027.7 - guide utilisateur. Chaque logiciel est livré séparément :
 installez uniquement une version publiée pour votre plateforme et consultez
 ses notes de version. Les limites Windows et macOS sont précisées ci-dessous.
 
-StageFlow est gratuit et facultatif. Chaque logiciel SiLeMIO reste utilisable
+StageFlow propose un essai complet de 30 jours. Chaque logiciel SiLeMIO reste utilisable
 seul, avec son projet natif. Lorsqu’on veut faire circuler le même show
 entre plusieurs outils, chaque logiciel peut aussi créer, ouvrir et enregistrer
 un projet StageFlow `.stageflow`, même si StageFlow n’est pas installé.
+
+Prix TTC des licences permanentes : StageFlow **79 €**, StageDesk **99 €**,
+Dante Config Editor **79 €**, StageMark **49 €**, StageMon **49 €** et Larsen Lupin
+**49 €**. Le pack StageFlow, StageDesk, StageMark et StageMon coûte **199 € TTC**,
+au lieu de **276 €** séparément, soit **77 € d’économie**.
 
 Découvrir StageFlow et ses versions publiées : [page officielle StageFlow](https://www.silemio.com/logiciels/stageflow).
 
 Le bouton **Guide** ouvre la notice du logiciel utilisé, dans sa langue.
 Le présent **Guide de la suite** est accessible depuis le menu **Aide**.
-Les nouveaux parcours décrits dans cette édition concernent Windows ; les
-paquets macOS existants et leurs notices restent distincts.
+Cette édition décrit StageFlow 2027.1.18 sous Windows et macOS. La liaison
+Excel directe est réservée à Windows.
 
 ## Disponibilité Windows et macOS
 
 | Logiciel | Windows public | macOS public |
 |---|---|---|
-| StageFlow | v2027.0.2 · Windows 11 x64 | v2027.0.1 · macOS 14+ · Intel / Apple Silicon* |
+| StageFlow | v2027.1.18 · Windows 11 x64 | v2027.1.18 · macOS 14+ · Intel / Apple Silicon* |
 | StageDesk | v2027.0.4 · Windows 10+ x64 | v2027.0.2 · macOS 12+ · Intel / Apple Silicon* |
 | StageMark | v2027.0.2 · Windows 11 x64 | v2027.0.0 · macOS 12+ · Intel / Apple Silicon* |
 | StageMon | v2027.0.2 · Windows 10/11 x64 | v2027.0.1 · macOS 12+ · Intel / Apple Silicon* |
@@ -36,11 +41,10 @@ utilisent une signature d'intégrité ad hoc lorsque leur release l'indique ; ne
 l'étendez pas aux autres. Vérifiez la source officielle et ne désactivez jamais
 les protections globales de macOS.*
 
-L'édition 2027 de ce guide n'impose ni le même numéro de build, ni le même statut
-Latest sur tous les systèmes. État de référence : livraisons vérifiées le
-6 septembre 2026. Les correctifs suivants peuvent être livrés sur Windows avant
-Mac, sans renommer les paquets Mac existants. Les pages du site et les notes de
-chaque release donnent les versions disponibles les plus récentes.
+StageFlow correspond à la version décrite ici, 2027.1.18. Les autres lignes sont
+des repères historiques vérifiés le 6 septembre 2026, pas un catalogue des
+dernières versions. Les pages du site et les notes de chaque release donnent
+les versions disponibles les plus récentes.
 
 StageFlow peut héberger le show sous **Windows ou macOS**. Les logiciels
 compatibles rejoignent volontairement cette Session StageFlow LIVE sur le réseau
@@ -138,6 +142,23 @@ Dans StageFlow Windows, choisissez A4, A3 ou un autre format, puis une ou
 plusieurs pages par groupe. Les titres se répètent sur chaque page. Le
 classeur conserve des identifiants invisibles et stables afin que les logiciels
 reconnaissent les groupes et les paires après une modification.
+
+### Liaison directe ou manuelle avec Excel
+
+Dans StageFlow Windows, le panneau **Tableur** propose **Synchronisation directe**,
+cochée par défaut. Ce mode utilise Microsoft Excel installé sur le PC, sans
+plugin, et ne concerne pas Excel dans le navigateur. Après **Connecter Excel**,
+les valeurs des cellules circulent dans les deux sens environ une seconde après
+validation de la saisie, sans fermer Excel ni reconstruire les feuilles.
+Décochez cette option pour mettre le classeur à jour à votre demande.
+
+Un conflit suspend le mode direct. Utilisez **Comparer et résoudre…** pour choisir
+les valeurs à conserver. Un changement de structure ou de mise en page peut
+indiquer **Mise à jour manuelle requise** : mettez alors le classeur à jour avec
+le bouton prévu. Le direct reprend après validation. Enregistrez séparément
+le projet et le classeur, car le direct n'enregistre pas automatiquement Excel
+sur disque. Sous macOS, utilisez l'export puis l'import ou l'actualisation
+explicite du classeur. La liaison directe décrite ici est réservée à Windows.
 
 ### Depuis un autre logiciel SiLeMIO
 
@@ -356,12 +377,20 @@ présentes au clic. Il ne les efface ni chez les autres destinataires, ni pour u
 nouvelle alerte reçue ensuite. Chaque destinataire peut couper sa réception
 sans affecter les autres ; les alertes ignorées ne sont pas rejouées à la reprise.
 
-Le maître peut **Suspendre les notifications de modifications**, puis les
-réactiver **sans arrêter LIVE**. Les changements réalisés pendant cette pause
-ne sont pas rappelés. La synchronisation des labels continue, même sans
-notification ou après acquittement. Ce n'est pas un acquittement pour toute l'équipe.
-Seuls les labels de sources déclenchent les alertes : jamais les micros,
-commentaires, groupes, balances ou autres réglages.
+Le maître StageFlow peut **suspendre toutes les alertes** sans arrêter LIVE.
+À la reprise, il choisit une seule alerte regroupant les changements conservés
+ou une reprise sans alerte de rattrapage. Annuler conserve la pause. Le récapitulatif
+conserve jusqu’à 200 changements et le dialogue signale les détails supplémentaires
+omis. Les données continuent à se synchroniser dans tous les cas.
+
+Le poste ou mobile qui effectue la saisie ne reçoit pas sa propre alerte. Dans
+StageFlow, l’entrée du groupe, son onglet Patch et sa cellule Source clignotent
+jusqu’à l’acquittement local. Les groupes héritant du label commun sont aussi
+repérés. Les valeurs locales qui le remplacent restent indépendantes.
+Les préférences d’émission personnelle et de réception restent distinctes de la
+pause globale. Appliquer les préférences ne reprend pas les alertes globales.
+Seuls les labels de sources déclenchent les alertes, jamais les micros, notes,
+monitoring, commentaires, groupes, balances ou autres réglages.
 
 ## 8. Piloter avec OSC, MIDI ou Stream Deck
 

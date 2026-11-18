@@ -2,27 +2,32 @@
 
 **From the first patch list to live operation, with one application or the whole suite.**
 
-2027.3 edition - user guide. Each application is delivered separately: install
+2027.7 edition - user guide. Each application is delivered separately: install
 only a release published for your platform and check its release notes.
 Windows and macOS limitations are explained below.
 
-StageFlow is free and optional. Every SiLeMIO application remains usable on its
+StageFlow includes a full 30-day trial. Every SiLeMIO application remains usable on its
 own with its native project. When the same show must move between several
 tools, every application can also create, open and save a StageFlow
 `.stageflow` project, even when StageFlow is not installed.
+
+Permanent license prices including VAT: StageFlow **€79**, StageDesk **€99**,
+Dante Config Editor **€79**, StageMark **€49**, StageMon **€49** and Larsen Lupin
+**€49**. The StageFlow, StageDesk, StageMark and StageMon bundle costs **€199
+including VAT**, instead of **€276** separately, saving **€77**.
 
 Discover StageFlow and its published versions: [official StageFlow page](https://www.silemio.com/en/software/stageflow).
 
 The **Guide** button opens the current application's manual in its selected
 language. This **Suite guide** is available through the **Help** menu.
-The new workflows in this edition concern Windows; existing macOS packages and
-their manuals remain separate.
+This edition describes StageFlow 2027.1.18 on Windows and macOS. Direct Excel
+synchronization is available on Windows only.
 
 ## Windows and macOS availability
 
 | Application | Public Windows | Public macOS |
 |---|---|---|
-| StageFlow | v2027.0.2 · Windows 11 x64 | v2027.0.1 · macOS 14+ · Intel / Apple Silicon* |
+| StageFlow | v2027.1.18 · Windows 11 x64 | v2027.1.18 · macOS 14+ · Intel / Apple Silicon* |
 | StageDesk | v2027.0.4 · Windows 10+ x64 | v2027.0.2 · macOS 12+ · Intel / Apple Silicon* |
 | StageMark | v2027.0.2 · Windows 11 x64 | v2027.0.0 · macOS 12+ · Intel / Apple Silicon* |
 | StageMon | v2027.0.2 · Windows 10/11 x64 | v2027.0.1 · macOS 12+ · Intel / Apple Silicon* |
@@ -35,10 +40,9 @@ are not notarized by Apple. Some products use an ad-hoc integrity signature
 when their release says so; do not extend that claim to the others. Verify the
 official source and never disable macOS protections globally.*
 
-The 2027 edition of this guide does not force the same build number or Latest
-status on every system. Reference snapshot: deliveries verified on 5 September
-2026. Later fixes may ship on Windows before Mac, without renaming existing Mac
-packages. Site pages and release notes provide the most recent available versions.
+StageFlow matches the version described here, 2027.1.18. Other rows are historical
+references verified on 6 September 2026, not a list of the latest versions.
+Site pages and release notes provide the most recent available versions.
 
 StageFlow can host the show on **Windows or macOS**. Compatible applications
 voluntarily join that StageFlow LIVE session over a trusted local network with
@@ -130,6 +134,22 @@ In StageFlow Windows, choose A4, A3 or another format, then one or multiple page
 per group. Headers repeat on every page. The workbook
 keeps invisible, stable identifiers so applications can recognize groups and
 pairs after an edit.
+
+### Direct or manual Excel connection
+
+In StageFlow Windows, the **Spreadsheet** panel offers **Direct synchronization**,
+enabled by default. It uses Microsoft Excel installed on the PC, without a
+plugin, and does not apply to browser Excel. After **Connect Excel**, cell values
+update in both directions about one second after an edit is committed, without
+closing Excel or rebuilding sheets. Clear this option to update the workbook
+on request.
+
+A conflict pauses direct mode. Use **Compare and resolve…** to choose which
+values to keep. Structural or layout changes may show **Manual update required**:
+use the update button. Direct mode resumes after validation. Save the project
+and workbook separately, as direct mode does not save Excel to disk automatically.
+On macOS, use workbook export followed by explicit import or refresh. The direct
+connection described here is available on Windows only.
 
 ### From another SiLeMIO application
 
@@ -338,11 +358,19 @@ the click. It never clears another recipient's alerts or a new alert received
 afterwards. Each recipient can turn reception off locally without affecting
 others; ignored alerts are not replayed when reception is enabled again.
 
-The host can **Pause change notifications**, then enable them again **without
-stopping LIVE**. Changes made during this pause are not replayed. Labels still
-synchronize without notifications or after acknowledgement. This is not
-an acknowledgement for the whole team. Only source labels trigger alerts:
-never microphones, comments, groups, sound-check notes or other settings.
+The StageFlow host can **pause all alerts** without stopping LIVE.
+When resuming, choose one alert grouping retained changes or resume without
+catch-up alerts. Cancel keeps alerts paused. The summary retains up to 200
+changes and the dialog reports additional omitted details. Data synchronization
+continues in all cases.
+
+The computer or mobile making the edit does not receive its own alert. In
+StageFlow, the affected group entry, Patch tab and Source cell pulse until
+locally acknowledged. Groups inheriting the common label are also highlighted.
+Local overrides remain independent. Personal emission and reception preferences
+stay separate from the global pause. Applying settings does not resume global
+alerts. Only source labels trigger alerts, never microphones, notes, monitoring,
+comments, groups, soundcheck or other settings.
 
 ## 8. Control with OSC, MIDI or Stream Deck
 
