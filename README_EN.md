@@ -31,7 +31,7 @@ The four Windows PDFs and four macOS PDFs below correspond to 2027.3.1; the macO
 
 | Discover Dante Config Editor | English | Français |
 | --- | --- | --- |
-| Short presentation | [MP4 video](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/dante-config-editor-presentation-en.mp4) | [Vidéo MP4](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.2.4/dante-config-editor-presentation-fr.mp4) |
+| Historical 2027.2.4 presentation | [MP4 video](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/dante-config-editor-presentation-historique-v2027.2.4-en.mp4) | [Vidéo MP4](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/dante-config-editor-presentation-historique-v2027.2.4-fr.mp4) |
 | Windows quick start | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/QuickStart_DanteConfigEditorV3_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/QuickStart_DanteConfigEditorV3_FR.pdf) |
 | Windows full manual | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/Notice_DanteConfigEditorV3_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/Notice_DanteConfigEditorV3_FR.pdf) |
 | macOS quick start | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/QuickStart_DanteConfigEditor_macOS_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/QuickStart_DanteConfigEditor_macOS_FR.pdf) |
