@@ -1,6 +1,6 @@
 # Dante Config Editor
 
-**Windows 2027.3.2 et macOS 2027.3.1 — préparation hors ligne, patch Dante en ligne et mode mixte.** [Installateurs et SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.3.2) · [Notes](RELEASE_NOTES_2027.3.2.md)
+**Windows 2027.3.3 et macOS 2027.3.1 — préparation hors ligne, patch Dante en ligne et mode mixte.** [Installateurs et SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.3.3) · [Notes](RELEASE_NOTES_2027.3.3.md)
 
 La grille réunit le projet XML et les appareils détectés. Le patch direct et la synchronisation sur demande sont disponibles sur Windows et macOS 15 ou ultérieur. La qualification du réseau Mac a été réalisée en simulation sur Apple Silicon. L’exécution native Intel et les appareils Dante physiques restent à vérifier.
 
@@ -18,23 +18,23 @@ depuis la banque.
 
 **Essai gratuit de 30 jours** à partir du premier lancement de 2027.3. Activez ensuite une licence permanente à **79 € TTC**, en paiement unique. Une licence DCE valide déjà activée reste utilisable. L’activation initiale d’un code V2 nécessite Internet. Après activation, vous pouvez travailler hors ligne.
 
-**Windows 2027.3.2 ; macOS Apple Silicon/Intel 2027.3.1 ; qualification propre à chaque plateforme.**
+**Windows 2027.3.3 ; macOS Apple Silicon/Intel 2027.3.1 ; qualification propre à chaque plateforme.**
 
 | Plateforme | Téléchargement direct |
 | --- | --- |
-| Windows 11 x64 | [Installateur autonome 2027.3.2 `.exe`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.2/DanteConfigEditor2027_Installer.exe) |
+| Windows 11 x64 | [Installateur autonome 2027.3.3 `.exe`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.3/DanteConfigEditor2027_Installer.exe) |
 | macOS Apple Silicon | [Image disque `.dmg`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/DanteConfigEditor2027_macOS_AppleSilicon.dmg) |
 | macOS Intel | [Image disque `.dmg`](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/DanteConfigEditor2027_macOS_Intel.dmg) |
-| Contrôle des téléchargements | [Windows SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.2/SHA256SUMS-2027.3.2-Windows.txt) · [Mac ARM SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/DanteConfigEditor2027_macOS_AppleSilicon.dmg.sha256) · [Mac Intel SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/DanteConfigEditor2027_macOS_Intel.dmg.sha256) |
+| Contrôle des téléchargements | [Windows SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.3/SHA256SUMS-2027.3.3-Windows.txt) · [Mac ARM SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/DanteConfigEditor2027_macOS_AppleSilicon.dmg.sha256) · [Mac Intel SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/DanteConfigEditor2027_macOS_Intel.dmg.sha256) |
 | Projet StageFlow facultatif | [StageFlow](https://github.com/Mamat79/StageFlow) |
 
-Les quatre PDF Windows et les quatre PDF macOS ci-dessous correspondent respectivement aux versions 2027.3.2 et 2027.3.1 ; les PDF macOS sont identiques aux guides des deux DMG qualifiés.
+Les quatre PDF Windows et les quatre PDF macOS ci-dessous correspondent respectivement aux versions 2027.3.3 et 2027.3.1 ; les PDF macOS sont identiques aux guides des deux DMG qualifiés.
 
 | Découvrir Dante Config Editor | Français | English |
 | --- | --- | --- |
 | Présentation historique 2027.2.4 | [Vidéo MP4](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/dante-config-editor-presentation-historique-v2027.2.4-fr.mp4) | [MP4 video](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/dante-config-editor-presentation-historique-v2027.2.4-en.mp4) |
-| Démarrage rapide Windows | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.2/QuickStart_DanteConfigEditorV3_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.2/QuickStart_DanteConfigEditorV3_EN.pdf) |
-| Notice complète Windows | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.2/Notice_DanteConfigEditorV3_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.2/Notice_DanteConfigEditorV3_EN.pdf) |
+| Démarrage rapide Windows | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.3/QuickStart_DanteConfigEditorV3_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.3/QuickStart_DanteConfigEditorV3_EN.pdf) |
+| Notice complète Windows | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.3/Notice_DanteConfigEditorV3_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.3/Notice_DanteConfigEditorV3_EN.pdf) |
 | Démarrage rapide macOS | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/QuickStart_DanteConfigEditor_macOS_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/QuickStart_DanteConfigEditor_macOS_EN.pdf) |
 | Notice complète macOS | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/Notice_DanteConfigEditor_macOS_FR.pdf) | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/Notice_DanteConfigEditor_macOS_EN.pdf) |
 | Guide commun de la suite SiLeMI/O | [PDF français](manuals/Guide-Suite-SiLeMIO-FR.pdf) | [English PDF](manuals/SiLeMIO-Suite-Guide-EN.pdf) |
@@ -506,7 +506,7 @@ Ces tests ne remplacent pas l’import final dans Dante Controller.
 
 ## Installer Dante Config Editor sous Windows
 
-La [Release Windows 2027.3.2](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.3.1)
+La [Release Windows 2027.3.3](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.3.1)
 regroupe l’installateur Windows, les notices Windows et les banques fournies.
 Les [paquets et notices Mac 2027.3.1](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.3.1) sont disponibles dans la même release ; les anciens paquets 2027.2.12 sont conservés. Les artefacts intermédiaires de construction ne constituent pas une distribution.
 

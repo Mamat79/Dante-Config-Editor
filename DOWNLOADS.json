@@ -1,14 +1,14 @@
 {
   "product": "Dante Config Editor",
   "edition": "v2027",
-  "latestRelease": "v2027.3.2",
+  "latestRelease": "v2027.3.3",
   "platforms": {
     "windowsX64": {
-      "version": "2027.3.2",
-      "releaseUrl": "https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.3.2",
-      "downloadUrl": "https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.2/DanteConfigEditor2027_Installer.exe",
-      "bytes": 103003434,
-      "sha256": "105a977df93c691a91468bcf7bd60af6ff6735e764efd598fe2dc0327fe96139"
+      "version": "2027.3.3",
+      "releaseUrl": "https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.3.3",
+      "downloadUrl": "https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.3/DanteConfigEditor2027_Installer.exe",
+      "bytes": 103017506,
+      "sha256": "c96c4567f524436c3d895ba10198750b2da37b3e5878550e73e8488f3feeb705"
     },
     "macOSAppleSilicon": {
       "version": "2027.3.1",
