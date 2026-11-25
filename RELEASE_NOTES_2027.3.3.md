@@ -1,6 +1,6 @@
-# Dante Config Editor 2027.3.3 (Windows)
+# Dante Config Editor 2027.3.3 (Windows / macOS)
 
-## 2027.3.3 — session réseau Windows
+## 2027.3.3 — sessions réseau Windows et macOS
 
 - La croix de Réseau Dante masque la fenêtre et conserve la connexion. Revenir hors ligne déconnecte explicitement.
 - La matrice démarre repliée lors de sa première ouverture.
@@ -10,4 +10,4 @@
 - Les tableaux distinguent les informations observées des données non fournies.
 
 
-Paquets macOS actuels : 2027.3.1.
+macOS Apple Silicon et Intel : 2027.3.3. [Qualification Mac et limites](QUALIFICATION-MACOS-2027.3.3.md).

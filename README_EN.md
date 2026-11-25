@@ -1,6 +1,6 @@
 # Dante Config Editor
 
-**Windows 2027.3.3 and macOS 2027.3.1 — offline preparation, live Dante patching and mixed mode.** [Installers and SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.3.3) · [Release notes](RELEASE_NOTES_2027.3.3_EN.md)
+**Windows 2027.3.3 and macOS 2027.3.3 — offline preparation, live Dante patching and mixed mode.** [Installers and SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/tag/v2027.3.3) · [Release notes](RELEASE_NOTES_2027.3.3_EN.md)
 
 The matrix combines the XML project and discovered devices. Direct patching and on-demand synchronization are available on Windows and macOS 15 or later. Mac network workflows were qualified in simulation on Apple Silicon. Native Intel execution and physical Dante hardware remain to be verified.
 
@@ -17,25 +17,25 @@ then populated with the required device-bank templates.
 
 **30-day free trial** from the first launch of 2027.3. Activate a permanent license afterwards for **€79 including VAT**, paid once. Existing valid activated DCE licenses still work. Initial activation of a V2 code requires internet access. You can work offline after activation.
 
-**Windows 2027.3.3; macOS Apple Silicon/Intel 2027.3.1; qualification is platform-specific.**
+**Windows 2027.3.3; macOS Apple Silicon/Intel 2027.3.3; qualification is platform-specific.**
 
 | Platform | Direct download |
 | --- | --- |
 | Windows 11 x64 | [Self-contained 2027.3.3 `.exe` installer](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.3/DanteConfigEditor2027_Installer.exe) |
-| macOS Apple Silicon | [`.dmg` disk image](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/DanteConfigEditor2027_macOS_AppleSilicon.dmg) |
-| macOS Intel | [`.dmg` disk image](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/DanteConfigEditor2027_macOS_Intel.dmg) |
-| Download verification | [Windows SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.3/SHA256SUMS-2027.3.3-Windows.txt) · [Mac ARM SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/DanteConfigEditor2027_macOS_AppleSilicon.dmg.sha256) · [Mac Intel SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/DanteConfigEditor2027_macOS_Intel.dmg.sha256) |
+| macOS Apple Silicon | [`.dmg` disk image](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.3/DanteConfigEditor2027_macOS_AppleSilicon.dmg) |
+| macOS Intel | [`.dmg` disk image](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.3/DanteConfigEditor2027_macOS_Intel.dmg) |
+| Download verification | [Windows SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.3/SHA256SUMS-2027.3.3-Windows.txt) · [Mac ARM SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.3/DanteConfigEditor2027_macOS_AppleSilicon.dmg.sha256) · [Mac Intel SHA-256](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.3/DanteConfigEditor2027_macOS_Intel.dmg.sha256) |
 | Optional StageFlow project tool | [StageFlow](https://github.com/Mamat79/StageFlow) |
 
-The four Windows PDFs and four macOS PDFs below correspond to versions 2027.3.3 and 2027.3.1 respectively; the macOS PDFs exactly match the guides in both qualified DMGs.
+The four Windows PDFs and four macOS PDFs below all describe version 2027.3.3; the macOS PDFs exactly match the guides in both qualified DMGs.
 
 | Discover Dante Config Editor | English | Français |
 | --- | --- | --- |
 | Historical 2027.2.4 presentation | [MP4 video](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/dante-config-editor-presentation-historique-v2027.2.4-en.mp4) | [Vidéo MP4](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/dante-config-editor-presentation-historique-v2027.2.4-fr.mp4) |
 | Windows quick start | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.3/QuickStart_DanteConfigEditorV3_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.3/QuickStart_DanteConfigEditorV3_FR.pdf) |
 | Windows full manual | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.3/Notice_DanteConfigEditorV3_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.3/Notice_DanteConfigEditorV3_FR.pdf) |
-| macOS quick start | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/QuickStart_DanteConfigEditor_macOS_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/QuickStart_DanteConfigEditor_macOS_FR.pdf) |
-| macOS full manual | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/Notice_DanteConfigEditor_macOS_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.1/Notice_DanteConfigEditor_macOS_FR.pdf) |
+| macOS quick start | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.3/QuickStart_DanteConfigEditor_macOS_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.3/QuickStart_DanteConfigEditor_macOS_FR.pdf) |
+| macOS full manual | [English PDF](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.3/Notice_DanteConfigEditor_macOS_EN.pdf) | [PDF français](https://github.com/Mamat79/Dante-Config-Editor/releases/download/v2027.3.3/Notice_DanteConfigEditor_macOS_FR.pdf) |
 | Shared SiLeMI/O suite guide | [English PDF](manuals/SiLeMIO-Suite-Guide-EN.pdf) | [PDF français](manuals/Guide-Suite-SiLeMIO-FR.pdf) |
 
 The videos introduce the software's principles. The current manuals cover
@@ -55,7 +55,7 @@ assistant, and Easy Patch clearly separates Source / destination from the
 Recommended hybrid mode.
 
 > DCE is an unofficial third-party tool and is not affiliated with Audinate.
-> It does not control a live Dante network and uses no Audinate SDK or API.
+> It offers explicit local network control without DDM or an Audinate SDK or API.
 > Work on a copy and review the final file in Dante Controller before using it
 > on an installation.
 
@@ -63,9 +63,9 @@ The maintainer has successfully imported XML produced by this generation into
 Dante Controller. Structural, semantic, and regression tests complement those
 real-world imports.
 
-## macOS 2027.3.1 qualification
+## macOS 2027.3.3 qualification
 
-[Mac checks and limitations](QUALIFICATION-MACOS-2027.3.1.md).
+[Mac checks and limitations](QUALIFICATION-MACOS-2027.3.3.md).
 
 ## Getting started
 

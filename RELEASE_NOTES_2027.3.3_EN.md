@@ -1,6 +1,6 @@
-# Dante Config Editor 2027.3.3 (Windows)
+# Dante Config Editor 2027.3.3 (Windows / macOS)
 
-## 2027.3.3 — Windows network session
+## 2027.3.3 — Windows and macOS network sessions
 
 - Closing Network Dante hides its window and retains the connection. Go offline explicitly disconnects.
 - The matrix starts collapsed on its first opening.
@@ -10,4 +10,4 @@
 - Inventory tables distinguish observed values from information not reported by the device.
 
 
-Current macOS packages: 2027.3.1.
+macOS Apple Silicon and Intel: 2027.3.3. [Mac qualification and limits](QUALIFICATION-MACOS-2027.3.3.md).
